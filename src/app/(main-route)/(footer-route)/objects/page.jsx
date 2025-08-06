@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ContactUsPage = () => {
+const ObjectsPage = () => {
     return (
         <div className='min-h-minus-header'>
             
@@ -8,4 +8,4 @@ const ContactUsPage = () => {
     );
 };
 
-export default ContactUsPage;
+export default ObjectsPage;

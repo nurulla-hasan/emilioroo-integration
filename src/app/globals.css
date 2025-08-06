@@ -2,9 +2,7 @@
 @import "tw-animate-css";
 
 @theme {
-  --color-brand: #ff9933;
-  --color-skyBlue: #0061bb;
-  --color-skyBlue2: #E9F5FF;
+  --color-brand: #1C4587;
   --color-title: #333333;
   --color-subtitle: #414141;
   --color-content-bg: #90B8DE;
@@ -61,7 +59,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.707 0.166 70.47);
+  --primary: oklch(0.320 0.093 258.9);
   --primary-foreground: oklch(100% 0.00011 271.152);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -95,7 +93,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(72.186% 0.15941 67.059);
+  --primary: oklch(0.320 0.093 258.9);
   --primary-foreground: oklch(33.073% 0.07179 59.091);
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
@@ -106,7 +104,7 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.554 0.135 66.442);
+  --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -122,9 +120,7 @@
   --sidebar-ring: oklch(0.554 0.135 66.442);
 
   /* Custom theme colors for dark mode */
-  --color-brand: #ff9933; 
-  --color-skyBlue: #0084ff; 
-  --color-skyBlue2: #0a2d52; 
+  --color-brand: #1C4587; 
   --color-title: #ffffff; 
   --color-subtitle: #cccccc;
   --color-content-bg: #0e2034; 
@@ -158,7 +154,7 @@ body {
 
 /* Custom height */
 .min-h-minus-header {
-  min-height: calc(100vh - 81px);
+  min-height: calc(100vh - 80px);
 }
 
 /* Custom selection color */

@@ -1,6 +1,6 @@
 
 
-const CategoryPage = () => {
+const DonateUsPage = () => {
     return (
         <div className="min-h-minus-header">
             
@@ -8,4 +8,4 @@ const CategoryPage = () => {
     );
 };
 
-export default CategoryPage;
+export default DonateUsPage;

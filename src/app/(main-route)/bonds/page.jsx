@@ -1,6 +1,6 @@
 
 
-const AboutUsPage = () => {
+const BondsPage = () => {
     return (
         <div className="min-h-minus-header">
             
@@ -8,4 +8,4 @@ const AboutUsPage = () => {
     );
 };
 
-export default AboutUsPage;
+export default BondsPage;

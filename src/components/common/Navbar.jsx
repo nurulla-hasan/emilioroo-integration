@@ -1,34 +1,38 @@
 "use client";
-// import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, LayoutGrid, Info, Mail } from "lucide-react";
+import { User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, FileSearch, SearchIcon, ArrowRightIcon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toggle } from "../ui/toggle";
-import { useAuthRedirect } from "@/lib/utils";
+// import { useAuthRedirect } from "@/lib/utils";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "../ui/input";
 
 const Navbar = () => {
     const { theme, setTheme } = useTheme()
     const isLoading = false;
-    const cart = 1;
-    const handleAuthRedirect = useAuthRedirect();
+    // const cart = 1;
+    // const handleAuthRedirect = useAuthRedirect();
 
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const userName = "Golap Hasan";
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
+
     const navLinks = [
         { name: "Home", href: "/", icon: Home },
-        { name: "Category", href: "/category", icon: LayoutGrid },
-        { name: "About Us", href: "/about-us", icon: Info },
-        { name: "Contact Us", href: "/contact", icon: Mail },
+        { name: "Donate Us", href: "/donate-us", icon: UserPlus },
+        { name: "Bonds", href: "/bonds", icon: ShoppingCart },
+        { name: "Objects", href: "/objects", icon: ShoppingBasket },
+        { name: "Institutions", href: "/institutions", icon: User },
+        { name: "Message", href: "/message", icon: Mail },
+        { name: "We are chatting", href: "/chatting", icon: Mail },
     ];
 
     const handleLogOut = () => {
@@ -41,11 +45,11 @@ const Navbar = () => {
     }
 
     return (
-        <nav className="h-[81px]">
-            <div className="bg-black/20 backdrop-blur-3xl fixed top-0 left-0 right-0 z-50">
+        <nav className="h-[80px] ">
+            <div className="bg-brand fixed top-0 left-0 right-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 xl:px-0 py-2">
-                    <div className="flex items-center justify-between h-16">
-                        {/* Mobile menu button */}
+                    <div className="flex items-center justify-center h-16">
+                        {/* Mobile menu */}
                         <div className="lg:hidden flex items-center">
                             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                                 <SheetTrigger asChild>
@@ -57,18 +61,8 @@ const Navbar = () => {
                                 <SheetContent side="left" className="w-[300px] p-0 border-0">
                                     <div className="h-full bg-white dark:bg-gray-900 flex flex-col">
                                         {/* Header Section */}
-                                        <div className="relative bg-gradient-to-br from-primary via-primary/90 to-primary/80 p-6 text-white">
+                                        <div className="relative bg-gradient-to-br from-brand via-brand/90 to-brand/80 p-6 text-white">
                                             <SheetHeader className="text-left">
-                                                {/* <Link href="/" onClick={handleNavClick} className="flex items-center mb-4">
-                                                    <Image
-                                                        src="/images/logo.png"
-                                                        alt="Company Logo"
-                                                        priority
-                                                        width={120}
-                                                        height={48}
-                                                        className="h-10 w-auto brightness-0 invert"
-                                                    />
-                                                </Link> */}
                                                 <SheetTitle className="sr-only">Main Menu</SheetTitle>
                                                 <SheetDescription className="sr-only">Navigation links for the website.</SheetDescription>
                                             </SheetHeader>
@@ -144,120 +138,73 @@ const Navbar = () => {
                                                     )
                                                 })}
                                             </nav>
-
-                                            {/* Quick Actions */}
-                                            {/* <div className="mt-8 pt-6 border-t border-gray-200">
-                                                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
-                                                    Quick Actions
-                                                </h3>
-                                                <div className="space-y-2">
-                                                    <button
-                                                        onClick={(e) => {
-                                                            handleAuthRedirect(e, "/cart")
-                                                            handleNavClick()
-                                                        }}
-                                                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 w-full group"
-                                                    >
-                                                        <div className="relative">
-                                                            <ShoppingCart className="h-5 w-5 text-gray-400 group-hover:text-gray-600" />
-                                                            {cart && cart > 0 && (
-                                                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                                                                    {cart}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                        <span className="font-medium">Shopping Cart</span>
-                                                        <ChevronRight className="h-4 w-4 ml-auto text-gray-300 group-hover:text-gray-400 group-hover:translate-x-1 transition-transform" />
-                                                    </button>
-
-                                                    <button
-                                                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                                                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 w-full group"
-                                                    >
-                                                        {theme === "dark" ? (
-                                                            <SunIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-600" />
-                                                        ) : (
-                                                            <MoonIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-600" />
-                                                        )}
-                                                        <span className="font-medium">{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
-                                                        <ChevronRight className="h-4 w-4 ml-auto text-gray-300 group-hover:text-gray-400 group-hover:translate-x-1 transition-transform" />
-                                                    </button>
-                                                </div>
-                                            </div> */}
-                                        </div>
-
-                                        {/* Footer Section */}
-                                        {/* {isLoggedIn && (
-                                            <div className="p-6 border-t border-gray-200 bg-gray-50">
-                                                <div className="space-y-2">
-                                                    <Link href="/profile" onClick={handleNavClick}>
-                                                        <button className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-white hover:text-gray-900 transition-all duration-200 w-full group">
-                                                            <User className="h-4 w-4 text-gray-400 group-hover:text-gray-600" />
-                                                            <span className="text-sm font-medium">My Account</span>
-                                                        </button>
-                                                    </Link>
-                                                    <Link href="/my-orders" onClick={handleNavClick}>
-                                                        <button className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-white hover:text-gray-900 transition-all duration-200 w-full group">
-                                                            <ShoppingBasket className="h-4 w-4 text-gray-400 group-hover:text-gray-600" />
-                                                            <span className="text-sm font-medium">My Orders</span>
-                                                        </button>
-                                                    </Link>
-                                                    <button
-                                                        onClick={handleLogOut}
-                                                        className="flex items-center gap-3 px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition-all duration-200 w-full group"
-                                                    >
-                                                        <LogOut className="h-4 w-4 text-red-500" />
-                                                        <span className="text-sm font-medium">Logout</span>
-                                                    </button>
+                                            <div className="md:flex justify-center hidden">
+                                                <div className="relative w-full">
+                                                    <FileSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Search"
+                                                        className="w-full pl-10 py-2 rounded-full border text-gray-100 border-gray-300 text-[10px] md:text-xs shadow-sm outline-none focus:outline-none focus:ring-0 focus:border-gray-300"
+                                                    />
                                                 </div>
                                             </div>
-                                        )} */}
+                                        </div>
+
+
                                     </div>
                                 </SheetContent>
                             </Sheet>
                         </div>
 
-                        {/* Left Logo - Visible on all screen sizes */}
-                        <div className="flex-shrink-0">
-                            {/* <Link href="/" className="flex items-center">
-                                <Image
-                                    src="/images/logo.png"
-                                    alt="TripleM Collectibles"
-                                    width={124}
-                                    height={32}
-                                    priority
-                                    className="md:h-14 h-10 w-auto"
-                                />
-                            </Link> */}
-                        </div>
-
                         {/* Right side content: Nav Links and Icons */}
-                        <div className="lg:flex items-center space-x-16">
+                        <div className="lg:flex w-full items-center justify-between space-x-2">
+                            {/* Logo */}
+                            <div className="flex flex-col justify-center">
+                                <Link href="/">
+                                    <div className="md:h-7 lg:h-8 border-[#FFFFFF] font-bold text-lg flex justify-center items-center gap-2 border-2 rounded-[100%] p-2">
+                                        <div className="lg:w-2 w-2 lg:h-2 h-2 rounded-full bg-[#22B14C]"></div>
+                                        <div className="lg:w-12 w-8 h-2 rounded-full bg-[#FFF200]"></div>
+                                        <div className="lg:w-2 w-2 lg:h-2 h-2 rounded-full bg-[#ED1C24]"></div>
+                                    </div>
+                                </Link>
+                            </div>
+
                             {/* Desktop Navigation Links */}
                             <div className="hidden lg:flex items-center space-x-8">
                                 {navLinks.map((link) => (
                                     <Link
                                         key={link.name}
                                         href={link.href}
-                                        className={`hover:opacity-70 transition-colors font-medium duration-200 text-sm ${pathname === link.href ? "border-b-2 border-brand text-brand font-bold" : "text-white"}`}
+                                        className={`hover:opacity-70 transition-colors font-medium duration-200 text-sm ${pathname === link.href ? "border-b-2 border-white text-white font-bold" : "text-white"}`}
                                     >
                                         {link.name}
                                     </Link>
                                 ))}
                             </div>
 
+                            {/* Search Input */}
+                            <div className="*:not-first:mt-2">
+                                <div className="relative">
+                                    <Input
+                                        className="peer ps-9 pe-9 rounded-full"
+                                        placeholder="Search..."
+                                        type="search"
+                                    />
+                                    <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                                        <SearchIcon size={16} />
+                                    </div>
+                                    <button
+                                        className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                                        aria-label="Submit search"
+                                        type="submit"
+                                    >
+                                        <ArrowRightIcon size={16} aria-hidden="true" />
+                                    </button>
+                                </div>
+                            </div>
+
                             {/* Right Action Icons */}
                             <div className="flex items-center space-x-2">
-                                <div onClick={(e) => handleAuthRedirect(e, '/cart')}>
-                                    <Button variant="ghost" size="icon" className="relative hover:bg-brand">
-                                        <ShoppingCart className="h-5 w-5 text-white" />
-                                        <span className="sr-only">Shopping Cart</span>
-                                        {cart && cart.length > 0 && (
-                                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">{cart?.length}</span>
-                                        )}
-                                    </Button>
-                                </div>
-
                                 {/* User Profile Icon */}
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
