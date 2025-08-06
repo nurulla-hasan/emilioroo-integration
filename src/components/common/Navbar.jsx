@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, FileSearch, SearchIcon, ArrowRightIcon } from "lucide-react";
+import { User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, ArrowRightIcon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -46,9 +46,9 @@ const Navbar = () => {
 
     return (
         <nav className="h-[80px] ">
-            <div className="bg-brand fixed top-0 left-0 right-0 z-50">
+            <div className="bg-primary fixed top-0 left-0 right-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 xl:px-0 py-2">
-                    <div className="flex items-center justify-center h-16">
+                    <div className="flex items-center justify-between h-16">
                         {/* Mobile menu */}
                         <div className="lg:hidden flex items-center">
                             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -138,13 +138,13 @@ const Navbar = () => {
                                                     )
                                                 })}
                                             </nav>
-                                            <div className="md:flex justify-center hidden">
+                                            <div className="flex justify-center mt-4">
                                                 <div className="relative w-full">
-                                                    <FileSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                                    <input
+                                                    <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                                    <Input
                                                         type="text"
-                                                        placeholder="Search"
-                                                        className="w-full pl-10 py-2 rounded-full border text-gray-100 border-gray-300 text-[10px] md:text-xs shadow-sm outline-none focus:outline-none focus:ring-0 focus:border-gray-300"
+                                                        placeholder="Search..."
+                                                        className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 text-gray-900 text-sm shadow-sm outline-none focus:outline-none focus:ring-0 focus:border-gray-300"
                                                     />
                                                 </div>
                                             </div>
@@ -157,9 +157,9 @@ const Navbar = () => {
                         </div>
 
                         {/* Right side content: Nav Links and Icons */}
-                        <div className="lg:flex w-full items-center justify-between space-x-2">
+                        <div className="lg:flex w-full items-center justify-between">
                             {/* Logo */}
-                            <div className="flex flex-col justify-center">
+                            <div className="hidden lg:flex flex-col justify-center">
                                 <Link href="/">
                                     <div className="md:h-7 lg:h-8 border-[#FFFFFF] font-bold text-lg flex justify-center items-center gap-2 border-2 rounded-[100%] p-2">
                                         <div className="lg:w-2 w-2 lg:h-2 h-2 rounded-full bg-[#22B14C]"></div>
@@ -170,7 +170,7 @@ const Navbar = () => {
                             </div>
 
                             {/* Desktop Navigation Links */}
-                            <div className="hidden lg:flex items-center space-x-8">
+                            <div className="hidden lg:flex items-center gap-8">
                                 {navLinks.map((link) => (
                                     <Link
                                         key={link.name}
@@ -183,28 +183,25 @@ const Navbar = () => {
                             </div>
 
                             {/* Search Input */}
-                            <div className="*:not-first:mt-2">
-                                <div className="relative">
-                                    <Input
-                                        className="peer ps-9 pe-9 rounded-full"
-                                        placeholder="Search..."
-                                        type="search"
-                                    />
-                                    <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                                        <SearchIcon size={16} />
-                                    </div>
-                                    <button
-                                        className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                                        aria-label="Submit search"
-                                        type="submit"
-                                    >
-                                        <ArrowRightIcon size={16} aria-hidden="true" />
-                                    </button>
+                            <div className="hidden lg:block relative ">
+                                <Input
+                                    className="peer ps-9 pe-9 placeholder:text-white text-white border-none bg-white/5"
+                                    placeholder="Search..."
+                                    type="search"
+                                />
+                                <div className="text-white pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                                    <SearchIcon size={16} />
                                 </div>
+                                <button
+                                    className="text-white hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                                    aria-label="Submit search"
+                                    type="submit"
+                                >
+                                    <ArrowRightIcon size={16} aria-hidden="true" />
+                                </button>
                             </div>
-
                             {/* Right Action Icons */}
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center justify-end lg:justify-start space-x-2">
                                 {/* User Profile Icon */}
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>

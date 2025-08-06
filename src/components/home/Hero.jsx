@@ -6,7 +6,7 @@ import { Button } from "../ui/button"
 const Hero = () => {
     return (
         <div
-            className="relative w-full min-h-minus-header flex flex-col items-center justify-center text-center bg-brand"
+            className="relative w-full min-h-minus-header flex flex-col items-center justify-center text-center bg-primary"
         >
             {/* Content above the overlay */}
             <div className="relative w-full mx-auto z-20 px-4 flex flex-col items-center justify-center">
@@ -22,10 +22,10 @@ const Hero = () => {
 
                     {/* CTA Button */}
                     <div className="flex justify-center">
-                        <Link href="/shop" passHref>
-                            <Button className={"rounded-full md:w-40 md:h-12 md:text-lg bg-transparent border border-white text-white hover:text-primary hover:bg-white hover:border"}>
+                        <Link href="/" passHref>
+                            <Button className={"rounded-full md:w-50 md:h-12 md:text-lg bg-transparent border border-white text-white hover:text-primary hover:bg-white hover:border"}>
                                 Explor Now
-                                <ArrowRight className="ml-2 h-5 w-5" />
+                                <ArrowRight className="ml-2 h-8 w-8" />
                             </Button>
                         </Link>
                     </div>
