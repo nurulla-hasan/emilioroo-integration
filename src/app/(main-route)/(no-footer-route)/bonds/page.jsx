@@ -20,7 +20,7 @@ const BondsPage = () => {
         <div className="min-h-minus-header">
             <PageLayout>
                 <CardHeader className="flex flex-row justify-between items-center p-0 mb-6">
-                    <CardTitle className="text-xl font-bold text-primary">Exchange Services & Goods</CardTitle>
+                    <CardTitle className="text-xl font-bold text-primary dark:text-white">Exchange Services & Goods</CardTitle>
                     <Link href="/bonds/all-bonds">
                         <Button className="text-sm font-semibold">
                             All Bonds <ArrowBigRight className="h-4 w-4" />
