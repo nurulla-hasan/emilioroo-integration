@@ -11,8 +11,7 @@ import * as z from "zod";
 import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useMutation } from "@tanstack/react-query";
-import { setNewPassword } from "@/api/auth/setNewPassword";
+import { useResetPasswordMutation } from "@/lib/features/api/authApi"; 
 import { toast } from "sonner";
 
 const resetPasswordSchema = z.object({
@@ -27,7 +26,6 @@ export function ResetPasswordForm({ className, ...props }) {
   const router = useRouter()
 
   const resetPassMail = typeof window !== 'undefined' ? localStorage.getItem("tempEmailForOTPVerification") : null
-  const resetPassOTP = typeof window !== 'undefined' ? localStorage.getItem("tempEmailOTP") : null
 
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
@@ -44,28 +42,25 @@ export function ResetPasswordForm({ className, ...props }) {
     mode: "onChange",
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: setNewPassword,
-    onSuccess: () => {
+  const [resetPassword, { isLoading: isPending }] = useResetPasswordMutation();
+
+  const onSubmit = async (data) => {
+    const credential = {
+      email: resetPassMail,
+      password: data?.newPassword,
+      confirmPassword: data?.confirmNewPassword
+    };
+    try {
+      await resetPassword(credential).unwrap();
       toast.success("Password reset successful!");
       if (typeof window !== 'undefined') {
         localStorage.removeItem("tempEmailForOTPVerification")
         localStorage.removeItem("tempEmailOTP")
       }
       router.push("/auth/login")
-    },
-    onError: (error) => {
-      toast.error(error?.response?.data?.message || "Password reset failed.");
-    },
-  })
-
-  const onSubmit = (data) => {
-    const credential = {
-      email: resetPassMail,
-      otp: resetPassOTP,
-      password: data?.newPassword
-    };
-    mutate(credential);
+    } catch (error) {
+      toast.error(error?.data?.message || "Password reset failed.");
+    }
   };
 
   return (

@@ -8,19 +8,21 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toggle } from "../ui/toggle";
-// import { useAuthRedirect } from "@/lib/utils";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "../ui/input";
+import { useGetProfileQuery, useLogoutMutation } from "@/lib/features/api/authApi";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const Navbar = () => {
     const { theme, setTheme } = useTheme()
-    const isLoading = false;
-    // const cart = 1;
-    // const handleAuthRedirect = useAuthRedirect();
+    const { accessToken: token } = useSelector((state) => state.auth);
+    const { data: profile, isLoading: profileLoading } = useGetProfileQuery(undefined, { skip: !token });
+    const [ logout] = useLogoutMutation();
 
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
-    const userName = "Golap Hasan";
+    const isLoggedIn = profile?.success && token
+    const userName = profile?.data?.name;
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -36,9 +38,9 @@ const Navbar = () => {
     ];
 
     const handleLogOut = () => {
-        // toast.success("Logout successful!");
+        logout()
+        toast.success("Logout successful!");
         // window.location.reload();
-        setIsLoggedIn(false);
     }
     const handleNavClick = () => {
         setIsMobileMenuOpen(false)
@@ -46,7 +48,7 @@ const Navbar = () => {
 
     return (
         <nav className="h-[80px] ">
-            <div className="bg-primary fixed top-0 left-0 right-0 z-50">
+            <div className="bg-primary max-w-[1920px] mx-auto fixed top-0 left-0 right-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 xl:px-0 py-2">
                     <div className="flex items-center justify-between h-16">
                         {/* Mobile menu */}
@@ -210,7 +212,7 @@ const Navbar = () => {
                                                 <User className="h-5 w-5 text-white" />
                                                 <span className="sr-only">Profile</span>
                                             </Button>
-                                            {isLoading ? (
+                                            {profileLoading ? (
                                                 <div className="flex items-center gap-1">
                                                     <Skeleton className="h-4 w-23" />
                                                     <Skeleton className="h-4 w-4" />

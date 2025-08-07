@@ -8,17 +8,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { ArrowLeft, Eye, EyeOff, Loader2, CalendarIcon } from "lucide-react";
 import { MultipleSelector } from "@/components/ui/multiselect";
 import Link from "next/link";
+import { useRegisterMutation } from "@/lib/features/api/authApi";
+import { useRouter } from "next/navigation";
 
 const frameworks = [
-  { value: "nextjs", label: "Next.js" },
-  { value: "react", label: "React" },
+  { value: "684bd02558c89b118cadc499", label: "Next.js" },
+  { value: "684bcffe1332dc9dbf08664a", label: "React" },
   { value: "vue", label: "Vue" },
   { value: "angular", label: "Angular" },
   { value: "svelte", label: "Svelte" }
@@ -42,10 +44,23 @@ const signUpSchema = z.object({
 });
 
 export function SignUpForm({ className, ...props }) {
+
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const toggleVisibility = () => setShowPassword(!showPassword);
   const [openDatePicker, setOpenDatePicker] = useState(false);
-  const isPending = false; 
+
+  const [register, { data, isLoading, isSuccess }] = useRegisterMutation();
+  console.log(data);
+
+  useEffect(() => {
+    if (isSuccess) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("tempEmailForOTPVerification", data?.data?.email);
+      }
+      router.push("/auth/verification?type=signup");
+    }
+  }, [isSuccess, router, data])
 
   const methods = useForm({
     resolver: zodResolver(signUpSchema),
@@ -71,7 +86,8 @@ export function SignUpForm({ className, ...props }) {
       ...data,
       dateOfBirth: data.dateOfBirth ? data.dateOfBirth.toISOString().slice(0, 10) : undefined,
     };
-    console.log(formattedData);
+    // console.log(formattedData);
+    register(formattedData);
   };
 
   return (
@@ -90,64 +106,64 @@ export function SignUpForm({ className, ...props }) {
                 </div>
                 <div className="grid gap-3 md:grid-cols-2 md:gap-6">
                   <FormField
-                  control={control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-3">
-                      <FormLabel htmlFor="name">Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="name"
-                          type="text"
-                          placeholder="Enter your name"
-                          {...field}
-                        />
-                      </FormControl>
+                    control={control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-3">
+                        <FormLabel htmlFor="name">Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            id="name"
+                            type="text"
+                            placeholder="Enter your name"
+                            {...field}
+                          />
+                        </FormControl>
                         {errors.name && <p className="text-red-500 text-xs -mt-2">{errors.name.message}</p>}
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
-                  control={control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-3">
-                      <FormLabel htmlFor="email">Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="Enter your email"
-                          {...field}
-                        />
-                      </FormControl>
+                    control={control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-3">
+                        <FormLabel htmlFor="email">Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            {...field}
+                          />
+                        </FormControl>
                         {errors.email && <p className="text-red-500 text-xs -mt-2">{errors.email.message}</p>}
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 <div className="grid gap-3 md:grid-cols-2 md:gap-6">
                   <FormField
-                  control={control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-3">
-                      <FormLabel htmlFor="phone">Phone <span className="text-xs">(Optional)</span></FormLabel>
-                      <FormControl>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          placeholder="Enter your phone number"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    control={control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-3">
+                        <FormLabel htmlFor="phone">Phone <span className="text-xs">(Optional)</span></FormLabel>
+                        <FormControl>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            placeholder="Enter your phone number"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={control}
                     name="gender"
@@ -164,7 +180,7 @@ export function SignUpForm({ className, ...props }) {
                             <SelectItem value="OTHER">Other</SelectItem>
                           </SelectContent>
                         </Select>
-                        <FormMessage /> 
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -208,23 +224,23 @@ export function SignUpForm({ className, ...props }) {
                   />
 
                   <FormField
-                  control={control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-3">
-                      <FormLabel htmlFor="address">Address <span className="text-xs">(Optional)</span></FormLabel>
-                      <FormControl>
-                        <Input
-                          id="address"
-                          type="text"
-                          placeholder="Enter your address"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    control={control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-3">
+                        <FormLabel htmlFor="address">Address <span className="text-xs">(Optional)</span></FormLabel>
+                        <FormControl>
+                          <Input
+                            id="address"
+                            type="text"
+                            placeholder="Enter your address"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 <FormField
@@ -262,61 +278,61 @@ export function SignUpForm({ className, ...props }) {
                 />
 
                 <div className="grid gap-3 md:grid-cols-2 md:gap-6">
-                <FormField
-                  control={control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-3">
-                      <FormLabel htmlFor="password">Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            id="password"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="********"
-                            {...field}
-                          />
-                          {errors && <span className="text-red-500 text-xs">{errors.password?.message}</span>}
-                          <Button
-                            variant="ghost"
-                            type="button"
-                            className="absolute inset-y-0 right-0 flex items-center px-3 text-primary cursor-pointer"
-                            onClick={toggleVisibility}
-                          >
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                          </Button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-3">
+                        <FormLabel htmlFor="password">Password</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              id="password"
+                              type={showPassword ? "text" : "password"}
+                              placeholder="********"
+                              {...field}
+                            />
+                            {errors && <span className="text-red-500 text-xs">{errors.password?.message}</span>}
+                            <Button
+                              variant="ghost"
+                              type="button"
+                              className="absolute inset-y-0 right-0 flex items-center px-3 text-primary cursor-pointer"
+                              onClick={toggleVisibility}
+                            >
+                              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </Button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem className="grid gap-3">
-                      <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            id="confirmPassword"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="********"
-                            {...field}
-                          />
-                          {errors && <span className="text-red-500 text-xs">{errors.confirmPassword?.message}</span>}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                  <FormField
+                    control={control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-3">
+                        <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              id="confirmPassword"
+                              type={showPassword ? "text" : "password"}
+                              placeholder="********"
+                              {...field}
+                            />
+                            {errors && <span className="text-red-500 text-xs">{errors.confirmPassword?.message}</span>}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-                <Button type="submit" className="w-full" disabled={!isValid || isPending}>
-                  {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+                <Button type="submit" className="w-full" disabled={!isValid || isLoading}>
+                  {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                   Sign Up
                 </Button>
               </div>

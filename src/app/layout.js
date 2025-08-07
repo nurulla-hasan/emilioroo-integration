@@ -2,6 +2,7 @@ import { Poppins, Poltawski_Nowy } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Toaster } from "sonner";
 
 const poltawski = Poltawski_Nowy({
   variable: "--font-poltawski",
@@ -38,6 +39,7 @@ export default function RootLayout({ children }) {
             disableTransitionOnChange
           >
             {children}
+            <Toaster richColors  />
           </ThemeProvider>
         </StoreProvider>
       </body>

@@ -10,9 +10,8 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useMutation } from "@tanstack/react-query";
+import { useForgetPasswordMutation } from "@/lib/features/api/authApi";
 import { toast } from "sonner";
-import { sendOTP } from "@/api/auth/sendOTP";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -29,19 +28,20 @@ export function ForgotPasswordForm({ className, ...props }) {
     mode: "onChange",
   });
 
-  const {mutate, isPending } = useMutation({
-    mutationFn: sendOTP,
-    onSuccess: () => {
-      toast.success("Please check your email for the OTP!");
-      router.push("/auth/verification")
-    },
-    onError: (error) => {
-      toast.error(error?.response?.data?.message || "Verification failed.");
-    },
-  })
 
-  const onSubmit = (data) => {
-    mutate(data?.email)
+  const [forgetPassword, { isLoading }] = useForgetPasswordMutation(); 
+
+  const onSubmit = async (data) => {
+    try {
+      await forgetPassword( data.email ).unwrap();
+      toast.success("Please check your email for the OTP!");
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("tempEmailForOTPVerification", data.email);
+      }
+      router.push('/auth/verification?type=reset-password');
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to send OTP.");
+    }
   };
 
   return (
@@ -71,8 +71,8 @@ export function ForgotPasswordForm({ className, ...props }) {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isValid || isPending}>
-                {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+              <Button type="submit" className="w-full" disabled={!isValid || isLoading}>
+                {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                 Get Code
               </Button>
             </div>
