@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, ArrowRightIcon } from "lucide-react";
+import { User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,9 +19,9 @@ const Navbar = () => {
     const { theme, setTheme } = useTheme()
     const { accessToken: token } = useSelector((state) => state.auth);
     const { data: profile, isLoading: profileLoading } = useGetProfileQuery(undefined, { skip: !token });
-    const [ logout] = useLogoutMutation();
+    const [logout] = useLogoutMutation();
 
-    const isLoggedIn = profile?.success && token
+    const isLoggedIn = profile?.data?.email && token
     const userName = profile?.data?.name;
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -61,7 +61,7 @@ const Navbar = () => {
                                     </Button>
                                 </SheetTrigger>
                                 <SheetContent side="left" className="w-[300px] p-0 border-0">
-                                    <div className="h-full bg-white dark:bg-gray-900 flex flex-col">
+                                    <div className="h-full bg-primary dark:bg-gray-900 flex flex-col">
                                         {/* Header Section */}
                                         <div className="relative bg-gradient-to-br from-brand via-brand/90 to-brand/80 p-6 text-white">
                                             <SheetHeader className="text-left">
@@ -73,7 +73,7 @@ const Navbar = () => {
                                             {isLoggedIn ? (
                                                 <div className="flex items-center gap-3 mt-4">
                                                     <Avatar className="h-12 w-12 border-2 border-white/30">
-                                                        <AvatarImage src="/placeholder.svg?height=48&width=48" alt={userName} />
+                                                        <AvatarImage src={profile?.data?.profile_image} alt={userName} />
                                                         <AvatarFallback className="bg-white/20 text-white font-semibold">
                                                             {userName
                                                                 .split(" ")
@@ -113,8 +113,19 @@ const Navbar = () => {
                                             <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full blur-xl translate-y-4 -translate-x-4"></div>
                                         </div>
 
+
                                         {/* Navigation Links */}
                                         <div className="flex-1 p-6">
+                                            <div className="relative mb-6">
+                                                <Input
+                                                    className="peer ps-9 placeholder:text-white placeholder:text-xs text-white border-none bg-white/5 rounded-full"
+                                                    placeholder="Search..."
+                                                    type="search"
+                                                />
+                                                <div className="text-white pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                                                    <SearchIcon size={16} />
+                                                </div>
+                                            </div>
                                             <nav className="space-y-2">
                                                 {navLinks.map((link) => {
                                                     const IconComponent = link.icon
@@ -125,31 +136,22 @@ const Navbar = () => {
                                                             href={link.href}
                                                             onClick={handleNavClick}
                                                             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group ${isActive
-                                                                ? "bg-primary/10 text-primary border border-primary/20"
-                                                                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                                                ? "bg-white/10 text-white border border-white/20"
+                                                                : "text-gray-100 hover:bg-gray-50 hover:text-gray-900"
                                                                 }`}
                                                         >
                                                             <IconComponent
-                                                                className={`h-5 w-5 ${isActive ? "text-primary" : "text-gray-400 group-hover:text-gray-600"}`}
+                                                                className={`h-5 w-5 ${isActive ? "text-white" : "text-gray-400 group-hover:text-gray-600"}`}
                                                             />
                                                             <span className="font-medium">{link.name}</span>
                                                             <ChevronRight
-                                                                className={`h-4 w-4 ml-auto transition-transform ${isActive ? "text-primary" : "text-gray-300 group-hover:text-gray-400 group-hover:translate-x-1"}`}
+                                                                className={`h-4 w-4 ml-auto transition-transform ${isActive ? "text-white" : "text-gray-300 group-hover:text-gray-400 group-hover:translate-x-1"}`}
                                                             />
                                                         </Link>
                                                     )
                                                 })}
                                             </nav>
-                                            <div className="flex justify-center mt-4">
-                                                <div className="relative w-full">
-                                                    <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Search..."
-                                                        className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 text-gray-900 text-sm shadow-sm outline-none focus:outline-none focus:ring-0 focus:border-gray-300"
-                                                    />
-                                                </div>
-                                            </div>
+
                                         </div>
 
 
@@ -157,8 +159,9 @@ const Navbar = () => {
                                 </SheetContent>
                             </Sheet>
                         </div>
+                       {/*---------------------------------------- */}
 
-                        {/* Right side content: Nav Links and Icons */}
+                        {/* Desktop Navigation */}
                         <div className="lg:flex w-full items-center justify-between">
                             {/* Logo */}
                             <div className="hidden lg:flex flex-col justify-center">
@@ -185,22 +188,15 @@ const Navbar = () => {
                             </div>
 
                             {/* Search Input */}
-                            <div className="hidden lg:block relative ">
+                            <div className="hidden lg:block relative">
                                 <Input
-                                    className="peer ps-9 pe-9 placeholder:text-white text-white border-none bg-white/5"
+                                    className="peer ps-9 placeholder:text-white placeholder:text-xs text-white border-none bg-white/5 rounded-full"
                                     placeholder="Search..."
                                     type="search"
                                 />
                                 <div className="text-white pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
                                     <SearchIcon size={16} />
                                 </div>
-                                <button
-                                    className="text-white hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                                    aria-label="Submit search"
-                                    type="submit"
-                                >
-                                    <ArrowRightIcon size={16} aria-hidden="true" />
-                                </button>
                             </div>
                             {/* Right Action Icons */}
                             <div className="flex items-center justify-end lg:justify-start space-x-2">
@@ -209,7 +205,19 @@ const Navbar = () => {
                                     <DropdownMenuTrigger asChild>
                                         <div className="flex items-center cursor-pointer">
                                             <Button variant="ghost" size="icon" className="hover:bg-brand">
-                                                <User className="h-5 w-5 text-white" />
+                                                {isLoggedIn && profile?.data?.profile_image ? (
+                                                    <Avatar className="h-10 w-10 border-2 border-white/30">
+                                                        <AvatarImage src={profile?.data?.profile_image} alt={userName} />
+                                                        <AvatarFallback className="bg-white/20 text-white font-semibold text-xs">
+                                                            {userName
+                                                                .split(" ")
+                                                                .map((n) => n[0])
+                                                                .join("")}
+                                                        </AvatarFallback>
+                                                    </Avatar>
+                                                ) : (
+                                                    <User2 className="h-5 w-5 text-white" />
+                                                )}
                                                 <span className="sr-only">Profile</span>
                                             </Button>
                                             {profileLoading ? (
@@ -232,15 +240,22 @@ const Navbar = () => {
                                                 <DropdownMenuSeparator className={"md:hidden"} />
                                                 <Link href="/profile">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
-                                                        <User className="mr-2 h-4 w-4" />
+                                                        <User2 className="mr-2 h-4 w-4" />
                                                         <span>My Account</span>
                                                     </DropdownMenuItem>
                                                 </Link>
                                                 <DropdownMenuSeparator />
                                                 <Link href="/my-orders">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
-                                                        <ShoppingBasket className="mr-2 h-4 w-4" />
-                                                        <span>My Order</span>
+                                                        <Heart className="mr-2 h-4 w-4" />
+                                                        <span>Favorite</span>
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuSeparator />
+                                                </Link>
+                                                <Link href="/playlist">
+                                                    <DropdownMenuItem className={"cursor-pointer"}>
+                                                        <Play className="mr-2 h-4 w-4" />
+                                                        <span>Playlist</span>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                 </Link>

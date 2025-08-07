@@ -9,7 +9,7 @@ const Hero = () => {
             className="relative w-full min-h-minus-header flex flex-col items-center justify-center text-center bg-primary"
         >
             {/* Content above the overlay */}
-            <div className="relative w-full mx-auto z-20 px-4 flex flex-col items-center justify-center">
+            <div className="-mt-20 md:mt-0 relative w-full mx-auto z-20 px-4 flex flex-col items-center justify-center">
                 <div className="max-w-5xl flex flex-col justify-center">
                     {/* Main Heading */}
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-medium text-white leading-tight mb-6 drop-shadow-2xl">
@@ -33,7 +33,7 @@ const Hero = () => {
             </div>
 
             {/* Wave Images */}
-            <div className="relative">
+            <div className="relative mt-20">
                 <img className="absolut" src='images/wave/wave (3).png' alt="Wave 3" />
                 <img className="absolut" src='images/wave/wave (3).png' alt="Wave 3" />
                 <img className="absolute top-10" src='images/wave/wave (3).png' alt="Wave 3" />

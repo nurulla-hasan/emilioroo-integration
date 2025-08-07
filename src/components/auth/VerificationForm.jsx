@@ -77,7 +77,6 @@ export function VerificationForm({ className, type, ...props }) {
     try {
       if (type === 'signup') {
         await verifySignupOTP(credentials).unwrap();
-        toast.success("Account verified successfully! Please login.");
         if (typeof window !== 'undefined') {
           localStorage.removeItem("tempEmailForOTPVerification");
         }
@@ -121,7 +120,8 @@ export function VerificationForm({ className, type, ...props }) {
     }
   };
 
-  const isLoading = isVerifyingSignupOTP || isVerifyingResetOTP || isResendingOTP || isResendingResetOTP;
+  const sendOtpLoading = isResendingOTP || isResendingResetOTP;
+  const verifyOtpLoading = isVerifyingSignupOTP || isVerifyingResetOTP;
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -180,10 +180,10 @@ export function VerificationForm({ className, type, ...props }) {
                     type="button"
                     variant="link"
                     onClick={handleResendOTP}
-                    disabled={isLoading}
+                    disabled={sendOtpLoading}
                     className="p-0 h-auto"
                   >
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {sendOtpLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Resend Code
                   </Button>
                 ) : (
@@ -193,8 +193,8 @@ export function VerificationForm({ className, type, ...props }) {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isValid || isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Button type="submit" className="w-full" disabled={!isValid || verifyOtpLoading}>
+                {verifyOtpLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Verify
               </Button>
             </div>

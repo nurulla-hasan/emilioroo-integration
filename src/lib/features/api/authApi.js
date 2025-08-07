@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { clearAuthTokens, setAuthTokens } from "../slices/auth/authSlice";
+import { persistor } from "../../store";
 import { baseApi } from "./baseApi";
 
 const authApis = baseApi.injectEndpoints({
@@ -174,6 +175,7 @@ const authApis = baseApi.injectEndpoints({
                 try {
                     await queryFulfilled;
                     dispatch(clearAuthTokens());
+                    await persistor.purge();
                 } catch (error) {
                     console.log(error);
                 }
