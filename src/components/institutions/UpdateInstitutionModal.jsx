@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Loader2, Upload } from "lucide-react"
-import { useCreateInstitutionMutation } from "@/lib/features/api/InstitutionApi"
+import { useUpdateInstitutionMutation } from "@/lib/features/api/InstitutionApi"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -35,42 +35,49 @@ const formSchema = z.object({
   description: z.string().min(1, { message: "Description is required." }),
   facebookLink: z.string().url({ message: "Invalid URL." }).optional().or(z.literal("")),
   instagramLink: z.string().url({ message: "Invalid URL." }).optional().or(z.literal("")),
-  institution_cover:
-    z
-      .any()
-      .refine((files) => files?.length == 1, "Institution cover image is required.")
-      .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-      .refine(
-        (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-        "Only .jpg, .jpeg, .png and .webp formats are supported."
-      ),
+  institution_cover: z
+    .any()
+    .refine((files) => !files || files.length === 0 || files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+    .refine(
+      (files) => !files || files.length === 0 || ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+      "Only .jpg, .jpeg, .png and .webp formats are supported."
+    ).optional(), // Make optional for update, as it might not be changed
 });
 
-export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
+export default function UpdateInstitutionModal({ isOpen, onOpenChange, institution }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     mode: "onChange",
     defaultValues: {
-      name: "",
-      description: "",
-      facebookLink: "",
-      instagramLink: "",
+      name: institution?.name || "",
+      description: institution?.description || "",
+      facebookLink: institution?.facebookLink || "",
+      instagramLink: institution?.instagramLink || "",
       institution_cover: undefined,
     },
   });
 
   const fileInputRef = useRef(null);
-  const [createInstitution, { isLoading }] = useCreateInstitutionMutation();
+  const [updateInstitution, { isLoading }] = useUpdateInstitutionMutation();
 
   useEffect(() => {
-    if (isOpen) {
-      form.reset(); 
+    if (isOpen && institution) {
+      form.reset({
+        name: institution.name,
+        description: institution.description,
+        facebookLink: institution.facebookLink,
+        instagramLink: institution.instagramLink,
+        institution_cover: undefined, // Clear file input on open
+      });
     }
-  }, [isOpen, form.reset, form]);
+  }, [isOpen, institution, form.reset, form]);
 
   const onSubmit = async (values) => {
     const formData = new FormData();
-    formData.append("institution_cover", values.institution_cover[0]);
+
+    if (values.institution_cover && values.institution_cover[0]) {
+      formData.append("institution_cover", values.institution_cover[0]);
+    }
 
     const data = {
       name: values.name,
@@ -81,12 +88,12 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
     formData.append("data", JSON.stringify(data));
 
     try {
-      await createInstitution(formData).unwrap();
-      toast.success("Institution created successfully!");
+      await updateInstitution({ id: institution._id, data: formData }).unwrap();
+      toast.success("Institution updated successfully!");
       onOpenChange(false);
       form.reset();
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to create institution.");
+      toast.error(error?.data?.message || "Failed to update institution.");
     }
   };
 
@@ -94,7 +101,7 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Create New Institution</DialogTitle>
+          <DialogTitle>Edit Institution</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
@@ -175,8 +182,11 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
                     className="w-full flex items-center justify-center gap-2"
                   >
                     <Upload className="h-4 w-4" />
-                    {value && value[0] ? value[0].name : "Upload Image"}
+                    {value && value[0] ? value[0].name : (institution?.cover_image ? "Change Image" : "Upload Image")}
                   </Button>
+                  {institution?.cover_image && !value && (
+                    <p className="text-sm text-muted-foreground">Current: {institution.cover_image.split('/').pop()}</p>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -189,7 +199,7 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
                 </Button>
               </DialogClose>
               <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Creating</> : "Create Institution"}
+                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Updating</> : "Update Institution"}
               </Button>
             </DialogFooter>
           </form>

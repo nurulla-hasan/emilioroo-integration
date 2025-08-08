@@ -7,7 +7,7 @@ import MyInstitutionCard from "@/components/institutions/my-institutions/MyInsti
 import CustomPagination from "@/components/common/CustomPagination"
 import CardSkeleton from "@/components/common/CardSkeleton"
 
-export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm }) {
+export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEditInstitution }) {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize] = useState(12)
   const [activeTab, setActiveTab] = useState("created")
@@ -69,7 +69,7 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm }) {
           )}
           <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
             {!currentLoading && !currentError && currentData?.data?.result?.map((institution) => (
-              <MyInstitutionCard key={institution._id} institution={institution} />
+              <MyInstitutionCard key={institution._id} institution={institution} onEdit={onEditInstitution} />
             ))}
           </div>
           {!currentLoading && !currentError && currentData?.data?.result?.length > pageSize && (
@@ -96,7 +96,7 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm }) {
           )}
           <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
             {!currentLoading && !currentError && currentData?.data?.result?.map((institution) => (
-              <MyInstitutionCard key={institution._id} institution={institution} />
+              <MyInstitutionCard key={institution._id} institution={institution} onEdit={onEditInstitution} />
             ))}
           </div>
           {!currentLoading && !currentError && currentData?.data?.result?.length > pageSize && (

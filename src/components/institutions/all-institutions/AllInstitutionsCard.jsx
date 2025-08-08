@@ -1,17 +1,19 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users } from 'lucide-react';
+import JoinInstitutionModal from "@/components/institutions/JoinInstitutionModal";
 
 const AllInstitutionsCard = ({ institution }) => {
+    const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
     return (
-        <Card className="w-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 bg-card">
-            <CardHeader className="p-0 relative h-50">
-                <div className="relative h-50 w-full bg-card">
+        <Card className="w-full overflow-hidden bg-card flex flex-col">
+            <CardHeader className="p-0 relative h-40">
+                <div className="relative h-40 w-full bg-card border-b">
                     <Image
                         src={
                             institution?.cover_image ||"/placeholder"}
@@ -21,16 +23,14 @@ const AllInstitutionsCard = ({ institution }) => {
                         className="object-cover"
                         priority
                     />
-                    {/* Subtle edge fade to white like the screenshot */}
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0" />
                 </div>
             </CardHeader>
-            <CardContent className="p-4">
+            <CardContent className="p-4 flex flex-col flex-grow">
                 {/* Title + Description */}
                 <h3 className="text-[17px] font-semibold text-primary">
                     {institution?.name}
                 </h3>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-2 flex-grow">
                     {institution?.description}
                 </p>
 
@@ -60,7 +60,7 @@ const AllInstitutionsCard = ({ institution }) => {
                 </div>
 
                 {/* Actions */}
-                <div className="mt-6 flex gap-2">
+                <div className="mt-4 flex gap-2">
                     <Button
                         variant="outline"
                         className="flex-1 border-border text-foreground hover:bg-accent"
@@ -69,13 +69,18 @@ const AllInstitutionsCard = ({ institution }) => {
                         Open
                     </Button>
                     <Button
-                        // onClick={onJoin}
+                        onClick={() => setIsJoinModalOpen(true)} // Open modal on click
                         className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm dark:text-white"
                     >
                         Join Institution
                     </Button>
                 </div>
             </CardContent>
+            <JoinInstitutionModal
+                isOpen={isJoinModalOpen}
+                onOpenChange={setIsJoinModalOpen}
+                institutionId={institution._id}
+            />
         </Card>
     );
 };

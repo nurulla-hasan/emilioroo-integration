@@ -5,16 +5,6 @@ import { baseApi } from "./baseApi"
 const institutionApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
 
-        // CREATE INSTITUTION
-        createInstitution: builder.mutation({
-            query: (data) => ({
-                url: "/institution/create",
-                method: "POST",
-                body: data,
-            }),
-            invalidatesTags: ["INSTITUTIONS"],
-        }),
-
         // GET ALL INSTITUTION
         getAllInstitution: builder.query({
             query: (args) => {
@@ -45,11 +35,33 @@ const institutionApi = baseApi.injectEndpoints({
             providesTags: ["INSTITUTIONS"],
         }),
 
+
+        // CREATE INSTITUTION
+        createInstitution: builder.mutation({
+            query: (data) => ({
+                url: "/institution/create",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
         // UPDATE INSTITUTION
         updateInstitution: builder.mutation({
-            query: (id) => ({
+            query: ({ id, data }) => ({
                 url: `/institution/update/${id}`,
                 method: "PATCH",
+                body: data,
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
+        // JOIN INSTITUTION
+        joinInstitution: builder.mutation({
+            query: (data) => ({
+                url: "/institution/join-instituion",
+                method: "POST",
+                body: data,
             }),
             invalidatesTags: ["INSTITUTIONS"],
         }),
@@ -60,6 +72,7 @@ const institutionApi = baseApi.injectEndpoints({
         //         url: `/institution/delete/${id}`,
         //         method: "DELETE",
         //     }),
+        //     invalidatesTags: ["INSTITUTIONS"],
         // }),
 
     }),
@@ -70,6 +83,7 @@ export const {
     useGetAllInstitutionQuery,
     useGetSingleInstitutionQuery,
     useUpdateInstitutionMutation,
+    useJoinInstitutionMutation,
     // useDeleteInstitutionMutation,
 } = institutionApi
 

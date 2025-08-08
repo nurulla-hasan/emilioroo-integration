@@ -12,13 +12,16 @@ import AllInstitutionsCard from "@/components/institutions/all-institutions/AllI
 import MyInstitutionsTabs from "@/components/institutions/my-institutions/MyInstitutionsTabs";
 import CardSkeleton from "@/components/common/CardSkeleton";
 import CreateInstitutionModal from "@/components/institutions/CreateInstitutionModal";
+import UpdateInstitutionModal from "@/components/institutions/UpdateInstitutionModal";
 
 const InstitutionsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize] = useState(12);
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false); // State for modal visibility
+    const [pageSize] = useState(12); 
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [editingInstitution, setEditingInstitution] = useState(null); 
 
     const { data, isLoading, isError } = useGetAllInstitutionQuery([
         { name: "page", value: currentPage },
@@ -35,7 +38,16 @@ const InstitutionsPage = () => {
         return () => clearTimeout(timeoutId);
     }, [searchQuery])
 
-    const totalPages = data?.data?.meta?.totalPage || 1;
+    const totalPages = Math.ceil((data?.data?.meta?.total || 0) / pageSize) || 1;
+
+    const handleOpenCreateModal = () => {
+        setIsCreateModalOpen(true);
+    };
+
+    const handleOpenEditModal = (institution) => {
+        setEditingInstitution(institution);
+        setIsUpdateModalOpen(true);
+    };
 
     return (
         <div className="min-h-minus-header">
@@ -52,7 +64,7 @@ const InstitutionsPage = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <Button className="w-full md:w-auto flex items-center gap-2" onClick={() => setIsCreateModalOpen(true)}> {/* Open modal on click */}
+                        <Button className="w-full md:w-auto flex items-center gap-2" onClick={handleOpenCreateModal}> 
                             <Plus className="h-4 w-4" />
                             Create Institution
                         </Button>
@@ -92,7 +104,7 @@ const InstitutionsPage = () => {
                         </div>
                     </TabsContent>
                     <TabsContent value="my-institutions">
-                        <MyInstitutionsTabs searchTerm={searchTerm} />
+                        <MyInstitutionsTabs searchTerm={searchTerm} onEditInstitution={handleOpenEditModal} /> 
                     </TabsContent>
                 </Tabs>
 
@@ -101,6 +113,12 @@ const InstitutionsPage = () => {
             <CreateInstitutionModal
                 isOpen={isCreateModalOpen}
                 onOpenChange={setIsCreateModalOpen}
+            />
+
+            <UpdateInstitutionModal
+                isOpen={isUpdateModalOpen}
+                onOpenChange={setIsUpdateModalOpen}
+                institution={editingInstitution}
             />
         </div>
     );
