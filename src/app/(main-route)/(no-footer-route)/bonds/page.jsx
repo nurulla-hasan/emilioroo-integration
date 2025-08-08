@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import PageLayout from "@/components/layout/PageLayout";
 import { ArrowBigRight } from "lucide-react";
 import Link from "next/link";
+import MatchingBondCard from "@/components/bonds/MatchingBondCard";
 
 const BondsPage = () => {
     const [showLocationFilter, setShowLocationFilter] = useState(true);
@@ -27,8 +28,8 @@ const BondsPage = () => {
                         </Button>
                     </Link>
                 </CardHeader>
-                <div className=" flex justify-center items-center p-6">
-                    <Card className="w-full max-w-2xl shadow-xl p-6">
+                <div className=" flex justify-center items-center md:p-6">
+                    <Card className="w-full max-w-4xl p-3 md:p-6">
                         <CardContent className="p-0">
                             <div className="flex flex-col lg:flex-row justify-between gap-6">
                                 <div className="flex flex-col space-y-1.5 w-full">
@@ -92,6 +93,19 @@ const BondsPage = () => {
                                     </div>
                                 </div>
                             )}
+
+                            {/* here is the filter section */}
+                            <Card className="w-full mt-8 gap-0">
+                                {/* Header: title + mute */}
+                                <CardHeader className="flex flex-row items-center justify-between gap-4 p-4 md:p-6">
+                                    <CardTitle className="text-lg md:text-xl font-bold">Matching Bonds</CardTitle>
+                                </CardHeader>
+                                <MatchingBondCard />
+                            </Card>
+                            <div className="max-w-4xl mx-auto">
+                                
+                            </div>
+                            {/* -------------------------- */}
 
                             <div className="flex justify-center mt-8">
                                 <Button>

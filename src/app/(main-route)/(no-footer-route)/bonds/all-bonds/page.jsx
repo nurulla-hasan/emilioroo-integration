@@ -1,6 +1,6 @@
 import React from 'react'; import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageLayout from "@/components/layout/PageLayout";
-import MyBonds from '@/components/bonds/all-bonds/MyBonds';
+import MyBonds from '@/components/bonds/all-bonds/my-bonds/MyBonds';
 
 const AllBonds = () => {
     return (
