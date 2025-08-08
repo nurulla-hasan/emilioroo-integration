@@ -55,7 +55,7 @@ const MyBonds = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
         <Card className="bg-card p-3">
           <CardHeader>
-            <CardTitle className="text-xl font-bold text-primary dark:text-white">Give</CardTitle>
+            <CardTitle className="text-xl font-bold text-primary dark:text-white">Offer</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {giveBonds.map((bond, index) => (
@@ -70,7 +70,7 @@ const MyBonds = () => {
         </Card>
         <Card className="bg-card p-3">
           <CardHeader>
-            <CardTitle className="text-xl font-bold text-primary dark:text-white">Get</CardTitle>
+            <CardTitle className="text-xl font-bold text-primary dark:text-white">Want</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {getBonds.map((bond, index) => (

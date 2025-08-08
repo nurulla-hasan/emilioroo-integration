@@ -33,7 +33,7 @@ const BondsPage = () => {
                         <CardContent className="p-0">
                             <div className="flex flex-col lg:flex-row justify-between gap-6">
                                 <div className="flex flex-col space-y-1.5 w-full">
-                                    <Label htmlFor="give" className="text-sm font-medium">Give</Label>
+                                    <Label htmlFor="offer" className="text-sm font-medium">Offer</Label>
                                     <Select>
                                         <SelectTrigger id="give" className="w-full">
                                             <SelectValue placeholder="Type what you can offer..." />
@@ -45,7 +45,7 @@ const BondsPage = () => {
                                     </Select>
                                 </div>
                                 <div className="flex flex-col justify-between space-y-1.5 w-full">
-                                    <Label htmlFor="get" className="text-sm flex justify-end font-medium">Get</Label>
+                                    <Label htmlFor="want" className="text-sm flex justify-end font-medium">Want</Label>
                                     <Select>
                                         <SelectTrigger id="get" className="w-full">
                                             <SelectValue placeholder="Type what you want..." />

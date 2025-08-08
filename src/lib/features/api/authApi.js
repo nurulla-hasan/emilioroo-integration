@@ -142,7 +142,7 @@ const authApis = baseApi.injectEndpoints({
                     method: 'GET'
                 }
             },
-            providesTags: ['Profile']
+            providesTags: ['PROFILE']
         }),
 
         // UPDATE PROFILE
@@ -185,4 +185,4 @@ const authApis = baseApi.injectEndpoints({
     })
 })
 
-export const { useLoginMutation, useRegisterMutation, useVerifyOTPMutation, useVerifyOTPForResetPasswordMutation, useResendOTPMutation, useResendResetOTPMutation, useGetProfileQuery, useChangePasswordMutation, useUpdateProfileMutation, useForgetPasswordMutation, useVerifyEmailMutation, useResetPasswordMutation, useLogoutMutation } = authApis;
+export const { useLoginMutation, useRegisterMutation, useVerifyOTPMutation, useVerifyOTPForResetPasswordMutation, useResendOTPMutation, useResendResetOTPMutation, useGetProfileQuery, useChangePasswordMutation, useUpdateProfileMutation, useForgetPasswordMutation, useResetPasswordMutation, useLogoutMutation } = authApis;

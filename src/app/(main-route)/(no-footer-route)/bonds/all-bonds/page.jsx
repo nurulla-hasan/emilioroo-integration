@@ -1,6 +1,7 @@
 import React from 'react'; import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageLayout from "@/components/layout/PageLayout";
 import MyBonds from '@/components/bonds/all-bonds/my-bonds/MyBonds';
+import BondRequestTabs from '@/components/bonds/all-bonds/bond-request/BondRequestTabs';
 
 const AllBonds = () => {
     return (
@@ -19,8 +20,8 @@ const AllBonds = () => {
                         </div>
                     </TabsContent>
                     <TabsContent value="bond-request">
-                        <div className="p-4 border rounded-md mt-4">
-                            Bond Request Content
+                        <div className="mt-4">
+                            <BondRequestTabs />
                         </div>
                     </TabsContent>
                     <TabsContent value="ongoing-bonds">

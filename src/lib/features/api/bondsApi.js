@@ -19,6 +19,7 @@ const bondsApi = baseApi.injectEndpoints({
                 url: "/bond/my-bonds",
                 method: "GET",
             }),
+            providesTags: ["MY_BONDS"],
         }),
 
         // GET MY BONDS REQUEST
@@ -27,6 +28,7 @@ const bondsApi = baseApi.injectEndpoints({
                 url: "/bond-request/my-bond-requests",
                 method: "GET",
             }),
+            providesTags: ["MY_BONDS_REQUEST"],
         }),
 
 
@@ -37,6 +39,7 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "GET",
                 body: id,
             }),
+            providesTags: ["MATCHING_BONDS"],
         }),
 
         // UPDATE BOND

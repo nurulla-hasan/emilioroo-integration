@@ -2,7 +2,7 @@ import { toast } from "sonner";
 
 const { baseApi } = require("./baseApi");
 
-const donateApis = baseApi.injectEndpoints({
+const donateApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
 
         // donate
@@ -36,4 +36,4 @@ const donateApis = baseApi.injectEndpoints({
     }),
 })
 
-export const { useDonateMutation } = donateApis;
+export const { useDonateMutation } = donateApi;
