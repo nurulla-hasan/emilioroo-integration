@@ -180,7 +180,6 @@ const authApis = baseApi.injectEndpoints({
                     console.log(error);
                 }
             },
-            invalidatesTags: ["User"],
         }),
     })
 })

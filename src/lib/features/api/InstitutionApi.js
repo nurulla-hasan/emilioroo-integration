@@ -105,8 +105,8 @@ const institutionApi = baseApi.injectEndpoints({
 
         // DELETE INSTITUTION CONVERSATION
         deleteInstitutionConversation: builder.mutation({
-            query: (id) => ({
-                url: `/institution-conversation/delete/${id}`,
+            query: (topicId) => ({
+                url: `/institution-conversation/delete/${topicId}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["INSTITUTIONS"],
