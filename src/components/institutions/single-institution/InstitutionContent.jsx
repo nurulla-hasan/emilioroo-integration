@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Trash2, Plus } from 'lucide-react';
 import ConversationTopics from './ConversationTopics';
 
-const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEditTopic, onDeleteTopic, onRemoveMember, onCreateConversationClick }) => {
+const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEditTopic, onDeleteTopic, onRemoveMember, onCreateConversationClick, isLoading, error }) => {
     return (
         <div className="grid grid-cols-4 gap-4 mt-4">
 
@@ -42,7 +42,9 @@ const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEdit
                     <h2 className="text-md font-semibold">Conversations</h2>
                     <Plus className="h-5 w-5 cursor-pointer" onClick={onCreateConversationClick} />
                 </div>
-                <ConversationTopics topics={topics} onTopicClick={onTopicClick} onEditTopic={onEditTopic} onDeleteTopic={onDeleteTopic} />
+                {isLoading && <p>Loading conversations...</p>}
+                {error && <p className="text-red-500">Error loading conversations.</p>}
+                {!isLoading && !error && <ConversationTopics topics={topics} onTopicClick={onTopicClick} onEditTopic={onEditTopic} onDeleteTopic={onDeleteTopic} />}
             </div>
 
             {/* <Innovators /> */}

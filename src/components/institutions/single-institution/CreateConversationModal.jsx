@@ -2,40 +2,51 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Loader2 } from 'lucide-react';
 
 const CreateConversationModal = ({ isOpen, onOpenChange, onCreateConversation, isLoading }) => {
-    const [title, setTitle] = React.useState("");
-    const [description, setDescription] = React.useState("");
+    const [name, setName] = React.useState("");
 
     const handleSubmit = () => {
-        onCreateConversation({ title, description });
+        onCreateConversation({ name });
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent>
+            <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Create New Conversation</DialogTitle>
-                    <DialogDescription>Fill in the details to create a new conversation topic.</DialogDescription>
+                    <DialogTitle>Create a new conversation</DialogTitle>
+                    <DialogDescription>
+                        Give your conversation a name. You can change this later.
+                    </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="title" className="text-right">Title</Label>
-                        <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} className="col-span-3" />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="description" className="text-right">Description</Label>
-                        <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} className="col-span-3" />
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="name" className="text-right">
+                            Name
+                        </Label>
+                        <Input
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="col-span-3"
+                            placeholder="e.g., General Chat"
+                        />
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-                    <Button onClick={handleSubmit} disabled={isLoading}>
-                        {isLoading ? "Creating..." : "Create"}
+                    <DialogClose asChild>
+                        <Button size={"sm"} variant="outline">Cancel</Button>
+                    </DialogClose>
+                    <Button size={"sm"} onClick={handleSubmit} disabled={isLoading}>
+                        {isLoading ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating</>
+                        ) : (
+                            "Create"
+                        )}
                     </Button>
                 </DialogFooter>
             </DialogContent>

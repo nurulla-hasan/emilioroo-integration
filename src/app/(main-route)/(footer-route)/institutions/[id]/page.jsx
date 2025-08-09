@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetSingleInstitutionQuery, useGetAllInstitutionQuery, useGetInstitutionMembersQuery, useRemoveInstitutionMemberMutation } from "@/lib/features/api/InstitutionApi";
+import { useGetSingleInstitutionQuery, useGetAllInstitutionQuery, useGetInstitutionMembersQuery, useRemoveInstitutionMemberMutation, useGetInstitutionConversationQuery, useCreateInstitutionConversationMutation } from "@/lib/features/api/InstitutionApi";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Facebook, Instagram, Loader2 } from "lucide-react";
@@ -21,13 +21,6 @@ const fakeMediators = [
     { id: 3, name: "MS. Fatima", title: "Pioneers", avatar: "/placeholder-user.jpg" },
     { id: 4, name: "MR. Ahmed", title: "Visionaries", avatar: "/placeholder-user.jpg" },
     { id: 5, name: "MS. Sarah", title: "Trailblazers", avatar: "/placeholder-user.jpg" },
-];
-
-const fakeTopics = [
-    { id: 1, name: "Sustainable Development & Climate Action", members: 12, emoji: "🌍", emojiAriaLabel: "globe" },
-    { id: 2, name: "Technology & Innovation", members: 8, emoji: "💡", emojiAriaLabel: "light bulb" },
-    { id: 3, name: "Health & Well-being", members: 5, emoji: "❤️", emojiAriaLabel: "heart" },
-    { id: 4, name: "Education & Research", members: 10, emoji: "📚", emojiAriaLabel: "books" },
 ];
 
 const fakePosts = [
@@ -71,11 +64,14 @@ const SingleInstitutionPage = () => {
     const { data: singleInstitutionData, isLoading: isSingleInstitutionLoading, isError: isSingleInstitutionError } = useGetSingleInstitutionQuery(id);
     const { data: allInstitutionsData, isLoading: areAllInstitutionsLoading, isError: areAllInstitutionsError } = useGetAllInstitutionQuery();
     const { data: institutionMembersData, refetch: refetchInstitutionMembers } = useGetInstitutionMembersQuery(id);
+    const { data: institutionConversationsData, isLoading: areInstitutionConversationsLoading, isError: areInstitutionConversationsError, refetch: refetchInstitutionConversations } = useGetInstitutionConversationQuery(id);
     const [removeInstitutionMember, { isLoading: isRemovingMember }] = useRemoveInstitutionMemberMutation();
+    const [createInstitutionConversation, { isLoading: isCreatingConversation }] = useCreateInstitutionConversationMutation();
 
     const institution = singleInstitutionData?.data;
     const allInstitutions = allInstitutionsData?.data?.result;
     const institutionMembers = institutionMembersData?.data?.result;
+    const institutionConversations = institutionConversationsData?.data;
 
     const innovators = institutionMembers?.filter(member => member.group === "A") || [];
     const thinkers = institutionMembers?.filter(member => member.group === "B") || [];
@@ -120,10 +116,16 @@ const SingleInstitutionPage = () => {
         setIsCreateConversationModalOpen(true);
     };
 
-    const handleCreateConversation = (data) => {
-        console.log("Create conversation:", data);
-        // Implement create conversation logic here
-        setIsCreateConversationModalOpen(false);
+    const handleCreateConversation = async (data) => {
+        try {
+            await createInstitutionConversation({ name: data.name, institution: id }).unwrap();
+            toast.success("Conversation created successfully!");
+            refetchInstitutionConversations();
+            setIsCreateConversationModalOpen(false);
+        } catch (error) {
+            console.error("Failed to create conversation:", error);
+            toast.error(error?.data?.message || "Failed to create conversation.");
+        }
     };
 
     return (
@@ -168,7 +170,7 @@ const SingleInstitutionPage = () => {
                             </div>
                         </div>
                         <Mediators mediators={fakeMediators} />
-                        <InstitutionContent innovators={innovators} thinkers={thinkers} topics={fakeTopics} onTopicClick={handleTopicClick} onEditTopic={handleEditTopic} onDeleteTopic={handleDeleteTopic} onRemoveMember={handleRemoveMemberClick} onCreateConversationClick={handleCreateConversationClick} />
+                        <InstitutionContent innovators={innovators} thinkers={thinkers} topics={institutionConversations} onTopicClick={handleTopicClick} onEditTopic={handleEditTopic} onDeleteTopic={handleDeleteTopic} onRemoveMember={handleRemoveMemberClick} onCreateConversationClick={handleCreateConversationClick} isLoading={areInstitutionConversationsLoading} error={areInstitutionConversationsError} />
                         {selectedTopic && <PostFeed posts={fakePosts} />}
                     </>
                 )}
@@ -181,14 +183,13 @@ const SingleInstitutionPage = () => {
                 description="Are you sure you want to remove this member? This action cannot be undone."
                 onConfirm={handleConfirmRemove}
                 confirmText={isRemovingMember ? <><Loader2 className="h-4 w-4 animate-spin" /> Removing</> : "Remove"}
-                confirmButtonVariant="destructive"
             />
 
             <CreateConversationModal
                 isOpen={isCreateConversationModalOpen}
                 onOpenChange={setIsCreateConversationModalOpen}
                 onCreateConversation={handleCreateConversation}
-                isLoading={false} // Replace with actual loading state
+                isLoading={isCreatingConversation}
             />
         </div>
     );
