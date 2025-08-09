@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetSingleInstitutionQuery, useGetAllInstitutionQuery, useGetInstitutionMembersQuery, useRemoveInstitutionMemberMutation, useGetInstitutionConversationQuery, useCreateInstitutionConversationMutation, useUpdateInstitutionConversationMutation } from "@/lib/features/api/InstitutionApi";
+import { useGetSingleInstitutionQuery, useGetAllInstitutionQuery, useGetInstitutionMembersQuery, useRemoveInstitutionMemberMutation, useGetInstitutionConversationQuery, useCreateInstitutionConversationMutation, useUpdateInstitutionConversationMutation, useDeleteInstitutionConversationMutation } from "@/lib/features/api/InstitutionApi";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Facebook, Instagram, Loader2 } from "lucide-react";
@@ -62,6 +62,8 @@ const SingleInstitutionPage = () => {
     const [isCreateConversationModalOpen, setIsCreateConversationModalOpen] = useState(false);
     const [isEditConversationModalOpen, setIsEditConversationModalOpen] = useState(false);
     const [selectedConversation, setSelectedConversation] = useState(null);
+    const [isDeleteConversationModalOpen, setIsDeleteConversationModalOpen] = useState(false);
+    const [conversationToDelete, setConversationToDelete] = useState(null);
 
     // Query
     const { data: singleInstitutionData, isLoading: isSingleInstitutionLoading, isError: isSingleInstitutionError } = useGetSingleInstitutionQuery(id);
@@ -71,6 +73,7 @@ const SingleInstitutionPage = () => {
     const [removeInstitutionMember, { isLoading: isRemovingMember }] = useRemoveInstitutionMemberMutation();
     const [createInstitutionConversation, { isLoading: isCreatingConversation }] = useCreateInstitutionConversationMutation();
     const [updateInstitutionConversation, { isLoading: isUpdatingConversation }] = useUpdateInstitutionConversationMutation();
+    const [deleteInstitutionConversation, { isLoading: isDeletingConversation }] = useDeleteInstitutionConversationMutation();
 
     const institution = singleInstitutionData?.data;
     const allInstitutions = allInstitutionsData?.data?.result;
@@ -90,9 +93,9 @@ const SingleInstitutionPage = () => {
         setIsEditConversationModalOpen(true);
     };
 
-    const handleDeleteTopic = (topic) => {
-        console.log("Delete topic:", topic);
-        // Implement delete logic here
+    const handleDeleteConversationClick = (conversation) => {
+        setConversationToDelete(conversation);
+        setIsDeleteConversationModalOpen(true);
     };
 
     const handleRemoveMemberClick = (memberId) => {
@@ -144,6 +147,20 @@ const SingleInstitutionPage = () => {
         }
     };
 
+    const handleConfirmDeleteConversation = async () => {
+        if (conversationToDelete) {
+            try {
+                await deleteInstitutionConversation(conversationToDelete._id).unwrap();
+                toast.success("Conversation deleted successfully!");
+                refetchInstitutionConversations();
+                setIsDeleteConversationModalOpen(false);
+            } catch (error) {
+                console.error("Failed to delete conversation:", error);
+                toast.error(error?.data?.message || "Failed to delete conversation.");
+            }
+        }
+    };
+
     return (
         <div className="h-[calc(100vh-80px)] overflow-hidden grid grid-cols-12 gap-8 p-2">
             {/* Sidebar */}
@@ -186,7 +203,7 @@ const SingleInstitutionPage = () => {
                             </div>
                         </div>
                         <Mediators mediators={fakeMediators} />
-                        <InstitutionContent innovators={innovators} thinkers={thinkers} topics={institutionConversations} onTopicClick={handleTopicClick} onEditTopic={handleEditConversationClick} onDeleteTopic={handleDeleteTopic} onRemoveMember={handleRemoveMemberClick} onCreateConversationClick={handleCreateConversationClick} isLoading={areInstitutionConversationsLoading} error={areInstitutionConversationsError} />
+                        <InstitutionContent innovators={innovators} thinkers={thinkers} topics={institutionConversations} onTopicClick={handleTopicClick} onEditTopic={handleEditConversationClick} onDeleteTopic={handleDeleteConversationClick} onRemoveMember={handleRemoveMemberClick} onCreateConversationClick={handleCreateConversationClick} isLoading={areInstitutionConversationsLoading} error={areInstitutionConversationsError} />
                         {selectedTopic && <PostFeed posts={fakePosts} />}
                     </>
                 )}
@@ -199,6 +216,15 @@ const SingleInstitutionPage = () => {
                 description="Are you sure you want to remove this member? This action cannot be undone."
                 onConfirm={handleConfirmRemove}
                 confirmText={isRemovingMember ? <><Loader2 className="h-4 w-4 animate-spin" /> Removing</> : "Remove"}
+            />
+
+            <ConfirmationModal
+                isOpen={isDeleteConversationModalOpen}
+                onOpenChange={setIsDeleteConversationModalOpen}
+                title="Confirm Deletion"
+                description="Are you sure you want to delete this conversation? This action cannot be undone."
+                onConfirm={handleConfirmDeleteConversation}
+                confirmText={isDeletingConversation ? <><Loader2 className="h-4 w-4 animate-spin" /> Deleting</> : "Delete"}
             />
 
             <CreateConversationModal

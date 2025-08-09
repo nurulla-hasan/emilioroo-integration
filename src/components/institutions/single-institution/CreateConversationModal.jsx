@@ -43,7 +43,7 @@ const CreateConversationModal = ({ isOpen, onOpenChange, onCreateConversation, i
                     </DialogClose>
                     <Button size={"sm"} onClick={handleSubmit} disabled={isLoading}>
                         {isLoading ? (
-                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating</>
+                            <><Loader2 className="h-4 w-4 animate-spin" /> Creating</>
                         ) : (
                             "Create"
                         )}
