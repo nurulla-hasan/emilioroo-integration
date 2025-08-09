@@ -1,11 +1,12 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -16,13 +17,21 @@ const bondSchema = z.object({
     tag: z.string().min(1, "Tag is required"),
 });
 
-const AddNewBondModal = ({ isOpen, onOpenChange, onCreateBond, isLoading }) => {
-    const { register, handleSubmit, formState: { errors, isValid }, reset } = useForm({
+const EditBondModal = ({ isOpen, onOpenChange, onUpdateBond, isLoading, bond }) => {
+    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
         resolver: zodResolver(bondSchema),
     });
 
+    useEffect(() => {
+        if (bond) {
+            setValue("offer", bond.offer);
+            setValue("want", bond.want);
+            setValue("tag", bond.tag);
+        }
+    }, [bond, setValue]);
+
     const onSubmit = (data) => {
-        onCreateBond(data);
+        onUpdateBond({ id: bond._id, ...data });
         reset();
     };
 
@@ -30,9 +39,9 @@ const AddNewBondModal = ({ isOpen, onOpenChange, onCreateBond, isLoading }) => {
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Create a new bond</DialogTitle>
+                    <DialogTitle>Edit bond</DialogTitle>
                     <DialogDescription>
-                        Fill in the details to create a new bond.
+                        Update the details of your bond.
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
@@ -72,13 +81,13 @@ const AddNewBondModal = ({ isOpen, onOpenChange, onCreateBond, isLoading }) => {
                     
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button size={"sm"} type="button" variant="outline">Cancel</Button>
+                            <Button type="button" variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button size={"sm"} type="submit" disabled={isLoading || !isValid}>
+                        <Button type="submit" disabled={isLoading}>
                             {isLoading ? (
-                                <><Loader2 className="h-4 w-4 animate-spin" /> Creating</>
+                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</>
                             ) : (
-                                "Create Bond"
+                                "Update Bond"
                             )}
                         </Button>
                     </DialogFooter>
@@ -88,4 +97,4 @@ const AddNewBondModal = ({ isOpen, onOpenChange, onCreateBond, isLoading }) => {
     );
 };
 
-export default AddNewBondModal;
+export default EditBondModal;

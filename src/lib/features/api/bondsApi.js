@@ -82,7 +82,7 @@ const bondsApi = baseApi.injectEndpoints({
         }),
 
         // DELETE BOND REQUEST
-        deleteBond: builder.mutation({
+        deleteRequestBond: builder.mutation({
             query: (id) => ({
                 url: `/bond-request/delete/${id}`,
                 method: "DELETE",

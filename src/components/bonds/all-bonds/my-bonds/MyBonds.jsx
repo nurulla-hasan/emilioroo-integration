@@ -1,20 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, Pencil, Plus } from "lucide-react";
-import AddNewBondModal from "./AddNewBondModal";
 import BondItemSkeleton from "./BondItemSkeleton";
 
-const MyBonds = ({ onCreateBond, isLoading, myBonds }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleCreateBond = async (data) => {
-    await onCreateBond(data);
-    setIsModalOpen(false);
-  };
-
+const MyBonds = ({ isLoading, myBonds, onEditBond, onOpenAddBondModal, onDeleteBond }) => {
   const BondItem = ({ text, onEdit, onDelete }) => (
     <div className="flex items-center justify-between py-2 px-4 bg-muted rounded-md hover:bg-muted/80 transition-colors mb-2">
       <span className="text-sm font-medium text-foreground">{text}</span>
@@ -30,17 +21,17 @@ const MyBonds = ({ onCreateBond, isLoading, myBonds }) => {
   );
 
   const handleEdit = (bond) => {
-    console.log(`Edit bond: ${bond}`);
+    onEditBond(bond);
   };
 
   const handleDelete = (bond) => {
-    console.log(`Delete bond: ${bond}`);
+    onDeleteBond(bond);
   };
 
   return (
     <div className="p-6 mt-20 flex flex-col items-center bg-background rounded-md">
       <div className="w-full max-w-5xl flex justify-center mb-8">
-        <Button variant="default" onClick={() => setIsModalOpen(true)} className="gap-2 bg-primary hover:bg-primary/90">
+        <Button variant="default" onClick={onOpenAddBondModal} className="gap-2 bg-primary hover:bg-primary/90">
           <Plus className="h-4 w-4" /> Add New Bond
         </Button>
       </div>
@@ -88,13 +79,6 @@ const MyBonds = ({ onCreateBond, isLoading, myBonds }) => {
           </CardContent>
         </Card>
       </div>
-
-      <AddNewBondModal
-        isOpen={isModalOpen}
-        onOpenChange={setIsModalOpen}
-        onCreateBond={handleCreateBond}
-        isLoading={isLoading}
-      />
     </div>
   );
 };

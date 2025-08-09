@@ -1,26 +1,79 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageLayout from "@/components/layout/PageLayout";
 import MyBonds from '@/components/bonds/all-bonds/my-bonds/MyBonds';
 import BondRequestTabs from '@/components/bonds/all-bonds/bond-request/BondRequestTabs';
-import { useCreateMyBondMutation, useGetMyBondsQuery } from '@/lib/features/api/bondsApi';
+import { useCreateMyBondMutation, useGetMyBondsQuery, useUpdateMyBondMutation, useDeleteMyBondMutation } from '@/lib/features/api/bondsApi';
 import { toast } from 'sonner';
+import EditBondModal from '@/components/bonds/all-bonds/my-bonds/EditBondModal';
+import AddNewBondModal from '@/components/bonds/all-bonds/my-bonds/AddNewBondModal';
+import ConfirmationModal from '@/components/common/ConfirmationModal';
+import { Loader2 } from 'lucide-react';
 
 const AllBonds = () => {
     const [createMyBond, { isLoading: isCreatingBond }] = useCreateMyBondMutation();
     const { data: myBonds, isLoading: isMyBondsLoading, refetch: refetchMyBonds } = useGetMyBondsQuery();
+    const [updateBond, { isLoading: isUpdatingBond }] = useUpdateMyBondMutation();
+    const [deleteBond, { isLoading: isDeletingBond }] = useDeleteMyBondMutation();
+
+    const [isEditBondModalOpen, setIsEditBondModalOpen] = useState(false);
+    const [selectedBond, setSelectedBond] = useState(null);
+    const [isAddBondModalOpen, setIsAddBondModalOpen] = useState(false);
+    const [isDeleteBondModalOpen, setIsDeleteBondModalOpen] = useState(false);
+    const [bondToDelete, setBondToDelete] = useState(null);
 
     const handleCreateBond = async (data) => {
         try {
             await createMyBond(data).unwrap();
             toast.success("Bond created successfully!");
             refetchMyBonds();
+            setIsAddBondModalOpen(false);
         } catch (error) {
             console.error("Failed to create bond:", error);
             toast.error(error?.data?.message || "Failed to create bond.");
         }
+    };
+
+    const handleEditBondClick = (bond) => {
+        setSelectedBond(bond);
+        setIsEditBondModalOpen(true);
+    };
+
+    const handleDeleteBondClick = (bond) => {
+        setBondToDelete(bond);
+        setIsDeleteBondModalOpen(true);
+    };
+
+    const handleUpdateBond = async (data) => {
+        try {
+            await updateBond({ id: data.id, data: { offer: data.offer, want: data.want, tag: data.tag } }).unwrap();
+            toast.success("Bond updated successfully!");
+            refetchMyBonds();
+            setIsEditBondModalOpen(false);
+        } catch (error) {
+            console.error("Failed to update bond:", error);
+            toast.error(error?.data?.message || "Failed to update bond.");
+        }
+    };
+
+    const handleConfirmDeleteBond = async () => {
+        if (bondToDelete) {
+            try {
+                await deleteBond(bondToDelete._id).unwrap();
+                toast.success("Bond deleted successfully!");
+                refetchMyBonds();
+                setIsDeleteBondModalOpen(false);
+            } catch (error) {
+                console.error("Failed to delete bond:", error);
+                toast.error(error?.data?.message || "Failed to delete bond.");
+            }
+        }
+    };
+
+    const handleOpenAddBondModal = () => {
+        setIsAddBondModalOpen(true);
     };
 
     return (
@@ -33,9 +86,9 @@ const AllBonds = () => {
                         <TabsTrigger value="ongoing-bonds" className="data-[state=active]:bg-primary data-[state=active]:text-white">Ongoing Bonds</TabsTrigger>
                         <TabsTrigger value="completed-bonds" className="data-[state=active]:bg-primary data-[state=active]:text-white">Completed Bonds</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="my-bonds"> 
+                    <TabsContent value="my-bonds">
                         <div className="mt-4">
-                            <MyBonds onCreateBond={handleCreateBond} isLoading={isMyBondsLoading} myBonds={myBonds} />
+                            <MyBonds isLoading={isMyBondsLoading} myBonds={myBonds} onEditBond={handleEditBondClick} onOpenAddBondModal={handleOpenAddBondModal} onDeleteBond={handleDeleteBondClick} />
                         </div>
                     </TabsContent>
                     <TabsContent value="bond-request">
@@ -55,6 +108,30 @@ const AllBonds = () => {
                     </TabsContent>
                 </Tabs>
             </PageLayout>
+
+
+            {/* Modals */}
+            <AddNewBondModal
+                isOpen={isAddBondModalOpen}
+                onOpenChange={setIsAddBondModalOpen}
+                onCreateBond={handleCreateBond}
+                isLoading={isCreatingBond}
+            />
+            <EditBondModal
+                isOpen={isEditBondModalOpen}
+                onOpenChange={setIsEditBondModalOpen}
+                onUpdateBond={handleUpdateBond}
+                isLoading={isUpdatingBond}
+                bond={selectedBond}
+            />
+            <ConfirmationModal
+                isOpen={isDeleteBondModalOpen}
+                onOpenChange={setIsDeleteBondModalOpen}
+                title="Confirm Deletion"
+                description="Are you sure you want to delete this bond? This action cannot be undone."
+                onConfirm={handleConfirmDeleteBond}
+                confirmText={isDeletingBond ? <><Loader2 className="h-4 w-4 animate-spin" /> Deleting</> : "Delete"}
+            />
         </div>
     );
 };
