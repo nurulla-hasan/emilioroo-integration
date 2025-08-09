@@ -15,7 +15,7 @@ import MatchingBondCard from "@/components/bonds/MatchingBondCard";
 
 const BondsPage = () => {
     const [showLocationFilter, setShowLocationFilter] = useState(true);
-    const [radius, setRadius] = useState([10]);
+    const [radius, setRadius] = useState([10]); 
 
     return (
         <div className="min-h-minus-header">

@@ -3,16 +3,6 @@ import { baseApi } from "./baseApi";
 const bondsApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
 
-        // create bond
-        createBond: builder.mutation({
-            query: (data) => ({
-                url: "/bond-request/create",
-                method: "POST",
-                body: data,
-            }),
-        }),
-
-
         // GET MY BONDS
         getMyBonds: builder.query({
             query: () => ({
@@ -42,25 +32,66 @@ const bondsApi = baseApi.injectEndpoints({
             providesTags: ["MATCHING_BONDS"],
         }),
 
-        // UPDATE BOND
-        updateBond: builder.mutation({
+        // CREATE MY BOND
+        createMyBond: builder.mutation({
+            query: (data) => ({
+                url: "/bond/create",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["MY_BONDS"],
+        }),
+
+        // CREATE BOND REQUEST
+        createRequestBond: builder.mutation({
+            query: (data) => ({
+                url: "/bond-request/create",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["MY_BONDS_REQUEST"],
+        }),
+
+        // UPDATE MY BOND
+        updateMyBond: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/bond/update/${id}`,
+                method: "PATCH",
+                body: data,
+            }),
+            invalidatesTags: ["MY_BONDS"],
+        }),
+
+        // DELETE MY BOND
+        deleteMyBond: builder.mutation({
+            query: (id) => ({
+                url: `/bond/delete/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["MY_BONDS"],
+        }),
+
+        // UPDATE BOND REQUEST
+        updateRequestBond: builder.mutation({
             query: ({ id, data }) => ({
                 url: `/bond-request/update/${id}`,
                 method: "PATCH",
                 body: data,
             }),
+            invalidatesTags: ["MY_BONDS_REQUEST"],
         }),
 
-        // DELETE BOND
+        // DELETE BOND REQUEST
         deleteBond: builder.mutation({
             query: (id) => ({
                 url: `/bond-request/delete/${id}`,
                 method: "DELETE",
             }),
+            invalidatesTags: ["MY_BONDS_REQUEST"],
         }),
 
 
     }),
 });
 
-export const { useCreateBondMutation, useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useUpdateBondMutation, useDeleteBondMutation } = bondsApi;
+export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteBondMutation } = bondsApi;

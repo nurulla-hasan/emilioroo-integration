@@ -5,23 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, Pencil, Plus } from "lucide-react";
 import AddNewBondModal from "./AddNewBondModal";
+import BondItemSkeleton from "./BondItemSkeleton";
 
-const giveBonds = [
-  "Teaching Math",
-  "Fixing Computer",
-  "Teaching Math",
-  "Fixing Computer",
-];
-
-const getBonds = [
-  "Spending Time Together",
-  "Cooking Help",
-  "Spending Time Together",
-  "Cooking Help",
-];
-
-const MyBonds = () => {
+const MyBonds = ({ onCreateBond, isLoading, myBonds }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCreateBond = async (data) => {
+    await onCreateBond(data);
+    setIsModalOpen(false);
+  };
 
   const BondItem = ({ text, onEdit, onDelete }) => (
     <div className="flex items-center justify-between py-2 px-4 bg-muted rounded-md hover:bg-muted/80 transition-colors mb-2">
@@ -37,12 +29,12 @@ const MyBonds = () => {
     </div>
   );
 
-  const handleEdit = (bondText) => {
-    console.log(`Edit bond: ${bondText}`);
+  const handleEdit = (bond) => {
+    console.log(`Edit bond: ${bond}`);
   };
 
-  const handleDelete = (bondText) => {
-    console.log(`Delete bond: ${bondText}`);
+  const handleDelete = (bond) => {
+    console.log(`Delete bond: ${bond}`);
   };
 
   return (
@@ -58,14 +50,20 @@ const MyBonds = () => {
             <CardTitle className="text-xl font-bold text-primary dark:text-white">Offer</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {giveBonds.map((bond, index) => (
-              <BondItem
-                key={`give-${index}`}
-                text={bond}
-                onEdit={() => handleEdit(bond)}
-                onDelete={() => handleDelete(bond)}
-              />
-            ))}
+            {isLoading ? (
+              <BondItemSkeleton count={5} />
+            ) : myBonds?.data?.result?.length > 0 ? (
+              myBonds.data.result.map((bond) => (
+                <BondItem
+                  key={bond._id}
+                  text={bond.offer}
+                  onEdit={() => handleEdit(bond)}
+                  onDelete={() => handleDelete(bond)}
+                />
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">No bonds offered yet.</p>
+            )}
           </CardContent>
         </Card>
         <Card className="bg-card p-3">
@@ -73,20 +71,29 @@ const MyBonds = () => {
             <CardTitle className="text-xl font-bold text-primary dark:text-white">Want</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {getBonds.map((bond, index) => (
-              <BondItem
-                key={`get-${index}`}
-                text={bond}
-                onEdit={() => handleEdit(bond)}
-                onDelete={() => handleDelete(bond)}
-              />
-            ))}
+            {isLoading ? (
+              <BondItemSkeleton count={5} />
+            ) : myBonds?.data?.result?.length > 0 ? (
+              myBonds.data.result.map((bond) => (
+                <BondItem
+                  key={bond._id}
+                  text={bond.want}
+                  onEdit={() => handleEdit(bond)}
+                  onDelete={() => handleDelete(bond)}
+                />
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">No bonds wanted yet.</p>
+            )}
           </CardContent>
         </Card>
       </div>
+
       <AddNewBondModal
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
+        onCreateBond={handleCreateBond}
+        isLoading={isLoading}
       />
     </div>
   );
