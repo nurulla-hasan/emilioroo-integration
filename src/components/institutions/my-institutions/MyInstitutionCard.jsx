@@ -7,11 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Users, Pencil, Trash2 } from 'lucide-react';
 
 const MyInstitutionCard = ({ institution, onEdit, onDelete }) => {
+    const handleNavigate = () => {
+        window.location.href = `/institutions/${institution._id}`;
+    };
 
     return (
         <Card className="w-full overflow-hidden bg-card flex flex-col">
             <CardHeader className="p-0 relative h-40">
-                <div className="relative h-40 w-full bg-card border-b">
+                <div onClick={handleNavigate} className="relative h-40 w-full bg-card border-b cursor-pointer">
                     <Image
                         src={
                             institution?.cover_image ||"/placeholder"}

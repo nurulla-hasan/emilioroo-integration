@@ -75,6 +75,7 @@ const institutionApi = baseApi.injectEndpoints({
         //     invalidatesTags: ["INSTITUTIONS"],
         // }),
 
+
     }),
 })
 

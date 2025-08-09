@@ -6,9 +6,15 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users } from 'lucide-react';
 import JoinInstitutionModal from "@/components/institutions/JoinInstitutionModal";
+import { useRouter } from 'next/navigation';
 
 const AllInstitutionsCard = ({ institution }) => {
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+    const router = useRouter();
+
+    const handleNavigate = () => {
+        router.push(`/institutions/${institution._id}`);
+    };
 
     return (
         <Card className="w-full overflow-hidden bg-card flex flex-col">
@@ -64,7 +70,7 @@ const AllInstitutionsCard = ({ institution }) => {
                     <Button
                         variant="outline"
                         className="flex-1 border-border text-foreground hover:bg-accent"
-                    // onClick={onOpen}
+                        onClick={handleNavigate}
                     >
                         Open
                     </Button>

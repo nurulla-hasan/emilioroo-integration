@@ -53,7 +53,7 @@ const InstitutionsPage = () => {
         <div className="min-h-minus-header">
             <PageLayout>
                 <div className="flex flex-col md:flex-row items-center justify-between">
-                    <h1 className="text-xl md:text-2xl font-bold text-primary mb-4 md:mb-0">Be part of it</h1>
+                    <h1 className="text-xl md:text-2xl font-bold text-primary mb-4 md:mb-0 dark:text-white">Be part of it</h1>
                     <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
                         <div className="relative w-full md:w-[250px]">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
