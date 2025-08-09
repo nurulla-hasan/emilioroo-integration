@@ -28,7 +28,7 @@ const MyInstitutionCard = ({ institution, onEdit, onDelete }) => {
             </CardHeader>
             <CardContent className="p-4 flex flex-col flex-grow">
                 {/* Title + Description */}
-                <h3 className="text-[17px] font-semibold text-primary">
+                <h3 className="text-[17px] font-semibold text-primary dark:text-white">
                     {institution?.name}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-2 flex-grow">

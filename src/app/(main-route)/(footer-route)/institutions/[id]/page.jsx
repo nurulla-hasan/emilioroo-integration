@@ -209,6 +209,7 @@ const SingleInstitutionPage = () => {
                 )}
             </div>
 
+            {/* Confirmation Modals */}
             <ConfirmationModal
                 isOpen={isConfirmModalOpen}
                 onOpenChange={setIsConfirmModalOpen}

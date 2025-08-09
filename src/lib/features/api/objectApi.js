@@ -1,18 +1,8 @@
 import { baseApi } from "./baseApi"
 
-
-
 const objectApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
 
-        // CREATE OBJECT
-        createObject: builder.mutation({
-            query: (data) => ({
-                url: "/project/create",
-                method: "POST",
-                body: data,
-            }),
-        }),
 
         // GET ALL OBJECTS
         getAllObjects: builder.query({
@@ -44,12 +34,23 @@ const objectApi = baseApi.injectEndpoints({
             providesTags: ["OBJECTS"],
         }),
 
+        // CREATE OBJECT
+        createObject: builder.mutation({
+            query: (data) => ({
+                url: "/project/create",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["OBJECTS"],
+        }),
+
         // UPDATE OBJECT
         updateObject: builder.mutation({
             query: (id) => ({
                 url: `/project/update/${id}`,
                 method: "PATCH",
             }),
+            invalidatesTags: ["OBJECTS"],
         }),
 
         // DELETE OBJECT
@@ -58,6 +59,7 @@ const objectApi = baseApi.injectEndpoints({
                 url: `/project/delete/${id}`,
                 method: "DELETE",
             }),
+            invalidatesTags: ["OBJECTS"],
         }),
 
     }),
