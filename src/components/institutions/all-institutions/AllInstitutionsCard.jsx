@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users } from 'lucide-react';
-import JoinInstitutionModal from "@/components/institutions/JoinInstitutionModal";
+import JoinInstitutionModal from "@/components/institutions/modal/JoinInstitutionModal";
 import { useRouter } from 'next/navigation';
 
 const AllInstitutionsCard = ({ institution }) => {

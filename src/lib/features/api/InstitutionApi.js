@@ -35,6 +35,43 @@ const institutionApi = baseApi.injectEndpoints({
             providesTags: ["INSTITUTIONS"],
         }),
 
+        // GET INSTITUTION MEMBERS
+        getInstitutionMembers: builder.query({
+            query: (id) => ({
+                url: `/institution-member/all-member/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["INSTITUTIONS"],
+        }),
+
+
+        // GET INSTITUTION CONVERSATION
+        getInstitutionConversation: builder.query({
+            query: (id) => ({
+                url: `/institution-conversation/get-all/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["INSTITUTIONS"],
+        }),
+
+        // GET SINGLE INSTITUTION CONVERSATION
+        getSingleInstitutionConversation: builder.query({
+            query: (id) => ({
+                url: `/institution-conversation/get-single/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["INSTITUTIONS"],
+        }),
+
+        // REMOVE INSTITUTION MEMBER
+        removeInstitutionMember: builder.mutation({
+            query: (memberId) => ({
+                url: `/institution-member/remove-member/${memberId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
 
         // CREATE INSTITUTION
         createInstitution: builder.mutation({
@@ -42,6 +79,35 @@ const institutionApi = baseApi.injectEndpoints({
                 url: "/institution/create",
                 method: "POST",
                 body: data,
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
+        // CREATE INSTITUTION CONVERSATION
+        createInstitutionConversation: builder.mutation({
+            query: (data) => ({
+                url: "/institution-conversation/create",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
+        // UPDATE INSTITUTION CONVERSATION
+        updateInstitutionConversation: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/institution-conversation/update/${id}`,
+                method: "PATCH",
+                body: data,
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
+        // DELETE INSTITUTION CONVERSATION
+        deleteInstitutionConversation: builder.mutation({
+            query: (id) => ({
+                url: `/institution-conversation/delete/${id}`,
+                method: "DELETE",
             }),
             invalidatesTags: ["INSTITUTIONS"],
         }),
@@ -85,6 +151,12 @@ export const {
     useGetSingleInstitutionQuery,
     useUpdateInstitutionMutation,
     useJoinInstitutionMutation,
-    // useDeleteInstitutionMutation,
+    useGetInstitutionMembersQuery,
+    useGetInstitutionConversationQuery,
+    useGetSingleInstitutionConversationQuery,
+    useRemoveInstitutionMemberMutation,
+    useCreateInstitutionConversationMutation,
+    useUpdateInstitutionConversationMutation,
+    useDeleteInstitutionConversationMutation,
 } = institutionApi
 

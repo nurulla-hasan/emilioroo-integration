@@ -11,8 +11,8 @@ import CustomPagination from "@/components/common/CustomPagination";
 import AllInstitutionsCard from "@/components/institutions/all-institutions/AllInstitutionsCard";
 import MyInstitutionsTabs from "@/components/institutions/my-institutions/MyInstitutionsTabs";
 import CardSkeleton from "@/components/common/CardSkeleton";
-import CreateInstitutionModal from "@/components/institutions/CreateInstitutionModal";
-import UpdateInstitutionModal from "@/components/institutions/UpdateInstitutionModal";
+import CreateInstitutionModal from "@/components/institutions/modal/CreateInstitutionModal";
+import UpdateInstitutionModal from "@/components/institutions/modal/UpdateInstitutionModal";
 
 const InstitutionsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");

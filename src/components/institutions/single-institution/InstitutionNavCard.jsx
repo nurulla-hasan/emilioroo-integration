@@ -26,7 +26,7 @@ const InstitutionNavCard = ({ institution }) => {
                     />
                 </div>
                 <div>
-                    <h3 className="text-sm font-semibold text-primary">
+                    <h3 className="text-sm font-semibold text-primary dark:text-white">
                         {institution?.name}
                     </h3>
                     <p className="text-xs text-muted-foreground">
