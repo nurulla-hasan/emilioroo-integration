@@ -46,7 +46,7 @@ const PlaylistPage = () => {
       </div>
 
       <Tabs defaultValue="all-playlists" className="w-full">
-        <TabsList className="inline-flex ml-auto">
+        <TabsList className="inline-flex mr-auto">
           <TabsTrigger value="all-playlists">All Playlists</TabsTrigger>
           <TabsTrigger value="my-playlists">My Playlists</TabsTrigger>
         </TabsList>
@@ -95,7 +95,7 @@ const PlaylistPage = () => {
             <div className="text-center text-red-500 p-4">Error loading your playlists.</div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6">
                 {myPlaylists.length > 0 ? (
                   myPlaylists.map((playlist) => (
                     <PlaylistCard key={playlist._id} playlist={playlist} />
