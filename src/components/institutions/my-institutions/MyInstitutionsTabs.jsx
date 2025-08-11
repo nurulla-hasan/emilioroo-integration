@@ -50,8 +50,8 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
     <Tabs defaultValue="created" className="w-full" onValueChange={setActiveTab}>
       <div className="flex justify-end mb-4">
         <TabsList className="w-fit">
-          <TabsTrigger value="created" className="data-[state=active]:bg-primary data-[state=active]:text-white">Created</TabsTrigger>
-          <TabsTrigger value="joined" className="data-[state=active]:bg-primary data-[state=active]:text-white">Joined</TabsTrigger>
+          <TabsTrigger value="created">Created</TabsTrigger>
+          <TabsTrigger value="joined">Joined</TabsTrigger>
         </TabsList>
       </div>
       <TabsContent value="created">

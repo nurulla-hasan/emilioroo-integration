@@ -73,8 +73,8 @@ const InstitutionsPage = () => {
 
                 <Tabs defaultValue="all-institutions" className="mt-12">
                     <TabsList className="w-fit">
-                        <TabsTrigger value="all-institutions" className="data-[state=active]:bg-primary data-[state=active]:text-white">All Institutions</TabsTrigger>
-                        <TabsTrigger value="my-institutions" className="data-[state=active]:bg-primary data-[state=active]:text-white">My Institutions</TabsTrigger>
+                        <TabsTrigger value="all-institutions">All Institutions</TabsTrigger>
+                        <TabsTrigger value="my-institutions">My Institutions</TabsTrigger>
                     </TabsList>
                     <TabsContent value="all-institutions">
                         <div className="mt-4">

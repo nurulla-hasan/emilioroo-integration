@@ -1,10 +1,11 @@
 
+"use client";
+
+import React from 'react';
+import AllContent from '@/components/chatting/main-page/AllContent';
+
 const ChattingPage = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+    return <AllContent />;
 };
 
 export default ChattingPage;

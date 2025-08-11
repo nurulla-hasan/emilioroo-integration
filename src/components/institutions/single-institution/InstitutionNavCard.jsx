@@ -22,7 +22,7 @@ const InstitutionNavCard = ({ institution }) => {
 
     return (
         <>
-            <Card className="w-full overflow-hidden bg-card flex flex-col cursor-pointer" onClick={handleNavigate}>
+            <Card className="w-full overflow-hidden bg-card flex flex-col cursor-pointer hover:bg-muted" onClick={handleNavigate}>
                 <CardContent className="p-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                         <div className="relative h-12 w-12 bg-card border rounded-md flex-shrink-0">
@@ -30,7 +30,7 @@ const InstitutionNavCard = ({ institution }) => {
                                 src={institution?.cover_image || "/placeholder.png"}
                                 alt={institution?.name || "Institution cover"}
                                 fill
-                                sizes="48px"
+                                sizes="100px"
                                 className="object-cover rounded-md"
                                 priority
                             />

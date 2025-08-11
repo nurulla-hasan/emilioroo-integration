@@ -81,10 +81,10 @@ const AllBonds = () => {
             <PageLayout>
                 <Tabs defaultValue="my-bonds" className="w-full">
                     <TabsList className="flex flex-wrap justify-center md:grid md:grid-cols-4 w-full">
-                        <TabsTrigger value="my-bonds" className="data-[state=active]:bg-primary data-[state=active]:text-white">My Bonds</TabsTrigger>
-                        <TabsTrigger value="bond-request" className="data-[state=active]:bg-primary data-[state=active]:text-white">Bond Request</TabsTrigger>
-                        <TabsTrigger value="ongoing-bonds" className="data-[state=active]:bg-primary data-[state=active]:text-white">Ongoing Bonds</TabsTrigger>
-                        <TabsTrigger value="completed-bonds" className="data-[state=active]:bg-primary data-[state=active]:text-white">Completed Bonds</TabsTrigger>
+                        <TabsTrigger value="my-bonds">My Bonds</TabsTrigger>
+                        <TabsTrigger value="bond-request">Bond Request</TabsTrigger>
+                        <TabsTrigger value="ongoing-bonds">Ongoing Bonds</TabsTrigger>
+                        <TabsTrigger value="completed-bonds">Completed Bonds</TabsTrigger>
                     </TabsList>
                     <TabsContent value="my-bonds">
                         <div className="mt-4">
