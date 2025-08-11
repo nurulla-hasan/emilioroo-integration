@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Play, Pause, Heart, Eye, Star, Clock } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { playAudio, pauseAudio } from '@/lib/features/slices/audio/audioSlice';
+import useFavoriteToggle from "@/hooks/useFavoriteToggle";
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
@@ -23,6 +24,7 @@ const formatDuration = (seconds) => {
 const AudioCard = ({ audio }) => {
     const dispatch = useDispatch();
     const { currentAudio, isPlaying } = useSelector((state) => state.audio);
+    const { toggleFavorite } = useFavoriteToggle();
 
     const isThisAudioPlaying = currentAudio?._id === audio._id && isPlaying;
 
@@ -33,6 +35,11 @@ const AudioCard = ({ audio }) => {
         } else {
             dispatch(playAudio(audio));
         }
+    };
+
+    const handleFavoriteClick = (e) => {
+        e.stopPropagation();
+        toggleFavorite(audio._id);
     };
 
     return (
@@ -63,7 +70,7 @@ const AudioCard = ({ audio }) => {
                                     size="icon"
                                     variant="ghost"
                                     className="absolute top-2 right-2 bg-black/20 hover:bg-white/25 text-white backdrop-blur-sm"
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={handleFavoriteClick}
                                     aria-label="Add to favorites"
                                 >
                                     <Heart className="h-5 w-5" />

@@ -129,10 +129,10 @@ const chattingApi = baseApi.injectEndpoints({
         }),
 
         // ADD AND DELETE BOOKMARK AUDIO
-        deleteBookmarkAudio: builder.mutation({
+        favoriteToggleAudio: builder.mutation({
             query: (id) => ({
                 url: `/audio-bookmark/add-delete/${id}`,
-                method: "DELETE",
+                method: "POST",
             }),
             invalidatesTags: ["AUDIO"],
         }),
@@ -183,7 +183,7 @@ export const {
     useUpdateAudioMutation,
     useDeleteAudioMutation,
     useGiveRatingAudioMutation,
-    useDeleteBookmarkAudioMutation,
+    useFavoriteToggleAudioMutation,
     useCreatePlaylistMutation,
     useUpdatePlaylistMutation,
     useDeletePlaylistMutation,
