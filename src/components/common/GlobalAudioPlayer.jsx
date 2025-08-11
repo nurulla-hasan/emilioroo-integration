@@ -31,13 +31,20 @@ const GlobalAudioPlayer = () => {
     useEffect(() => {
         if (audioRef.current) {
             if (currentAudio) {
-                audioRef.current.src = currentAudio.audio_url;
-                audioRef.current.volume = 1; 
-                audioRef.current.load();
+                // Check if a new audio is being set (different URL)
+                if (audioRef.current.src !== currentAudio.audio_url) {
+                    audioRef.current.src = currentAudio.audio_url;
+                    audioRef.current.load(); // Load only when audio source changes
+                }
+                audioRef.current.volume = 1; // Ensure volume is set
+
                 if (isPlaying) {
-                    audioRef.current.play().catch(e => console.log("Error playing new audio:", e));
+                    audioRef.current.play().catch(e => console.log("Error playing audio:", e));
+                } else {
+                    audioRef.current.pause();
                 }
             } else {
+                // No current audio, so pause and clear source
                 audioRef.current.pause();
                 audioRef.current.src = "";
             }
@@ -87,7 +94,7 @@ const GlobalAudioPlayer = () => {
     }
 
     return (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 max-w-xl w-[calc(100%-2rem)] bg-card border shadow-lg p-2 rounded-full flex items-center justify-between z-50">
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 max-w-xl w-[calc(100%-2rem)] bg-white/10 backdrop-blur-sm border p-2 rounded-full flex items-center justify-between z-50">
             <audio
                 ref={audioRef}
                 onTimeUpdate={handleTimeUpdate}

@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { useGetSinglePlaylistQuery } from "@/lib/features/api/chattingApi";
 import { useDispatch, useSelector } from "react-redux";
 import { playAudio, pauseAudio } from "@/lib/features/slices/audio/audioSlice";
-import { ListMusic, Clock, User, Eye, Star, Play, Trash2, Edit, Pause } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Eye, Star, Play, Trash2, Edit, Pause } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -154,7 +155,7 @@ const PlaylistDetailPage = () => {
         <h2 className="text-xl font-semibold mb-4">Audios in this Playlist</h2>
         {playlist.audios && playlist.audios.length > 0 ? (
           playlist.audios.map((audio) => (
-            <div key={audio._id} className="flex items-center bg-card rounded-lg shadow-sm p-4">
+            <div key={audio._id} className="flex items-center bg-card border rounded-lg p-4">
               <div className="relative w-24 h-24 rounded-md overflow-hidden flex-shrink-0 mr-4">
                 <Image
                   src={audio.cover_image || "/placeholder.png"}
@@ -168,7 +169,7 @@ const PlaylistDetailPage = () => {
                 <p className="text-sm text-gray-600 truncate mb-2">{audio.description}</p>
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   {audio.tags && audio.tags.map((tag, idx) => (
-                    <span key={idx} className="bg-gray-100 px-2 py-1 rounded-full">{tag}</span>
+                    <Badge key={idx} variant="outline">{tag}</Badge>
                   ))}
                 </div>
               </div>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ListMusic, Share2 } from "lucide-react";
+import { Eye, ListMusic, Share2 } from "lucide-react";
 import Link from "next/link"; // Import Link
 
 const PlaylistCard = ({ playlist }) => {
@@ -31,10 +31,10 @@ const PlaylistCard = ({ playlist }) => {
           )} */}
         </div>
         <div className="flex justify-between gap-2">
-          <Link href={`/chatting/playlist/${playlist._id}`} passHref>
-            <Button size={"sm"} className="w-26 bg-primary text-primary-foreground hover:bg-primary/90 dark:text-white">View</Button>
+          <Link className="flex justify-center rounded-md items-center flex-1 bg-primary text-primary-foreground hover:bg-primary/90 dark:text-white" href={`/chatting/playlist/${playlist._id}`} passHref>
+            <Button size={"sm"}> <Eye className="w-4 h-4 mr-1" />View</Button>
           </Link>
-          <Button size={"sm"} variant="outline" className="w-28 border-secondary text-secondary-foreground hover:bg-secondary/80">
+          <Button size={"sm"} variant="outline" className="flex-1 border-secondary text-secondary-foreground hover:bg-secondary/80">
             <Share2 className="w-4 h-4 mr-1" />
             Share
           </Button>
