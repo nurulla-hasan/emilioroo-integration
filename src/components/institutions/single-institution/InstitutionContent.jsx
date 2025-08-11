@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Trash2, Plus } from 'lucide-react';
-import ConversationTopics from './ConversationTopics';
+import ConversationTopics from './ConversationTopics'; 
 
 const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEditTopic, onDeleteTopic, onRemoveMember, onCreateConversationClick, isLoading, error }) => {
     return (

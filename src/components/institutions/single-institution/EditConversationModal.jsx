@@ -5,33 +5,36 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from 'lucide-react';
 
 const EditConversationModal = ({ isOpen, onOpenChange, onUpdateConversation, isLoading, topic }) => {
     const [name, setName] = useState("");
+    const [isPublic, setIsPublic] = useState(false);
 
     useEffect(() => {
         if (topic) {
             setName(topic.name);
+            setIsPublic(topic.isPublic || false);
         }
     }, [topic]);
 
     const handleSubmit = () => {
-        onUpdateConversation({ ...topic, name });
+        onUpdateConversation({ ...topic, name, isPublic });
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Edit conversation name</DialogTitle>
+                    <DialogTitle>Edit conversation</DialogTitle>
                     <DialogDescription>
-                        Give your conversation a new name. You can change this later.
+                        Update the conversation name and visibility.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="flex flex-col gap-2">
-                        <Label htmlFor="name" className="text-right">
+                        <Label htmlFor="name">
                             Name
                         </Label>
                         <Input
@@ -41,6 +44,16 @@ const EditConversationModal = ({ isOpen, onOpenChange, onUpdateConversation, isL
                             className="col-span-3"
                             placeholder="e.g., General Chat"
                         />
+                    </div>
+                    <div className="flex items-center space-x-2 mt-2">
+                        <Checkbox
+                            id="isPublic"
+                            checked={isPublic}
+                            onCheckedChange={setIsPublic}
+                        />
+                        <Label htmlFor="isPublic" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            Public (anyone can view this conversation)
+                        </Label>
                     </div>
                 </div>
                 <DialogFooter>

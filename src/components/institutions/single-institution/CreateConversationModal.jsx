@@ -1,17 +1,21 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from 'lucide-react';
 
 const CreateConversationModal = ({ isOpen, onOpenChange, onCreateConversation, isLoading }) => {
-    const [name, setName] = React.useState("");
+    const [name, setName] = useState("");
+    const [isPublic, setIsPublic] = useState(false);
 
     const handleSubmit = () => {
-        onCreateConversation({ name });
+        onCreateConversation({ name, isPublic });
+        setName("");
+        setIsPublic(false);
     };
 
     return (
@@ -20,12 +24,12 @@ const CreateConversationModal = ({ isOpen, onOpenChange, onCreateConversation, i
                 <DialogHeader>
                     <DialogTitle>Create a new conversation</DialogTitle>
                     <DialogDescription>
-                        Give your conversation a name. You can change this later.
+                        Give your conversation a name and set its visibility.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="flex flex-col gap-2">
-                        <Label htmlFor="name" className="text-right">
+                        <Label htmlFor="name">
                             Name
                         </Label>
                         <Input
@@ -36,14 +40,24 @@ const CreateConversationModal = ({ isOpen, onOpenChange, onCreateConversation, i
                             placeholder="e.g., General Chat"
                         />
                     </div>
+                    <div className="flex items-center space-x-2 mt-2">
+                        <Checkbox
+                            id="isPublic-create"
+                            checked={isPublic}
+                            onCheckedChange={setIsPublic}
+                        />
+                        <Label htmlFor="isPublic-create" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            Public (anyone can view this conversation)
+                        </Label>
+                    </div>
                 </div>
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button size={"sm"} variant="outline">Cancel</Button>
                     </DialogClose>
-                    <Button size={"sm"} onClick={handleSubmit} disabled={isLoading}>
+                    <Button size={"sm"} onClick={handleSubmit} disabled={isLoading || !name.trim()}>
                         {isLoading ? (
-                            <><Loader2 className="h-4 w-4 animate-spin" /> Creating</>
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating</>
                         ) : (
                             "Create"
                         )}

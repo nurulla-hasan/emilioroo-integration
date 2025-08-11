@@ -125,7 +125,7 @@ const SingleInstitutionPage = () => {
 
     const handleCreateConversation = async (data) => {
         try {
-            await createInstitutionConversation({ name: data.name, institution: id }).unwrap();
+            await createInstitutionConversation({ ...data, institution: id }).unwrap();
             toast.success("Conversation created successfully!");
             refetchInstitutionConversations();
             setIsCreateConversationModalOpen(false);
@@ -137,7 +137,7 @@ const SingleInstitutionPage = () => {
 
     const handleUpdateConversation = async (data) => {
         try {
-            await updateInstitutionConversation({ id: data._id, data: { name: data.name } }).unwrap();
+            await updateInstitutionConversation({ id: data._id, data: { name: data.name, isPublic: data.isPublic } }).unwrap();
             toast.success("Conversation updated successfully!");
             refetchInstitutionConversations();
             setIsEditConversationModalOpen(false);
