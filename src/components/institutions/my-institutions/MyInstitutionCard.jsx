@@ -63,14 +63,16 @@ const MyInstitutionCard = ({ institution, onEdit, onDelete }) => {
                 {/* Actions */}
                 <div className="mt-4 flex gap-2">
                     <Button
-                        variant="outline"
-                        className="flex-1 border-border text-foreground hover:bg-accent"
+                        // variant="outline"
+                        size={"sm"}
+                        className="flex-1"
                         onClick={() => onEdit?.(institution)}
                     >
                         <Pencil className="h-4 w-4 mr-2" /> Edit
                     </Button>
                     <Button
-                        variant="destructive"
+                        variant="outline"
+                        size={"sm"}
                         className="flex-1"
                         onClick={() => onDelete?.(institution._id)}
                     >

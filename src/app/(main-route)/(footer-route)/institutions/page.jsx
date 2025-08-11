@@ -85,7 +85,7 @@ const InstitutionsPage = () => {
                                     ))}
                                 </div>
                             )}
-                            {isError && <p className="text-red-500">Error loading institutions.</p>}
+                            {isError && <p className="text-red-500">Error fatching institutions.</p>}
                             {!isLoading && !isError && data?.data?.result?.length === 0 && (
                                 <p>No institutions found.</p>
                             )}

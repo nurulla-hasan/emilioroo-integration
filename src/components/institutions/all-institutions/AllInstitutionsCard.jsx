@@ -69,12 +69,14 @@ const AllInstitutionsCard = ({ institution }) => {
                 <div className="mt-4 flex gap-2">
                     <Button
                         variant="outline"
+                        size="sm"
                         className="flex-1 border-border text-foreground hover:bg-accent"
                         onClick={handleNavigate}
                     >
                         Open
                     </Button>
                     <Button
+                        size="sm"
                         onClick={() => setIsJoinModalOpen(true)} // Open modal on click
                         className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm dark:text-white"
                     >
