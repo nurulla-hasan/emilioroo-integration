@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useGetAllInstitutionQuery } from "@/lib/features/api/InstitutionApi"
 import MyInstitutionCard from "@/components/institutions/my-institutions/MyInstitutionCard"
 import CustomPagination from "@/components/common/CustomPagination"
-import CardSkeleton from "@/components/common/CardSkeleton"
+import CardSkeleton from "@/components/skeleton/CardSkeleton"
 
 export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEditInstitution }) {
   const [currentPage, setCurrentPage] = useState(1)

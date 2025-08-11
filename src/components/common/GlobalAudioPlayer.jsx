@@ -94,7 +94,7 @@ const GlobalAudioPlayer = () => {
     }
 
     return (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 max-w-xl w-[calc(100%-2rem)] bg-white/10 backdrop-blur-sm border p-2 rounded-full flex items-center justify-between z-50">
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 max-w-xl w-[calc(100%-2rem)] bg-card border p-2 rounded-full flex items-center justify-between z-50">
             <audio
                 ref={audioRef}
                 onTimeUpdate={handleTimeUpdate}

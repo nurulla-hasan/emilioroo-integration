@@ -18,11 +18,14 @@ const chattingApi = baseApi.injectEndpoints({
         }),
 
         // GET ALL AUDIO
-        getAllAudio: builder.query({
-            query: () => ({
-                url: "/audio/all-audios",
-                method: "GET",
-            }),
+                getAllAudio: builder.query({
+            query: (arg) => {
+                const params = new URLSearchParams(arg);
+                return {
+                    url: `/audio/all-audios?${params.toString()}`,
+                    method: "GET",
+                };
+            },
             providesTags: ["AUDIO"],
         }),
 

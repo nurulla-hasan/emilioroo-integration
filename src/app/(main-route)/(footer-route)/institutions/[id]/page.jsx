@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Facebook, Instagram, Loader2 } from "lucide-react";
 import InstitutionNavCard from "@/components/institutions/single-institution/InstitutionNavCard";
-import InstitutionNavCardSkeleton from "@/components/institutions/single-institution/InstitutionNavCardSkeleton";
+import InstitutionNavCardSkeleton from "@/components/skeleton/InstitutionNavCardSkeleton";
 import Mediators from "@/components/institutions/single-institution/Mediators";
 import InstitutionContent from "@/components/institutions/single-institution/InstitutionContent";
 import PostFeed from "@/components/institutions/single-institution/posts/PostFeed";

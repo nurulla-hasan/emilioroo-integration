@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, Pencil, Plus } from "lucide-react";
-import BondItemSkeleton from "./BondItemSkeleton";
+import BondItemSkeleton from "../../../skeleton/BondItemSkeleton";
 
 const MyBonds = ({ isLoading, myBonds, onEditBond, onOpenAddBondModal, onDeleteBond }) => {
   const BondItem = ({ text, onEdit, onDelete }) => (

@@ -4,24 +4,7 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetBookmarkAudioQuery } from "@/lib/features/api/chattingApi";
 import AudioCard from "@/components/chatting/AudioCard";
-import { Skeleton } from "@/components/ui/skeleton";
-
-const AudioCardSkeleton = () => (
-    <div className="flex flex-col gap-2 p-4 border rounded-lg">
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-6 w-3/4" />
-        <div className="flex gap-2">
-            <Skeleton className="h-5 w-16" />
-            <Skeleton className="h-5 w-16" />
-        </div>
-        <Skeleton className="h-px w-full" />
-        <div className="flex justify-between">
-            <Skeleton className="h-5 w-12" />
-            <Skeleton className="h-5 w-12" />
-            <Skeleton className="h-5 w-12" />
-        </div>
-    </div>
-);
+import AudioCardSkeleton from '@/components/skeleton/AudioCardSkeleton';
 
 const FavoritePage = () => {
     const { data: bookmarkData, isLoading, isError, error } = useGetBookmarkAudioQuery();

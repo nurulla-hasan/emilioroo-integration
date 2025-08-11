@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useGetAllPlaylistQuery, useGetMyPlaylistQuery } from "@/lib/features/api/chattingApi"; // Import useGetMyPlaylistQuery
 import PlaylistCard from "@/components/chatting/playlist/PlaylistCard";
-import PlaylistCardSkeleton from "@/components/chatting/playlist/PlaylistCardSkeleton";
+import PlaylistCardSkeleton from "@/components/skeleton/PlaylistCardSkeleton";
 import CustomPagination from "@/components/common/CustomPagination";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -39,7 +39,7 @@ const PlaylistPage = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="px-4 lg:px-0">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">My Playlists</h1>
         <Button className="bg-primary dark:text-white"><Plus className="w-4 h-4" /> Create new playlist</Button>

@@ -183,7 +183,7 @@ const PlaylistDetailPage = () => {
                 </Button>
                 <div className="flex items-center text-sm text-gray-600">
                   <Eye className="w-4 h-4 mr-1" /> {audio.totalPlay || 0}k
-                </div>
+                  </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Star className="w-4 h-4 mr-1" /> {audio.totalRating || 0}
                 </div>
