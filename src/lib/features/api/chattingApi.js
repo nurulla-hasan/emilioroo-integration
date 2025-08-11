@@ -5,6 +5,18 @@ import { baseApi } from "./baseApi";
 const chattingApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
 
+        // GET ALL TOPICS
+        getAllTopics: builder.query({
+            query: (arg) => {
+                const params = new URLSearchParams(arg);
+                return {
+                    url: `/topic/all-topics?${params.toString()}`,
+                    method: "GET",
+                };
+            },
+            providesTags: ["AUDIO"],
+        }),
+
         // GET ALL AUDIO
         getAllAudio: builder.query({
             query: () => ({
@@ -42,20 +54,26 @@ const chattingApi = baseApi.injectEndpoints({
         }),
 
         // GET ALL PLAYLIST
-        getAllPlaylist: builder.query({
-            query: () => ({
-                url: "/playlist/all-playlists",
-                method: "GET",
-            }),
+                getAllPlaylist: builder.query({
+            query: (arg) => {
+                const params = new URLSearchParams(arg);
+                return {
+                    url: `/playlist/all-playlists?${params.toString()}`,
+                    method: "GET",
+                };
+            },
             providesTags: ["AUDIO"],
         }),
 
         // GET MY PLAYLIST
-        getMyPlaylist: builder.query({
-            query: () => ({
-                url: "/playlist/my-playlists",
-                method: "GET",
-            }),
+                getMyPlaylist: builder.query({
+            query: (arg) => {
+                const params = new URLSearchParams(arg);
+                return {
+                    url: `/playlist/my-playlists?${params.toString()}`,
+                    method: "GET",
+                };
+            },
             providesTags: ["AUDIO"],
         }),
 
@@ -150,6 +168,7 @@ const chattingApi = baseApi.injectEndpoints({
 })
 
 export const {
+    useGetAllTopicsQuery,
     useGetAllAudioQuery,
     useGetMyAudioQuery,
     useGetSingleAudioQuery,

@@ -35,7 +35,7 @@ const GlobalAudioPlayer = () => {
                 audioRef.current.volume = 1; 
                 audioRef.current.load();
                 if (isPlaying) {
-                    audioRef.current.play().catch(e => console.error("Error playing new audio:", e));
+                    audioRef.current.play().catch(e => console.log("Error playing new audio:", e));
                 }
             } else {
                 audioRef.current.pause();
