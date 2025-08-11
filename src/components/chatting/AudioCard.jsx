@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, Heart, Eye, Star, Clock } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { playAudio, pauseAudio } from '@/lib/features/slices/audio/audioSlice';
 
 const formatDuration = (seconds) => {
     if (isNaN(seconds) || seconds < 0) {
@@ -16,17 +18,17 @@ const formatDuration = (seconds) => {
 };
 
 const AudioCard = ({ audio }) => {
-    const [isPlaying, setIsPlaying] = useState(false);
-    const audioRef = useRef(null);
+    const dispatch = useDispatch();
+    const { currentAudio, isPlaying } = useSelector((state) => state.audio);
+
+    const isThisAudioPlaying = currentAudio?._id === audio._id && isPlaying;
 
     const handlePlayPause = (e) => {
         e.stopPropagation();
-        if (isPlaying) {
-            audioRef.current.pause();
-            setIsPlaying(false);
+        if (isThisAudioPlaying) {
+            dispatch(pauseAudio());
         } else {
-            audioRef.current.play();
-            setIsPlaying(true);
+            dispatch(playAudio(audio));
         }
     };
 
@@ -54,7 +56,7 @@ const AudioCard = ({ audio }) => {
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-white/20 text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         onClick={handlePlayPause}
                     >
-                        {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
+                        {isThisAudioPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
                     </Button>
                 </div>
             </CardContent>
@@ -83,7 +85,6 @@ const AudioCard = ({ audio }) => {
                     </div>
                 </div>
             </CardFooter>
-            <audio ref={audioRef} src={audio.audio_url} onEnded={() => setIsPlaying(false)} />
         </Card>
     );
 };

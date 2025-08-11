@@ -2,19 +2,21 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import authReducer from './features/slices/auth/authSlice';
+import audioReducer from './features/slices/audio/audioSlice';
 import { baseApi } from './features/api/baseApi';
 
 
 
 const rootReducer = combineReducers({
     auth: authReducer,
+    audio: audioReducer,
     [baseApi.reducerPath]: baseApi.reducer,
 });
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['auth'],
+    whitelist: ['auth', 'audio'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
