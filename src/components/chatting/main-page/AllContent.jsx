@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Mic } from 'lucide-react';
+import { Mic, Plus } from 'lucide-react';
 import UploadAudioModal from './UploadAudioModal';
 
 const AllContent = () => {
@@ -13,12 +12,11 @@ const AllContent = () => {
         <>
             <div>
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold">Real conversation between people</h1>
+                    <h1 className="text-2xl font-bold text-primary dark:text-white">Real conversation between people</h1>
                     <div className="flex items-center gap-2">
-                        <Input placeholder="Search institute"/>
-                        <Button onClick={() => setIsModalOpen(true)}>+ Upload New Audio</Button>
+                        <Button onClick={() => setIsModalOpen(true)}><Plus/> Upload New Audio</Button>
                         <Button variant="outline" size="icon">
-                            <Mic className="h-4 w-4" />
+                            <Mic/>
                         </Button>
                     </div>
                 </div>

@@ -8,8 +8,10 @@ import CustomPagination from "@/components/common/CustomPagination";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
+import CreatePlaylistModal from "@/components/chatting/playlist/CreatePlaylistModal";
 
 const PlaylistPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // State for All Playlists
   const [allPage, setAllPage] = useState(1);
   const [allLimit] = useState(10);
@@ -39,10 +41,10 @@ const PlaylistPage = () => {
   };
 
   return (
-    <div className="px-4 lg:px-0">
+    <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">My Playlists</h1>
-        <Button className="bg-primary dark:text-white"><Plus className="w-4 h-4" /> Create new playlist</Button>
+        <h1 className="text-2xl font-bold text-primary dark:text-white">My Playlists</h1>
+        <Button onClick={() => setIsModalOpen(true)}><Plus /> Create new playlist</Button>
       </div>
 
       <Tabs defaultValue="all-playlists" className="w-full">
@@ -117,6 +119,8 @@ const PlaylistPage = () => {
           )}
         </TabsContent>
       </Tabs>
+
+      <CreatePlaylistModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
     </div>
   );
 };

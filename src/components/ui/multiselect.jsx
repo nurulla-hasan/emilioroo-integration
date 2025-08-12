@@ -5,7 +5,7 @@ import { X, Check, ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
@@ -64,7 +64,9 @@ export function MultipleSelector({
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
         <Command>
+          <CommandInput placeholder="Search..." />
           <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
               {options?.map((option) => (
                 <CommandItem

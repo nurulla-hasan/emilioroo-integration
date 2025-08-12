@@ -13,16 +13,16 @@ const FavoritePage = () => {
     const favouriteIds = bookmarks?.length > 0 ? bookmarks?.map((favorite) => favorite?.audio?._id) : []
 
     return (
-        <div>
+        <div className='px-4 lg:px-0'>
             <Tabs defaultValue="audio" className="p-0">
-                <div className="flex justify-between items-center mb-6 px-6">
-                    <h1 className="text-2xl font-bold">My Favorite</h1>
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl font-bold text-primary dark:text-white">My Favorite</h1>
                     <TabsList>
                         <TabsTrigger value="audio">Audio</TabsTrigger>
                         <TabsTrigger value="playlist">Playlist</TabsTrigger>
                     </TabsList>
                 </div>
-                <TabsContent value="audio" className="px-6">
+                <TabsContent value="audio">
                     {
                         isLoading ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -41,7 +41,7 @@ const FavoritePage = () => {
                         )
                     }
                 </TabsContent>
-                <TabsContent value="playlist" className="px-6">
+                <TabsContent value="playlist">
                     <div className="bg-gray-100 dark:bg-gray-800 h-96 rounded-lg flex items-center justify-center">
                         <p className="text-muted-foreground">Favorite playlist content will be displayed here.</p>
                     </div>
