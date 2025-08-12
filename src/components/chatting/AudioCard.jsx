@@ -21,7 +21,7 @@ const formatDuration = (seconds) => {
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
-const AudioCard = ({ audio }) => {
+const AudioCard = ({ audio, favouriteIds }) => {
     const dispatch = useDispatch();
     const { currentAudio, isPlaying } = useSelector((state) => state.audio);
     const { toggleFavorite } = useFavoriteToggle();
@@ -56,8 +56,9 @@ const AudioCard = ({ audio }) => {
                         src={audio.cover_image || "/placeholder.svg?height=320&width=640&query=music+cover"}
                         alt={audio.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, 400px"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        priority={false}
+                        priority
                     />
                     {/* Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-black/10 transition-colors duration-300 group-hover:from-black/50 group-hover:via-black/30 group-hover:to-black/10" />
@@ -73,7 +74,7 @@ const AudioCard = ({ audio }) => {
                                     onClick={handleFavoriteClick}
                                     aria-label="Add to favorites"
                                 >
-                                    <Heart className="h-5 w-5" />
+                                    <Heart className={`w-4 h-4 ${favouriteIds.includes(audio._id) ? "fill-red-500" : ""}`} />
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent side="left" className="text-xs">

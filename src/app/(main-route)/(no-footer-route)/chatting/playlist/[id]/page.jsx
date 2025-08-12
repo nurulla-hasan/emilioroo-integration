@@ -100,7 +100,7 @@ const PlaylistDetailPage = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="px-4 lg:px-0">
       {/* Banner Image */}
       <div className="relative w-full h-48 rounded-lg overflow-hidden mb-6">
         <Image

@@ -128,7 +128,7 @@ const chattingApi = baseApi.injectEndpoints({
             invalidatesTags: ["AUDIO"],
         }),
 
-        // ADD AND DELETE BOOKMARK AUDIO
+        // TOGGLE FAVORITE AUDIO
         favoriteToggleAudio: builder.mutation({
             query: (id) => ({
                 url: `/audio-bookmark/add-delete/${id}`,

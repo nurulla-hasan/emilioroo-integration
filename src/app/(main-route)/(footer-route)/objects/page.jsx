@@ -2,37 +2,37 @@
 import PageLayout from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useGetAllObjectsQuery } from '@/lib/features/api/objectApi';
+// import { useGetAllObjectsQuery } from '@/lib/features/api/objectApi';
 import { Plus, Search } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const ObjectsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize] = useState(12);
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    // const [searchTerm, setSearchTerm] = useState("");
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const [pageSize] = useState(12);
+    // const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-    const { data, isLoading, isError } = useGetAllObjectsQuery([
-        { name: "page", value: currentPage },
-        { name: "limit", value: pageSize },
-        { name: "searchTerm", value: searchTerm },
-    ]);
+    // const { data, isLoading, isError } = useGetAllObjectsQuery([
+    //     { name: "page", value: currentPage },
+    //     { name: "limit", value: pageSize },
+    //     { name: "searchTerm", value: searchTerm },
+    // ]);
 
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            setSearchTerm(searchQuery);
-            setCurrentPage(1)
-        }, 600);
+    // useEffect(() => {
+    //     const timeoutId = setTimeout(() => {
+    //         setSearchTerm(searchQuery);
+    //         setCurrentPage(1)
+    //     }, 600);
 
-        return () => clearTimeout(timeoutId);
-    }, [searchQuery])
+    //     return () => clearTimeout(timeoutId);
+    // }, [searchQuery])
 
-    const totalPages = Math.ceil((data?.data?.meta?.total || 0) / pageSize) || 1;
+    // const totalPages = Math.ceil((data?.data?.meta?.total || 0) / pageSize) || 1;
 
-    const handleOpenCreateModal = () => {
-        setIsCreateModalOpen(true);
-    };
+    // const handleOpenCreateModal = () => {
+    //     setIsCreateModalOpen(true);
+    // };
 
     return (
         <div className='min-h-minus-header'>
@@ -49,7 +49,7 @@ const ObjectsPage = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <Button className="w-full md:w-auto flex items-center gap-2" onClick={handleOpenCreateModal}>
+                        <Button className="w-full md:w-auto flex items-center gap-2">
                             <Plus className="h-4 w-4" />
                             Create New Project
                         </Button>

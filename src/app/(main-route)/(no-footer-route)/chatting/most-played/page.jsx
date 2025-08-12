@@ -5,12 +5,14 @@ import { useGetAllAudioQuery } from "@/lib/features/api/chattingApi";
 import AudioCard from "@/components/chatting/AudioCard";
 import AudioCardSkeleton from "@/components/skeleton/AudioCardSkeleton";
 import CustomPagination from "@/components/common/CustomPagination";
+import useGetFavoriteIds from "@/hooks/useGetFavoriteIds";
 
 const MostPlayedPage = () => {
   const [page, setPage] = useState(1);
-  const [limit] = useState(10); // You can adjust the limit as needed
+  const [limit] = useState(10);
 
   const { data, isLoading, isError } = useGetAllAudioQuery({ page, limit });
+  const [favouriteIds] = useGetFavoriteIds();
 
   const audios = data?.data?.result || [];
   const meta = data?.data?.meta || {};
@@ -42,7 +44,7 @@ const MostPlayedPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {audios.length > 0 ? (
           audios.map((audio) => (
-            <AudioCard key={audio._id} audio={audio} />
+            <AudioCard key={audio._id} audio={audio} favouriteIds={favouriteIds} />
           ))
         ) : (
           <p className="col-span-full text-center text-gray-500">No most played audios found.</p>

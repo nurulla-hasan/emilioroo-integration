@@ -10,6 +10,8 @@ const FavoritePage = () => {
     const { data: bookmarkData, isLoading, isError, error } = useGetBookmarkAudioQuery();
     const bookmarks = bookmarkData?.data || [];
 
+    const favouriteIds = bookmarks?.length > 0 ? bookmarks?.map((favorite) => favorite?.audio?._id) : []
+
     return (
         <div>
             <Tabs defaultValue="audio" className="p-0">
@@ -31,7 +33,7 @@ const FavoritePage = () => {
                         ) : bookmarks.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                 {bookmarks.map(bookmark => (
-                                    <AudioCard key={bookmark._id} audio={bookmark.audio} />
+                                    <AudioCard key={bookmark._id} audio={bookmark.audio} favouriteIds={favouriteIds} />
                                 ))}
                             </div>
                         ) : (

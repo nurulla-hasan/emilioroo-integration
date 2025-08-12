@@ -47,7 +47,7 @@ const DonateUs = () => {
                                     key={amount}
                                     onClick={() => handleSelectAmount(amount)}
                                     className={cn(
-                                        "w-[110px] py-2 rounded-sm text-sm font-medium focus:outline-none",
+                                        "w-[110px] py-2 text-sm font-medium focus:outline-none",
                                         selectedAmounts.includes(amount)
                                             ? "bg-primary text-white hover:bg-primary/80 hover:text-white dark:bg-primary dark:text-white"
                                             : "bg-card border border-primary hover:bg-primary/30"
@@ -76,7 +76,7 @@ const DonateUs = () => {
                         <Button
                             onClick={handleDonate}
                             disabled={selectedAmounts.length === 0 && Number(customAmount) <= 0 || isLoading}
-                            className={`mt-5 w-3/6 font-medium py-2 rounded-sm text-xs transition focus:outline-none ${selectedAmounts.length > 0 || Number(customAmount) > 0 ? "bg-primary " : "bg-gray-400  cursor-not-allowed"}`}
+                            className={`mt-5 w-3/6 font-medium py-2 text-xs transition focus:outline-none ${selectedAmounts.length > 0 || Number(customAmount) > 0 ? "bg-primary " : "bg-gray-400  cursor-not-allowed"}`}
                         >
                             {isLoading && <Loader2 className=" h-4 w-4 animate-spin" />}
                             Donate now
