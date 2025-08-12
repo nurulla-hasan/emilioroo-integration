@@ -10,12 +10,16 @@ import { Badge } from "@/components/ui/badge";
 import { Eye, Star, Play, Trash2, Edit, Pause } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import UpdatePlaylistModal from "@/components/chatting/playlist/UpdatePlaylistModal";
+import { useState } from "react";
 
 const PlaylistDetailPage = () => {
   const params = useParams();
   const playlistId = params.id;
   const dispatch = useDispatch(); // Initialize useDispatch
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Fetch playlist data
   const { data, isLoading, isError } = useGetSinglePlaylistQuery(playlistId);
   const { currentAudio, isPlaying } = useSelector((state) => state.audio); // Access Redux audio state
 
@@ -136,7 +140,7 @@ const PlaylistDetailPage = () => {
           <Button variant="outline" className="border-destructive text-destructive hover:bg-destructive/10">
             <Trash2 className="w-4 h-4 mr-2" /> Delete Playlist
           </Button>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button onClick={() => setIsModalOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90">
             <Edit className="w-4 h-4 mr-2" /> Edit Playlist
           </Button>
         </div>
@@ -196,6 +200,8 @@ const PlaylistDetailPage = () => {
           <p className="text-center text-gray-500">No audios in this playlist.</p>
         )}
       </div>
+      
+      {playlist && <UpdatePlaylistModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} playlist={playlist} />}
     </div>
   );
 };
