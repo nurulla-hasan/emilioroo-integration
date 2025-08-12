@@ -4,30 +4,8 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Play, Headphones, Clock } from "lucide-react"
-
-function pluralize(n, word = "audio") {
-  const v = Number(n ?? 0)
-  return `${v} ${v === 1 ? word : `${word}s`}`
-}
-
-function isNew(createdAt, days = 7) {
-  if (!createdAt) return false
-  const created = new Date(createdAt).getTime()
-  const diff = Date.now() - created
-  return diff <= days * 24 * 60 * 60 * 1000
-}
-
-function timeAgo(createdAt) {
-  if (!createdAt) return ""
-  const s = Math.floor((Date.now() - new Date(createdAt).getTime()) / 1000)
-  if (s < 60) return "Just now"
-  const m = Math.floor(s / 60)
-  if (m < 60) return `${m}m ago`
-  const h = Math.floor(m / 60)
-  if (h < 24) return `${h}h ago`
-  const d = Math.floor(h / 24)
-  return `${d}d ago`
-}
+import { isNew, timeAgo } from "@/lib/utils"
+import Link from "next/link"
 
 export default function TrendingTopicCard({topic}) {
   const fresh = isNew(topic.createdAt)
@@ -54,7 +32,7 @@ export default function TrendingTopicCard({topic}) {
         {/* Bottom left: audio count */}
         <div className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-[11px] text-white backdrop-blur-sm">
           <Headphones className="h-3.5 w-3.5" />
-          <span className="tabular-nums">{pluralize(topic.audioCount)}</span>
+          <span className="tabular-nums">{topic.totalAudios} Audio</span>
         </div>
 
         {/* Bottom right: time ago */}
@@ -71,17 +49,22 @@ export default function TrendingTopicCard({topic}) {
         <h3 className="truncate text-xl font-semibold leading-tight text-white">{topic.name}</h3>
 
         <p className="text-sm leading-snug text-white/80">
-          {typeof topic.audioCount === "number" ? pluralize(topic.audioCount) : ""}
+          {typeof topic.totalAudios === "number" ? topic.totalAudios : ""} Audio
         </p>
 
-        <Button
-          size="sm"
-          variant="outline"
-          className="mt-1 w-full border-white/50 bg-white/10 text-white hover:bg-white/20 hover:text-white"
-        >
-          <Play className="mr-2 h-4 w-4" />
-          Listen Now
-        </Button>
+        <Link href={`/chatting/trending/${topic._id}`} passHref>
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="mt-1 w-full border-white/50 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+          >
+            <div>
+              <Play className="mr-2 h-4 w-4" />
+              Listen Now
+            </div>
+          </Button>
+        </Link>
       </div>
     </div>
   )

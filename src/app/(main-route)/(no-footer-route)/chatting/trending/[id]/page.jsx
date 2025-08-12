@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo } from "react";
+import { useParams } from "next/navigation";
 import { useGetAllAudioQuery } from "@/lib/features/api/chattingApi";
-import CustomPagination from "@/components/common/CustomPagination";
 import { useDispatch, useSelector } from "react-redux";
 import { playAudio, pauseAudio } from "@/lib/features/slices/audio/audioSlice";
 import Image from "next/image";
@@ -18,21 +18,20 @@ const formatDuration = (totalSeconds) => {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
-const ConversationsPage = () => {
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+const TrendingDetailPage = () => {
+  const params = useParams();
+  const topicId = params.id;
 
   const dispatch = useDispatch();
   const { currentAudio, isPlaying } = useSelector((state) => state.audio);
 
-  const { data, isLoading, isError } = useGetAllAudioQuery({ page, limit });
+  const { data, isLoading, isError } = useGetAllAudioQuery({ limit: 500 });
 
-  const audios = data?.data?.result || [];
-  const meta = data?.data?.meta || {};
-
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-  };
+  const filteredAudios = useMemo(() => {
+    const allAudios = data?.data?.result || [];
+    if (!allAudios.length || !topicId) return [];
+    return allAudios.filter(audio => audio.audioTopic?._id === topicId);
+  }, [data, topicId]);
 
   const handlePlayAudio = (audio) => {
     if (currentAudio?._id === audio._id && isPlaying) {
@@ -44,10 +43,9 @@ const ConversationsPage = () => {
 
   if (isLoading) {
     return (
-      <div>
-        <h1 className="text-2xl font-bold mb-6">Conversations</h1>
+      <div className="px-4 lg:px-0">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[...Array(limit)].map((_, index) => (
+          {[...Array(10)].map((_, index) => (
             <ConversationAudioCardSkeleton key={index} />
           ))}
         </div>
@@ -56,15 +54,15 @@ const ConversationsPage = () => {
   }
 
   if (isError) {
-    return <div className="text-center text-red-500 min-h-minus-header">Error loading conversations.</div>;
+    return <div className="text-center text-red-500 px-4 lg:px-0">Error loading audios.</div>;
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">Conversations</h1>
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {audios.length > 0 ? (
-          audios.map((audio) => (
+    <div className="px-4 lg:px-0">
+      <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">Audios for this Topic</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {filteredAudios.length > 0 ? (
+          filteredAudios.map((audio) => (
             <div key={audio._id} className="flex flex-col sm:flex-row sm:items-center bg-gray-50 dark:bg-card border rounded-lg p-4">
               <div className="relative w-full h-48 sm:w-24 sm:h-24 rounded-md overflow-hidden flex-shrink-0 sm:mr-4 mb-4 sm:mb-0">
                 <Image
@@ -73,7 +71,6 @@ const ConversationsPage = () => {
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 200px"
                   className="object-cover"
-                  priority
                 />
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end w-full">
@@ -101,27 +98,16 @@ const ConversationsPage = () => {
                     <Star className="w-4 h-4 mr-1" /> {audio.totalRating || 0}
                   </div>
                   <div className="text-sm text-gray-600">{formatDuration(audio.duration)}</div>
-                  {/* Delete button is not in the provided snippet, so omitting */}
-                  {/* <Button size="sm" variant="outline" className="border-destructive text-destructive hover:bg-destructive/10">Delete</Button> */}
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <p className="col-span-full text-center text-gray-500">No conversations found.</p>
+          <p className="col-span-full text-center text-gray-500">No audios found for this topic.</p>
         )}
       </div>
-      {meta.totalPage > 1 && (
-        <div className="mt-8 flex justify-center">
-          <CustomPagination
-            currentPage={meta.page}
-            totalPage={meta.totalPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
-      )}
     </div>
   );
 };
 
-export default ConversationsPage;
+export default TrendingDetailPage;

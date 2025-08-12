@@ -51,7 +51,6 @@ export function SignUpForm({ className, ...props }) {
   const [openDatePicker, setOpenDatePicker] = useState(false);
 
   const [register, { data, isLoading, isSuccess }] = useRegisterMutation();
-  console.log(data);
 
   useEffect(() => {
     if (isSuccess) {

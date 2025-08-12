@@ -4,15 +4,16 @@ import React from 'react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Heart, LayoutGrid, ListMusic, MessageCircle, PlayCircle, Flame } from "lucide-react";
+import { Heart, LayoutGrid, ListMusic, MessageCircle, PlayCircle, Flame, TableOfContents } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
     { name: "All Content", href: "/chatting", icon: LayoutGrid },
+    { name: "My Content", href: "/chatting/my-content", icon: TableOfContents },
     { name: "Favorite", href: "/chatting/favorite", icon: Heart },
     { name: "Playlist", href: "/chatting/playlist", icon: ListMusic },
     { name: "Most Played", href: "/chatting/most-played", icon: PlayCircle },
-    { name: "Trending", href: "/chatting/trending", icon: Flame },
+    { name: "Trending Topics", href: "/chatting/trending", icon: Flame },
     { name: "Conversations", href: "/chatting/conversations", icon: MessageCircle },
 ];
 

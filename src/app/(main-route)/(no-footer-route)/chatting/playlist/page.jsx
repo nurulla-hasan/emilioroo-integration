@@ -14,11 +14,11 @@ const PlaylistPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // State for All Playlists
   const [allPage, setAllPage] = useState(1);
-  const [allLimit] = useState(10);
+  const [allLimit] = useState(12);
 
   // State for My Playlists
   const [myPage, setMyPage] = useState(1);
-  const [myLimit] = useState(10);
+  const [myLimit] = useState(12);
 
   // Fetch data for All Playlists
   const { data: allPlaylistsData, isLoading: isLoadingAll, isError: isErrorAll } = useGetAllPlaylistQuery({ page: allPage, limit: allLimit });
@@ -55,7 +55,7 @@ const PlaylistPage = () => {
 
         <TabsContent value="all-playlists">
           {isLoadingAll ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
               {[...Array(allLimit)].map((_, index) => (
                 <PlaylistCardSkeleton key={index} />
               ))}
@@ -64,7 +64,7 @@ const PlaylistPage = () => {
             <div className="text-center text-red-500 p-4">Error loading playlists.</div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
                 {allPlaylists.length > 0 ? (
                   allPlaylists.map((playlist) => (
                     <PlaylistCard key={playlist._id} playlist={playlist} />
@@ -74,13 +74,13 @@ const PlaylistPage = () => {
                 )}
               </div>
               {allMeta.totalPage > 1 && (
-                <div className="mt-8 flex justify-center">
+                // <div className="mt-8 flex justify-center">
                   <CustomPagination
                     currentPage={allMeta.page}
                     totalPage={allMeta.totalPage}
                     onPageChange={handleAllPageChange}
                   />
-                </div>
+                // {/* </div> */}
               )}
             </>
           )}
@@ -88,7 +88,7 @@ const PlaylistPage = () => {
 
         <TabsContent value="my-playlists">
           {isLoadingMy ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
               {[...Array(myLimit)].map((_, index) => (
                 <PlaylistCardSkeleton key={index} />
               ))}
@@ -97,7 +97,7 @@ const PlaylistPage = () => {
             <div className="text-center text-red-500 p-4">Error loading your playlists.</div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
                 {myPlaylists.length > 0 ? (
                   myPlaylists.map((playlist) => (
                     <PlaylistCard key={playlist._id} playlist={playlist} />

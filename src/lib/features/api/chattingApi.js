@@ -18,7 +18,7 @@ const chattingApi = baseApi.injectEndpoints({
         }),
 
         // GET ALL AUDIO
-                getAllAudio: builder.query({
+        getAllAudio: builder.query({
             query: (arg) => {
                 const params = new URLSearchParams(arg);
                 return {
@@ -57,7 +57,7 @@ const chattingApi = baseApi.injectEndpoints({
         }),
 
         // GET ALL PLAYLIST
-                getAllPlaylist: builder.query({
+        getAllPlaylist: builder.query({
             query: (arg) => {
                 const params = new URLSearchParams(arg);
                 return {
@@ -69,7 +69,7 @@ const chattingApi = baseApi.injectEndpoints({
         }),
 
         // GET MY PLAYLIST
-                getMyPlaylist: builder.query({
+        getMyPlaylist: builder.query({
             query: (arg) => {
                 const params = new URLSearchParams(arg);
                 return {

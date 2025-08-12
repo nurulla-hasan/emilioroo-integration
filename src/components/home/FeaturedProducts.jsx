@@ -67,7 +67,7 @@ const FeaturedProducts = () => {
                         </div>
 
                         {/* Product Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
                             {products.map(({ id, name, price, originalPrice, discountPercentage, rating, imageSrc, imageAlt }) => (
                                 <Card key={id} className="w-full max-w-sm mx-auto bg-card text-card-foreground shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden">
                                     <CardContent className="p-0">

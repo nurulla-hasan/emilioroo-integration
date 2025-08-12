@@ -104,7 +104,7 @@ const Footer = () => {
 
                 {/* Main Footer Content */}
                 <div className="max-w-7xl mx-auto px-4 lg:px-0 py-10">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-18 ">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-18 ">
                         {/* Logo and Description */}
                         <div className="flex flex-col justify-start items-start gap-4">
                             <div className="relative w-[150px] h-auto">

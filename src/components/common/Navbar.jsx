@@ -49,10 +49,10 @@ const Navbar = () => {
     return (
         <nav className="h-[80px] ">
             <div className="bg-primary max-w-[1920px] mx-auto fixed top-0 left-0 right-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 xl:px-0 py-2">
+                <div className="max-w-[1400] mx-auto px-4 xl:px-0 py-2">
                     <div className="flex items-center justify-between h-16">
                         {/* Mobile menu */}
-                        <div className="lg:hidden flex items-center">
+                        <div className="xl:hidden flex items-center">
                             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                                 <SheetTrigger asChild>
                                     <Button variant="ghost" size="icon" className="hover:bg-brand">
@@ -159,12 +159,12 @@ const Navbar = () => {
                                 </SheetContent>
                             </Sheet>
                         </div>
-                       {/*---------------------------------------- */}
+                        {/*---------------------------------------- */}
 
                         {/* Desktop Navigation */}
-                        <div className="lg:flex w-full items-center justify-between">
+                        <div className="xl:flex w-full items-center justify-between">
                             {/* Logo */}
-                            <div className="hidden lg:flex flex-col justify-center">
+                            <div className="hidden xl:flex flex-col justify-center">
                                 <Link href="/">
                                     <div className="md:h-7 lg:h-8 border-[#FFFFFF] font-bold text-lg flex justify-center items-center gap-2 border-2 rounded-[100%] p-2">
                                         <div className="lg:w-2 w-2 lg:h-2 h-2 rounded-full bg-[#22B14C]"></div>
@@ -175,7 +175,7 @@ const Navbar = () => {
                             </div>
 
                             {/* Desktop Navigation Links */}
-                            <div className="hidden lg:flex items-center gap-8">
+                            <div className="hidden xl:flex items-center gap-8">
                                 {navLinks.map((link) => (
                                     <Link
                                         key={link.name}
@@ -188,7 +188,7 @@ const Navbar = () => {
                             </div>
 
                             {/* Search Input */}
-                            <div className="hidden lg:block relative">
+                            <div className="hidden xl:block relative">
                                 <Input
                                     className="peer ps-9 placeholder:text-white placeholder:text-xs text-white border-none bg-white/5 rounded-full"
                                     placeholder="Search..."
@@ -199,13 +199,13 @@ const Navbar = () => {
                                 </div>
                             </div>
                             {/* Right Action Icons */}
-                            <div className="flex items-center justify-end lg:justify-start space-x-2">
+                            <div className="flex items-center justify-end xl:justify-start space-x-2">
                                 {/* User Profile Icon */}
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <div className="flex items-center cursor-pointer">
-                                            <Button variant="ghost" size="icon" className="hover:bg-brand">
-                                                {isLoggedIn && profile?.data?.profile_image ? (
+                                        <div className="flex gap-3 items-center cursor-pointer">
+                                            <Button variant="ghost" size="icon" className="hover:bg-brand hidden md:block">
+                                                {isLoggedIn &&  
                                                     <Avatar className="h-10 w-10 border-2 border-white/30">
                                                         <AvatarImage src={profile?.data?.profile_image} alt={userName} />
                                                         <AvatarFallback className="bg-white/20 text-white font-semibold text-xs">
@@ -214,10 +214,7 @@ const Navbar = () => {
                                                                 .map((n) => n[0])
                                                                 .join("")}
                                                         </AvatarFallback>
-                                                    </Avatar>
-                                                ) : (
-                                                    <User2 className="h-5 w-5 text-white" />
-                                                )}
+                                                    </Avatar>}
                                                 <span className="sr-only">Profile</span>
                                             </Button>
                                             {profileLoading ? (
@@ -227,8 +224,8 @@ const Navbar = () => {
                                                 </div>
                                             ) : isLoggedIn && (
                                                 <div className="flex items-center gap-1">
-                                                    <span className="hidden md:block text-white text-sm font-medium">{userName}</span>
-                                                    <ChevronDown className="hidden md:block h-4 w-4 text-white" />
+                                                    <span className=" text-white text-sm font-medium">{userName}</span>
+                                                    <ChevronDown className=" h-4 w-4 text-white" />
                                                 </div>
                                             )}
                                         </div>
@@ -245,14 +242,14 @@ const Navbar = () => {
                                                     </DropdownMenuItem>
                                                 </Link>
                                                 <DropdownMenuSeparator />
-                                                <Link href="/my-orders">
+                                                <Link href="/chatting/favorite">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <Heart className="mr-2 h-4 w-4" />
                                                         <span>Favorite</span>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                 </Link>
-                                                <Link href="/playlist">
+                                                <Link href="/chatting/playlist">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <Play className="mr-2 h-4 w-4" />
                                                         <span>Playlist</span>
@@ -284,9 +281,10 @@ const Navbar = () => {
                                     </DropdownMenuContent>
                                 </DropdownMenu>
 
+                                {/* Theme Toggle */}
                                 <Toggle
                                     variant="ghost"
-                                    className="group data-[state=on]:hover:bg-muted size-9 data-[state=on]:bg-transparent text-white hover:bg-brand hover:text-white"
+                                    className="group data-[state=on]:bg-transparent text-white hover:bg-primary dark:hover:bg-primary justify-end"
                                     pressed={theme === "dark"}
                                     onPressedChange={() =>
                                         setTheme((prev) => (prev === "dark" ? "light" : "dark"))

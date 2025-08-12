@@ -20,7 +20,7 @@ const PlaylistCard = ({ playlist = {} }) => {
           fill
           sizes="(max-width: 768px) 100vw, 400px"
           className="object-cover transition-transform duration-500 hover:scale-105"
-          priority={false}
+          priority={true}
         />
 
         {/* Overlay */}

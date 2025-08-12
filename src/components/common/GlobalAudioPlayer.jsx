@@ -111,6 +111,7 @@ const GlobalAudioPlayer = () => {
                         src={currentAudio?.cover_image || "/placeholder.png"}
                         alt={currentAudio?.title || "Audio cover"}
                         fill
+                        sizes="(max-width: 768px) 100vw, 320px"
                         className="object-cover"
                     />
                 </div>
