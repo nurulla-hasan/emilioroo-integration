@@ -35,26 +35,11 @@ export function MultipleSelector({
           aria-expanded={open}
           className={cn("w-full justify-between", className)}
         >
-          <div className="flex flex-wrap gap-1">
+          <div className="flex items-center gap-1">
             {(value || []).length > 0 ? (
-              (value || []).map((itemValue) => {
-                const selectedOption = options.find(option => option.value === itemValue);
-                return selectedOption ? (
-                  <Badge key={itemValue} variant="secondary">
-                    {selectedOption.label}
-                    <span
-                      className="ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring cursor-pointer"
-                      onMouseDown={(e) => e.stopPropagation()}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSelect(itemValue);
-                      }}
-                    >
-                      <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                    </span>
-                  </Badge>
-                ) : null;
-              })
+              <span className="text-sm font-medium">
+                {value.length} {value.length === 1 ? "item" : "items"} selected
+              </span>
             ) : (
               <span className="text-muted-foreground">{placeholder}</span>
             )}
