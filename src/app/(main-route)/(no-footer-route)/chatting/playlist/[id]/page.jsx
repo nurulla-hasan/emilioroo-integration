@@ -1,40 +1,55 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { useGetSinglePlaylistQuery } from "@/lib/features/api/chattingApi";
+import { useGetSinglePlaylistQuery, useDeletePlaylistMutation } from "@/lib/features/api/chattingApi";
 import { useDispatch, useSelector } from "react-redux";
 import { playAudio, pauseAudio } from "@/lib/features/slices/audio/audioSlice";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Star, Play, Trash2, Edit, Pause } from "lucide-react";
+import { Eye, Star, Play, Trash2, Edit, Pause, Loader2 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import UpdatePlaylistModal from "@/components/chatting/playlist/UpdatePlaylistModal";
 import { useState } from "react";
+import ConfirmationModal from "@/components/common/ConfirmationModal";
+import { toast } from "sonner";
 
 const PlaylistDetailPage = () => {
   const params = useParams();
+  const router = useRouter();
   const playlistId = params.id;
-  const dispatch = useDispatch(); // Initialize useDispatch
+  const dispatch = useDispatch();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  // Fetch playlist data
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+
   const { data, isLoading, isError } = useGetSinglePlaylistQuery(playlistId);
-  const { currentAudio, isPlaying } = useSelector((state) => state.audio); // Access Redux audio state
+  const [deletePlaylist, { isLoading: isDeleting }] = useDeletePlaylistMutation();
+  const { currentAudio, isPlaying } = useSelector((state) => state.audio);
 
-  // Function to handle playing/pausing an audio
   const handlePlayAudio = (audio) => {
     if (currentAudio?._id === audio._id && isPlaying) {
-      dispatch(pauseAudio()); // Pause if already playing this audio
+      dispatch(pauseAudio());
     } else {
-      dispatch(playAudio(audio)); // Play this audio
+      dispatch(playAudio(audio));
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deletePlaylist(playlistId).unwrap();
+      toast.success("Playlist deleted successfully");
+      setIsConfirmModalOpen(false);
+      router.push("/chatting/playlist");
+    } catch (error) {
+      toast.error("Failed to delete playlist");
+      console.log(error);
     }
   };
 
   const playlist = data?.data;
 
-  // Function to format duration from seconds to Hh Mm
   const formatDuration = (totalSeconds) => {
     if (isNaN(totalSeconds) || totalSeconds < 0) return "0m";
     const hours = Math.floor(totalSeconds / 3600);
@@ -46,7 +61,6 @@ const PlaylistDetailPage = () => {
     }
   };
 
-  // Calculate total duration of audios in the playlist
   const totalPlaylistDuration = playlist?.audios?.reduce((sum, audio) => sum + (audio.duration || 0), 0);
 
   if (isLoading) {
@@ -137,10 +151,10 @@ const PlaylistDetailPage = () => {
 
         {/* Action Buttons */}
         <div className="flex gap-4">
-          <Button variant="outline" className="border-destructive text-destructive hover:bg-destructive/10">
+          <Button onClick={() => setIsConfirmModalOpen(true)} variant="outline" className="border-destructive text-destructive hover:bg-destructive/10">
             <Trash2 className="w-4 h-4 mr-2" /> Delete Playlist
           </Button>
-          <Button onClick={() => setIsModalOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button onClick={() => setIsUpdateModalOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90">
             <Edit className="w-4 h-4 mr-2" /> Edit Playlist
           </Button>
         </div>
@@ -187,7 +201,7 @@ const PlaylistDetailPage = () => {
                 </Button>
                 <div className="flex items-center text-sm text-gray-600">
                   <Eye className="w-4 h-4 mr-1" /> {audio.totalPlay || 0}k
-                  </div>
+                </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Star className="w-4 h-4 mr-1" /> {audio.totalRating || 0}
                 </div>
@@ -200,8 +214,18 @@ const PlaylistDetailPage = () => {
           <p className="text-center text-gray-500">No audios in this playlist.</p>
         )}
       </div>
-      
-      {playlist && <UpdatePlaylistModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} playlist={playlist} />}
+
+      {/* Update Playlist Modal */}
+      {playlist && <UpdatePlaylistModal isOpen={isUpdateModalOpen} onOpenChange={setIsUpdateModalOpen} playlist={playlist} />}
+      {/* Delete Playlist Modal */}
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onOpenChange={setIsConfirmModalOpen}
+        title="Are you sure you want to delete this playlist?"
+        description="This action cannot be undone. This will permanently delete the playlist."
+        onConfirm={handleDelete}
+        confirmText={isDeleting ? <><Loader2 className="animate-spin" /> Deleting</> : "Delete"}
+      />
     </div>
   );
 };
