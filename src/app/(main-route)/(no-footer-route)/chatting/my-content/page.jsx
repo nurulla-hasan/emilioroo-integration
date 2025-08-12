@@ -58,7 +58,7 @@ const MyContentPage = () => {
 
   if (isLoading) {
     return (
-      <div className="p-6">
+      <div>
         <h1 className="text-2xl font-bold mb-6">My Content</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[...Array(10)].map((_, index) => <ConversationAudioCardSkeleton key={index} />)}
@@ -68,12 +68,12 @@ const MyContentPage = () => {
   }
 
   if (isError) {
-    return <div className="text-center text-red-500 p-6">Error loading your content.</div>;
+    return <div className="text-center text-red-500">Error loading your content.</div>;
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">My Content</h1>
+    <div>
+      <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">My Content</h1>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {myAudios.length > 0 ? (
           myAudios.map((audio) => (
