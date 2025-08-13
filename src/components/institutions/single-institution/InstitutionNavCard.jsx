@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import JoinInstitutionModal from "@/components/institutions/modal/JoinInstitutionModal";
 
-const InstitutionNavCard = ({ institution }) => {
+const InstitutionNavCard = ({ institution, isActive }) => {
     const router = useRouter();
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
@@ -16,13 +17,13 @@ const InstitutionNavCard = ({ institution }) => {
     };
 
     const handleJoinClick = (e) => {
-        e.stopPropagation(); // Prevent card's onClick from firing
+        e.stopPropagation();
         setIsJoinModalOpen(true);
     };
 
     return (
         <>
-            <Card className="w-full overflow-hidden bg-card flex flex-col cursor-pointer hover:bg-muted" onClick={handleNavigate}>
+            <Card className={cn("w-full overflow-hidden bg-card flex flex-col cursor-pointer hover:bg-muted", isActive && "bg-primary/10 border border-primary/30")} onClick={handleNavigate}>
                 <CardContent className="p-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                         <div className="relative h-12 w-12 bg-card border rounded-md flex-shrink-0">

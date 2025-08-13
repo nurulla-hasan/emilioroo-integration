@@ -11,7 +11,7 @@ const CreatePost = () => {
         <div className="bg-card p-4 rounded-lg border">
             <div className="flex items-start space-x-4">
                 <Avatar>
-                    <AvatarImage src="/placeholder-user.jpg" />
+                    <AvatarImage src="/images/placeholder-image.jpg" />
                     <AvatarFallback>U</AvatarFallback>
                 </Avatar>
                 <div className="w-full">

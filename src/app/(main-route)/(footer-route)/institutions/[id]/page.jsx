@@ -16,13 +16,7 @@ import ConfirmationModal from "@/components/common/ConfirmationModal";
 import CreateConversationModal from "@/components/institutions/single-institution/CreateConversationModal";
 import EditConversationModal from "@/components/institutions/single-institution/EditConversationModal";
 
-const fakeMediators = [
-    { id: 1, name: "MR. Sarwar", title: "Innovators Hub", avatar: "/placeholder-user.jpg" },
-    { id: 2, name: "MR. Golap", title: "Change makers", avatar: "/placeholder-user.jpg" },
-    { id: 3, name: "MS. Fatima", title: "Pioneers", avatar: "/placeholder-user.jpg" },
-    { id: 4, name: "MR. Ahmed", title: "Visionaries", avatar: "/placeholder-user.jpg" },
-    { id: 5, name: "MS. Sarah", title: "Trailblazers", avatar: "/placeholder-user.jpg" },
-];
+
 
 const fakePosts = [
     {
@@ -30,7 +24,7 @@ const fakePosts = [
         author: {
             name: "MR. Sarwar",
             title: "CEO",
-            avatar: "/placeholder-user.jpg",
+            avatar: "/images/placeholder-image.jpg",
         },
         date: "22 May 2025",
         time: "10:30 AM",
@@ -43,7 +37,7 @@ const fakePosts = [
         author: {
             name: "Ahmad Musa",
             title: "General Manager",
-            avatar: "/placeholder-user.jpg",
+            avatar: "/images/placeholder-image.jpg",
         },
         date: "21 May 2025",
         time: "2:45 PM",
@@ -82,6 +76,8 @@ const SingleInstitutionPage = () => {
 
     const innovators = institutionMembers?.filter(member => member.group === "A") || [];
     const thinkers = institutionMembers?.filter(member => member.group === "B") || [];
+    const mediators = institutionMembers?.filter(member => member.group === "Mediator") || [];
+    console.log(mediators);
 
     // Handlers
     const handleTopicClick = (topic) => {
@@ -169,7 +165,7 @@ const SingleInstitutionPage = () => {
                     {areAllInstitutionsLoading && <InstitutionNavCardSkeleton count={7} />}
                     {areAllInstitutionsError && <p className="text-red-500">Error loading institutions.</p>}
                     {allInstitutions && allInstitutions.map(inst => (
-                        <InstitutionNavCard key={inst._id} institution={inst} />
+                        <InstitutionNavCard key={inst._id} institution={inst} isActive={inst._id === id} />
                     ))}
                 </div>
             </div>
@@ -202,7 +198,7 @@ const SingleInstitutionPage = () => {
                                 </Link>
                             </div>
                         </div>
-                        <Mediators mediators={fakeMediators} />
+                        <Mediators mediators={mediators} />
                         <InstitutionContent innovators={innovators} thinkers={thinkers} topics={institutionConversations} onTopicClick={handleTopicClick} onEditTopic={handleEditConversationClick} onDeleteTopic={handleDeleteConversationClick} onRemoveMember={handleRemoveMemberClick} onCreateConversationClick={handleCreateConversationClick} isLoading={areInstitutionConversationsLoading} error={areInstitutionConversationsError} />
                         {selectedTopic && <PostFeed posts={fakePosts} />}
                     </>

@@ -88,7 +88,12 @@ const AllBonds = () => {
                     </TabsList>
                     <TabsContent value="my-bonds">
                         <div className="mt-4">
-                            <MyBonds isLoading={isMyBondsLoading} myBonds={myBonds} onEditBond={handleEditBondClick} onOpenAddBondModal={handleOpenAddBondModal} onDeleteBond={handleDeleteBondClick} />
+                            <MyBonds
+                                isLoading={isMyBondsLoading}
+                                myBonds={myBonds}
+                                onEditBond={handleEditBondClick}
+                                onOpenAddBondModal={handleOpenAddBondModal}
+                                onDeleteBond={handleDeleteBondClick} />
                         </div>
                     </TabsContent>
                     <TabsContent value="bond-request">

@@ -17,7 +17,7 @@ const AllInstitutionsCard = ({ institution }) => {
     };
 
     return (
-        <Card className="w-full overflow-hidden bg-card flex flex-col">
+        <Card className="w-full overflow-hidden bg-card flex flex-col hover:shadow-xl transition-shadow duration-300">
             <CardHeader className="p-0 relative h-40">
                 <div className="relative h-40 w-full bg-card border-b">
                     <Image

@@ -18,7 +18,7 @@ const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEdit
                                 <div key={innovator._id} className="bg-card p-2 rounded-lg border flex items-center justify-between">
                                     <div className="flex items-center space-x-2">
                                         <Avatar className="h-8 w-8">
-                                            <AvatarImage src={innovator.user.profile_image || "/placeholder-user.jpg"} />
+                                            <AvatarImage src={innovator.user.profile_image} />
                                             <AvatarFallback>{innovator.user.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div>
@@ -57,7 +57,7 @@ const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEdit
                                 <div key={thinker._id} className="bg-card p-2 rounded-lg border flex items-center justify-between">
                                     <div className="flex items-center space-x-2">
                                         <Avatar className="h-8 w-8">
-                                            <AvatarImage src={thinker.user.profile_image || "/placeholder-user.jpg"} />
+                                            <AvatarImage src={thinker.user.profile_image } />
                                             <AvatarFallback>{thinker.user.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div>
