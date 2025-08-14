@@ -175,7 +175,7 @@ const Navbar = () => {
                             </div>
 
                             {/* Desktop Navigation Links */}
-                            <div className="hidden xl:flex items-center gap-8">
+                            <div className="hidden xl:flex items-center gap-10">
                                 {navLinks.map((link) => (
                                     <Link
                                         key={link.name}
@@ -204,17 +204,20 @@ const Navbar = () => {
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <div className="flex gap-3 items-center cursor-pointer">
-                                            <Button variant="ghost" size="icon" className="hover:bg-brand hidden md:block">
-                                                {isLoggedIn &&  
+                                            <Button variant="ghost" size="icon" className="hover:bg-brand">
+                                                {isLoggedIn ? (
                                                     <Avatar className="h-10 w-10 border-2 border-white/30">
                                                         <AvatarImage src={profile?.data?.profile_image} alt={userName} />
                                                         <AvatarFallback className="bg-white/20 text-white font-semibold text-xs">
                                                             {userName
-                                                                .split(" ")
+                                                                ?.split(" ")
                                                                 .map((n) => n[0])
                                                                 .join("")}
                                                         </AvatarFallback>
-                                                    </Avatar>}
+                                                    </Avatar>
+                                                ) : !profileLoading && (
+                                                    <User className="h-6 w-6 text-white" />
+                                                )}
                                                 <span className="sr-only">Profile</span>
                                             </Button>
                                             {profileLoading ? (
@@ -238,7 +241,7 @@ const Navbar = () => {
                                                 <Link href="/profile">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <User2 className="mr-2 h-4 w-4" />
-                                                        <span>My Account</span>
+                                                        <span>Profile</span>
                                                     </DropdownMenuItem>
                                                 </Link>
                                                 <DropdownMenuSeparator />
