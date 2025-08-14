@@ -4,9 +4,9 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link"; // New import
-import { useSendJoinRequestMutation } from "@/lib/features/api/projectApi"; // New import
-import { toast } from "sonner"; // New import
+import Link from "next/link";
+import { useSendJoinRequestMutation } from "@/lib/features/api/projectApi";
+import { toast } from "sonner";
 
 const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
   const [sendJoinRequest, { isLoading: isSendingRequest }] = useSendJoinRequestMutation();

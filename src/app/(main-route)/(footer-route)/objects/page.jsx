@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from 'react';
 import CreateProjectModal from '@/components/objects/modal/CreateProjectModal';
 import ProjectCard from '@/components/objects/all-projects/ProjectCard';
 import CustomPagination from '@/components/common/CustomPagination';
+import ProjectCardSkeleton from '@/components/skeleton/ProjectCardSkeleton';
 
 const ObjectsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -101,7 +102,7 @@ const ObjectsPage = () => {
                 <TabsContent value="all-projects">
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {allProjectsLoading ? (
-                            <p>Loading projects...</p>
+                            <ProjectCardSkeleton count={12} />
                         ) : allProjectsError ? (
                             <p className="col-span-full text-center text-red-500">Failed to load projects.</p>
                         ) : allProjectsData?.data?.result?.length > 0 ? (
@@ -116,7 +117,7 @@ const ObjectsPage = () => {
                 <TabsContent value="my-projects">
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {myProjectsLoading ? (
-                            <p>Loading my projects...</p>
+                            <ProjectCardSkeleton count={12} />
                         ) : myProjectsError ? (
                             <p className="col-span-full text-center text-red-500">Failed to load my projects.</p>
                         ) : myProjectsData?.data?.result?.length > 0 ? (
@@ -131,7 +132,7 @@ const ObjectsPage = () => {
                 <TabsContent value="joined-projects">
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {joinedProjectsLoading ? (
-                            <p>Loading joined projects...</p>
+                            <ProjectCardSkeleton count={12} />
                         ) : joinedProjectsError ? (
                             <p className="col-span-full text-center text-red-500">Failed to load joined projects.</p>
                         ) : joinedProjectsData?.data?.result?.length > 0 ? (
