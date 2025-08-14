@@ -28,7 +28,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Loader2, Upload } from "lucide-react";
-import { useCreateProjectMutation } from "@/lib/features/api/projectApi";
+import { useUpdateProjectMutation } from "@/lib/features/api/projectApi";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -41,35 +41,41 @@ const formSchema = z.object({
   project_cover:
     z
       .any()
-      .refine((files) => files?.length == 1, "Project cover image is required.")
-      .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+      .optional() // Make project_cover optional for update
+      .refine((files) => !files || files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
       .refine(
-        (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+        (files) => !files || ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
         "Only .jpg, .jpeg, .png and .webp formats are supported."
       ),
 });
 
-export default function CreateProjectModal({ isOpen, onOpenChange }) {
+export default function UpdateProjectModal({ isOpen, onOpenChange, project }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     mode: "onChange",
     defaultValues: {
-      name: "",
-      description: "",
-      isPublic: true,
-      joinControll: "Public",
+      name: project?.name || "",
+      description: project?.description || "",
+      isPublic: project?.isPublic || false,
+      joinControll: project?.joinControll || "Public",
       project_cover: undefined,
     },
   });
 
   const fileInputRef = useRef(null);
-  const [createProject, { isLoading }] = useCreateProjectMutation();
+  const [updateProject, { isLoading }] = useUpdateProjectMutation();
 
   useEffect(() => {
-    if (isOpen) {
-      form.reset();
+    if (isOpen && project) {
+      form.reset({
+        name: project.name,
+        description: project.description,
+        isPublic: project.isPublic,
+        joinControll: project.joinControll,
+        project_cover: undefined,
+      });
     }
-  }, [isOpen, form.reset, form]);
+  }, [isOpen, project, form.reset, form]);
 
   const onSubmit = async (values) => {
     const formData = new FormData();
@@ -84,17 +90,15 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
       joinControll: values.joinControll,
     };
 
-    console.log({ data });
-
     formData.append("data", JSON.stringify(data));
 
     try {
-      await createProject(formData).unwrap();
-      toast.success("Project created successfully!");
+      await updateProject({ id: project._id, formData }).unwrap();
+      toast.success("Project updated successfully!");
       onOpenChange(false);
-      form.reset();
+      // No form.reset() here, as we want to keep the updated values in the form
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to create project.");
+      toast.error(error?.data?.message || "Failed to update project.");
     }
   };
 
@@ -102,7 +106,7 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Create New Project</DialogTitle>
+          <DialogTitle>Edit Project</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
@@ -162,7 +166,7 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value} // Use value instead of defaultValue for controlled component
                       className="flex flex-col space-y-1"
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
@@ -215,12 +219,14 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
                     className="w-full flex items-center justify-center gap-2"
                   >
                     <Upload className="h-4 w-4" />
-                    <span className="truncate overflow-hidden whitespace-nowrap">
-                      {value?.[0]?.name?.length > 17
-                        ? `${value[0].name.slice(0, 17)}...${value[0].name.slice(-10)}`
-                        : value?.[0]?.name || "Upload Image"}
-                    </span>
+                    {value?.[0]?.name?.length > 20
+                      ? `${value[0].name.slice(0, 30)}...${value[0].name.slice(-10)}`
+                      : value?.[0]?.name || (project?.cover_image ? "Change Image" : "Upload Image")
+                    }
                   </Button>
+                  {project?.cover_image && !value && (
+                    <FormDescription>Current image: {project.cover_image.split('/').pop()}</FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -233,7 +239,7 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
                 </Button>
               </DialogClose>
               <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Creating</> : "Create Project"}
+                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Updating</> : "Update Project"}
               </Button>
             </DialogFooter>
           </form>

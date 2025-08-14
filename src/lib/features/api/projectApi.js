@@ -90,9 +90,10 @@ const projectApi = baseApi.injectEndpoints({
 
         // UPDATE PROJECT
         updateProject:builder.mutation({
-            query: (id) => ({
+            query: ({ id, formData }) => ({
                 url: `/project/update/${id}`,
                 method: "PATCH",
+                body: formData, // Pass the formData as the body
             }),
             invalidatesTags: ["PROJECTS"],
         }),

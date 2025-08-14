@@ -12,11 +12,12 @@ import {
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import AddMemberModal from "@/components/objects/modal/AddMemberModal";
-import { useState } from "react";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
 import ProjectHeader from "@/components/objects/single-projects/ProjectHeader";
 import MembersList from "@/components/objects/single-projects/MembersList";
 import JoinRequests from "@/components/objects/single-projects/JoinRequests";
+import UpdateProjectModal from "@/components/objects/modal/UpdateProjectModal"; 
+import { useState } from "react";
 
 const ProjectDetailsPage = () => {
     const params = useParams();
@@ -27,6 +28,8 @@ const ProjectDetailsPage = () => {
 
     const [isRemoveMemberModalOpen, setIsRemoveMemberModalOpen] = useState(false);
     const [memberToRemove, setMemberToRemove] = useState(null);
+
+    const [isUpdateProjectModalOpen, setIsUpdateProjectModalOpen] = useState(false);
 
     const [removeProjectMember, { isLoading: isRemovingMember }] = useRemoveProjectMemberMutation();
     const { data, isLoading, isError } = useGetSingleProjectQuery(projectId);
@@ -131,7 +134,7 @@ const ProjectDetailsPage = () => {
 
     return (
         <PageLayout>
-            <ProjectHeader project={project} />
+            <ProjectHeader project={project} onEditProject={() => setIsUpdateProjectModalOpen(true)} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <MembersList
@@ -175,7 +178,12 @@ const ProjectDetailsPage = () => {
                 title="Remove Member"
                 description={`Are you sure you want to remove ${memberToRemove?.user?.name || "this member"}?`}
                 onConfirm={handleConfirmRemoveMember}
-                confirmText={isRemovingMember ? "Removing..." : "Remove"}
+                confirmText={isRemovingMember ? <><Loader2 className="animate-spin" />Removing</> : "Remove"}
+            />
+            <UpdateProjectModal
+                isOpen={isUpdateProjectModalOpen}
+                onOpenChange={setIsUpdateProjectModalOpen}
+                project={project}
             />
         </PageLayout>
     );

@@ -5,9 +5,9 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, Pencil } from "lucide-react";
+import { Pencil, Users } from "lucide-react";
 
-const ProjectHeader = ({ project }) => {
+const ProjectHeader = ({ project, onEditProject }) => {
     return (
         <div>
             {/* Header Image */}
@@ -15,9 +15,9 @@ const ProjectHeader = ({ project }) => {
                 <Image
                     src={project.cover_image || "/images/placeholder-image.jpg"}
                     alt={project.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-lg"
+                    fill={true}
+                    priority
+                    className="rounded-lg object-cover"
                 />
             </div>
 
@@ -27,7 +27,7 @@ const ProjectHeader = ({ project }) => {
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">{project.name}</h1>
                     <div className="flex items-center space-x-2 mb-4">
                         <Avatar className="h-10 w-10">
-                            <AvatarImage src={project.owner?.profile_image || "/images/placeholder-avatar.jpg"} />
+                            <AvatarImage src={project.owner?.profile_image || "/images/placeholder-image.jpg"} />
                             <AvatarFallback>{project.owner?.name?.charAt(0) || "U"}</AvatarFallback>
                         </Avatar>
                         <p className="text-gray-700 font-medium">{project.owner?.name || "Unknown"}</p>
@@ -41,7 +41,7 @@ const ProjectHeader = ({ project }) => {
                 </div>
 
                 <div className="w-full flex flex-col items-end space-y-2">
-                    <Button size="sm" variant="default" className="flex items-center gap-2">
+                    <Button size="sm" variant="default" className="flex items-center gap-2" onClick={onEditProject}>
                         <Pencil className="h-4 w-4" /> Edit Project
                     </Button>
                     <div className="flex flex-wrap justify-end gap-2">

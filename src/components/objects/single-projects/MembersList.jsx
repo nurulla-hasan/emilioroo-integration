@@ -22,7 +22,7 @@ const MembersList = ({ title, members, isLoading, isError, onAddMember, onRemove
                         <div key={member._id} className="flex items-center justify-between p-3 border rounded-md">
                             <div className="flex items-center space-x-3">
                                 <Avatar className="h-9 w-9">
-                                    <AvatarImage src={member.user?.profile_image || "/images/placeholder-avatar.jpg"} />
+                                    <AvatarImage src={member.user?.profile_image || "/images/placeholder-image.jpg"} />
                                     <AvatarFallback>{member.user?.name?.charAt(0) || "U"}</AvatarFallback>
                                 </Avatar>
                                 <div>
