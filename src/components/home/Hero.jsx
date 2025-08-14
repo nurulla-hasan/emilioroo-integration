@@ -6,7 +6,7 @@ import { Button } from "../ui/button"
 const Hero = () => {
     return (
         <div
-            className="relative w-full min-h-minus-header flex flex-col items-center justify-center text-center bg-primary"
+            className="relative w-full min-h-minus-header flex flex-col items-center justify-center text-center bg-primary dark:bg-accent"
         >
             {/* Content above the overlay */}
             <div className="-mt-20 md:mt-0 relative w-full mx-auto z-20 px-4 flex flex-col items-center justify-center">

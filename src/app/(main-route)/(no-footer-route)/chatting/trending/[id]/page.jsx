@@ -18,35 +18,38 @@ const TrendingDetailPage = () => {
     return allAudios.filter(audio => audio.audioTopic?._id === topicId);
   }, [data, topicId]);
 
+  let content;
 
   if (isLoading) {
-    return (
-      <div className="px-4 lg:px-0">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[...Array(10)].map((_, index) => (
-            <ConversationAudioCardSkeleton key={index} />
-          ))}
-        </div>
+    content = (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[...Array(12)].map((_, index) => (
+          <ConversationAudioCardSkeleton key={index} />
+        ))}
       </div>
     );
   }
 
   if (isError) {
-    return <div className="text-center text-red-500 px-4 lg:px-0">Error loading audios.</div>;
+    content = (
+      <div className="text-center py-10 text-red-500">Error loading audios.</div>
+    );
+  }
+
+  if (filteredAudios.length > 0) {
+    content = (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {filteredAudios.map((audio) => (
+          <TrendingAudioCard key={audio._id} audio={audio} />
+        ))}
+      </div>
+    );
   }
 
   return (
     <div className="px-4 lg:px-0">
       <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">Audios for this Topic</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filteredAudios.length > 0 ? (
-          filteredAudios.map((audio) => (
-            <TrendingAudioCard key={audio._id} audio={audio} />
-          ))
-        ) : (
-          <p className="col-span-full text-center text-muted-foreground">No audios found for this topic.</p>
-        )}
-      </div>
+      {content}
     </div>
   );
 };

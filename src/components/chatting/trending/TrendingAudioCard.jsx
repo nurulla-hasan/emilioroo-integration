@@ -3,14 +3,19 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Star, Play, Pause } from "lucide-react";
+import { Eye, Star, Play, Pause, Heart } from "lucide-react";
 import { formatDuration } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { playAudio, pauseAudio } from "@/lib/features/slices/audio/audioSlice";
+import useFavoriteToggle from "@/hooks/useFavoriteToggle";
+import useGetFavoriteIds from "@/hooks/useGetFavoriteIds";
 
 const TrendingAudioCard = ({ audio }) => {
+  const [favouriteIds] = useGetFavoriteIds();
   const dispatch = useDispatch();
   const { currentAudio, isPlaying } = useSelector((state) => state.audio);
+
+  const { toggleFavorite } = useFavoriteToggle();
 
   const handlePlayAudio = (audio) => {
     if (currentAudio?._id === audio._id && isPlaying) {
@@ -18,6 +23,11 @@ const TrendingAudioCard = ({ audio }) => {
     } else {
       dispatch(playAudio(audio));
     }
+  };
+
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+    toggleFavorite(audio._id);
   };
 
   return (
@@ -41,21 +51,28 @@ const TrendingAudioCard = ({ audio }) => {
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-4 mt-4 sm:mt-0 sm:ml-4">
-          <Button size="icon" variant="ghost" className="rounded-full" onClick={() => handlePlayAudio(audio)}>
-            {currentAudio?._id === audio._id && isPlaying ? (
-              <Pause className="w-6 h-6" />
-            ) : (
-              <Play className="w-6 h-6" />
-            )}
-          </Button>
-          <div className="flex items-center text-sm text-muted-foreground">
-            <Eye className="w-4 h-4 mr-1" /> {audio.totalPlay || 0}k
+        <div className="flex flex-col items-end justify-between gap-4">
+          <div>
+            <Button size="icon" variant="ghost" className="rounded-full" onClick={handleFavoriteClick}>
+              <Heart className={`w-5 h-5 ${favouriteIds.includes(audio._id) ? "fill-red-500 text-red-500" : "text-gray-500"}`} />
+            </Button>
           </div>
-          <div className="flex items-center text-sm text-muted-foreground">
-            <Star className="w-4 h-4 mr-1" /> {audio.totalRating || 0}
+          <div className="flex items-center gap-4 mt-4 sm:mt-0 sm:ml-4">
+            <Button size="icon" variant="ghost" className="rounded-full" onClick={() => handlePlayAudio(audio)}>
+              {currentAudio?._id === audio._id && isPlaying ? (
+                <Pause className="w-6 h-6" />
+              ) : (
+                <Play className="w-6 h-6" />
+              )}
+            </Button>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Eye className="w-4 h-4 mr-1" /> {audio.totalPlay || 0}k
+            </div>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Star className="w-4 h-4 mr-1" /> {audio.totalRating || 0}
+            </div>
+            <div className="text-sm text-muted-foreground">{formatDuration(audio.duration)}</div>
           </div>
-          <div className="text-sm text-muted-foreground">{formatDuration(audio.duration)}</div>
         </div>
       </div>
     </div>

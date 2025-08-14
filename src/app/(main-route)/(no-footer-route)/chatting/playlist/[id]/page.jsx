@@ -4,37 +4,26 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useGetSinglePlaylistQuery, useDeletePlaylistMutation } from "@/lib/features/api/chattingApi";
-import { useDispatch, useSelector } from "react-redux";
-import { playAudio, pauseAudio } from "@/lib/features/slices/audio/audioSlice";
-import { Badge } from "@/components/ui/badge";
-import { Eye, Star, Play, Trash2, Edit, Pause, Loader2 } from "lucide-react";
+import { Trash2, Edit, Loader2 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import UpdatePlaylistModal from "@/components/chatting/playlist/UpdatePlaylistModal";
 import { useState } from "react";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
 import { toast } from "sonner";
 import SinglePlaylistSkeleton from "@/components/skeleton/SinglePlaylistSkeleton";
+import TrendingAudioCard from "@/components/chatting/trending/TrendingAudioCard";
 
 const PlaylistDetailPage = () => {
   const params = useParams();
   const router = useRouter();
   const playlistId = params.id;
-  const dispatch = useDispatch();
 
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const { data, isLoading, isError } = useGetSinglePlaylistQuery(playlistId);
   const [deletePlaylist, { isLoading: isDeleting }] = useDeletePlaylistMutation();
-  const { currentAudio, isPlaying } = useSelector((state) => state.audio);
 
-  const handlePlayAudio = (audio) => {
-    if (currentAudio?._id === audio._id && isPlaying) {
-      dispatch(pauseAudio());
-    } else {
-      dispatch(playAudio(audio));
-    }
-  };
 
   const handleDelete = async () => {
     try {
@@ -133,42 +122,7 @@ const PlaylistDetailPage = () => {
         <h2 className="text-xl font-semibold mb-4">Audios in this Playlist</h2> 
         {playlist.audios && playlist.audios.length > 0 ? (
           playlist.audios.map((audio) => (
-            <div key={audio._id} className="flex items-center bg-card border rounded-lg p-4">
-              <div className="relative w-24 h-24 rounded-md overflow-hidden flex-shrink-0 mr-4">
-                <Image
-                  src={audio.cover_image || "/placeholder.png"}
-                  alt={audio.title || "Audio Cover"}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-lg truncate mb-1">{audio.title}</h3>
-                <p className="text-sm text-gray-600 truncate mb-2">{audio.description}</p>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  {audio.tags && audio.tags.map((tag, idx) => (
-                    <Badge key={idx} variant="outline">{tag}</Badge>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-4 ml-4">
-                <Button size="icon" variant="ghost" className="rounded-full" onClick={() => handlePlayAudio(audio)}>
-                  {currentAudio?._id === audio._id && isPlaying ? (
-                    <Pause className="w-6 h-6" />
-                  ) : (
-                    <Play className="w-6 h-6" />
-                  )}
-                </Button>
-                <div className="flex items-center text-sm text-gray-600">
-                  <Eye className="w-4 h-4 mr-1" /> {audio.totalPlay || 0}k
-                </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <Star className="w-4 h-4 mr-1" /> {audio.totalRating || 0}
-                </div>
-                <div className="text-sm text-gray-600">{formatDuration(audio.duration)}</div>
-                <Button size="sm" variant="outline" className="border-destructive text-destructive hover:bg-destructive/10">Delete</Button>
-              </div>
-            </div>
+            <TrendingAudioCard key={audio._id} audio={audio} />
           ))
         ) : (
           <p className="text-center text-gray-500">No audios in this playlist.</p>

@@ -31,7 +31,7 @@ const DonateUs = () => {
     };
 
     return (
-        <div className="min-h-minus-header flex flex-col items-center justify-between bg-primary p-6 lg:px-0 md:pt-40 pt-20 overflow-hidden relative">
+        <div className="min-h-minus-header flex flex-col items-center justify-between bg-primary dark:bg-accent p-6 lg:px-0 md:pt-40 pt-20 overflow-hidden relative">
             <div className="bg-card rounded-lg p-6 text-center z-10 w-full max-w-xl shadow-2xl">
                 <Card className="shadow-none border-none">
                     <CardHeader>

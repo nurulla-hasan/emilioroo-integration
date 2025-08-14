@@ -9,17 +9,9 @@ import { Play, Pause, Heart, Eye, Star, Clock } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { playAudio, pauseAudio } from '@/lib/features/slices/audio/audioSlice';
 import useFavoriteToggle from "@/hooks/useFavoriteToggle";
-import { cn } from '@/lib/utils';
+import { cn, formatDuration } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
-const formatDuration = (seconds) => {
-    if (isNaN(seconds) || seconds < 0) {
-        return "00:00";
-    }
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-};
 
 const AudioCard = ({ audio, favouriteIds }) => {
     const dispatch = useDispatch();
