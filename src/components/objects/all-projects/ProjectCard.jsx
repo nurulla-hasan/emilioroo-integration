@@ -45,7 +45,7 @@ const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center space-x-2">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={project.owner?.avatar || "/images/placeholder-image.jpg"} />
+              <AvatarImage src={project.owner?.avatar} />
               <AvatarFallback>{project.owner?.name?.charAt(0) || "U"}</AvatarFallback>
             </Avatar>
             <div>
@@ -55,7 +55,7 @@ const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
           </div>
           <div className="flex items-center space-x-1">
             <Users className="h-4 w-4" />
-            <span>{project.participants?.length || 0} Participants</span>
+            <span>{project.totalParticipants} Participants</span>
           </div>
         </div>
 

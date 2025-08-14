@@ -146,7 +146,7 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
                   <div className="space-y-1 leading-none">
                     <FormLabel>Make Project Public</FormLabel>
                     <FormDescription>
-                      Anyone can view and join this project.
+                      Anyone can view this project.
                     </FormDescription>
                   </div>
                   <FormMessage />

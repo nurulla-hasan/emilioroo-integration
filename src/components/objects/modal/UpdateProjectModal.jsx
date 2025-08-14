@@ -150,7 +150,7 @@ export default function UpdateProjectModal({ isOpen, onOpenChange, project }) {
                   <div className="space-y-1 leading-none">
                     <FormLabel>Make Project Public</FormLabel>
                     <FormDescription>
-                      Anyone can view and join this project.
+                      Anyone can view this project.
                     </FormDescription>
                   </div>
                   <FormMessage />
@@ -225,7 +225,13 @@ export default function UpdateProjectModal({ isOpen, onOpenChange, project }) {
                     }
                   </Button>
                   {project?.cover_image && !value && (
-                    <FormDescription>Current image: {project.cover_image.split('/').pop()}</FormDescription>
+                    <FormDescription>
+                      Current image: {
+                        project.cover_image.split('/').pop().length > 40
+                          ? `${project.cover_image.split('/').pop().slice(0, 30)}...${project.cover_image.split('/').pop().slice(-10)}`
+                          : project.cover_image.split('/').pop()
+                      }
+                    </FormDescription>
                   )}
                   <FormMessage />
                 </FormItem>

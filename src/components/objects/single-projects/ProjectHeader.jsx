@@ -27,7 +27,7 @@ const ProjectHeader = ({ project, onEditProject }) => {
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">{project.name}</h1>
                     <div className="flex items-center space-x-2 mb-4">
                         <Avatar className="h-10 w-10">
-                            <AvatarImage src={project.owner?.profile_image || "/images/placeholder-image.jpg"} />
+                            <AvatarImage src={project.owner?.profile_image} />
                             <AvatarFallback>{project.owner?.name?.charAt(0) || "U"}</AvatarFallback>
                         </Avatar>
                         <p className="text-gray-700 font-medium">{project.owner?.name || "Unknown"}</p>
