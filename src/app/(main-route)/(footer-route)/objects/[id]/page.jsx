@@ -5,7 +5,6 @@ import { Loader2 } from "lucide-react";
 import {
     useGetSingleProjectQuery,
     useGetJoinRequestQuery,
-    useAcceptRejectJoinRequestMutation,
     useGetProjectMemberQuery,
     useRemoveProjectMemberMutation
 } from "@/lib/features/api/projectApi";
@@ -61,20 +60,7 @@ const ProjectDetailsPage = () => {
         data: joinRequestsData,
         isLoading: isJoinRequestsLoading,
         isError: isJoinRequestsError,
-        refetch: refetchJoinRequests
     } = useGetJoinRequestQuery(projectId);
-
-    const [acceptRejectJoinRequest, { isLoading: isAcceptingRejecting }] = useAcceptRejectJoinRequestMutation();
-
-    const handleAcceptReject = async (requestId, status) => {
-        try {
-            await acceptRejectJoinRequest({ id: requestId, data: { status } }).unwrap();
-            toast.success(`Request ${status} successfully!`);
-            refetchJoinRequests();
-        } catch (err) {
-            toast.error(err?.data?.message || `Failed to ${status.toLowerCase()} request.`);
-        }
-    };
 
     const handleOpenAddMemberModal = (type) => {
         setMemberTypeToAdd(type);
@@ -162,8 +148,6 @@ const ProjectDetailsPage = () => {
                     requests={joinRequestsData?.data}
                     isLoading={isJoinRequestsLoading}
                     isError={isJoinRequestsError}
-                    onAcceptReject={handleAcceptReject}
-                    isProcessing={isAcceptingRejecting}
                 />
 
                 <AddMemberModal

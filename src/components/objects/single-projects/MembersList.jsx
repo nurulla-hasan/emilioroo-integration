@@ -3,7 +3,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2 } from "lucide-react";
 
 const MembersList = ({ title, members, isLoading, isError, onAddMember, onRemoveMember, isRemovingMember, memberType }) => {
     return (
@@ -31,7 +30,7 @@ const MembersList = ({ title, members, isLoading, isError, onAddMember, onRemove
                                 </div>
                             </div>
                             <Button variant="destructive" size="sm" onClick={() => onRemoveMember(member)} disabled={isRemovingMember}>
-                                {isRemovingMember ? <><Loader2 className="animate-spin" />Removing</> : "Remove"}
+                                Remove
                             </Button>
                         </div>
                     ))

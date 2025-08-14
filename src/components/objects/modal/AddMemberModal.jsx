@@ -75,6 +75,7 @@ const AddMemberModal = ({ isOpen, onOpenChange, projectId, onMemberAdded }) => {
   }, [isOpen, form.reset, form]);
 
   const onSubmit = async (values) => {
+    console.log(values);
     try {
       const payload = {
         user: values.userId,
@@ -116,7 +117,7 @@ const AddMemberModal = ({ isOpen, onOpenChange, projectId, onMemberAdded }) => {
                     <SelectContent>
                       {usersData?.data?.result?.length > 0 ? (
                         usersData.data.result.map((user) => (
-                          <SelectItem key={user._id} value={user.user}>
+                          <SelectItem key={user._id} value={user._id}>
                             {user.name}
                           </SelectItem>
                         ))

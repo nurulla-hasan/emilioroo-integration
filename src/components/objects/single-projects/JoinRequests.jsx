@@ -1,11 +1,11 @@
 
 "use client"
 
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2 } from "lucide-react";
+import MemberRejectButton from "./MemberRejectButton";
+import MemberAcceptButton from "./MemberAcceptButton";
 
-const JoinRequests = ({ requests, isLoading, isError, onAcceptReject, isProcessing }) => {
+const JoinRequests = ({ requests, isLoading, isError }) => {
     return (
         <div className="mb-8">
             <h2 className="text-xl font-bold mb-4">Join Request</h2>
@@ -28,21 +28,8 @@ const JoinRequests = ({ requests, isLoading, isError, onAcceptReject, isProcessi
                                 </div>
                             </div>
                             <div className="flex space-x-2">
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    onClick={() => onAcceptReject(request._id, "Rejected")}
-                                    disabled={isProcessing}
-                                >
-                                    {isProcessing ? <><Loader2 className="animate-spin" /> Processing</> : "Reject"}
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    onClick={() => onAcceptReject(request._id, "Approved")}
-                                    disabled={isProcessing}
-                                >
-                                    {isProcessing ? <><Loader2 className="animate-spin" /> Processing</> : "Accept"}
-                                </Button>
+                              <MemberAcceptButton request={request} />
+                              <MemberRejectButton request={request} />
                             </div>
                         </div>
                     ))
