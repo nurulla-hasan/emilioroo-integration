@@ -30,6 +30,7 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
         return (
             <Dialog open={isOpen} onOpenChange={onOpenChange}>
                 <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-hidden p-0 border">
+                    <DialogTitle className={"sr-only"}>nothing</DialogTitle>
                     <div className="flex justify-center items-center h-full">
                         <Loader2 className="h-8 w-8 animate-spin" />
                     </div>
@@ -42,6 +43,7 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
         return (
             <Dialog open={isOpen} onOpenChange={onOpenChange}>
                 <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-hidden p-0 border">
+                    <DialogTitle className={"sr-only"}>nothing</DialogTitle>
                     <div className="flex justify-center items-center h-full">
                         <p className="text-red-500">Error loading project details.</p>
                     </div>
@@ -54,6 +56,7 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
         return (
             <Dialog open={isOpen} onOpenChange={onOpenChange}>
                 <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-hidden p-0 border">
+                    <DialogTitle className={"sr-only"}>nothing</DialogTitle>
                     <div className="flex justify-center items-center h-full">
                         <p>Project not found.</p>
                     </div>
@@ -123,12 +126,12 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
                         </div>
 
                         {/* Description */}
-                        <p className="text-sm text-gray-600 leading-relaxed">
+                        <p className="text-sm text-muted-foreground leading-relaxed">
                             {project?.description}
                         </p>
 
                         {/* Participant count */}
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Users className="h-4 w-4" />
                             <span className="font-medium">{project?.totalParticipate} Participant</span>
                         </div>

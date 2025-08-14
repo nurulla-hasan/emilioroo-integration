@@ -95,7 +95,7 @@ const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
       <ProjectDetailsModal
         isOpen={isProjectDetailsModalOpen}
         onOpenChange={setIsProjectDetailsModalOpen}
-        projectId={project._id} // Pass projectId instead of project object
+        projectId={project._id}
       />
 
     </>

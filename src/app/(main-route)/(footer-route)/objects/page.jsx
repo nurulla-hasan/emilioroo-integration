@@ -10,6 +10,7 @@ import CreateProjectModal from '@/components/objects/modal/CreateProjectModal';
 import ProjectCard from '@/components/objects/all-projects/ProjectCard';
 import CustomPagination from '@/components/common/CustomPagination';
 import ProjectCardSkeleton from '@/components/skeleton/ProjectCardSkeleton';
+import LoadFailed from '@/components/common/LoadFailed';
 
 
 const ObjectsPage = () => {
@@ -20,7 +21,7 @@ const ObjectsPage = () => {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("all-projects");
 
-    
+
 
     const commonParams = [
         { name: "page", value: currentPage },
@@ -105,7 +106,9 @@ const ObjectsPage = () => {
                         {allProjectsLoading ? (
                             <ProjectCardSkeleton count={12} />
                         ) : allProjectsError ? (
-                            <p className="col-span-full text-center text-red-500">Failed to load projects.</p>
+                            <div className='col-span-4 justify-items-center'>
+                                <LoadFailed />
+                            </div>
                         ) : allProjectsData?.data?.result?.length > 0 ? (
                             allProjectsData.data.result.map((project) => (
                                 <ProjectCard key={project._id} project={project} />
@@ -120,7 +123,9 @@ const ObjectsPage = () => {
                         {myProjectsLoading ? (
                             <ProjectCardSkeleton count={12} />
                         ) : myProjectsError ? (
-                            <p className="col-span-full text-center text-red-500">Failed to load my projects.</p>
+                            <div className='col-span-4 justify-items-center'>
+                                <LoadFailed />
+                            </div>
                         ) : myProjectsData?.data?.result?.length > 0 ? (
                             myProjectsData.data.result.map((project) => (
                                 <ProjectCard key={project._id} project={project} isMyOrJoinedProject={true} />
@@ -135,7 +140,9 @@ const ObjectsPage = () => {
                         {joinedProjectsLoading ? (
                             <ProjectCardSkeleton count={12} />
                         ) : joinedProjectsError ? (
-                            <p className="col-span-full text-center text-red-500">Failed to load joined projects.</p>
+                            <div className='col-span-4 justify-items-center'>
+                                <LoadFailed />
+                            </div>
                         ) : joinedProjectsData?.data?.result?.length > 0 ? (
                             joinedProjectsData.data.result.map((project) => (
                                 <ProjectCard key={project._id} project={project} isMyOrJoinedProject={true} />
@@ -160,7 +167,7 @@ const ObjectsPage = () => {
                 onOpenChange={setIsCreateModalOpen}
             />
 
-            
+
         </PageLayout>
     );
 };
