@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 const JoinRequests = ({ requests, isLoading, isError, onAcceptReject, isProcessing }) => {
     return (
         <div className="mb-8">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Join Request</h2>
+            <h2 className="text-xl font-bold mb-4">Join Request</h2>
             <div className="space-y-3">
                 {isLoading ? (
                     <p>Loading join requests...</p>
@@ -24,7 +24,7 @@ const JoinRequests = ({ requests, isLoading, isError, onAcceptReject, isProcessi
                                 </Avatar>
                                 <div>
                                     <p className="font-medium">{request.user?.name || "Unknown"}</p>
-                                    <p className="text-sm text-gray-500">{request.user?.role || "User"}</p>
+                                    <p className="text-sm text-muted-foreground">{request.user?.role || "User"}</p>
                                 </div>
                             </div>
                             <div className="flex space-x-2">
@@ -47,7 +47,7 @@ const JoinRequests = ({ requests, isLoading, isError, onAcceptReject, isProcessi
                         </div>
                     ))
                 ) : (
-                    <p className="text-gray-500">No pending join requests.</p>
+                    <p className="text-muted-foreground">No pending join requests.</p>
                 )}
             </div>
         </div>

@@ -16,7 +16,7 @@ import ConfirmationModal from "@/components/common/ConfirmationModal";
 import ProjectHeader from "@/components/objects/single-projects/ProjectHeader";
 import MembersList from "@/components/objects/single-projects/MembersList";
 import JoinRequests from "@/components/objects/single-projects/JoinRequests";
-import UpdateProjectModal from "@/components/objects/modal/UpdateProjectModal"; 
+import UpdateProjectModal from "@/components/objects/modal/UpdateProjectModal";
 import { useState } from "react";
 
 const ProjectDetailsPage = () => {
@@ -135,56 +135,58 @@ const ProjectDetailsPage = () => {
     return (
         <PageLayout>
             <ProjectHeader project={project} onEditProject={() => setIsUpdateProjectModalOpen(true)} />
+            <div className="border rounded-lg p-4">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <MembersList
-                    title="Producers"
-                    members={producersData?.data?.result}
-                    isLoading={isProducersLoading}
-                    isError={isProducersError}
-                    onAddMember={() => handleOpenAddMemberModal("Producer")}
-                    onRemoveMember={handleOpenRemoveMemberModal}
-                    isRemovingMember={isRemovingMember}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <MembersList
+                        title="Producers"
+                        members={producersData?.data?.result}
+                        isLoading={isProducersLoading}
+                        isError={isProducersError}
+                        onAddMember={() => handleOpenAddMemberModal("Producer")}
+                        onRemoveMember={handleOpenRemoveMemberModal}
+                        isRemovingMember={isRemovingMember}
+                    />
+                    <MembersList
+                        title="Consumers"
+                        members={consumersData?.data?.result}
+                        isLoading={isConsumersLoading}
+                        isError={isConsumersError}
+                        onAddMember={() => handleOpenAddMemberModal("Consumer")}
+                        onRemoveMember={handleOpenRemoveMemberModal}
+                        isRemovingMember={isRemovingMember}
+                    />
+                </div>
+
+                <JoinRequests
+                    requests={joinRequestsData?.data}
+                    isLoading={isJoinRequestsLoading}
+                    isError={isJoinRequestsError}
+                    onAcceptReject={handleAcceptReject}
+                    isProcessing={isAcceptingRejecting}
                 />
-                <MembersList
-                    title="Consumers"
-                    members={consumersData?.data?.result}
-                    isLoading={isConsumersLoading}
-                    isError={isConsumersError}
-                    onAddMember={() => handleOpenAddMemberModal("Consumer")}
-                    onRemoveMember={handleOpenRemoveMemberModal}
-                    isRemovingMember={isRemovingMember}
+
+                <AddMemberModal
+                    isOpen={isAddMemberModalOpen}
+                    onOpenChange={setIsAddMemberModalOpen}
+                    projectId={projectId}
+                    memberType={memberTypeToAdd}
+                    onMemberAdded={handleMemberAdded}
+                />
+                <ConfirmationModal
+                    isOpen={isRemoveMemberModalOpen}
+                    onOpenChange={setIsRemoveMemberModalOpen}
+                    title="Remove Member"
+                    description={`Are you sure you want to remove ${memberToRemove?.user?.name || "this member"}?`}
+                    onConfirm={handleConfirmRemoveMember}
+                    confirmText={isRemovingMember ? <><Loader2 className="animate-spin" />Removing</> : "Remove"}
+                />
+                <UpdateProjectModal
+                    isOpen={isUpdateProjectModalOpen}
+                    onOpenChange={setIsUpdateProjectModalOpen}
+                    project={project}
                 />
             </div>
-
-            <JoinRequests
-                requests={joinRequestsData?.data}
-                isLoading={isJoinRequestsLoading}
-                isError={isJoinRequestsError}
-                onAcceptReject={handleAcceptReject}
-                isProcessing={isAcceptingRejecting}
-            />
-
-            <AddMemberModal
-                isOpen={isAddMemberModalOpen}
-                onOpenChange={setIsAddMemberModalOpen}
-                projectId={projectId}
-                memberType={memberTypeToAdd}
-                onMemberAdded={handleMemberAdded}
-            />
-            <ConfirmationModal
-                isOpen={isRemoveMemberModalOpen}
-                onOpenChange={setIsRemoveMemberModalOpen}
-                title="Remove Member"
-                description={`Are you sure you want to remove ${memberToRemove?.user?.name || "this member"}?`}
-                onConfirm={handleConfirmRemoveMember}
-                confirmText={isRemovingMember ? <><Loader2 className="animate-spin" />Removing</> : "Remove"}
-            />
-            <UpdateProjectModal
-                isOpen={isUpdateProjectModalOpen}
-                onOpenChange={setIsUpdateProjectModalOpen}
-                project={project}
-            />
         </PageLayout>
     );
 };

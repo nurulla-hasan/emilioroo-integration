@@ -1,4 +1,3 @@
-
 "use client"
 
 import Image from "next/image";
@@ -11,7 +10,7 @@ const ProjectHeader = ({ project, onEditProject }) => {
     return (
         <div>
             {/* Header Image */}
-            <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6">
+            <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6 border">
                 <Image
                     src={project.cover_image || "/images/placeholder-image.jpg"}
                     alt={project.name}
@@ -22,19 +21,19 @@ const ProjectHeader = ({ project, onEditProject }) => {
             </div>
 
             {/* Project Info Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start mb-6">
+            <div className="flex flex-col md:flex-row justify-between items-start mb-6 border p-4 rounded-lg">
                 <div className="w-full">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{project.name}</h1>
+                    <h1 className="text-3xl font-bold mb-2">{project.name}</h1>
                     <div className="flex items-center space-x-2 mb-4">
                         <Avatar className="h-10 w-10">
                             <AvatarImage src={project.owner?.profile_image} />
                             <AvatarFallback>{project.owner?.name?.charAt(0) || "U"}</AvatarFallback>
                         </Avatar>
-                        <p className="text-gray-700 font-medium">{project.owner?.name || "Unknown"}</p>
-                        <span className="text-gray-500 text-sm">Owner</span>
+                        <p className=" font-medium">{project.owner?.name || "Unknown"}</p>
+                        <span className="text-xs">(Owner)</span>
                     </div>
-                    <p className="text-gray-700 mb-4">{project.description}</p>
-                    <div className="flex items-center text-gray-600 text-sm">
+                    <p className=" mb-4">{project.description}</p>
+                    <div className="flex items-center text-sm">
                         <Users className="h-4 w-4 mr-1" />
                         <span>{project.totalParticipate || 0} Participant</span>
                     </div>
@@ -48,7 +47,7 @@ const ProjectHeader = ({ project, onEditProject }) => {
                         <Badge variant="secondary">{project.status}</Badge>
                         <Badge variant="outline">{project.joinControll}</Badge>
                     </div>
-                    <p className="text-gray-500 text-sm mt-2">{new Date(project.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+                    <p className=" text-sm mt-2">{new Date(project.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
                 </div>
             </div>
         </div>

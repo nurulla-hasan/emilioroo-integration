@@ -9,7 +9,7 @@ const MembersList = ({ title, members, isLoading, isError, onAddMember, onRemove
     return (
         <div>
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-gray-800">{title}</h2>
+                <h2 className="text-xl font-bold ">{title}</h2>
                 <Button size="sm" onClick={() => onAddMember(memberType)}>+Add {title}</Button>
             </div>
             <div className="space-y-3">
@@ -27,7 +27,7 @@ const MembersList = ({ title, members, isLoading, isError, onAddMember, onRemove
                                 </Avatar>
                                 <div>
                                     <p className="font-medium">{member.user?.name || "Unknown"}</p>
-                                    <p className="text-sm text-gray-500">{member.role}</p>
+                                    <p className="text-xs text-muted-foreground">{member.role}</p>
                                 </div>
                             </div>
                             <Button variant="destructive" size="sm" onClick={() => onRemoveMember(member)} disabled={isRemovingMember}>
@@ -36,7 +36,7 @@ const MembersList = ({ title, members, isLoading, isError, onAddMember, onRemove
                         </div>
                     ))
                 ) : (
-                    <p className="text-gray-500">No {title.toLowerCase()} found.</p>
+                    <p className="text-muted-foreground">No {title.toLowerCase()} found.</p>
                 )}
                 {members?.length > 5 && (
                     <Button variant="link" className="p-0 h-auto">View all</Button>

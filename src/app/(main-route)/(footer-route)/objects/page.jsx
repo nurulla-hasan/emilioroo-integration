@@ -11,6 +11,7 @@ import ProjectCard from '@/components/objects/all-projects/ProjectCard';
 import CustomPagination from '@/components/common/CustomPagination';
 import ProjectCardSkeleton from '@/components/skeleton/ProjectCardSkeleton';
 
+
 const ObjectsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
@@ -18,6 +19,8 @@ const ObjectsPage = () => {
     const [pageSize] = useState(12);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("all-projects");
+
+    
 
     const commonParams = [
         { name: "page", value: currentPage },
@@ -66,8 +69,6 @@ const ObjectsPage = () => {
     const handleOpenCreateModal = () => {
         setIsCreateModalOpen(true);
     };
-
-    console.log("Total Pages:", totalPages);
 
     return (
         <PageLayout>
@@ -158,6 +159,8 @@ const ObjectsPage = () => {
                 isOpen={isCreateModalOpen}
                 onOpenChange={setIsCreateModalOpen}
             />
+
+            
         </PageLayout>
     );
 };
