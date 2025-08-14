@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useGetAllAudioQuery } from "@/lib/features/api/chattingApi";
-import CustomPagination from "@/components/common/CustomPagination";
+import CustomPagination from "@/components/common/CustomPagination"; 
 import { useDispatch, useSelector } from "react-redux";
 import { playAudio, pauseAudio } from "@/lib/features/slices/audio/audioSlice";
 import Image from "next/image";
@@ -10,13 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Star, Play, Pause } from "lucide-react";
 import ConversationAudioCardSkeleton from "@/components/skeleton/ConversationAudioCardSkeleton";
-
-const formatDuration = (totalSeconds) => {
-  if (isNaN(totalSeconds) || totalSeconds < 0) return "0m";
-  const minutes = Math.floor(totalSeconds / 60);
-  const remainingSeconds = Math.floor(totalSeconds % 60);
-  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-};
+import { formatDuration } from "@/lib/utils";
 
 const ConversationsPage = () => {
   const [page, setPage] = useState(1);

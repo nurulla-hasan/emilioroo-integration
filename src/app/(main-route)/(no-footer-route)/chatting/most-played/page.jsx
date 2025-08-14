@@ -49,7 +49,7 @@ const MostPlayedPage = () => {
         ) : (
           <p className="col-span-full text-center text-gray-500">No most played audios found.</p>
         )}
-      </div>
+      </div> 
       {meta.totalPage > 1 && (
         <div className="mt-8 flex justify-center">
           <CustomPagination

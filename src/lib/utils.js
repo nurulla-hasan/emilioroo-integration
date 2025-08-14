@@ -28,6 +28,14 @@ export function isNew(createdAt, days = 7) {
   return diff <= days * 24 * 60 * 60 * 1000
 }
 
+// Format Duration
+export const formatDuration = (totalSeconds) => {
+  if (isNaN(totalSeconds) || totalSeconds < 0) return "0m";
+  const minutes = Math.floor(totalSeconds / 60);
+  const remainingSeconds = Math.floor(totalSeconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
+
 
 // useAuthRedirect
 // export const useAuthRedirect = () => {

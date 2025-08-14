@@ -23,7 +23,7 @@ const Hero = () => {
                     {/* CTA Button */}
                     <div className="flex justify-center">
                         <Link href="/" passHref>
-                            <Button className={"rounded-full md:w-50 md:h-12 md:text-lg bg-transparent border border-white text-white hover:text-primary hover:bg-white hover:border"}>
+                            <Button className={"rounded-full md:w-50 md:h-12 md:text-lg bg-transparent border border-white text-white hover:text-primary hover:bg-white dark:hover:text-primary hover:border"}>
                                 Explor Now
                                 <ArrowRight className="ml-2 h-8 w-8" />
                             </Button>

@@ -13,7 +13,7 @@ const PlaylistCard = ({ playlist = {} }) => {
   return (
     <Card className="overflow-hidden rounded-xl border border-gray-200/70 bg-card shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:shadow-md hover:ring-1 hover:ring-primary/20">
       {/* Cover */}
-      <div className="relative w-full aspect-video">
+      <div className="relative w-full h-40">
         <Image
           src={playlist?.cover_image}
           alt={playlist?.name || "Playlist Cover"}

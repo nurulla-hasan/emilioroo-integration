@@ -130,7 +130,7 @@ const PlaylistDetailPage = () => {
 
       {/* Audio List */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold mb-4">Audios in this Playlist</h2>
+        <h2 className="text-xl font-semibold mb-4">Audios in this Playlist</h2> 
         {playlist.audios && playlist.audios.length > 0 ? (
           playlist.audios.map((audio) => (
             <div key={audio._id} className="flex items-center bg-card border rounded-lg p-4">
