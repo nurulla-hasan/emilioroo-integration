@@ -1,6 +1,6 @@
 "use client"
 
-import { Facebook, Instagram, Twitter, Mail, Heart, Send } from "lucide-react"
+import { Facebook, Instagram, Mail, Heart, Send } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -159,7 +159,7 @@ const Footer = () => {
                                     </div>
                                     <span className="font-medium">Instagram</span>
                                 </Link>
-
+{/* 
                                 <Link
                                     href="https://twitter.com"
                                     className="flex items-center gap-4 text-white/80 hover:text-white transition-all duration-300 hover:translate-x-2 group"
@@ -171,7 +171,7 @@ const Footer = () => {
                                         <div className="absolute inset-0 bg-black/50 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                     </div>
                                     <span className="font-medium">Twitter</span>
-                                </Link>
+                                </Link> */}
                             </div>
                         </div>
                     </div>
