@@ -32,7 +32,7 @@ const ChattingLayout = ({ children }) => {
                             </SheetContent>
                         </Sheet>
                     </div>
-                    <div className="p-4 md:p-6 h-[calc(100vh-80px)] overflow-auto">
+                    <div className="p-4 md:p-6 h-[calc(100vh-200px)] md:h-[calc(100vh-130px)] overflow-auto">
                         {children}
                     </div>
                 </main>
