@@ -36,6 +36,17 @@ export const formatDuration = (totalSeconds) => {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
+// Format Date
+export const formatDate = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
 
 // useAuthRedirect
 // export const useAuthRedirect = () => {

@@ -158,7 +158,7 @@ const SingleInstitutionPage = () => {
     };
 
     return (
-        <div className="min-h-minus-header overflow-hidden grid grid-cols-12 gap-8 p-2">
+        <div className="h-[calc(100vh-80px)] overflow-hidden grid grid-cols-12 gap-8 p-2">
             {/* Sidebar */}
             <div className="hidden lg:block col-span-3 border rounded-lg p-4 overflow-y-auto">
                 <div className="flex flex-col gap-2">
@@ -199,7 +199,17 @@ const SingleInstitutionPage = () => {
                             </div>
                         </div>
                         <Mediators mediators={mediators} />
-                        <InstitutionContent innovators={innovators} thinkers={thinkers} topics={institutionConversations} onTopicClick={handleTopicClick} onEditTopic={handleEditConversationClick} onDeleteTopic={handleDeleteConversationClick} onRemoveMember={handleRemoveMemberClick} onCreateConversationClick={handleCreateConversationClick} isLoading={areInstitutionConversationsLoading} error={areInstitutionConversationsError} />
+                        <InstitutionContent
+                            innovators={innovators}
+                            thinkers={thinkers}
+                            topics={institutionConversations}
+                            onTopicClick={handleTopicClick}
+                            onEditTopic={handleEditConversationClick}
+                            onDeleteTopic={handleDeleteConversationClick}
+                            onRemoveMember={handleRemoveMemberClick}
+                            onCreateConversationClick={handleCreateConversationClick}
+                            isLoading={areInstitutionConversationsLoading}
+                            error={areInstitutionConversationsError} />
                         {selectedTopic && <PostFeed posts={fakePosts} />}
                     </>
                 )}
