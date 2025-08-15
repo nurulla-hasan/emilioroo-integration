@@ -14,6 +14,8 @@ const ProjectWorkspaceHeader = ({ project }) => {
                     src={project.cover_image || "/images/hero.png"}
                     alt={project.name}
                     fill
+                    sizes="100%"
+                    priority
                     className="object-cover"
                 />
             </div>
@@ -30,13 +32,16 @@ const ProjectWorkspaceHeader = ({ project }) => {
                             <p className="text-xs text-muted-foreground">Owner</p>
                         </div>
                     </div>
-                    <p className="text-muted-foreground mt-2">{project.description}</p>
                 </div>
                 <div className="text-right">
-                    <Badge variant="secondary">{project.status}</Badge>
+                    <div className='flex gap-2'>
+                        <Badge variant="secondary">{project.status}</Badge>
+                        <Badge variant="secondary">{project.joinControll}</Badge>
+                    </div>
                     <p className="text-xs text-muted-foreground mt-2">Created: {formatDate(project.createdAt)}</p>
                 </div>
             </div>
+                <p className="text-muted-foreground mt-2">{project.description}</p>
         </div>
     );
 };

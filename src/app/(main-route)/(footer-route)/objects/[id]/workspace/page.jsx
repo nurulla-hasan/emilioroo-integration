@@ -13,10 +13,10 @@ import ProjectDiscussion from "@/components/objects/workspace/ProjectDiscussion"
 import { Loader2 } from 'lucide-react';
 
 const staticMessages = [
-  { id: 1, author: { name: "Dindiniya", role: "General manager", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "musa-9:30", isYou: false },
-  { id: 2, author: { name: "You", role: "", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "you-9:30", isYou: true },
-  { id: 3, author: { name: "Dindiniya", role: "General manager", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "musa-9:30", isYou: false },
-  { id: 4, author: { name: "You", role: "", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "you-9:30", isYou: true },
+  { id: 1, author: { name: "Dindiniya", role: "General manager", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "9:30", isYou: false },
+  { id: 2, author: { name: "You", role: "", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "9:30", isYou: true },
+  { id: 3, author: { name: "Dindiniya", role: "General manager", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "9:30", isYou: false },
+  { id: 4, author: { name: "You", role: "", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "9:30", isYou: true },
 ];
 
 
@@ -39,13 +39,10 @@ const ProjectWorkspacePage = () => {
   const documents = documentsData?.data?.result;
   const images = imagesData?.data?.result;
 
-  console.log("Documents Data:", documentsData);
-  console.log("Images Data:", imagesData);
-
   return (
     <div className="h-[calc(100vh-80px)] overflow-hidden grid grid-cols-12 gap-8 p-2">
       {/* Sidebar */}
-      <div className="hidden lg:block col-span-3 border rounded-lg p-4 overflow-y-auto">
+      <div className="hidden xl:block col-span-3 border rounded-lg p-4 overflow-y-auto">
         <div className="flex flex-col gap-2">
           {areAllProjectsLoading && <InstitutionNavCardSkeleton count={7} />}
           {areAllProjectsError && <p className="text-red-500">Error loading projects.</p>}
@@ -56,7 +53,7 @@ const ProjectWorkspacePage = () => {
       </div>
 
       {/* Main content */}
-      <div className="col-span-12 lg:col-span-9 overflow-y-auto border p-3 rounded-lg">
+      <div className="col-span-12 xl:col-span-9 overflow-y-auto border p-3 rounded-lg">
         {isSingleProjectLoading && (
           <div className="flex justify-center items-center h-full">
             <Loader2 className="h-8 w-8 animate-spin" />
@@ -66,7 +63,7 @@ const ProjectWorkspacePage = () => {
         {project && (
           <>
             <ProjectWorkspaceHeader project={project} />
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
               <div className="lg:col-span-3">
                 <ProducersList producers={producers} isLoading={areProducersLoading} isError={areProducersError} />
               </div>

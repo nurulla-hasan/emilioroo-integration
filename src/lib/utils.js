@@ -48,6 +48,15 @@ export const formatDate = (dateString) => {
 };
 
 
+// Format File Name
+export const formatFileName = (url, len) => {
+    const fileName = url.split('/').pop();
+    if (fileName.length > len) {
+        return `${fileName.slice(0, 5)}...${fileName.slice(-10)}`;
+    }
+    return fileName;
+};
+
 // useAuthRedirect
 // export const useAuthRedirect = () => {
 //     const router = useRouter();

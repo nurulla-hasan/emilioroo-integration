@@ -22,7 +22,7 @@ const UsersList = ({ users, isLoading, isError }) => {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input placeholder="Search User" className="pl-9" />
             </div> */}
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-[884px] overflow-y-auto">
                 {!isLoading && !isError && users && users.length === 0 && (
                     <p className="text-muted-foreground">No users found.</p>
                 )}

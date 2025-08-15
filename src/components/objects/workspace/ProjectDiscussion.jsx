@@ -24,7 +24,7 @@ const ProjectDiscussion = ({ messages }) => {
                                 <p className="text-xs text-muted-foreground">{message.author.role}</p>
                             </div>
                             <p className='dark:text-white'>{message.text}</p>
-                            <p className={`text-xs mt-1 ${message.isYou ? 'text-primary-foreground/80 dark:text-white' : 'text-muted-foreground'}`}>{message.time}</p>
+                            <p className={`text-xs mt-1 ${message.isYou ? 'text-primary-foreground/80 dark:text-muted-foreground text-end' : 'text-muted-foreground'}`}>{message.time}</p>
                         </div>
                     </div>
                 ))}
