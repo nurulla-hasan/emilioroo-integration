@@ -93,7 +93,7 @@ const projectApi = baseApi.injectEndpoints({
             query: ({ id, formData }) => ({
                 url: `/project/update/${id}`,
                 method: "PATCH",
-                body: formData, // Pass the formData as the body
+                body: formData, 
             }),
             invalidatesTags: ["PROJECTS"],
         }),

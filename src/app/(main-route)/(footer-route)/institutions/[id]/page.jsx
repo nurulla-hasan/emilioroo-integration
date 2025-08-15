@@ -158,7 +158,7 @@ const SingleInstitutionPage = () => {
     };
 
     return (
-        <div className="h-[calc(100vh-80px)] overflow-hidden grid grid-cols-12 gap-8 p-2">
+        <div className="min-h-minus-header overflow-hidden grid grid-cols-12 gap-8 p-2">
             {/* Sidebar */}
             <div className="hidden lg:block col-span-3 border rounded-lg p-4 overflow-y-auto">
                 <div className="flex flex-col gap-2">

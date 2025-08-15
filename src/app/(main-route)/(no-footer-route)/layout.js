@@ -1,6 +1,6 @@
 
 
-export default function MainRouteLayout({ children }) {
+export default function NoFooterRouteLayout({ children }) {
     return (
         <>
             {children}

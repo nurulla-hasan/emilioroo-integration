@@ -1,205 +1,82 @@
-"use client"
+"use client";
 
-import { Mail, MapPin, Phone, Facebook, Instagram, Youtube, Loader2 } from "lucide-react";
-import { FaTelegramPlane } from "react-icons/fa";
-import Image from "next/image";
-import Link from "next/link";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-// import { useEffect } from "react";
-// import useWebsiteInfoStore from "@/store/websiteInfo";
-// import { toast } from "sonner";
-// import { useMutation } from "@tanstack/react-query";
-// import api from "@/lib/api";
-import { useForm } from "react-hook-form";
+import { Facebook, Instagram, Twitter } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
 
 const Footer = () => {
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-    } = useForm()
-
-    // const { info, fetchInfo } = useWebsiteInfoStore();
-
-    // useEffect(() => {
-    //     if (!info) {
-    //         fetchInfo();
-    //     }
-    // }, [info, fetchInfo]);
-
-    const info = {
-        email: "2Tt8K@example.com",
-        phone: "123-456-7890",
-        address: "123 Main St, Anytown, USA",
-        instagram: "https://www.instagram.com/example",
-        telegram: "https://t.me/example",
-    }
-
-    const { email, phone, address, instagram, telegram } = info || {};
-
-    const isPending = false;
-    // const { mutate, isPending } = useMutation({
-    //     mutationFn: (data) => api.post("/newsletter/subscribe", data),
-
-    //     onSuccess: (data) => {
-    //         console.log(data);
-    //         toast.success(data?.data?.message);
-    //     },
-    //     onError: (error) => {
-    //         toast.error(error?.response?.data?.message || "Failed to send message.");
-    //     },
-    // })
-
-    const onSubmit = (data) => {
-        console.log(data);
-        // mutate({
-        //     email: data.email,
-        // })
-        reset()
-    }
-
     return (
-        <footer
-            className="relative py-12 bg-skyBlue2"
-        >
-            {/* Dark overlay on top of the background image */}
-            <div className="relative z-10">
-                {/* Newsletter Section */}
-                <div className="max-w-7xl mx-auto px-4 lg:px-0 pb-8 md:pb-12">
-                    <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-                        <div>
-                            <h3 className="text-2xl lg:text-4xl max-w-lg text-title">
-                                Subscribe Newsletter For Latest Update
-                            </h3>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto bg-skyBlue3 p-2 rounded-lg">
-                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-4">
-                                <div>
-                                    <Input
-                                        {...register("email", { required: true })}
-                                        type="email"
-                                        placeholder="Enter your email"
-                                        className="focus:border-0"
-                                    />
-                                    {errors.email && <span className="text-red-500 text-xs ml-1">Email is required</span>}
-                                </div>
-                                <Button
-                                className={"bg-skyBlue text-white hover:bg-skyBlue/90"}
-                                    type="submit"
-                                >
-                                    {
-                                        isPending ? <><Loader2 className="animate-spin" />Loading</> : 'Subscribe'
-                                    }
-                                </Button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="border-b border-gray-300 w-full"></div>
-
-
-                {/* Main Footer Content */}
-                <div className="max-w-7xl mx-auto px-4 lg:px-0 py-10">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-18 ">
-                        {/* Logo and Description */}
-                        <div className="flex flex-col justify-start items-start gap-4">
-                            <div className="relative w-[150px] h-auto">
-                                <Image
-                                    src="/images/logo.png"
-                                    alt="TripleM Collectibles Logo"
-                                    width={150}
-                                    height={50}
-                                    style={{ width: '100%', height: 'auto' }}
-                                />
+        <footer className="bg-primary text-white py-16 border-t border-gray-500">
+            <div className="flex flex-col md:flex-row gap-10 justify-between text-center lg:text-left xl:max-w-[1400px] mx-auto">
+                {/* Logo and Description */}
+                <div className="space-y-4 relative">
+                    <div className="flex justify-center lg:justify-start gap-3 items-center">
+                        <Link href="/">
+                            <div className="md:h-7 lg:h-8 border-[#FFFFFF] font-bold text-lg flex justify-center items-center gap-2 border-2 rounded-[100%] p-2">
+                                <div className="lg:w-2 w-2 lg:h-2 h-2 rounded-full bg-[#22B14C]"></div>
+                                <div className="lg:w-12 w-8 h-2 rounded-full bg-[#FFF200]"></div>
+                                <div className="lg:w-2 w-2 lg:h-2 h-2 rounded-full bg-[#ED1C24]"></div>
                             </div>
-                            <p className="text-subtitle text-sm leading-relaxed">
-                                Collect smarter with authentic products, fair prices, and a platform built just for hobbyists.
-                            </p>
-                        </div>
-
-                        {/* Company & Legal */}
-                        <div>
-                            <h4 className="text-title font-semibold text-lg mb-4">
-                                Company & Legal
-                            </h4>
-                            <ul className="space-y-3">
-                                <li><Link href="/about" className="text-subtitle text-sm hover:text-primary transition-colors">About Us</Link></li>
-                                <li><Link href="/terms" className="text-subtitle text-sm hover:text-primary transition-colors">Terms & Conditions</Link></li>
-                                <li><Link href="/privacy" className="text-subtitle text-sm hover:text-primary transition-colors">Privacy Policy</Link></li>
-                            </ul>
-                        </div>
-
-                        {/* Help & Contact */}
-                        <div>
-                            <h4 className="text-title font-semibold text-lg mb-4">
-                                Help & Contact
-                            </h4>
-                            <ul className="space-y-3">
-                                <li><Link href="/faq" className="text-subtitle text-sm hover:text-primary transition-colors">FAQs</Link></li>
-                                <li><Link href="/help" className="text-subtitle text-sm hover:text-primary transition-colors">Help & Support</Link></li>
-                                <li><Link href="/contact" className="text-subtitle text-sm hover:text-primary transition-colors">Contact Us</Link></li>
-                            </ul>
-                        </div>
-
-                        {/* Our Address */}
-                        <div>
-                            <h4 className="text-title font-semibold text-lg mb-4">
-                                Our Address
-                            </h4>
-                            <address className="not-italic space-y-3 text-subtitle text-sm">
-                                <div className="flex items-start gap-3">
-                                    <MapPin className="h-5 w-5 text-subtitle shrink-0 mt-1" />
-                                    <span>{address}</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <Phone className="h-5 w-5 text-subtitle shrink-0" />
-                                    <span>{phone}</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <Mail className="h-5 w-5 text-subtitle shrink-0" />
-                                    <span>{email}</span>
-                                </div>
-                            </address>
-                        </div>
+                        </Link>
+                        <h2 className="text-xl font-bold">Bankybondy</h2>
                     </div>
+                    <p className="text-xs lg:absolute lg:top-8 lg:left-36">We are chatting</p>
+                    <p className="text-sm font-[300] mt-4 lg:mt-12 mx-auto lg:mx-0 max-w-xs">
+                        A free platform for sharing and exploring daily life conversations. Enjoy authentic audio snippets from real
+                        people, and if you&apos;d like to support us, donations are always appreciated.
+                    </p>
                 </div>
 
-                {/* Bottom Footer - Social Icons and Copyright */}
-                <div className="flex gap-3 items-center justify-center">
-                    <div className="border-b border-gray-300 w-full"></div>
-                    <div className="max-w-7xl mx-auto px-4 lg:px-0">
-                        <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
-                            <div className="flex space-x-6">
-                                <Link href={`${instagram}`} target="_blank" aria-label="Instagram" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
-                                    <Instagram className="w-4 h-4 text-subtitle hover:text-primary transition-colors" />
-                                </Link>
-                                <Link href={`${telegram}`} target="_blank" aria-label="Twitter" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
-                                    <FaTelegramPlane className="w-4 h-4 text-subtitle hover:text-primary transition-colors" />
-                                </Link>
-                                <Link href="#" aria-label="Facebook" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
-                                    <Facebook className="w-4 h-4 text-subtitle hover:text-primary transition-colors" />
-                                </Link>
-                                <Link href="#" aria-label="YouTube" className="w-8 h-8 border border-gray-600 rounded-full flex items-center justify-center hover:bg-prbg-primary hover:border-prbg-primary transition-colors">
-                                    <Youtube className="w-4 h-4 text-subtitle hover:text-primary transition-colors" />
-                                </Link>
-                                {/* Changed from Pinterest to MessageCircleHeart based on your import */}
+                {/* Information Links */}
+                <div className="space-y-4">
+                    <h3 className="text-xl font-semibold mb-4 lg:mb-6">Information</h3>
+                    <nav className="flex flex-col space-y-3 *:text-sm">
+                        <Link href="/donate-us" className="hover:underline">
+                            Donate us
+                        </Link>
+                        <Link href="/contact" className="hover:underline">
+                            Contact us
+                        </Link>
+                        <Link href="/about" className="hover:underline">
+                            About Us
+                        </Link>
+                        <Link href="/terms" className="hover:underline">
+                            Terms and Conditions
+                        </Link>
+                        <Link href="/privacy" className="hover:underline">
+                            Privacy policy
+                        </Link>
+                    </nav>
+                </div>
 
+                {/* Social Media */}
+                <div className="space-y-4">
+                    <h3 className="text-xl font-semibold mb-4 lg:mb-6">Social media</h3>
+                    <div className="flex flex-col space-y-3 *:text-sm items-center lg:items-start">
+                        <Link href="https://facebook.com" className="flex items-center space-x-2 hover:underline">
+                            <div className="bg-primary rounded-full p-1.5 border">
+                                <Facebook className="w-4 h-4 text-white" />
                             </div>
-
-                        </div>
+                            <span>Facebook</span>
+                        </Link>
+                        <Link href="https://instagram.com" className="flex items-center space-x-2 hover:underline">
+                            <div className="bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCAF45] rounded-full border p-1.5">
+                                <Instagram className="w-4 h-4 text-white" />
+                            </div>
+                            <span>Instagram</span>
+                        </Link>
+                        <Link href="https://twitter.com" className="flex items-center space-x-2 boredr hover:underline">
+                            <div className="bg-black rounded-full p-2">
+                                <Twitter className="w-4 h-4 text-white" />
+                            </div>
+                            <span>Twitter</span>
+                        </Link>
                     </div>
-                    <div className="border-b border-gray-300 w-full"></div>
-                </div>
-                <div className="text-subtitle text-sm text-center mt-8">
-                    © 2025 Triplemcollectibles. All right reserved
                 </div>
             </div>
         </footer>
-    )
-}
 
-export default Footer
+    );
+};
+
+export default Footer;
