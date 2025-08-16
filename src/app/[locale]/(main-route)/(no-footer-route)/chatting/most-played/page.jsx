@@ -6,8 +6,10 @@ import AudioCard from "@/components/chatting/AudioCard";
 import AudioCardSkeleton from "@/components/skeleton/AudioCardSkeleton";
 import CustomPagination from "@/components/common/CustomPagination";
 import useGetFavoriteIds from "@/hooks/useGetFavoriteIds";
+import { useTranslations } from 'next-intl';
 
 const MostPlayedPage = () => {
+  const t = useTranslations('MostPlayedPage');
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
 
@@ -24,7 +26,7 @@ const MostPlayedPage = () => {
   if (isLoading) {
     return (
       <div>
-        <h1 className="text-2xl font-bold mb-6">Most Played Audios</h1>
+        <h1 className="text-2xl font-bold mb-6">{t('mostPlayedAudios')}</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
           {[...Array(limit)].map((_, index) => (
             <AudioCardSkeleton key={index} />
@@ -35,19 +37,19 @@ const MostPlayedPage = () => {
   }
 
   if (isError) {
-    return <div className="text-center text-red-500 min-h-minus-header">Error loading most played audios.</div>;
+    return <div className="text-center text-red-500 min-h-minus-header">{t('errorLoadingMostPlayed')}</div>;
   }
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">Most Played Audios</h1>
+      <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">{t('mostPlayedAudios')}</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4  gap-6">
         {audios.length > 0 ? (
           audios.map((audio) => (
             <AudioCard key={audio._id} audio={audio} favouriteIds={favouriteIds} />
           ))
         ) : (
-          <p className="col-span-full text-center text-gray-500">No most played audios found.</p>
+          <p className="col-span-full text-center text-gray-500">{t('noMostPlayedAudios')}</p>
         )}
       </div> 
       {meta.totalPage > 1 && (

@@ -9,6 +9,7 @@ import { Loader2 } from 'lucide-react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 
 const bondSchema = z.object({
     offer: z.string().min(1, "Offer is required"),
@@ -17,6 +18,7 @@ const bondSchema = z.object({
 });
 
 const AddNewBondModal = ({ isOpen, onOpenChange, onCreateBond, isLoading }) => {
+    const t = useTranslations('AddNewBondModal');
     const { register, handleSubmit, formState: { errors, isValid }, reset } = useForm({
         resolver: zodResolver(bondSchema),
     });
@@ -30,55 +32,55 @@ const AddNewBondModal = ({ isOpen, onOpenChange, onCreateBond, isLoading }) => {
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Create a new bond</DialogTitle>
+                    <DialogTitle>{t('createANewBond')}</DialogTitle>
                     <DialogDescription>
-                        Fill in the details to create a new bond.
+                        {t('fillInDetails')}
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="offer" className="text-left">
-                            Offer
+                            {t('offer')}
                         </Label>
                         <Input
                             id="offer"
                             {...register("offer")}
-                            placeholder="e.g., Laptop"
+                            placeholder={t('exampleLaptop')}
                         />
-                        {errors.offer && <p className="text-red-500 text-xs mt-1">{errors.offer.message}</p>}
+                        {errors.offer && <p className="text-red-500 text-xs mt-1">{t('offerIsRequired')}</p>}
                     </div>
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="want" className="text-left">
-                            Want
+                            {t('want')}
                         </Label>
                         <Input
                             id="want"
                             {...register("want")}
-                            placeholder="e.g., Camera"
+                            placeholder={t('exampleCamera')}
                         />
-                        {errors.want && <p className="text-red-500 text-xs mt-1">{errors.want.message}</p>}
+                        {errors.want && <p className="text-red-500 text-xs mt-1">{t('wantIsRequired')}</p>}
                     </div>
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="tag" className="text-left">
-                            Tag <span className='text-xs'>(For better matching)</span>
+                            {t('tag')} <span className='text-xs'>{t('forBetterMatching')}</span>
                         </Label>
                         <Input
                             id="tag"
                             {...register("tag")}
-                            placeholder="e.g., electronics"
+                            placeholder={t('exampleElectronics')}
                         />
-                        {errors.tag && <p className="text-red-500 text-xs mt-1">{errors.tag.message}</p>}
+                        {errors.tag && <p className="text-red-500 text-xs mt-1">{t('tagIsRequired')}</p>}
                     </div>
                     
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button size={"sm"} type="button" variant="outline">Cancel</Button>
+                            <Button size={"sm"} type="button" variant="outline">{t('cancel')}</Button>
                         </DialogClose>
                         <Button size={"sm"} type="submit" disabled={isLoading || !isValid}>
                             {isLoading ? (
-                                <><Loader2 className="h-4 w-4 animate-spin" /> Creating</>
+                                <><Loader2 className="h-4 w-4 animate-spin" /> {t('creating')}</>
                             ) : (
-                                "Create Bond"
+                                t('createBond')
                             )}
                         </Button>
                     </DialogFooter>

@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { Separator } from "../ui/separator"
+import { useTranslations } from 'next-intl';
 
 const Footer = () => {
+    const t = useTranslations('Footer');
     const [email, setEmail] = useState("")
     const [isSubscribed, setIsSubscribed] = useState(false)
 
@@ -29,10 +31,10 @@ const Footer = () => {
                     <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between text-center">
                         <div className="flex flex-col">
                             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-                                Join Our Community
+                                {t('joinCommunity')}
                             </h2>
                             <p className="text-white/80 mb-8 max-w-md mx-auto">
-                                Get the latest updates and exclusive content delivered to your inbox
+                                {t('getUpdates')}
                             </p>
                         </div>
 
@@ -41,7 +43,7 @@ const Footer = () => {
                                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60" />
                                 <Input
                                     type="email"
-                                    placeholder="Enter your email"
+                                    placeholder={t('enterEmail')}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white/15 focus:border-white/40 transition-all duration-300"
@@ -54,12 +56,12 @@ const Footer = () => {
                                 {isSubscribed ? (
                                     <span className="flex items-center gap-2">
                                         <Heart className="w-4 h-4 text-red-500" />
-                                        Subscribed!
+                                        {t('subscribed')}
                                     </span>
                                 ) : (
                                     <span className="flex items-center gap-2">
                                         <Send className="w-4 h-4" />
-                                        Subscribe
+                                        {t('subscribe')}
                                     </span>
                                 )}
                             </Button>
@@ -87,31 +89,30 @@ const Footer = () => {
                                 </Link>
                                 <div>
                                     <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-                                        Bankybondy
+                                        {t('bankybondy')}
                                     </h2>
-                                    <p className="text-white/70 text-sm mt-1">We are chatting</p>
+                                    <p className="text-white/70 text-sm mt-1">{t('weAreChatting')}</p>
                                 </div>
                             </div>
 
                             <p className="text-white/80 leading-relaxed max-w-md">
-                                A free platform for sharing and exploring daily life conversations. Enjoy authentic audio snippets from
-                                real people, and if you would like to support us, donations are always appreciated.
+                                {t('platformDescription')}
                             </p>
                         </div>
 
                         {/* Information Links */}
                         <div className="space-y-6">
                             <h3 className="text-xl font-bold relative">
-                                Information
+                                {t('information')}
                                 <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-white to-transparent" />
                             </h3>
                             <nav className="space-y-4">
                                 {[
-                                    { href: "/donate-us", label: "Donate us", icon: Heart },
-                                    { href: "/contact", label: "Contact us", icon: Mail },
-                                    { href: "/about", label: "About Us", icon: null },
-                                    { href: "/terms", label: "Terms and Conditions", icon: null },
-                                    { href: "/privacy", label: "Privacy policy", icon: null },
+                                    { href: "/donate-us", label: t('donateUs'), icon: Heart },
+                                    { href: "/contact", label: t('contactUs'), icon: Mail },
+                                    { href: "/about", label: t('aboutUs'), icon: null },
+                                    { href: "/terms", label: t('termsAndConditions'), icon: null },
+                                    { href: "/privacy", label: t('privacyPolicy'), icon: null },
                                 ].map((item) => (
                                     <Link
                                         key={item.href}
@@ -130,7 +131,7 @@ const Footer = () => {
                         {/* Social Media */}
                         <div className="space-y-6">
                             <h3 className="text-xl font-bold relative">
-                                Follow Us
+                                {t('followUs')}
                                 <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-white to-transparent" />
                             </h3>
                             <div className="space-y-4">
@@ -144,7 +145,7 @@ const Footer = () => {
                                         </div>
                                         <div className="absolute inset-0 bg-[#1877F2]/50 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                     </div>
-                                    <span className="font-medium">Facebook</span>
+                                    <span className="font-medium">{t('facebook')}</span>
                                 </Link>
 
                                 <Link
@@ -157,7 +158,7 @@ const Footer = () => {
                                         </div>
                                         <div className="absolute inset-0 bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCAF45] rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                     </div>
-                                    <span className="font-medium">Instagram</span>
+                                    <span className="font-medium">{t('instagram')}</span>
                                 </Link>
 {/* 
                                 <Link
@@ -181,19 +182,19 @@ const Footer = () => {
                     <div className="pt-8 max-w-[1400px] mx-auto">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                             <div className="flex items-center gap-2 text-white/70 text-sm">
-                                <span>Made with</span>
+                                <span>{t('madeWith')}</span>
                                 <Heart className="w-4 h-4 text-red-400 animate-pulse" />
-                                <span>by Bankybondy Team</span>
+                                <span>{t('byTeam')}</span>
                             </div>
 
-                            <div className="text-white/70 text-sm">© 2024 Bankybondy. All rights reserved.</div>
+                            <div className="text-white/70 text-sm">{t('copyright')}</div>
 
                             <div className="flex items-center gap-4">
                                 <div className="flex items-center gap-2 text-xs text-white/60">
                                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                                    <span>Online</span>
+                                    <span>{t('online')}</span>
                                 </div>
-                                <div className="text-xs text-white/60">Last updated: Today</div>
+                                <div className="text-xs text-white/60">{t('lastUpdated')}</div>
                             </div>
                         </div>
                     </div>

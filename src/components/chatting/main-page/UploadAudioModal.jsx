@@ -29,35 +29,37 @@ import { useGetAllTopicsQuery, useCreateAudioMutation } from "@/lib/features/api
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const ALLOWED_AUDIO_TYPES = ['audio/mpeg', 'audio/wav', 'audio/ogg'];
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
 
-const formSchema = z.object({
-    title: z.string().min(5, "Title must be at least 5 characters."),
-    description: z.string().min(10, "Description must be at least 10 characters."),
-    audioTopic: z.string({ required_error: "Please select an audio topic." }),
-    tags: z.string(),
-    audio: z
-        .any()
-        .refine((files) => files?.length == 1, "Audio file is required.")
-        .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 50MB.`)
-        .refine(
-            (files) => ALLOWED_AUDIO_TYPES.includes(files?.[0]?.type),
-            ".mp3, .wav and .ogg files are accepted."
-        ),
-    audio_cover: z
-        .any()
-        .refine((files) => files?.length == 1, "Cover image is required.")
-        .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 50MB.`)
-        .refine(
-            (files) => ALLOWED_IMAGE_TYPES.includes(files?.[0]?.type),
-            ".jpg, .jpeg, .png and .webp files are accepted."
-        ),
-});
 
 const UploadAudioModal = ({ isOpen, onOpenChange }) => {
+    const t = useTranslations('UploadAudioModal');
+    const formSchema = z.object({
+        title: z.string().min(5, t('titleMinLength')),
+        description: z.string().min(10, t('descriptionMinLength')),
+        audioTopic: z.string({ required_error: t('audioTopicRequired') }),
+        tags: z.string(),
+        audio: z
+            .any()
+            .refine((files) => files?.length == 1, t('audioFileRequired'))
+            .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, t('maxFileSize'))
+            .refine(
+                (files) => ALLOWED_AUDIO_TYPES.includes(files?.[0]?.type),
+                t('acceptedAudioFormats')
+            ),
+        audio_cover: z
+            .any()
+            .refine((files) => files?.length == 1, t('coverImageRequired'))
+            .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, t('maxFileSize'))
+            .refine(
+                (files) => ALLOWED_IMAGE_TYPES.includes(files?.[0]?.type),
+                t('acceptedImageFormats')
+            ),
+    });
     const [duration, setDuration] = useState(0);
     const [open, setOpen] = useState(false);
     const { data: topicsData, isLoading: isTopicsLoading } = useGetAllTopicsQuery();
@@ -100,12 +102,12 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
 
         try {
             await createAudio(formData).unwrap();
-            toast.success("Audio uploaded successfully!");
+            toast.success(t('audioUploadedSuccessfully'));
             form.reset();
             onOpenChange(false);
         } catch (error) {
-            toast.error("Failed to upload audio.", {
-                description: error?.data?.message || "Something went wrong.",
+            toast.error(t('failedToUploadAudio'), {
+                description: error?.data?.message || t('somethingWentWrong'),
             });
         }
     };
@@ -114,9 +116,9 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
-                    <DialogTitle>Upload New Audio</DialogTitle>
+                    <DialogTitle>{t('uploadNewAudio')}</DialogTitle>
                     <DialogDescription>
-                        Fill in the details below to upload a new audio file. Click upload when you are done.
+                        {t('fillDetailsUploadAudio')}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -126,9 +128,9 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                             name="title"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Title</FormLabel>
+                                    <FormLabel>{t('title')}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="e.g., Soothing Ocean Waves" {...field} />
+                                        <Input placeholder={t('exampleTitle')} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -139,9 +141,9 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                             name="description"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel>{t('description')}</FormLabel>
                                     <FormControl>
-                                        <Textarea placeholder="Describe the audio..." {...field} />
+                                        <Textarea placeholder={t('describeAudio')} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -152,7 +154,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                             name="audioTopic"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>Audio Topic</FormLabel>
+                                    <FormLabel>{t('audioTopic')}</FormLabel>
                                     <Popover open={open} onOpenChange={setOpen}>
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -168,17 +170,17 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                                         ? topicsData?.data?.result?.find(
                                                             (topic) => topic._id === field.value
                                                         )?.name
-                                                        : "Select topic"}
+                                                        : t('selectTopic')}
                                                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                 </Button>
                                             </FormControl>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
                                             <Command>
-                                                <CommandInput placeholder="Search topic..." />
+                                                <CommandInput placeholder={t('searchTopic')} />
                                                 <CommandList>
-                                                    {isTopicsLoading && <div className="p-4 text-sm">Loading...</div>}
-                                                    <CommandEmpty>No topic found.</CommandEmpty>
+                                                    {isTopicsLoading && <div className="p-4 text-sm">{t('loading')}</div>}
+                                                    <CommandEmpty>{t('noTopicFound')}</CommandEmpty>
                                                     <CommandGroup>
                                                         {topicsData?.data?.result?.map((topic) => (
                                                             <CommandItem
@@ -214,9 +216,9 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                             name="tags"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Tags</FormLabel>
+                                    <FormLabel>{t('tags')}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="e.g., relaxing, nature, ocean (comma separated)" {...field} />
+                                        <Input placeholder={t('exampleTags')} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -227,7 +229,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                             name="audio"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Audio File</FormLabel>
+                                    <FormLabel>{t('audioFile')}</FormLabel>
                                     <FormControl>
                                         <Input type="file" accept="audio/*" onChange={(e) => {
                                             field.onChange(e.target.files);
@@ -243,7 +245,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                             name="audio_cover"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Cover Image</FormLabel>
+                                    <FormLabel>{t('coverImage')}</FormLabel>
                                     <FormControl>
                                         <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                                     </FormControl>
@@ -252,9 +254,9 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                             )}
                         />
                         <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+                            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t('cancel')}</Button>
                             <Button type="submit" disabled={!form.formState.isValid || isUploading}>
-                                {isUploading ? <><Loader2 className="h-4 w-4 animate-spin" />Uploading Audio</> : "Upload Audio"}
+                                {isUploading ? <><Loader2 className="h-4 w-4 animate-spin" />{t('uploadingAudio')}</> : t('uploadAudio')}
                             </Button>
                         </DialogFooter>
                     </form>

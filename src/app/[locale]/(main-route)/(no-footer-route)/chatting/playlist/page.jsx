@@ -9,8 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
 import CreatePlaylistModal from "@/components/chatting/playlist/CreatePlaylistModal";
+import { useTranslations } from "next-intl";
 
 const PlaylistPage = () => {
+  const t = useTranslations('PlaylistPage');
   const [isModalOpen, setIsModalOpen] = useState(false);
   // State for All Playlists
   const [allPage, setAllPage] = useState(1);
@@ -43,14 +45,14 @@ const PlaylistPage = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-primary dark:text-white">My Playlists</h1>
-        <Button onClick={() => setIsModalOpen(true)}><Plus /> Create new playlist</Button>
+        <h1 className="text-2xl font-bold text-primary dark:text-white">{t('myPlaylists')}</h1>
+        <Button onClick={() => setIsModalOpen(true)}><Plus /> {t('createNewPlaylist')}</Button>
       </div>
 
       <Tabs defaultValue="all-playlists" className="w-full">
         <TabsList className="inline-flex mr-auto">
-          <TabsTrigger value="all-playlists">All Playlists</TabsTrigger>
-          <TabsTrigger value="my-playlists">My Playlists</TabsTrigger>
+          <TabsTrigger value="all-playlists">{t('allPlaylists')}</TabsTrigger>
+          <TabsTrigger value="my-playlists">{t('myPlaylists')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all-playlists">
@@ -61,7 +63,7 @@ const PlaylistPage = () => {
               ))}
             </div>
           ) : isErrorAll ? (
-            <div className="text-center text-red-500 p-4">Error loading playlists.</div>
+            <div className="text-center text-red-500 p-4">{t('errorLoadingPlaylists')}</div>
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
@@ -70,7 +72,7 @@ const PlaylistPage = () => {
                     <PlaylistCard key={playlist._id} playlist={playlist} />
                   ))
                 ) : (
-                  <p className="col-span-full text-center text-gray-500">No playlists found.</p>
+                  <p className="col-span-full text-center text-gray-500">{t('noPlaylistsFound')}</p>
                 )}
               </div>
               {allMeta.totalPage > 1 && (
@@ -94,7 +96,7 @@ const PlaylistPage = () => {
               ))}
             </div>
           ) : isErrorMy ? (
-            <div className="text-center text-red-500 p-4">Error loading your playlists.</div>
+            <div className="text-center text-red-500 p-4">{t('errorLoadingYourPlaylists')}</div>
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
@@ -103,7 +105,7 @@ const PlaylistPage = () => {
                     <PlaylistCard key={playlist._id} playlist={playlist} />
                   ))
                 ) : (
-                  <p className="col-span-full text-center text-gray-500">No playlists found.</p>
+                  <p className="col-span-full text-center text-gray-500">{t('noPlaylistsFound')}</p>
                 )}
               </div>
               {myMeta.totalPage > 1 && (

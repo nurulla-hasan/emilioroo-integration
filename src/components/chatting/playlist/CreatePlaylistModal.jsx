@@ -27,25 +27,28 @@ import { useGetAllAudioQuery, useCreatePlaylistMutation } from "@/lib/features/a
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { MultipleSelector } from "@/components/ui/multiselect";
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
-
-const formSchema = z.object({
-    name: z.string().min(3, "Name must be at least 3 characters."),
-    description: z.string().min(10, "Description must be at least 10 characters."),
-    audios: z.array(z.string()).min(1, "Please select at least one audio."),
-    playlist_cover: z
-        .any()
-        .refine((files) => files?.length == 1, "Cover image is required.")
-        .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
-        .refine(
-            (files) => ALLOWED_IMAGE_TYPES.includes(files?.[0]?.type),
-            ".jpg, .jpeg, .png and .webp files are accepted."
-        ),
-});
+import { useTranslations } from "next-intl";
 
 const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
+    const t = useTranslations('CreatePlaylistModal');
+
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+
+    const formSchema = z.object({
+        name: z.string().min(3, t('nameMinLength')),
+        description: z.string().min(10, t('descriptionMinLength')),
+        audios: z.array(z.string()).min(1, t('selectAtLeastOneAudio')),
+        playlist_cover: z
+            .any()
+            .refine((files) => files?.length == 1, t('coverImageRequired'))
+            .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, t('maxFileSize'))
+            .refine(
+                (files) => ALLOWED_IMAGE_TYPES.includes(files?.[0]?.type),
+                t('acceptedImageFormats')
+            ),
+    });
+
     // Fetch all audios (assuming the API supports a way to get all without pagination, or a high limit)
     const { data: audioData, isLoading: isAudioLoading } = useGetAllAudioQuery({ limit: 500 }); // High limit to get all audios
     const [createPlaylist, { isLoading: isCreating }] = useCreatePlaylistMutation();
@@ -80,12 +83,12 @@ const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
 
         try {
             await createPlaylist(formData).unwrap();
-            toast.success("Playlist created successfully!");
+            toast.success(t("playlistCreatedSuccessfully"));
             form.reset();
             onOpenChange(false);
         } catch (error) {
-            toast.error("Failed to create playlist.", {
-                description: error?.data?.message || "Something went wrong.",
+            toast.error(t("failedToCreatePlaylist"), {
+                description: error?.data?.message || t("somethingWentWrong"),
             });
         }
     };
@@ -94,9 +97,9 @@ const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
-                    <DialogTitle>Create New Playlist</DialogTitle>
+                    <DialogTitle>{t('createNewPlaylist')}</DialogTitle>
                     <DialogDescription>
-                        Fill in the details below to create a new playlist. Click create when you are done.
+                        {t('fillDetailsCreatePlaylist')}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -106,9 +109,9 @@ const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Playlist Name</FormLabel>
+                                    <FormLabel>{t('playlistName')}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="e.g., Morning Focus" {...field} />
+                                        <Input placeholder={t('examplePlaylistName')} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -119,9 +122,9 @@ const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
                             name="description"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel>{t('description')}</FormLabel>
                                     <FormControl>
-                                        <Textarea placeholder="Describe the playlist..." {...field} />
+                                        <Textarea placeholder={t('describePlaylist')} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -132,12 +135,12 @@ const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
                             name="audios"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Audios</FormLabel>
+                                    <FormLabel>{t('audios')}</FormLabel>
                                     <FormControl>
                                         <MultipleSelector
                                             {...field}
                                             options={audioOptions}
-                                            placeholder="Select audios..."
+                                            placeholder={t('selectAudios')}
                                             className="z-50"
                                         />
                                     </FormControl>
@@ -150,7 +153,7 @@ const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
                             name="playlist_cover"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Playlist Cover Image</FormLabel>
+                                    <FormLabel>{t('playlistCoverImage')}</FormLabel>
                                     <FormControl>
                                         <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                                     </FormControl>
@@ -159,9 +162,9 @@ const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
                             )}
                         />
                         <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+                            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t('cancel')}</Button>
                             <Button type="submit" disabled={!form.formState.isValid || isCreating || isAudioLoading}>
-                                {(isCreating || isAudioLoading) ? <><Loader2 className="animate-spin" />Creating Playlist</>: "Create Playlist"}
+                                {(isCreating || isAudioLoading) ? <><Loader2 className="animate-spin" />{t('creatingPlaylist')}</>: t('createPlaylistButton')}
                             </Button>
                         </DialogFooter>
                     </form>

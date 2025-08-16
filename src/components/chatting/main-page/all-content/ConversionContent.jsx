@@ -5,8 +5,10 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import TrendingAudioCard from '../../trending/TrendingAudioCard';
+import { useTranslations } from "next-intl";
 
 const ConversionContent = () => {
+    const t = useTranslations('Chatting');
     const { data, isLoading, isError } = useGetAllAudioQuery();
 
     const audios = data?.data?.result || [];
@@ -15,7 +17,7 @@ const ConversionContent = () => {
     if (isLoading) {
         return (
             <div>
-                <h1 className="text-2xl font-bold mb-6">Conversations</h1>
+                <h1 className="text-2xl font-bold mb-6">{t('conversationsTitle')}</h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {[...Array(4)].map((_, index) => (
                         <ConversationAudioCardSkeleton key={index} />
@@ -26,16 +28,16 @@ const ConversionContent = () => {
     }
 
     if (isError) {
-        return <div className="text-center text-red-500 min-h-minus-header">Error loading conversations.</div>;
+        return <div className="text-center text-red-500 min-h-minus-header">{t('errorLoadingConversations')}</div>;
     }
 
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-lg font-bold text-primary dark:text-white">Discover Conversations You’ll Love</h1>
+                <h1 className="text-lg font-bold text-primary dark:text-white">{t('discoverConversations')}</h1>
                 <Link href="/chatting/conversations" passHref>
                     <Button variant="ghost" size="sm" className="text-primary dark:text-white">
-                        See all <ArrowRight className="ml-1 h-4 w-4" />
+                        {t('seeAll')} <ArrowRight className="ml-1 h-4 w-4" />
                     </Button>
                 </Link>
             </div>
@@ -45,7 +47,7 @@ const ConversionContent = () => {
                         <TrendingAudioCard key={audio._id} audio={audio} />
                     ))
                 ) : (
-                    <p className="col-span-full text-center text-gray-500">No conversations found.</p>
+                    <p className="col-span-full text-center text-gray-500">{t('noConversationsFound')}</p>
                 )}
             </div>
         </div>

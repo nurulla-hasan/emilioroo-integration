@@ -5,8 +5,10 @@ import { useParams } from "next/navigation";
 import { useGetAllAudioQuery } from "@/lib/features/api/chattingApi";
 import ConversationAudioCardSkeleton from "@/components/skeleton/ConversationAudioCardSkeleton";
 import TrendingAudioCard from "@/components/chatting/trending/TrendingAudioCard";
+import { useTranslations } from 'next-intl';
 
 const TrendingDetailPage = () => {
+  const t = useTranslations('TrendingDetailPage');
   const params = useParams();
   const topicId = params.id;
 
@@ -32,7 +34,7 @@ const TrendingDetailPage = () => {
 
   if (isError) {
     content = (
-      <div className="text-center py-10 text-red-500">Error loading audios.</div>
+      <div className="text-center py-10 text-red-500">{t('errorLoadingAudios')}</div>
     );
   }
 
@@ -48,7 +50,7 @@ const TrendingDetailPage = () => {
 
   return (
     <div className="px-4 lg:px-0">
-      <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">Audios for this Topic</h1>
+      <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">{t('audiosForTopic')}</h1>
       {content}
     </div>
   );

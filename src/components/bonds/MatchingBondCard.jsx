@@ -1,10 +1,10 @@
 "use client"
 
-import Image from "next/image"
 import { CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { MapPin, Star, Pause, Trash2 } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const defaultBond = {
   id: 1,
@@ -14,7 +14,6 @@ const defaultBond = {
   rating: 4.8,
   offers: "Cooking Cake",
   wants: "Teaching Math",
-  avatar: "https://placehold.co/100x100/3673c6/ffffff?text=JS",
 }
 
 export default function MatchingBondCard({
@@ -31,13 +30,13 @@ export default function MatchingBondCard({
         {/* Top row: avatar, name, location, rating, actions */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
-            <Image
-              src={bond.avatar || "/placeholder.svg?height=48&width=48&query=avatar"}
-              alt={bond.name}
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-full object-cover"
-            />
+            {/* Replace Image with Avatar */}
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={bond.avatar} alt={bond.name} />
+              <AvatarFallback className="bg-gray-200 text-gray-600 font-semibold">
+                {bond.name.split(' ').map(n => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
             <div className="min-w-0">
               <h4 className="font-bold text-[15px] md:text-base">{bond.name}</h4>
 

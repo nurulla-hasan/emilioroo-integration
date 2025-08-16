@@ -12,8 +12,10 @@ import ConfirmationModal from "@/components/common/ConfirmationModal";
 import { toast } from "sonner";
 import SinglePlaylistSkeleton from "@/components/skeleton/SinglePlaylistSkeleton";
 import TrendingAudioCard from "@/components/chatting/trending/TrendingAudioCard";
+import { useTranslations } from 'next-intl';
 
 const PlaylistDetailPage = () => {
+  const t = useTranslations('PlaylistDetailPage');
   const params = useParams();
   const router = useRouter();
   const playlistId = params.id;
@@ -28,11 +30,11 @@ const PlaylistDetailPage = () => {
   const handleDelete = async () => {
     try {
       await deletePlaylist(playlistId).unwrap();
-      toast.success("Playlist deleted successfully");
+      toast.success(t("playlistDeletedSuccessfully"));
       setIsConfirmModalOpen(false);
       router.push("/chatting/playlist");
     } catch (error) {
-      toast.error("Failed to delete playlist");
+      toast.error(t("failedToDeletePlaylist"));
       console.log(error);
     }
   };
@@ -59,11 +61,11 @@ const PlaylistDetailPage = () => {
   }
 
   if (isError) {
-    return <div className="text-center text-red-500">Error loading playlist details.</div>;
+    return <div className="text-center text-red-500">{t('errorLoadingPlaylist')}</div>;
   }
 
   if (!playlist) {
-    return <div className="text-center text-gray-500">Playlist not found.</div>;
+    return <div className="text-center text-gray-500">{t('playlistNotFound')}</div>;
   }
 
   return (
@@ -82,9 +84,9 @@ const PlaylistDetailPage = () => {
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">{playlist.name}</h1>
         <p className="text-gray-600 text-sm mb-4">
-          {playlist.audios?.length || 0}+ audio | {formatDuration(totalPlaylistDuration)}
+          {playlist.audios?.length || 0}+ {t('audio')} | {formatDuration(totalPlaylistDuration)}
         </p>
-        <p className="text-gray-500 text-xs mb-4">Last Updated: {new Date(playlist.updatedAt).toLocaleDateString()}</p>
+        <p className="text-gray-500 text-xs mb-4">{t('lastUpdated')}: {new Date(playlist.updatedAt).toLocaleDateString()}</p>
 
         {/* Creator Info */}
         <div className="flex items-center gap-3 mb-6">
@@ -94,17 +96,17 @@ const PlaylistDetailPage = () => {
           </Avatar>
           <div>
             <p className="font-semibold">{playlist.user?.name}</p>
-            <p className="text-sm text-gray-500">creator</p>
+            <p className="text-sm text-gray-500">{t('creator')}</p>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="flex gap-4">
           <Button onClick={() => setIsConfirmModalOpen(true)} variant="outline" className="border-destructive text-destructive hover:bg-destructive/10">
-            <Trash2 className="w-4 h-4 mr-2" /> Delete Playlist
+            <Trash2 className="w-4 h-4 mr-2" /> {t('deletePlaylist')}
           </Button>
           <Button onClick={() => setIsUpdateModalOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <Edit className="w-4 h-4 mr-2" /> Edit Playlist
+            <Edit className="w-4 h-4 mr-2" /> {t('editPlaylist')}
           </Button>
         </div>
       </div>
@@ -112,20 +114,20 @@ const PlaylistDetailPage = () => {
       {/* Playlist Description */}
       {playlist.description && (
         <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Description</h2>
+          <h2 className="text-xl font-semibold mb-2">{t('description')}</h2>
           <p className="text-gray-700">{playlist.description}</p>
         </div>
       )}
 
       {/* Audio List */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold mb-4">Audios in this Playlist</h2> 
+        <h2 className="text-xl font-semibold mb-4">{t('audiosInPlaylist')}</h2> 
         {playlist.audios && playlist.audios.length > 0 ? (
           playlist.audios.map((audio) => (
             <TrendingAudioCard key={audio._id} audio={audio} />
           ))
         ) : (
-          <p className="text-center text-gray-500">No audios in this playlist.</p>
+          <p className="text-center text-gray-500">{t('noAudiosInPlaylist')}</p>
         )}
       </div>
 
@@ -135,10 +137,10 @@ const PlaylistDetailPage = () => {
       <ConfirmationModal
         isOpen={isConfirmModalOpen}
         onOpenChange={setIsConfirmModalOpen}
-        title="Are you sure you want to delete this playlist?"
-        description="This action cannot be undone. This will permanently delete the playlist."
+        title={t('areYouSureDeletePlaylist')}
+        description={t('deletePlaylistConfirmation')}
         onConfirm={handleDelete}
-        confirmText={isDeleting ? <><Loader2 className="animate-spin" /> Deleting</> : "Delete"}
+        confirmText={isDeleting ? <><Loader2 className="animate-spin" /> {t('deleting')}</> : t('delete')}
       />
     </div>
   );

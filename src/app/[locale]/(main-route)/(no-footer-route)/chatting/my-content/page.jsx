@@ -12,8 +12,10 @@ import ConversationAudioCardSkeleton from "@/components/skeleton/ConversationAud
 import UpdateAudioModal from "@/components/chatting/my-content/UpdateAudioModal";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 const MyContentPage = () => {
+  const t = useTranslations('MyContentPage');
   const dispatch = useDispatch();
   const { data, isLoading, isError } = useGetMyAudioQuery();
   const [deleteAudio, { isLoading: isDeleting }] = useDeleteAudioMutation();
@@ -47,11 +49,11 @@ const MyContentPage = () => {
     if (!selectedAudio) return;
     try {
       await deleteAudio(selectedAudio._id).unwrap();
-      toast.success("Audio deleted successfully");
+      toast.success(t("audioDeletedSuccessfully"));
       setIsConfirmModalOpen(false);
       setSelectedAudio(null);
     } catch (error) {
-      toast.error("Failed to delete audio");
+      toast.error(t("failedToDeleteAudio"));
       console.log(error);
     }
   };
@@ -59,7 +61,7 @@ const MyContentPage = () => {
   if (isLoading) {
     return (
       <div>
-        <h1 className="text-2xl font-bold mb-6">My Content</h1>
+        <h1 className="text-2xl font-bold mb-6">{t('myContent')}</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[...Array(10)].map((_, index) => <ConversationAudioCardSkeleton key={index} />)}
         </div>
@@ -68,12 +70,12 @@ const MyContentPage = () => {
   }
 
   if (isError) {
-    return <div className="text-center text-red-500">Error loading your content.</div>;
+    return <div className="text-center text-red-500">{t('errorLoadingContent')}</div>;
   }
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">My Content</h1>
+      <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">{t('myContent')}</h1>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {myAudios.length > 0 ? (
           myAudios.map((audio) => (
@@ -106,7 +108,7 @@ const MyContentPage = () => {
             </div>
           ))
         ) : (
-          <p className="col-span-full text-center text-gray-500">You have not created any content yet.</p>
+          <p className="col-span-full text-center text-gray-500">{t('noContentCreated')}</p>
         )}
       </div>
 
@@ -121,10 +123,10 @@ const MyContentPage = () => {
       <ConfirmationModal 
         isOpen={isConfirmModalOpen}
         onOpenChange={setIsConfirmModalOpen}
-        title="Are you sure?"
-        description="This will permanently delete this audio. This action cannot be undone."
+        title={t('areYouSure')}
+        description={t('deleteConfirmation')}
         onConfirm={handleDeleteConfirm}
-        confirmText={isDeleting ? <><Loader2 className="animate-spin" />Deleting</> : "Delete"}
+        confirmText={isDeleting ? <><Loader2 className="animate-spin" />{t('deleting')}</> : t('delete')}
       />
     </div>
   );

@@ -13,8 +13,10 @@ import MyInstitutionsTabs from "@/components/institutions/my-institutions/MyInst
 import CardSkeleton from "@/components/skeleton/CardSkeleton";
 import CreateInstitutionModal from "@/components/institutions/modal/CreateInstitutionModal";
 import UpdateInstitutionModal from "@/components/institutions/modal/UpdateInstitutionModal";
+import { useTranslations } from "next-intl";
 
 const InstitutionsPage = () => {
+    const t = useTranslations('Institutions');
     const [searchQuery, setSearchQuery] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -53,12 +55,12 @@ const InstitutionsPage = () => {
         <div className="min-h-minus-header">
             <PageLayout>
                 <div className="flex flex-col md:flex-row items-center justify-between">
-                    <h1 className="text-xl md:text-2xl font-bold text-primary mb-4 md:mb-0 dark:text-white">Be part of it</h1>
+                    <h1 className="text-xl md:text-2xl font-bold text-primary mb-4 md:mb-0 dark:text-white">{t('bePartOfIt')}</h1>
                     <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
                         <div className="relative w-full md:w-[250px]">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="Search Institution"
+                                placeholder={t('searchInstitution')}
                                 className="pl-9"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -66,15 +68,15 @@ const InstitutionsPage = () => {
                         </div>
                         <Button className="w-full md:w-auto flex items-center gap-2" onClick={handleOpenCreateModal}> 
                             <Plus className="h-4 w-4" />
-                            Create Institution
+                            {t('createInstitution')}
                         </Button>
                     </div>
                 </div>
 
                 <Tabs defaultValue="all-institutions" className="mt-12">
                     <TabsList className="w-fit">
-                        <TabsTrigger value="all-institutions">All Institutions</TabsTrigger>
-                        <TabsTrigger value="my-institutions">My Institutions</TabsTrigger>
+                        <TabsTrigger value="all-institutions">{t('allInstitutions')}</TabsTrigger>
+                        <TabsTrigger value="my-institutions">{t('myInstitutions')}</TabsTrigger>
                     </TabsList>
                     <TabsContent value="all-institutions">
                         <div className="mt-4">
@@ -85,9 +87,9 @@ const InstitutionsPage = () => {
                                     ))}
                                 </div>
                             )}
-                            {isError && <p className="text-red-500">Error fatching institutions.</p>}
+                            {isError && <p className="text-red-500">{t('errorFetchingInstitutions')}</p>}
                             {!isLoading && !isError && data?.data?.result?.length === 0 && (
-                                <p>No institutions found.</p>
+                                <p>{t('noInstitutionsFound')}</p>
                             )}
                             <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
                                 {!isLoading && !isError && data?.data?.result?.map((institution) => (

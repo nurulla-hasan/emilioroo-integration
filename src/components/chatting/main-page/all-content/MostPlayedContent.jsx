@@ -6,8 +6,10 @@ import AudioCardSkeleton from '@/components/skeleton/AudioCardSkeleton';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { useTranslations } from "next-intl";
 
 const MostPlayedContent = () => {
+    const t = useTranslations('Chatting');
 
     const { data, isLoading, isError } = useGetAllAudioQuery();
     const [favouriteIds] = useGetFavoriteIds();
@@ -17,10 +19,10 @@ const MostPlayedContent = () => {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-lg font-bold text-primary dark:text-white">Most Played In This Week</h1>
+                <h1 className="text-lg font-bold text-primary dark:text-white">{t('mostPlayedInThisWeek')}</h1>
                 <Link href="/chatting/most-played" passHref>
                     <Button variant="ghost" size="sm" className="text-primary dark:text-white">
-                        See all <ArrowRight className="ml-1 h-4 w-4" />
+                        {t('seeAll')} <ArrowRight className="ml-1 h-4 w-4" />
                     </Button>
                 </Link>
             </div>
@@ -31,13 +33,13 @@ const MostPlayedContent = () => {
                     ))
                 ) : (!isLoading && !isError) && (
                     audios?.length === 0 && (
-                        <p className="col-span-full text-center text-gray-500">No most played audios found.</p>
+                        <p className="col-span-full text-center text-gray-500">{t('noMostPlayedAudiosFound')}</p>
                     )
                 )}
                 {isLoading && [...Array(4)].map((_, index) => (
                     <AudioCardSkeleton key={index} />
                 ))}
-                {isError && <p className="col-span-full text-center text-red-500">Error loading most played audios.</p>}
+                {isError && <p className="col-span-full text-center text-red-500">{t('errorLoadingMostPlayedAudios')}</p>}
             </div>
         </div>
     );

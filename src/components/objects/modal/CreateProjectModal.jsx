@@ -29,27 +29,32 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Loader2, Upload } from "lucide-react";
 import { useCreateProjectMutation } from "@/lib/features/api/projectApi";
+import { useTranslations } from "next-intl";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Project name is required." }),
-  description: z.string().min(1, { message: "Description is required." }),
-  isPublic: z.boolean(),
-  joinControll: z.enum(["Public", "Private"], { message: "Join control is required." }),
-  project_cover:
-    z
-      .any()
-      .refine((files) => files?.length == 1, "Project cover image is required.")
-      .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-      .refine(
-        (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-        "Only .jpg, .jpeg, .png and .webp formats are supported."
-      ),
-});
+
 
 export default function CreateProjectModal({ isOpen, onOpenChange }) {
+  const t = useTranslations('CreateProjectModal');
+
+  const formSchema = z.object({
+    name: z.string().min(1, { message: t('projectNameRequired') }),
+    description: z.string().min(1, { message: t('descriptionRequired') }),
+    isPublic: z.boolean(),
+    joinControll: z.enum(["Public", "Private"], { message: t('joinControlRequired') }),
+    project_cover:
+      z
+        .any()
+        .refine((files) => files?.length == 1, t('projectCoverRequired'))
+        .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, t('maxImageSize'))
+        .refine(
+          (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+          t('supportedFormats')
+        ),
+  });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -102,7 +107,7 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Create New Project</DialogTitle>
+          <DialogTitle>{t('createProject')}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
@@ -111,9 +116,9 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Project Name</FormLabel>
+                  <FormLabel>{t('projectName')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., My Awesome Project" {...field} />
+                    <Input placeholder={t('exampleProjectName')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,9 +129,9 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t('description')}</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Describe your project..." {...field} />
+                    <Textarea placeholder={t('describeProject')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -144,9 +149,9 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Make Project Public</FormLabel>
+                    <FormLabel>{t('makeProjectPublic')}</FormLabel>
                     <FormDescription>
-                      Anyone can view this project.
+                      {t('anyoneCanView')}
                     </FormDescription>
                   </div>
                   <FormMessage />
@@ -158,7 +163,7 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
               name="joinControll"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel>Join Control</FormLabel>
+                  <FormLabel>{t('joinControl')}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -170,7 +175,7 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
                           <RadioGroupItem value="Public" />
                         </FormControl>
                         <FormLabel className="font-normal">
-                          Public
+                          {t('public')}
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
@@ -178,13 +183,13 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
                           <RadioGroupItem value="Private" />
                         </FormControl>
                         <FormLabel className="font-normal">
-                          Private
+                          {t('private')}
                         </FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
                   <FormDescription>
-                    Control who can join your project.
+                    {t('controlWhoCanJoin')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -195,7 +200,7 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
               name="project_cover"
               render={({ field: { value, onChange, ...fieldProps } }) => (
                 <FormItem>
-                  <FormLabel>Project Cover Image</FormLabel>
+                  <FormLabel>{t('projectCoverImage')}</FormLabel>
                   <FormControl>
                     <Input
                       {...fieldProps}
@@ -218,7 +223,7 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
                     <span className="truncate overflow-hidden whitespace-nowrap">
                       {value?.[0]?.name?.length > 17
                         ? `${value[0].name.slice(0, 17)}...${value[0].name.slice(-10)}`
-                        : value?.[0]?.name || "Upload Image"}
+                        : value?.[0]?.name || t('uploadImage')}
                     </span>
                   </Button>
                   <FormMessage />
@@ -229,11 +234,11 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="secondary">
-                  Cancel
+                  {t('cancel')}
                 </Button>
               </DialogClose>
               <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Creating</> : "Create Project"}
+                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />{t('creating')}</> : t('createProjectButton')}
               </Button>
             </DialogFooter>
           </form>

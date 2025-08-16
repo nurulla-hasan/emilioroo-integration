@@ -34,6 +34,7 @@ const Navbar = () => {
         { name: t('Home'), href: "/", icon: Home },
         { name: t('DonateUs'), href: "/donate-us", icon: UserPlus },
         { name: t('Bonds'), href: "/bonds", icon: ShoppingCart },
+        { name: t('People'), href: "/people", icon: User },
         { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
         { name: t('Institutions'), href: "/institutions", icon: User },
         { name: t('Message'), href: "/message", icon: Mail },
@@ -182,7 +183,7 @@ const Navbar = () => {
                             </div>
 
                             {/* Desktop Navigation Links */}
-                            <div className="hidden xl:flex items-center gap-10">
+                            <div className="hidden xl:flex items-center gap-7">
                                 {navLinks.map((link) => (
                                     <NextIntlLink
                                         key={link.name}
@@ -321,8 +322,8 @@ const Navbar = () => {
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>{t('English')}</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => handleLanguageChange('es')}>{t('Spanish')}</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>English</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleLanguageChange('es')}>Spanish</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </div>

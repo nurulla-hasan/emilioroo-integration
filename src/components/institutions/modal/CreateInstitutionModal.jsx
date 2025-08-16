@@ -26,27 +26,33 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Loader2, Upload } from "lucide-react"
 import { useCreateInstitutionMutation } from "@/lib/features/api/InstitutionApi"
+import { useTranslations } from "next-intl"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Institution name is required." }),
-  description: z.string().min(1, { message: "Description is required." }),
-  facebookLink: z.string().url({ message: "Invalid URL." }).optional().or(z.literal("")),
-  instagramLink: z.string().url({ message: "Invalid URL." }).optional().or(z.literal("")),
+
+
+export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
+  const t = useTranslations('CreateInstitutionModal');
+
+  const formSchema = z.object({
+  name: z.string().min(1, { message: t('institutionNameRequired') }),
+  description: z.string().min(1, { message: t('descriptionRequired') }),
+  facebookLink: z.string().url({ message: t('invalidUrl') }).optional().or(z.literal("")),
+  instagramLink: z.string().url({ message: t('invalidUrl') }).optional().or(z.literal("")),
   institution_cover:
     z
       .any()
-      .refine((files) => files?.length == 1, "Institution cover image is required.")
-      .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+      .refine((files) => files?.length == 1, t('institutionCoverRequired'))
+      .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, t('maxImageSize'))
       .refine(
         (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-        "Only .jpg, .jpeg, .png and .webp formats are supported."
+        t('supportedFormats')
       ),
 });
 
-export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -82,11 +88,11 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
 
     try {
       await createInstitution(formData).unwrap();
-      toast.success("Institution created successfully!");
+      toast.success(t('institutionCreatedSuccessfully'));
       onOpenChange(false);
       form.reset();
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to create institution.");
+      toast.error(error?.data?.message || t('failedToCreateInstitution'));
     }
   };
 
@@ -94,7 +100,7 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Create New Institution</DialogTitle>
+          <DialogTitle>{t('createNewInstitution')}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
@@ -103,9 +109,9 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Institution Name</FormLabel>
+                  <FormLabel>{t('institutionName')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Green University" {...field} />
+                    <Input placeholder={t('exampleInstitutionName')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -116,9 +122,9 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t('description')}</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Describe your institution..." {...field} />
+                    <Textarea placeholder={t('describeInstitution')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -129,9 +135,9 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
               name="facebookLink"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Facebook Link (Optional)</FormLabel>
+                  <FormLabel>{t('facebookLinkOptional')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://facebook.com/yourinstitution" {...field} />
+                    <Input placeholder={t('facebookPlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,9 +148,9 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
               name="instagramLink"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Instagram Link (Optional)</FormLabel>
+                  <FormLabel>{t('instagramLinkOptional')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://instagram.com/yourinstitution" {...field} />
+                    <Input placeholder={t('instagramPlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -155,7 +161,7 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
               name="institution_cover"
               render={({ field: { value, onChange, ...fieldProps } }) => (
                 <FormItem>
-                  <FormLabel>Institution Cover Image</FormLabel>
+                  <FormLabel>{t('institutionCoverImage')}</FormLabel>
                   <FormControl>
                     <Input
                       {...fieldProps}
@@ -175,7 +181,7 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
                     className="w-full flex items-center justify-center gap-2"
                   >
                     <Upload className="h-4 w-4" />
-                    {value && value[0] ? value[0].name : "Upload Image"}
+                    {value && value[0] ? value[0].name : t('uploadImage')}
                   </Button>
                   <FormMessage />
                 </FormItem>
@@ -185,11 +191,11 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="secondary">
-                  Cancel
+                  {t('cancel')}
                 </Button>
               </DialogClose>
               <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Creating</> : "Create Institution"}
+                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />{t('creating')}</> : t('createInstitutionButton')}
               </Button>
             </DialogFooter>
           </form>
