@@ -1,9 +1,8 @@
 "use client";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, Link as NextIntlLink , useRouter as useNextRouter} from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2 } from "lucide-react";
+import { User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Globe } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,8 +13,13 @@ import { Input } from "../ui/input";
 import { useGetProfileQuery, useLogoutMutation } from "@/lib/features/api/authApi";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
+import {useTranslations } from "next-intl";
 
 const Navbar = () => {
+    const t = useTranslations('Navbar');
+    const nextRouter = useNextRouter(); 
+
+    const currentPathname = usePathname(); 
     const { theme, setTheme } = useTheme()
     const { accessToken: token } = useSelector((state) => state.auth);
     const { data: profile, isLoading: profileLoading } = useGetProfileQuery(undefined, { skip: !token });
@@ -23,18 +27,17 @@ const Navbar = () => {
 
     const isLoggedIn = profile?.data?.email && token
     const userName = profile?.data?.name;
-    const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
 
     const navLinks = [
-        { name: "Home", href: "/", icon: Home },
-        { name: "Donate Us", href: "/donate-us", icon: UserPlus },
-        { name: "Bonds", href: "/bonds", icon: ShoppingCart },
-        { name: "Objects", href: "/objects", icon: ShoppingBasket },
-        { name: "Institutions", href: "/institutions", icon: User },
-        { name: "Message", href: "/message", icon: Mail },
-        { name: "We are chatting", href: "/chatting", icon: Mail },
+        { name: t('Home'), href: "/", icon: Home },
+        { name: t('DonateUs'), href: "/donate-us", icon: UserPlus },
+        { name: t('Bonds'), href: "/bonds", icon: ShoppingCart },
+        { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
+        { name: t('Institutions'), href: "/institutions", icon: User },
+        { name: t('Message'), href: "/message", icon: Mail },
+        { name: t('WeAreChatting'), href: "/chatting", icon: Mail },
     ];
 
     const handleLogOut = () => {
@@ -45,6 +48,10 @@ const Navbar = () => {
     const handleNavClick = () => {
         setIsMobileMenuOpen(false)
     }
+
+    const handleLanguageChange = (locale) => {
+        nextRouter.push(currentPathname, { locale });
+    };
 
     return (
         <nav className="h-[80px] ">
@@ -90,12 +97,12 @@ const Navbar = () => {
                                                 <div className="mt-4 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
                                                     <p className="text-white/90 text-sm mb-3">Join our community</p>
                                                     <div className="flex gap-2">
-                                                        <Link href="/auth/login" onClick={handleNavClick}>
+                                                        <NextIntlLink href="/auth/login" onClick={handleNavClick}>
                                                             <Button size="sm" variant="secondary" className="text-xs">
                                                                 Login
                                                             </Button>
-                                                        </Link>
-                                                        <Link href="/auth/sign-up" onClick={handleNavClick}>
+                                                        </NextIntlLink>
+                                                        <NextIntlLink href="/auth/sign-up" onClick={handleNavClick}>
                                                             <Button
                                                                 size="sm"
                                                                 variant="outline"
@@ -103,7 +110,7 @@ const Navbar = () => {
                                                             >
                                                                 Sign Up
                                                             </Button>
-                                                        </Link>
+                                                        </NextIntlLink>
                                                     </div>
                                                 </div>
                                             )}
@@ -129,9 +136,9 @@ const Navbar = () => {
                                             <nav className="space-y-2">
                                                 {navLinks.map((link) => {
                                                     const IconComponent = link.icon
-                                                    const isActive = pathname === link.href
+                                                    const isActive = currentPathname === link.href
                                                     return (
-                                                        <Link
+                                                        <NextIntlLink
                                                             key={link.name}
                                                             href={link.href}
                                                             onClick={handleNavClick}
@@ -147,7 +154,7 @@ const Navbar = () => {
                                                             <ChevronRight
                                                                 className={`h-4 w-4 ml-auto transition-transform ${isActive ? "text-white" : "text-gray-300 group-hover:text-gray-400 group-hover:translate-x-1"}`}
                                                             />
-                                                        </Link>
+                                                        </NextIntlLink>
                                                     )
                                                 })}
                                             </nav>
@@ -165,25 +172,25 @@ const Navbar = () => {
                         <div className="xl:flex w-full items-center justify-between">
                             {/* Logo */}
                             <div className="hidden xl:flex flex-col justify-center">
-                                <Link href="/">
+                                <NextIntlLink href="/">
                                     <div className="md:h-7 lg:h-8 border-[#FFFFFF] font-bold text-lg flex justify-center items-center gap-2 border-2 rounded-[100%] p-2">
                                         <div className="lg:w-2 w-2 lg:h-2 h-2 rounded-full bg-[#22B14C]"></div>
                                         <div className="lg:w-12 w-8 h-2 rounded-full bg-[#FFF200]"></div>
                                         <div className="lg:w-2 w-2 lg:h-2 h-2 rounded-full bg-[#ED1C24]"></div>
                                     </div>
-                                </Link>
+                                </NextIntlLink>
                             </div>
 
                             {/* Desktop Navigation Links */}
                             <div className="hidden xl:flex items-center gap-10">
                                 {navLinks.map((link) => (
-                                    <Link
+                                    <NextIntlLink
                                         key={link.name}
                                         href={link.href}
-                                        className={`hover:opacity-70 transition-colors font-medium duration-200 text-sm ${pathname === link.href ? "border-b-2 border-white text-white font-bold" : "text-white"}`}
+                                        className={`hover:opacity-70 transition-colors font-medium duration-200 text-sm ${currentPathname === link.href ? "border-b-2 border-white text-white font-bold" : "text-white"}`}
                                     >
                                         {link.name}
-                                    </Link>
+                                    </NextIntlLink>
                                 ))}
                             </div>
 
@@ -238,27 +245,27 @@ const Navbar = () => {
                                             <div>
                                                 <DropdownMenuLabel className="md:hidden text-center">{userName}</DropdownMenuLabel>
                                                 <DropdownMenuSeparator className={"md:hidden"} />
-                                                <Link href="/profile">
+                                                <NextIntlLink href="/profile">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <User2 className="mr-2 h-4 w-4" />
                                                         <span>Profile</span>
                                                     </DropdownMenuItem>
-                                                </Link>
+                                                </NextIntlLink>
                                                 <DropdownMenuSeparator />
-                                                <Link href="/chatting/favorite">
+                                                <NextIntlLink href="/chatting/favorite">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <Heart className="mr-2 h-4 w-4" />
                                                         <span>Favorite</span>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
-                                                </Link>
-                                                <Link href="/chatting/playlist">
+                                                </NextIntlLink>
+                                                <NextIntlLink href="/chatting/playlist">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <Play className="mr-2 h-4 w-4" />
                                                         <span>Playlist</span>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
-                                                </Link>
+                                                </NextIntlLink>
                                                 <DropdownMenuItem onClick={handleLogOut} className={"cursor-pointer"}>
                                                     <LogOut className="mr-2 h-4 w-4 text-red-500" />
                                                     <span className="text-red-500">Logout</span>
@@ -266,19 +273,19 @@ const Navbar = () => {
                                             </div>
                                         ) : (
                                             <>
-                                                <Link href="/auth/sign-up">
+                                                <NextIntlLink href="/auth/sign-up">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <UserPlus className="mr-2 h-4 w-4" />
                                                         <span>Sign Up</span>
                                                     </DropdownMenuItem>
-                                                </Link>
+                                                </NextIntlLink>
                                                 <DropdownMenuSeparator />
-                                                <Link href="/auth/login">
+                                                <NextIntlLink href="/auth/login">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <User className="mr-2 h-4 w-4" />
                                                         <span>Login</span>
                                                     </DropdownMenuItem>
-                                                </Link>
+                                                </NextIntlLink>
                                             </>
                                         )}
                                     </DropdownMenuContent>
@@ -305,6 +312,19 @@ const Navbar = () => {
                                         aria-hidden="true"
                                     />
                                 </Toggle>
+
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="hover:bg-brand">
+                                            <Globe className="h-6 w-6 text-white" />
+                                            <span className="sr-only">Language</span>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>{t('English')}</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleLanguageChange('es')}>{t('Spanish')}</DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         </div>
                     </div>

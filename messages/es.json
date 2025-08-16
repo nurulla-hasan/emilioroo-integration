@@ -1,0 +1,29 @@
+{
+  "Navbar": {
+    "Home": "Inicio",
+    "DonateUs": "Dónanos",
+    "Bonds": "Bonos",
+    "Objects": "Objetos",
+    "Institutions": "Instituciones",
+    "Message": "Mensaje",
+    "WeAreChatting": "Estamos chateando",
+    "English": "Inglés",
+    "Spanish": "Español"
+  },
+  "Hero": {
+    "title": "Somos lo que hacemos juntos",
+    "explore": "Explorar ahora"
+  },
+  "DonateUs": {
+    "supportCommunity": "Apoya a la Comunidad",
+    "description": "La donación promedio es de $25. ¡Cada contribución nos ayuda a mejorar y expandir! 🚀",
+    "chooseSupportLevel": "Elige tu Nivel de Apoyo",
+    "orEnterCustomAmount": "O Ingresa una Cantidad Personalizada",
+    "totalDonation": "Donación Total:",
+    "processing": "Procesando...",
+    "donateNow": "Donar Ahora",
+    "secure": "Seguro",
+    "trusted": "Confiable",
+    "transparent": "Transparente"
+  }
+}

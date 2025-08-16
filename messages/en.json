@@ -1,0 +1,29 @@
+{
+  "Navbar": {
+    "Home": "Home",
+    "DonateUs": "Donate Us",
+    "Bonds": "Bonds",
+    "Objects": "Objects",
+    "Institutions": "Institutions",
+    "Message": "Message",
+    "WeAreChatting": "We are chatting",
+    "English": "English",
+    "Spanish": "Spanish"
+  },
+  "Hero": {
+    "title": "We are what we do together",
+    "explore": "Explore Now"
+  },
+  "DonateUs": {
+    "supportCommunity": "Support the Community",
+    "description": "The average donation is $25. Every contribution helps us improve and expand! 🚀",
+    "chooseSupportLevel": "Choose Your Support Level",
+    "orEnterCustomAmount": "Or Enter Custom Amount",
+    "totalDonation": "Total Donation:",
+    "processing": "Processing...",
+    "donateNow": "Donate Now",
+    "secure": "Secure",
+    "trusted": "Trusted",
+    "transparent": "Transparent"
+  }
+}

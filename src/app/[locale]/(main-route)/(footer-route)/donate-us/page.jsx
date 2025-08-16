@@ -8,8 +8,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useDonateMutation } from "@/lib/features/api/donateApi"
 import { Loader2, Heart, DollarSign, Gift, Sparkles } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 const DonateUs = () => {
+  const t = useTranslations('DonateUs');
   const [donate, { isLoading }] = useDonateMutation()
   const [selectedAmounts, setSelectedAmounts] = useState([])
   const [customAmount, setCustomAmount] = useState("")
@@ -116,10 +118,10 @@ const DonateUs = () => {
             </div>
 
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-pink-600 bg-clip-text text-transparent">
-              Support the Community
+              {t('supportCommunity')}
             </CardTitle>
             <CardDescription className="text-muted-foreground text-base mt-3 leading-relaxed">
-              The average donation is{" "}
+              {t('description')}
               <span className="font-bold text-primary bg-primary/10 px-2 py-1 rounded-full">$25</span>. Every
               contribution helps us improve and expand! 🚀
             </CardDescription>
@@ -130,7 +132,7 @@ const DonateUs = () => {
             <div className="space-y-4">
               <Label className="text-muted-foreground font-semibold text-lg flex items-center justify-center gap-2">
                 <Sparkles className="w-5 h-5 text-primary" />
-                Choose Your Support Level
+                {t('chooseSupportLevel')}
               </Label>
 
               <div className="flex flex-wrap justify-center lg:gap-6 gap-3 mt-6">
@@ -167,7 +169,7 @@ const DonateUs = () => {
                 className="text-muted-foreground font-semibold text-center flex items-center justify-center gap-2"
               >
                 <Heart className="w-4 h-4 text-pink-500 fill-current" />
-                Or Enter Custom Amount
+                {t('orEnterCustomAmount')}
               </Label>
 
               <div className="relative max-w-xs mx-auto">
@@ -188,7 +190,7 @@ const DonateUs = () => {
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl py-2 animate-fade-in">
                 <div className="flex items-center justify-center gap-3">
                   <Heart className="w-5 h-5 text-green-600 fill-current animate-pulse" />
-                  <span className="text-green-700 font-semibold">Total Donation:</span>
+                  <span className="text-green-700 font-semibold">{t('totalDonation')}</span>
                   <span className="text-2xl font-bold text-green-600">${totalAmount}</span>
                   <Sparkles className="w-5 h-5 text-green-600" />
                 </div>
@@ -216,12 +218,12 @@ const DonateUs = () => {
                   {isLoading ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Processing...</span>
+                      <span>{t('processing')}</span>
                     </>
                   ) : (
                     <>
                       <Heart className="w-5 h-5 fill-current" />
-                      <span>Donate Now</span>
+                      <span>{t('donateNow')}</span>
                       <Gift className="w-5 h-5" />
                     </>
                   )}
@@ -233,15 +235,15 @@ const DonateUs = () => {
             <div className="flex items-center justify-center gap-6 pt-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span>Secure</span>
+                <span>{t('secure')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                <span>Trusted</span>
+                <span>{t('trusted')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                <span>Transparent</span>
+                <span>{t('transparent')}</span>
               </div>
             </div>
           </CardContent>

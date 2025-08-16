@@ -21,7 +21,7 @@ const Footer = () => {
     }
 
     return (
-        <footer className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/90 text-white overflow-hidden px-4 md:px-0">
+        <footer className="relative dark:bg-accent bg-primary text-white overflow-hidden px-4 md:px-0">
             {/* Animated Background Elements */}
             <div className="relative z-10 py-8">
                 <div>
@@ -49,7 +49,7 @@ const Footer = () => {
                             </div>
                             <Button
                                 type="submit"
-                                className="bg-white text-primary hover:bg-white/90 font-semibold px-6 transition-all duration-300 hover:scale-105 shadow-lg"
+                                className="bg-white dark:bg-white/10 text-primary hover:bg-white/90 font-semibold px-6 transition-all duration-300 hover:scale-105 shadow-lg"
                             >
                                 {isSubscribed ? (
                                     <span className="flex items-center gap-2">
