@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import JoinInstitutionModal from "@/components/institutions/modal/JoinInstitutionModal";
+import { Badge } from "@/components/ui/badge";
 
 const InstitutionNavCard = ({ institution, isActive }) => {
     const router = useRouter();
@@ -43,15 +44,21 @@ const InstitutionNavCard = ({ institution, isActive }) => {
                             <p className="text-xs text-muted-foreground truncate">
                                 {institution?.description.slice(0, 30)}...
                             </p>
+                            {
+                                institution.isCreator && (
+                                    <Badge variant={"outline"} className="flex-shrink-0 text-[10px]">My Institution</Badge>
+                                )
+                            }
                         </div>
                     </div>
                     <Button
                         variant="outline"
                         size="sm"
                         onClick={handleJoinClick}
-                        className="flex-shrink-0 w-full"
+                        className={`${institution.isJoined && "bg-green-700 text-white"} flex-shrink-0 w-full`}
+                        disabled={institution.isJoined}
                     >
-                        Join
+                        {institution.isJoined ? "Joined" : "Join"}
                     </Button>
                 </CardContent>
             </Card>

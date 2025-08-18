@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import { useSendJoinRequestMutation } from "@/lib/features/api/projectApi";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 const ProjectNavCard = ({ project, isActive }) => {
     const router = useRouter();
@@ -49,15 +50,16 @@ const ProjectNavCard = ({ project, isActive }) => {
                             {project?.description.slice(0, 30)}...
                         </p>
                     </div>
+                    <Badge variant={"outline"} className={`text-[10px] ${project?.joinControll === "Public" ? "text-green-500" : "text-red-500"}`}>{project?.joinControll}</Badge>
                 </div>
                 <Button
                     loading={isSendingRequest}
                     variant="outline"
                     onClick={handleSendJoinRequest}
-                    disabled={isSendingRequest || project.isJoined || project.isJoinRequestSent}
-                    className={`flex-shrink-0 ${project.isJoinRequestSent ? "bg-yellow-600" : project.isJoined ? "bg-green-600" : "bg-primary"} text-white`}
+                    disabled={isSendingRequest || project.isJoined || project.isJoinRequestSent || project?.joinControll === "Private"}
+                    className={`flex-shrink-0 ${project.isJoinRequestSent ? "bg-yellow-700" : project.isJoined ? "bg-green-700" : "bg-primary"} text-white`}
                 >
-                    {project.isJoinRequestSent ? "Request Sent": project.isJoined ? "Joined" : "Join Project"}
+                    {project.isJoinRequestSent ? "Request Sent" : project.isJoined ? "Joined" : "Join Project"}
                 </Button>
             </CardContent>
         </Card>
