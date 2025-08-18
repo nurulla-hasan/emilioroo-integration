@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Heart, Loader2, MoreHorizontal } from 'lucide-react';
+import { MessageSquare, Heart, MoreHorizontal } from 'lucide-react';
 import CommentRepliesModal from './CommentRepliesModal';
 import { DialogTrigger } from '@/components/ui/dialog';
 import { useLikeUnlikeCommentMutation, useDeleteCommentMutation } from '@/lib/features/api/InstitutionApi';
@@ -113,7 +113,8 @@ const PostCard = ({ post }) => {
                 title="Confirm Deletion"
                 description="Are you sure you want to delete this comment? This action cannot be undone."
                 onConfirm={handleDeleteComment}
-                confirmText={isDeleting ? <><Loader2 className="h-4 w-4 animate-spin" /> Deleting</> : "Delete"}
+                confirmText="Delete"
+                loading={isDeleting}
             />
         </>
     );

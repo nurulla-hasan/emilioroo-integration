@@ -6,7 +6,6 @@ import EditCommentModal from './EditCommentModal';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import { ReplyForm, ReplyList } from './ReplyCard';
 import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2 } from "lucide-react";
 
 const CommentRepliesModal = ({ commentId, children }) => {
     const { data: repliesData, isLoading, isError, refetch } = useGetCommentRepliesQuery(commentId, { skip: !commentId });
@@ -98,7 +97,8 @@ const CommentRepliesModal = ({ commentId, children }) => {
                 title="Confirm Deletion"
                 description="Are you sure you want to delete this reply? This action cannot be undone."
                 onConfirm={handleConfirmDelete}
-                confirmText={isDeleting ? <><Loader2 className="animate-spin" />Deleting</> : "Delete"}
+                confirmText="Delete"
+                loading={isDeleting}
             />
         </Dialog>
     );

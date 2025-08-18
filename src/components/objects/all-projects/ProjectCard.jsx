@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Users, Loader2 } from "lucide-react";
+import { Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useSendJoinRequestMutation } from "@/lib/features/api/projectApi";
@@ -71,20 +71,20 @@ const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
           {isMyOrJoinedProject ? (
             <div className="flex space-x-2 w-full">
               <Link href={`/objects/${project._id}`} className="flex-1">
-                <Button size={"sm"} variant="outline" className="w-full">View Details</Button>
+                <Button variant="outline" className="w-full">View Details</Button>
               </Link>
               <Link href={`/objects/${project._id}/workspace`} className="flex-1">
-                <Button size={"sm"} className="w-full">Open Workspace</Button>
+                <Button className="w-full">Open Workspace</Button>
               </Link>
             </div>
           ) : (
             <Button
-              size={"sm"}
+              loading={isSendingRequest}
               className="w-full"
               onClick={() => handleSendJoinRequest(project._id)}
               disabled={isSendingRequest || project?.joinControll === "Private"}
             >
-              {isSendingRequest ? <><Loader2 className="animate-spin" /> Sending</> : "Request to join"}
+              Request to join
             </Button>
           )}
         </CardFooter>

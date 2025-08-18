@@ -24,7 +24,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useGetAllAudioQuery, useCreatePlaylistMutation } from "@/lib/features/api/chattingApi";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { MultipleSelector } from "@/components/ui/multiselect";
 import { useTranslations } from "next-intl";
@@ -163,8 +162,8 @@ const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
                         />
                         <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t('cancel')}</Button>
-                            <Button type="submit" disabled={!form.formState.isValid || isCreating || isAudioLoading}>
-                                {(isCreating || isAudioLoading) ? <><Loader2 className="animate-spin" />{t('creatingPlaylist')}</>: t('createPlaylistButton')}
+                            <Button loading={isCreating || isAudioLoading} type="submit" disabled={!form.formState.isValid || isCreating || isAudioLoading}>
+                                {t('createPlaylistButton')}
                             </Button>
                         </DialogFooter>
                     </form>

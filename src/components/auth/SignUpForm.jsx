@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { ArrowLeft, Eye, EyeOff, Loader2, CalendarIcon } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, CalendarIcon } from "lucide-react";
 import { MultipleSelector } from "@/components/ui/multiselect";
 import Link from "next/link";
 import { useRegisterMutation } from "@/lib/features/api/authApi";
@@ -330,8 +330,7 @@ export function SignUpForm({ className, ...props }) {
                   />
                 </div>
 
-                <Button type="submit" className="w-full" disabled={!isValid || isLoading}>
-                  {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+                <Button loading={isLoading} type="submit" className="w-full" disabled={!isValid || isLoading}>
                   Sign Up
                 </Button>
               </div>

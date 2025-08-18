@@ -1,13 +1,11 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, Music, Music2, Music3, Music4, Headphones, Radio, Volume2, Disc3 } from "lucide-react"
+import { ArrowRight, Music, Music2, Music3, Music4, Headphones, Radio, Volume2, Disc3, Activity } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
-import { useTranslations } from "next-intl"
 
 const Hero = () => {
-  const t = useTranslations('Hero');
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -22,7 +20,7 @@ const Hero = () => {
       {/* Animated Background Bubbles */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Large Bubbles */}
-        {[...Array(8)].map((_, i) => (
+        {[...Array(5)].map((_, i) => (
           <div
             key={`bubble-${i}`}
             className={`absolute rounded-full bg-white/10 backdrop-blur-sm animate-float-${i % 4}`}
@@ -92,25 +90,6 @@ const Hero = () => {
         })}
       </div>
 
-      {/* Pulsing Music Waves */}
-      <div className="absolute inset-0">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={`wave-${i}`}
-            className="absolute rounded-full border border-white/10 animate-pulse-wave"
-            style={{
-              width: `${200 + i * 100}px`,
-              height: `${200 + i * 100}px`,
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: "4s",
-            }}
-          />
-        ))}
-      </div>
-
       {/* Floating Musical Notes */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(10)].map((_, i) => (
@@ -144,22 +123,120 @@ const Hero = () => {
         ))}
       </div>
 
+      {/* ENHANCED ANIMATED PULSE WAVES - MAIN FEATURE */}
+      <div className="absolute inset-0 overflow-hidden">
+
+        {/* Medium Rhythm Pulse Waves */}
+        {[...Array(16)].map((_, i) => (
+          <div
+            key={`medium-pulse-${i}`}
+            className="absolute animate-rhythm-pulse-wave"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${1.8 + Math.random() * 1.5}s`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+            }}
+          >
+            <Activity className="text-white/80 drop-shadow-sm" />
+          </div>
+        ))}
+
+        {/* Small Quick Pulse Waves */}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={`small-pulse-${i}`}
+            className="absolute animate-quick-pulse-wave"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 2}s`,
+              animationDuration: `${1 + Math.random() * 1}s`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+            }}
+          >
+            <svg
+              width="35"
+              height="18"
+              viewBox="0 0 35 18"
+              className="text-white/15 drop-shadow-sm"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+            >
+              <path d="M2 9 L6 9 L10 3 L14 15 L18 6 L22 12 L26 9 L30 9" />
+            </svg>
+          </div>
+        ))}
+
+        {/* Complex EKG Style Pulses */}
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={`ekg-pulse-${i}`}
+            className="absolute animate-ekg-pulse-complex"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${4 + Math.random() * 2}s`,
+              transform: `rotate(${Math.random() * 90}deg)`,
+            }}
+          >
+            <svg
+              width="100"
+              height="50"
+              viewBox="0 0 100 50"
+              className="text-white/22 drop-shadow-lg"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+            >
+              <path d="M5 25 L15 25 L18 10 L22 40 L26 15 L30 35 L34 20 L38 30 L42 25 L50 25 L54 12 L58 38 L62 18 L66 32 L70 25 L78 25 L82 15 L86 35 L90 25 L95 25" />
+              <path d="M5 28 L15 28 L20 15 L24 38 L28 20 L32 33 L36 25 L40 32 L44 28 L52 28 L56 18 L60 36 L64 22 L68 30 L72 28 L80 28 L84 20 L88 32 L92 28 L95 28" opacity="0.4" strokeWidth="1.5" />
+            </svg>
+          </div>
+        ))}
+
+        {/* Pulsing Dots for Rhythm */}
+        {[...Array(25)].map((_, i) => (
+          <div
+            key={`pulse-dot-${i}`}
+            className="absolute animate-pulse-dot-rhythm"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${1.5 + Math.random() * 1}s`,
+            }}
+          >
+            <div className="w-2 h-2 bg-white/20 rounded-full shadow-lg"></div>
+          </div>
+        ))}
+
+        {/* Expanding Pulse Rings */}
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={`pulse-ring-${i}`}
+            className="absolute animate-expanding-pulse-ring"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 4}s`,
+              animationDuration: `${3 + Math.random() * 2}s`,
+            }}
+          >
+            <div className="w-8 h-8 border border-white/15 rounded-full"></div>
+          </div>
+        ))}
+      </div>
+
       {/* Gradient Overlay for better text readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/20 to-primary/40 dark:from-transparent dark:via-accent/20 dark:to-accent/40" />
 
       {/* Content above the overlay */}
       <div className="relative w-full mx-auto z-20 px-4 flex flex-col items-center justify-center">
         <div className="max-w-5xl flex flex-col justify-center">
-          {/* Animated Logo/Icon */}
-          <div className="mb-8 relative">
-            {/* Orbiting music notes */}
-            <div className="absolute inset-0 animate-spin-slow">
-              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 text-white/60 text-lg">♪</div>
-              <div className="absolute top-1/2 -right-2 transform -translate-y-1/2 text-white/60 text-lg">♫</div>
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 text-white/60 text-lg">♪</div>
-              <div className="absolute top-1/2 -left-2 transform -translate-y-1/2 text-white/60 text-lg">♫</div>
-            </div>
-          </div>
 
           {/* Main Heading with enhanced styling */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-medium text-white leading-tight mb-6 drop-shadow-2xl animate-fade-in-up">
@@ -199,7 +276,7 @@ const Hero = () => {
             className="text-sm sm:text-base md:text-lg text-white mb-8 opacity-90 drop-shadow-lg animate-fade-in-up"
             style={{ animationDelay: "0.5s" }}
           >
-            {t('title')}
+            We are what we do together
           </p>
 
           {/* Enhanced CTA Button */}
@@ -211,7 +288,7 @@ const Hero = () => {
 
                 <span className="relative flex items-center">
                   <Headphones className="mr-2 h-5 w-5 animate-pulse" />
-                  {t('explore')}
+                  Explore Now
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </span>
               </Button>

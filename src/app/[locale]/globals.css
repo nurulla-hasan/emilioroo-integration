@@ -1,13 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* @theme {
-  --color-brand: #1c4587;
-  --color-title: #333333;
-  --color-subtitle: #414141;
-  --color-content-bg: #90b8de;
-  --color-background: #2b2b2b;
-} */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -164,6 +157,8 @@ body {
 
 
 /* Custom animation */
+/* Add these animations to your global CSS file */
+
 @keyframes float-0 {
   0%,
   100% {
@@ -303,17 +298,6 @@ body {
   }
 }
 
-@keyframes pulse-wave {
-  0% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0;
-  }
-}
-
 @keyframes bounce-slow {
   0%,
   100% {
@@ -374,6 +358,193 @@ body {
   }
 }
 
+/* ENHANCED PULSE WAVE ANIMATIONS */
+
+@keyframes mega-pulse-wave {
+  0% {
+    opacity: 0.1;
+    transform: scale(0.8) translateY(0px) translateX(0px);
+  }
+  25% {
+    opacity: 0.4;
+    transform: scale(1.3) translateY(-15px) translateX(10px);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.1) translateY(-8px) translateX(-5px);
+  }
+  75% {
+    opacity: 0.35;
+    transform: scale(1.2) translateY(-12px) translateX(8px);
+  }
+  100% {
+    opacity: 0.1;
+    transform: scale(0.8) translateY(0px) translateX(0px);
+  }
+}
+
+@keyframes large-heartbeat-pulse {
+  0% {
+    opacity: 0.15;
+    transform: scale(1) translateY(0px);
+  }
+  15% {
+    opacity: 0.4;
+    transform: scale(1.4) translateY(-10px);
+  }
+  30% {
+    opacity: 0.2;
+    transform: scale(1.1) translateY(-3px);
+  }
+  45% {
+    opacity: 0.45;
+    transform: scale(1.5) translateY(-12px);
+  }
+  60% {
+    opacity: 0.18;
+    transform: scale(1.05) translateY(-2px);
+  }
+  100% {
+    opacity: 0.15;
+    transform: scale(1) translateY(0px);
+  }
+}
+
+@keyframes rhythm-pulse-wave {
+  0% {
+    opacity: 0.12;
+    transform: scale(1) rotate(0deg) translateX(0px);
+  }
+  20% {
+    opacity: 0.35;
+    transform: scale(1.3) rotate(5deg) translateX(5px);
+  }
+  40% {
+    opacity: 0.2;
+    transform: scale(1.1) rotate(-2deg) translateX(-2px);
+  }
+  60% {
+    opacity: 0.4;
+    transform: scale(1.25) rotate(3deg) translateX(3px);
+  }
+  80% {
+    opacity: 0.18;
+    transform: scale(1.05) rotate(-1deg) translateX(-1px);
+  }
+  100% {
+    opacity: 0.12;
+    transform: scale(1) rotate(0deg) translateX(0px);
+  }
+}
+
+@keyframes quick-pulse-wave {
+  0% {
+    opacity: 0.08;
+    transform: scale(1) translateY(0px);
+  }
+  30% {
+    opacity: 0.3;
+    transform: scale(1.6) translateY(-8px);
+  }
+  60% {
+    opacity: 0.15;
+    transform: scale(1.2) translateY(-3px);
+  }
+  100% {
+    opacity: 0.08;
+    transform: scale(1) translateY(0px);
+  }
+}
+
+@keyframes ekg-pulse-complex {
+  0% {
+    opacity: 0.1;
+    transform: scale(1) translateY(0px) translateX(0px);
+  }
+  12% {
+    opacity: 0.3;
+    transform: scale(1.2) translateY(-8px) translateX(3px);
+  }
+  24% {
+    opacity: 0.15;
+    transform: scale(1.05) translateY(-2px) translateX(-1px);
+  }
+  36% {
+    opacity: 0.4;
+    transform: scale(1.35) translateY(-12px) translateX(5px);
+  }
+  48% {
+    opacity: 0.2;
+    transform: scale(1.1) translateY(-4px) translateX(-2px);
+  }
+  60% {
+    opacity: 0.35;
+    transform: scale(1.25) translateY(-10px) translateX(4px);
+  }
+  72% {
+    opacity: 0.18;
+    transform: scale(1.08) translateY(-3px) translateX(-1px);
+  }
+  84% {
+    opacity: 0.25;
+    transform: scale(1.15) translateY(-6px) translateX(2px);
+  }
+  100% {
+    opacity: 0.1;
+    transform: scale(1) translateY(0px) translateX(0px);
+  }
+}
+
+@keyframes pulse-dot-rhythm {
+  0% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  25% {
+    opacity: 0.4;
+    transform: scale(1.8);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(1.3);
+  }
+  75% {
+    opacity: 0.35;
+    transform: scale(1.6);
+  }
+  100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+}
+
+@keyframes expanding-pulse-ring {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 0.1;
+    transform: scale(2.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(4);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.5);
+  }
+}
+
 /* Apply animations */
 .animate-float-0 {
   animation: float-0 8s ease-in-out infinite;
@@ -407,9 +578,6 @@ body {
   animation: music-float-5 14s ease-in-out infinite;
 }
 
-.animate-pulse-wave {
-  animation: pulse-wave 4s ease-out infinite;
-}
 .animate-bounce-slow {
   animation: bounce-slow 3s ease-in-out infinite;
 }
@@ -423,119 +591,41 @@ body {
   animation: bounce-gentle 2s ease-in-out infinite;
 }
 .animate-fade-in-up {
-  animation: fade-in-up 1s ease-out forwards;
+  animation: fade-in-up 3s ease-out forwards;
 }
 .animate-equalizer {
-  animation: equalizer 1s ease-in-out infinite;
+  animation: equalizer 3s ease-in-out infinite;
 }
 
-
-
-/*  */
-
-/* Heart Animation Styles */
-
-@keyframes float-heart {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.1;
-  }
-  25% {
-    transform: translateY(-20px) rotate(5deg);
-    opacity: 0.3;
-  }
-  50% {
-    transform: translateY(-10px) rotate(-5deg);
-    opacity: 0.2;
-  }
-  75% {
-    transform: translateY(-30px) rotate(3deg);
-    opacity: 0.4;
-  }
+/* Enhanced Pulse Wave Animations */
+.animate-mega-pulse-wave {
+  animation: mega-pulse-wave 4s ease-in-out infinite;
 }
 
-@keyframes float-heart-slow {
-  0%,
-  100% {
-    transform: translateY(0px) translateX(0px) rotate(0deg);
-    opacity: 0.08;
-  }
-  33% {
-    transform: translateY(-15px) translateX(10px) rotate(10deg);
-    opacity: 0.15;
-  }
-  66% {
-    transform: translateY(-5px) translateX(-8px) rotate(-8deg);
-    opacity: 0.12;
-  }
+.animate-large-heartbeat-pulse {
+  animation: large-heartbeat-pulse 3.5s ease-in-out infinite;
 }
 
-@keyframes float-heart-gentle {
-  0%,
-  100% {
-    transform: translateY(0px) scale(1);
-    opacity: 0.06;
-  }
-  50% {
-    transform: translateY(-12px) scale(1.1);
-    opacity: 0.12;
-  }
+.animate-rhythm-pulse-wave {
+  animation: rhythm-pulse-wave 4.5s ease-in-out infinite;
 }
 
-@keyframes pulse-heart {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.05;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.1;
-  }
+.animate-quick-pulse-wave {
+  animation: quick-pulse-wave 4.8s ease-in-out infinite;
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.animate-ekg-pulse-complex {
+  animation: ekg-pulse-complex 5s ease-in-out infinite;
 }
 
-@keyframes shine {
-  0% {
-    transform: translateX(-100%) skewX(-12deg);
-  }
-  100% {
-    transform: translateX(200%) skewX(-12deg);
-  }
+.animate-pulse-dot-rhythm {
+  animation: pulse-dot-rhythm 4s ease-in-out infinite;
 }
 
-/* Apply animations */
-.animate-float-heart {
-  animation: float-heart 12s ease-in-out infinite;
+.animate-expanding-pulse-ring {
+  animation: expanding-pulse-ring 4s ease-out infinite;
 }
 
-.animate-float-heart-slow {
-  animation: float-heart-slow 15s ease-in-out infinite;
-}
-
-.animate-float-heart-gentle {
-  animation: float-heart-gentle 8s ease-in-out infinite;
-}
-
-.animate-pulse-heart {
-  animation: pulse-heart 4s ease-in-out infinite;
-}
-
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
-}
-
-.animate-shine {
-  animation: shine 2s ease-in-out infinite;
+.animate-pulse-dot {
+  animation: pulse-dot 4.5s ease-in-out infinite;
 }

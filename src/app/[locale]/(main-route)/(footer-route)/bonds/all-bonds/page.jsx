@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 import EditBondModal from '@/components/bonds/all-bonds/my-bonds/EditBondModal';
 import AddNewBondModal from '@/components/bonds/all-bonds/my-bonds/AddNewBondModal';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
-import { Loader2 } from 'lucide-react';
 
 const AllBonds = () => {
     const [createMyBond, { isLoading: isCreatingBond }] = useCreateMyBondMutation();
@@ -135,7 +134,8 @@ const AllBonds = () => {
                 title="Confirm Deletion"
                 description="Are you sure you want to delete this bond? This action cannot be undone."
                 onConfirm={handleConfirmDeleteBond}
-                confirmText={isDeletingBond ? <><Loader2 className="h-4 w-4 animate-spin" /> Deleting</> : "Delete"}
+                confirmText="Delete"
+                loading={isDeletingBond}
             />
         </div>
     );

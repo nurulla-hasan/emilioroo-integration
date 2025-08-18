@@ -6,7 +6,6 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2 } from 'lucide-react';
 
 const EditConversationModal = ({ isOpen, onOpenChange, onUpdateConversation, isLoading, topic }) => {
     const [name, setName] = useState("");
@@ -60,12 +59,8 @@ const EditConversationModal = ({ isOpen, onOpenChange, onUpdateConversation, isL
                     <DialogClose asChild>
                         <Button size={"sm"} variant="outline">Cancel</Button>
                     </DialogClose>
-                    <Button size={"sm"} onClick={handleSubmit} disabled={isLoading}>
-                        {isLoading ? (
-                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating</>
-                        ) : (
-                            "Update Conversation"
-                        )}
+                    <Button loading={isLoading} size={"sm"} onClick={handleSubmit} disabled={isLoading}>
+                        Update Conversation
                     </Button>
                 </DialogFooter>
             </DialogContent>

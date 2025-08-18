@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, UploadCloud, Folder } from "lucide-react";
+import { UploadCloud, Folder } from "lucide-react";
 import { useCreateProjectDocumentMutation } from "@/lib/features/api/projectApi";
 import { useParams } from "next/navigation";
 import { formatFileName } from "@/lib/utils";
@@ -118,8 +118,8 @@ export default function UploadDocumentModal({ isOpen, onOpenChange }) {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" /> Uploading</> : "Upload Document"}
+              <Button loading={isLoading} type="submit" disabled={!form.formState.isValid || isLoading}>
+                Upload Document
               </Button>
             </DialogFooter>
           </form>

@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useResetPasswordMutation } from "@/lib/features/api/authApi"; 
@@ -42,7 +42,7 @@ export function ResetPasswordForm({ className, ...props }) {
     mode: "onChange",
   });
 
-  const [resetPassword, { isLoading: isPending }] = useResetPasswordMutation();
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
   const onSubmit = async (data) => {
     const credential = {
@@ -121,8 +121,7 @@ export function ResetPasswordForm({ className, ...props }) {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isValid || isPending}>
-                {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+              <Button loading={isLoading} type="submit" className="w-full" disabled={!isValid || isLoading}>
                 Reset Password
               </Button>
             </div>

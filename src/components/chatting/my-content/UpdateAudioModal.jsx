@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useGetAllTopicsQuery, useUpdateAudioMutation } from "@/lib/features/api/chattingApi";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import Image from 'next/image';
@@ -150,8 +150,7 @@ const UpdateAudioModal = ({ isOpen, onOpenChange, audio }) => {
                         <FormField control={form.control} name="audio" render={({ field }) => (<FormItem><FormLabel>{t('changeAudioFile')}</FormLabel><FormControl><Input type="file" accept="audio/*" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>)} />
                         <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t('cancel')}</Button>
-                            <Button type="submit" disabled={isUpdating || isTopicsLoading}>
-                                {(isUpdating || isTopicsLoading) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            <Button loading={isUpdating || isTopicsLoading} type="submit" disabled={isUpdating || isTopicsLoading}>
                                 {t('saveChanges')}
                             </Button>
                         </DialogFooter>

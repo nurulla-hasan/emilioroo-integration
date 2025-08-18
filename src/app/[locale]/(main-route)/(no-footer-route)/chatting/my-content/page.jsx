@@ -5,7 +5,7 @@ import { useGetMyAudioQuery, useDeleteAudioMutation } from "@/lib/features/api/c
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Play, Pause, Edit, Trash2, Loader2 } from "lucide-react";
+import { Play, Pause, Edit, Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { playAudio, pauseAudio } from "@/lib/features/slices/audio/audioSlice";
 import ConversationAudioCardSkeleton from "@/components/skeleton/ConversationAudioCardSkeleton";
@@ -126,7 +126,8 @@ const MyContentPage = () => {
         title={t('areYouSure')}
         description={t('deleteConfirmation')}
         onConfirm={handleDeleteConfirm}
-        confirmText={isDeleting ? <><Loader2 className="animate-spin" />{t('deleting')}</> : t('delete')}
+        confirmText={t('delete')}
+        loading={isDeleting}
       />
     </div>
   );

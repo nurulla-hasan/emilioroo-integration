@@ -29,7 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Loader2 } from "lucide-react"
 import { useJoinInstitutionMutation } from "@/lib/features/api/InstitutionApi"
 
 const formSchema = z.object({
@@ -114,8 +113,8 @@ export default function JoinInstitutionModal({ isOpen, onOpenChange, institution
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Joining</> : "Join Institution"}
+              <Button loading={isLoading} type="submit" disabled={!form.formState.isValid || isLoading}>
+                Join Institution
               </Button>
             </DialogFooter>
           </form>

@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Loader2, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useUpdateProjectMutation } from "@/lib/features/api/projectApi";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -244,8 +244,8 @@ export default function UpdateProjectModal({ isOpen, onOpenChange, project }) {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Updating</> : "Update Project"}
+              <Button loading={isLoading} type="submit" disabled={!form.formState.isValid || isLoading}>
+                Update Project
               </Button>
             </DialogFooter>
           </form>

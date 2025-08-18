@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useGetSinglePlaylistQuery, useDeletePlaylistMutation } from "@/lib/features/api/chattingApi";
-import { Trash2, Edit, Loader2 } from "lucide-react";
+import { Trash2, Edit } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import UpdatePlaylistModal from "@/components/chatting/playlist/UpdatePlaylistModal";
 import { useState } from "react";
@@ -140,7 +140,8 @@ const PlaylistDetailPage = () => {
         title={t('areYouSureDeletePlaylist')}
         description={t('deletePlaylistConfirmation')}
         onConfirm={handleDelete}
-        confirmText={isDeleting ? <><Loader2 className="animate-spin" /> {t('deleting')}</> : t('delete')}
+        confirmText={t('delete')}
+        loading={isDeleting}
       />
     </div>
   );

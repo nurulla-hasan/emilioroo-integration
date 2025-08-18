@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from 'lucide-react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -77,17 +76,13 @@ const EditBondModal = ({ isOpen, onOpenChange, onUpdateBond, isLoading, bond }) 
                         />
                         {errors.tag && <p className="text-red-500 text-xs mt-1">{errors.tag.message}</p>}
                     </div>
-                    
+
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button type="button" variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit" disabled={isLoading}>
-                            {isLoading ? (
-                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</>
-                            ) : (
-                                "Update Bond"
-                            )}
+                        <Button loading={isLoading} type="submit" disabled={isLoading}>
+                            Update Bond
                         </Button>
                     </DialogFooter>
                 </form>

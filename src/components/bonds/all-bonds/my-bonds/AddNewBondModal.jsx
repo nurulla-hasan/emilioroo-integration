@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from 'lucide-react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -71,17 +70,13 @@ const AddNewBondModal = ({ isOpen, onOpenChange, onCreateBond, isLoading }) => {
                         />
                         {errors.tag && <p className="text-red-500 text-xs mt-1">{t('tagIsRequired')}</p>}
                     </div>
-                    
+
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button size={"sm"} type="button" variant="outline">{t('cancel')}</Button>
                         </DialogClose>
-                        <Button size={"sm"} type="submit" disabled={isLoading || !isValid}>
-                            {isLoading ? (
-                                <><Loader2 className="h-4 w-4 animate-spin" /> {t('creating')}</>
-                            ) : (
-                                t('createBond')
-                            )}
+                        <Button loading={isLoading} size={"sm"} type="submit" disabled={isLoading || !isValid}>
+                            {t('createBond')}
                         </Button>
                     </DialogFooter>
                 </form>

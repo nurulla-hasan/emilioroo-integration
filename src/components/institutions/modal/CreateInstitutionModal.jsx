@@ -24,9 +24,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Loader2, Upload } from "lucide-react"
 import { useCreateInstitutionMutation } from "@/lib/features/api/InstitutionApi"
 import { useTranslations } from "next-intl"
+import { Upload } from "lucide-react"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -194,8 +194,8 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
                   {t('cancel')}
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />{t('creating')}</> : t('createInstitutionButton')}
+              <Button loading={isLoading} type="submit" disabled={!form.formState.isValid || isLoading}>
+                {t('createInstitutionButton')}
               </Button>
             </DialogFooter>
           </form>

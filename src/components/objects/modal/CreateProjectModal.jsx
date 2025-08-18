@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Loader2, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useCreateProjectMutation } from "@/lib/features/api/projectApi";
 import { useTranslations } from "next-intl";
 
@@ -237,8 +237,8 @@ export default function CreateProjectModal({ isOpen, onOpenChange }) {
                   {t('cancel')}
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />{t('creating')}</> : t('createProjectButton')}
+              <Button loading={isLoading} type="submit" disabled={!form.formState.isValid || isLoading}>
+                {t('createProjectButton')}
               </Button>
             </DialogFooter>
           </form>

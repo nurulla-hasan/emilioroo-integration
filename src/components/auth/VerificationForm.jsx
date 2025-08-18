@@ -7,7 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -177,13 +177,13 @@ export function VerificationForm({ className, type, ...props }) {
               <div className="flex justify-center text-sm text-subtitle">
                 {canResend ? (
                   <Button
+                  loading={sendOtpLoading}
                     type="button"
                     variant="link"
                     onClick={handleResendOTP}
                     disabled={sendOtpLoading}
                     className="p-0 h-auto"
                   >
-                    {sendOtpLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Resend Code
                   </Button>
                 ) : (
@@ -193,8 +193,7 @@ export function VerificationForm({ className, type, ...props }) {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isValid || verifyOtpLoading}>
-                {verifyOtpLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Button loading={verifyOtpLoading} type="submit" className="w-full" disabled={!isValid || verifyOtpLoading}>
                 Verify
               </Button>
             </div>

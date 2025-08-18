@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { useAcceptRejectJoinRequestMutation } from '@/lib/features/api/projectApi';
-import { Loader2 } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';
 
@@ -21,11 +20,11 @@ const MemberRejectButton = ({ request }) => {
         <>
             <Button
                 variant="destructive"
-                size="sm"
+                loading={isLoading}
                 onClick={() => handleAcceptReject(request._id, "Rejected")}
                 disabled={isLoading}
             >
-                {isLoading ? <><Loader2 className=" animate-spin" />Loading</> : "Reject"}
+                Reject
             </Button>
         </>
     );

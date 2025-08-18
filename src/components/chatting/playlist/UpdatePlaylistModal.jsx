@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -24,7 +24,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useGetAllAudioQuery, useUpdatePlaylistMutation } from "@/lib/features/api/chattingApi";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { MultipleSelector } from "@/components/ui/multiselect";
 import Image from 'next/image';
@@ -166,10 +165,10 @@ const UpdatePlaylistModal = ({ isOpen, onOpenChange, playlist }) => {
                         <div className="space-y-2">
                             <p className="text-sm font-medium leading-none">Current Cover</p>
                             <div className="relative w-full h-32 rounded-md overflow-hidden">
-                                <Image 
-                                    src={playlist?.cover_image} 
-                                    alt="Current cover" 
-                                    fill 
+                                <Image
+                                    src={playlist?.cover_image}
+                                    alt="Current cover"
+                                    fill
                                     className="object-cover"
                                 />
                             </div>
@@ -189,8 +188,8 @@ const UpdatePlaylistModal = ({ isOpen, onOpenChange, playlist }) => {
                         />
                         <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-                            <Button type="submit" disabled={!form.formState.isValid || isUpdating || isAudioLoading}>
-                                {(isUpdating || isAudioLoading) ? <><Loader2 className="animate-spin" /> Saving Changes</> : "Save Changes"}
+                            <Button loading={isUpdating || isAudioLoading} type="submit" disabled={!form.formState.isValid || isUpdating || isAudioLoading}>
+                                Save Changes
                             </Button>
                         </DialogFooter>
                     </form>

@@ -24,8 +24,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Loader2, Upload } from "lucide-react"
 import { useUpdateInstitutionMutation } from "@/lib/features/api/InstitutionApi"
+import { Upload } from "lucide-react"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -198,8 +198,8 @@ export default function UpdateInstitutionModal({ isOpen, onOpenChange, instituti
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Updating</> : "Update Institution"}
+              <Button loading={isLoading} type="submit" disabled={!form.formState.isValid || isLoading}>
+                Update Institution
               </Button>
             </DialogFooter>
           </form>

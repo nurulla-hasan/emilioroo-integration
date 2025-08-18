@@ -220,8 +220,8 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
 
                 {/* Fixed bottom section with join button */}
                 <div className="border-t  p-4">
-                    <Button disabled={project?.joinControll === "Private"} onClick={() => handleSendJoinRequest(project?._id)} size={"sm"} className="w-full">
-                        {isSendingRequest ? <><Loader2 className="animate-spin" /> Processing</> : "Join Project"}
+                    <Button loading={isSendingRequest} disabled={project?.joinControll === "Private"} onClick={() => handleSendJoinRequest(project?._id)} className="w-full">
+                       Join Project
                     </Button>
                 </div>
             </DialogContent>

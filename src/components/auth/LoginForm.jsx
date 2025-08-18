@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, } from "lucide-react";
 import { useLoginMutation } from "@/lib/features/api/authApi";
 import { useRouter } from "next/navigation";
 
@@ -102,8 +102,7 @@ export function LoginForm({ className, ...props }) {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isValid || isLoading}>
-                {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+              <Button loading={isLoading} type="submit" className="w-full" disabled={!isValid || isLoading}>
                 Login
               </Button>
             </div>

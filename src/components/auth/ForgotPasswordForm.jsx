@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useForgetPasswordMutation } from "@/lib/features/api/authApi";
 import { toast } from "sonner";
@@ -71,8 +71,7 @@ export function ForgotPasswordForm({ className, ...props }) {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={!isValid || isLoading}>
-                {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+              <Button loading={isLoading} type="submit" className="w-full" disabled={!isValid || isLoading}>
                 Get Code
               </Button>
             </div>

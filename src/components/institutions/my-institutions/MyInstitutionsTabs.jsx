@@ -8,7 +8,6 @@ import CustomPagination from "@/components/common/CustomPagination"
 import CardSkeleton from "@/components/skeleton/CardSkeleton"
 import ConfirmationModal from "@/components/common/ConfirmationModal"
 import { toast } from "sonner"
-import { Loader2 } from "lucide-react"
 
 export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEditInstitution }) {
   const [currentPage, setCurrentPage] = useState(1)
@@ -145,7 +144,8 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
         title="Confirm Deletion"
         description="Are you sure you want to delete this institution? This action cannot be undone."
         onConfirm={handleConfirmDelete}
-        confirmText={isDeletingInstitution ? <><Loader2 className="animate-spin" /> Deleting</> : "Delete"}
+        confirmText="Delete"
+        loading={isDeletingInstitution}
       />
     </Tabs>
   )

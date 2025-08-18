@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Image as IconImage, Loader2, UploadCloud } from "lucide-react";
+import { Image as IconImage, UploadCloud } from "lucide-react";
 import { useCreateProjectImageMutation } from "@/lib/features/api/projectApi";
 import { useParams } from "next/navigation";
 import React, { useRef } from "react";
@@ -114,8 +114,8 @@ export default function UploadImageModal({ isOpen, onOpenChange }) {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={!form.formState.isValid || isLoading}>
-                {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" /> Uploading</> : "Upload Image"}
+              <Button loading={isLoading} type="submit" disabled={!form.formState.isValid || isLoading}>
+                Upload Image
               </Button>
             </DialogFooter>
           </form>

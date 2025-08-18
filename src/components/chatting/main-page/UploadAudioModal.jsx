@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useGetAllTopicsQuery, useCreateAudioMutation } from "@/lib/features/api/chattingApi";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -84,7 +84,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
             };
         }
     };
-    
+
     const onSubmit = async (values) => {
         const tags = values.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
         const data = {
@@ -255,8 +255,8 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                         />
                         <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t('cancel')}</Button>
-                            <Button type="submit" disabled={!form.formState.isValid || isUploading}>
-                                {isUploading ? <><Loader2 className="h-4 w-4 animate-spin" />{t('uploadingAudio')}</> : t('uploadAudio')}
+                            <Button loading={isUploading} type="submit" disabled={!form.formState.isValid || isUploading}>
+                                {t('uploadAudio')}
                             </Button>
                         </DialogFooter>
                     </form>

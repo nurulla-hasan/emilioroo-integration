@@ -4,7 +4,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
 import { useUpdateCommentMutation } from "@/lib/features/api/InstitutionApi";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
 
 const EditCommentModal = ({ isOpen, onOpenChange, comment }) => {
     const [text, setText] = useState(comment?.text || "");
@@ -40,8 +39,8 @@ const EditCommentModal = ({ isOpen, onOpenChange, comment }) => {
                         className="max-h-48"
                     />
                     <DialogFooter className="mt-4">
-                        <Button type="submit" disabled={isLoading || !text.trim()}>
-                            {isLoading ? <><Loader2 className="animate-spin" />Saving</> : "Save Changes"}
+                        <Button loading={isLoading} type="submit" disabled={isLoading || !text.trim()}>
+                            Save Changes
                         </Button>
                     </DialogFooter>
                 </form>

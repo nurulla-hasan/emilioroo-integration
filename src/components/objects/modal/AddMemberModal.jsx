@@ -30,7 +30,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
 import { useGetAllUsersQuery, useAddProjectMemberMutation } from "@/lib/features/api/projectApi";
 
 const formSchema = z.object({
@@ -171,12 +170,12 @@ const AddMemberModal = ({ isOpen, onOpenChange, projectId, onMemberAdded }) => {
 
             <DialogFooter>
               <DialogClose asChild>
-                <Button size={"sm"} type="button" variant="secondary">
+                <Button type="button" variant="secondary">
                   Cancel
                 </Button>
               </DialogClose>
-              <Button size={"sm"} type="submit" disabled={isAddingMember || !form.formState.isValid}>
-                {isAddingMember ? <><Loader2 className="animate-spin" /> Adding</> : "Add Member"}
+              <Button loading={isAddingMember} type="submit" disabled={isAddingMember || !form.formState.isValid}>
+               Add Member
               </Button>
             </DialogFooter>
           </form>

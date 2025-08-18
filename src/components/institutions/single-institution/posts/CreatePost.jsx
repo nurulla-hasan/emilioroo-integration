@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
 import { useCreateCommentMutation } from '@/lib/features/api/InstitutionApi';
 import { toast } from 'sonner';
 import Image from 'next/image';
@@ -66,8 +66,8 @@ const CreatePost = ({ selectedTopic }) => {
                                     accept="image/*"
                                 />
                             </div>
-                            <Button type="submit" disabled={isLoading || !text.trim()}>
-                                {isLoading ? <><Loader2 className="animate-spin" />Posting</> : "Post"}
+                            <Button loading={isLoading} type="submit" disabled={isLoading || !text.trim()}>
+                                Post
                             </Button>
                         </div>
                     </div>

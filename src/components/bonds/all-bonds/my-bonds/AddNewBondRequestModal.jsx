@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Loader2 } from "lucide-react"
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -30,7 +29,7 @@ import {
 
 const MapPicker = dynamic(() => import('./MapPicker'), { ssr: false })
 
-const defaultLocation = { lat: -34.6037, lng: -58.3816 }; 
+const defaultLocation = { lat: -34.6037, lng: -58.3816 };
 
 const formSchema = z.object({
   offer: z.string().min(1, { message: "Offer is required." }),
@@ -174,8 +173,8 @@ export default function AddNewBondModal({ isOpen, onOpenChange }) {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Add Bond"}
+              <Button loading={isLoading} type="submit" disabled={isLoading}>
+                Add Bond
               </Button>
             </DialogFooter>
           </form>

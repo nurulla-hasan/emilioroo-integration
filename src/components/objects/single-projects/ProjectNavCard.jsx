@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import { useSendJoinRequestMutation } from "@/lib/features/api/projectApi";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
 
 const ProjectNavCard = ({ project, isActive }) => {
     const router = useRouter();
@@ -52,12 +51,13 @@ const ProjectNavCard = ({ project, isActive }) => {
                     </div>
                 </div>
                 <Button
+                    loading={isSendingRequest}
                     variant="outline"
                     onClick={handleSendJoinRequest}
                     disabled={isSendingRequest}
                     className="flex-shrink-0"
                 >
-                    {isSendingRequest ? <><Loader2 className="h-4 w-4 animate-spin" /> Sending</> : "Request to join"}
+                    Request to join
                 </Button>
             </CardContent>
         </Card>

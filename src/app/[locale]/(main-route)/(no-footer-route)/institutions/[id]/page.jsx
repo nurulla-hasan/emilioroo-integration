@@ -13,7 +13,6 @@ import ConfirmationModal from "@/components/common/ConfirmationModal";
 import CreateConversationModal from "@/components/institutions/single-institution/CreateConversationModal";
 import EditConversationModal from "@/components/institutions/single-institution/EditConversationModal";
 import InstitutionHeader from "@/components/institutions/single-institution/InstitutionHeader";
-import { Loader2 } from "lucide-react";
 import InstitutionHeaderSkeleton from "@/components/skeleton/InstitutionHeaderSkeleton";
 import MediatorsSkeleton from "@/components/skeleton/MediatorsSkeleton";
 import InstitutionContentSkeleton from "@/components/skeleton/InstitutionContentSkeleton";
@@ -192,7 +191,8 @@ const SingleInstitutionPage = () => {
                 title="Confirm Removal"
                 description="Are you sure you want to remove this member? This action cannot be undone."
                 onConfirm={handleConfirmRemove}
-                confirmText={isRemovingMember ? <><Loader2 className="h-4 w-4 animate-spin" /> Removing</> : "Remove"}
+                confirmText="Remove"
+                loading={isRemovingMember}
             />
 
             <ConfirmationModal
@@ -201,7 +201,8 @@ const SingleInstitutionPage = () => {
                 title="Confirm Deletion"
                 description="Are you sure you want to delete this conversation? This action cannot be undone."
                 onConfirm={handleConfirmDeleteConversation}
-                confirmText={isDeletingConversation ? <><Loader2 className="h-4 w-4 animate-spin" /> Deleting</> : "Delete"}
+                confirmText="Delete"
+                loading={isDeletingConversation}
             />
 
             <CreateConversationModal
