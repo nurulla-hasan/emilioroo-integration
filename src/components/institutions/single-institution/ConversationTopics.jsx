@@ -8,8 +8,8 @@ const ConversationTopics = ({ topics, onTopicClick, onEditTopic, onDeleteTopic }
         <div className="space-y-2">
             {topics && topics.length > 0 ? (
                 topics.map(topic => (
-                    <div key={topic._id} className="bg-card p-2 rounded-lg border flex items-center justify-between cursor-pointer">
-                        <div className="flex items-center space-x-2" onClick={() => onTopicClick(topic)}>
+                    <div key={topic._id} onClick={() => onTopicClick(topic)} className="bg-card p-2 rounded-lg border flex items-center justify-between cursor-pointer">
+                        <div className="flex items-center space-x-2">
                             <p className="text-sm font-semibold">{topic.name}</p>
                             <p className="text-xs text-muted-foreground">({topic.ussers.length} members)</p>
                         </div>

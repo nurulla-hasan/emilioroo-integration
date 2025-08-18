@@ -63,6 +63,35 @@ const institutionApi = baseApi.injectEndpoints({
             providesTags: ["INSTITUTIONS"],
         }),
 
+        // GET CONVERSATION COMMENTS
+        getConversationComments: builder.query({
+            query: (id) => ({
+                url: `/comment/get-conversation-comments/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["INSTITUTIONS"],
+        }),
+
+        // GET COMMENT REPLIES
+        getCommentReplies: builder.query({
+            query: (id) => ({
+                url: `/comment/get-replies/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["INSTITUTIONS"],
+        }),
+
+        // GET COMMENT LIKERS
+        getCommentLikers: builder.query({
+            query: (id) => ({
+                url: `/comment/get-comment-likers/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["INSTITUTIONS"],
+        }),
+
+        // ----------------------------------- End Get Api ----------------------------------------------------------------------------
+
         // REMOVE INSTITUTION MEMBER
         removeInstitutionMember: builder.mutation({
             query: (memberId) => ({
@@ -141,6 +170,54 @@ const institutionApi = baseApi.injectEndpoints({
         //     invalidatesTags: ["INSTITUTIONS"],
         // }),
 
+        // CREATE COMMENT
+        createComment: builder.mutation({
+            query: (data) => ({
+                url: "/comment/create",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
+        // CREATE REPLY
+        createReply: builder.mutation({
+            query: (data) => ({
+                url: "/comment/create-reply",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
+        // LIKE UNLIKE COMMENT
+        likeUnlikeComment: builder.mutation({
+            query: (id) => ({
+                url: `/comment/like-unlike/${id}`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
+        // UPDATE COMMENT
+        updateComment: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/comment/update-comment/${id}`,
+                method: "PATCH",
+                body: data,
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
+        // DELETE COMMENT
+        deleteComment: builder.mutation({
+            query: (id) => ({
+                url: `/comment/delete-comment/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
+
 
     }),
 })
@@ -158,5 +235,13 @@ export const {
     useCreateInstitutionConversationMutation,
     useUpdateInstitutionConversationMutation,
     useDeleteInstitutionConversationMutation,
+    useGetConversationCommentsQuery,
+    useGetCommentRepliesQuery,
+    useGetCommentLikersQuery,
+    useCreateCommentMutation,
+    useCreateReplyMutation,
+    useLikeUnlikeCommentMutation,
+    useUpdateCommentMutation,
+    useDeleteCommentMutation
 } = institutionApi
 

@@ -204,7 +204,7 @@ const Hero = () => {
 
           {/* Enhanced CTA Button */}
           <div className="flex justify-center animate-fade-in-up" style={{ animationDelay: "0.8s" }}>
-            <Link href="/" passHref>
+            <Link href="/chatting" passHref>
               <Button className="group relative rounded-full md:w-50 md:h-12 md:text-lg bg-transparent border-2 border-white text-white hover:text-primary hover:bg-white dark:hover:text-primary hover:border-white transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden">
                 {/* Button background animation */}
                 <div className="absolute inset-0 bg-white/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
