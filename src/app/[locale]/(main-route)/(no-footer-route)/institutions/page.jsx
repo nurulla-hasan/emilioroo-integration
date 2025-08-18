@@ -85,7 +85,7 @@ const InstitutionsPage = () => {
                                     {[...Array(pageSize)].map((_, index) => (
                                         <CardSkeleton key={index} />
                                     ))}
-                                </div>
+                                </div> 
                             )}
                             {isError && <p className="text-red-500">{t('errorFetchingInstitutions')}</p>}
                             {!isLoading && !isError && data?.data?.result?.length === 0 && (

@@ -162,13 +162,13 @@ const institutionApi = baseApi.injectEndpoints({
         }),
 
         // DELETE INSTITUTION
-        // deleteInstitution: builder.mutation({
-        //     query: (id) => ({
-        //         url: `/institution/delete/${id}`,
-        //         method: "DELETE",
-        //     }),
-        //     invalidatesTags: ["INSTITUTIONS"],
-        // }),
+        deleteInstitution: builder.mutation({
+            query: (id) => ({
+                url: `/institution/delete/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["INSTITUTIONS"],
+        }),
 
         // CREATE COMMENT
         createComment: builder.mutation({
@@ -235,6 +235,7 @@ export const {
     useCreateInstitutionConversationMutation,
     useUpdateInstitutionConversationMutation,
     useDeleteInstitutionConversationMutation,
+    useDeleteInstitutionMutation,
     useGetConversationCommentsQuery,
     useGetCommentRepliesQuery,
     useGetCommentLikersQuery,

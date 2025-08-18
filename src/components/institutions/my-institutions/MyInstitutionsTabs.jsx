@@ -2,21 +2,26 @@
 
 import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useGetAllInstitutionQuery } from "@/lib/features/api/InstitutionApi"
+import { useGetAllInstitutionQuery, useDeleteInstitutionMutation } from "@/lib/features/api/InstitutionApi"
 import MyInstitutionCard from "@/components/institutions/my-institutions/MyInstitutionCard"
 import CustomPagination from "@/components/common/CustomPagination"
 import CardSkeleton from "@/components/skeleton/CardSkeleton"
+import ConfirmationModal from "@/components/common/ConfirmationModal"
+import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
 
 export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEditInstitution }) {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize] = useState(12)
   const [activeTab, setActiveTab] = useState("created")
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false)
+  const [institutionToDelete, setInstitutionToDelete] = useState(null)
 
   // Use the searchTerm from the parent component
   const currentSearchTerm = parentSearchTerm;
 
   // Query for Created Institutions
-  const { data: createdData, isLoading: createdLoading, isError: createdError } = useGetAllInstitutionQuery([
+  const { data: createdData, isLoading: createdLoading, isError: createdError, refetch: refetchCreatedInstitutions } = useGetAllInstitutionQuery([
     { name: "page", value: currentPage },
     { name: "limit", value: pageSize },
     { name: "searchTerm", value: currentSearchTerm },
@@ -26,7 +31,7 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
   })
 
   // Query for Joined Institutions
-  const { data: joinedData, isLoading: joinedLoading, isError: joinedError } = useGetAllInstitutionQuery([
+  const { data: joinedData, isLoading: joinedLoading, isError: joinedError, refetch: refetchJoinedInstitutions } = useGetAllInstitutionQuery([
     { name: "page", value: currentPage },
     { name: "limit", value: pageSize },
     { name: "searchTerm", value: currentSearchTerm },
@@ -34,6 +39,8 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
   ], {
     skip: activeTab !== "joined",
   })
+
+  const [deleteInstitution, { isLoading: isDeletingInstitution }] = useDeleteInstitutionMutation();
 
   // Reset current page when search term or active tab changes
   useEffect(() => {
@@ -45,6 +52,30 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
   const currentLoading = activeTab === "created" ? createdLoading : joinedLoading;
   const currentError = activeTab === "created" ? createdError : joinedError;
   const totalPages = currentData?.data?.meta?.totalPage || 1;
+
+  const handleDeleteInstitution = (institutionId) => {
+    setInstitutionToDelete(institutionId);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (institutionToDelete) {
+      try {
+        await deleteInstitution(institutionToDelete).unwrap();
+        toast.success("Institution deleted successfully!");
+        setIsDeleteConfirmOpen(false);
+        setInstitutionToDelete(null);
+        if (activeTab === "created") {
+          refetchCreatedInstitutions();
+        } else {
+          refetchJoinedInstitutions();
+        }
+      } catch (error) {
+        console.error("Failed to delete institution:", error);
+        toast.error(error?.data?.message || "Failed to delete institution.");
+      }
+    }
+  };
 
   return (
     <Tabs defaultValue="created" className="w-full" onValueChange={setActiveTab}>
@@ -69,7 +100,7 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
           )}
           <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
             {!currentLoading && !currentError && currentData?.data?.result?.map((institution) => (
-              <MyInstitutionCard key={institution._id} institution={institution} onEdit={onEditInstitution} />
+              <MyInstitutionCard key={institution._id} institution={institution} onEdit={onEditInstitution} onDelete={handleDeleteInstitution} />
             ))}
           </div>
           {!currentLoading && !currentError && currentData?.data?.result?.length > pageSize && (
@@ -96,7 +127,7 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
           )}
           <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
             {!currentLoading && !currentError && currentData?.data?.result?.map((institution) => (
-              <MyInstitutionCard key={institution._id} institution={institution} onEdit={onEditInstitution} />
+              <MyInstitutionCard key={institution._id} institution={institution} onEdit={onEditInstitution} onDelete={handleDeleteInstitution} />
             ))}
           </div>
           {!currentLoading && !currentError && currentData?.data?.result?.length > pageSize && (
@@ -108,6 +139,14 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
           )}
         </div>
       </TabsContent>
+      <ConfirmationModal
+        isOpen={isDeleteConfirmOpen}
+        onOpenChange={setIsDeleteConfirmOpen}
+        title="Confirm Deletion"
+        description="Are you sure you want to delete this institution? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
+        confirmText={isDeletingInstitution ? <><Loader2 className="animate-spin" /> Deleting</> : "Delete"}
+      />
     </Tabs>
   )
 }
