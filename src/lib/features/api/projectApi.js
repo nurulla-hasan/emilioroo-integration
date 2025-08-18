@@ -25,7 +25,7 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // GET SINGLE PROJECT
-        getSingleProject:builder.query({
+        getSingleProject: builder.query({
             query: (id) => ({
                 url: `/project/single-project/${id}`,
                 method: "GET",
@@ -34,7 +34,7 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // GET JOIN REQUEST
-        getJoinRequest:builder.query({
+        getJoinRequest: builder.query({
             query: (id) => ({
                 url: `/project-join-request/get-join-requests/${id}`,
                 method: "GET",
@@ -43,7 +43,7 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // GET PROJECT MEMBER
-        getProjectMember:builder.query({
+        getProjectMember: builder.query({
             query: ({ id, type }) => {
                 const params = new URLSearchParams();
                 if (type) {
@@ -59,7 +59,7 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // GET PROJECT DOCUMENT
-        getProjectDocument:builder.query({
+        getProjectDocument: builder.query({
             query: (id) => ({
                 url: `/project-document/get-all/${id}`,
                 method: "GET",
@@ -68,7 +68,7 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // GET PROJECT IMAGE
-        getProjectImage:builder.query({
+        getProjectImage: builder.query({
             query: (id) => ({
                 url: `/project-image/get-all/${id}`,
                 method: "GET",
@@ -79,7 +79,7 @@ const projectApi = baseApi.injectEndpoints({
         //------------------------------------------------------- END GET METHOD-----------------------------------------------------
 
         // CREATE PROJECT
-        createProject:builder.mutation({
+        createProject: builder.mutation({
             query: (data) => ({
                 url: "/project/create",
                 method: "POST",
@@ -89,17 +89,17 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // UPDATE PROJECT
-        updateProject:builder.mutation({
+        updateProject: builder.mutation({
             query: ({ id, formData }) => ({
                 url: `/project/update/${id}`,
                 method: "PATCH",
-                body: formData, 
+                body: formData,
             }),
             invalidatesTags: ["PROJECTS"],
         }),
 
         // DELETE PROJECT
-        deleteProject:builder.mutation({
+        deleteProject: builder.mutation({
             query: (id) => ({
                 url: `/project/delete/${id}`,
                 method: "DELETE",
@@ -108,7 +108,7 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // SEND JOIN REQUEST
-        sendJoinRequest:builder.mutation({
+        sendJoinRequest: builder.mutation({
             query: (id) => ({
                 url: `/project-join-request/send-request/${id}`,
                 method: "POST",
@@ -117,8 +117,8 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // ACCEPT AND REJECT JOIN REQUEST
-        acceptRejectJoinRequest:builder.mutation({
-            query: ({id,data}) => ({
+        acceptRejectJoinRequest: builder.mutation({
+            query: ({ id, data }) => ({
                 url: `/project-join-request/approve-reject/${id}`,
                 method: "PATCH",
                 body: data
@@ -127,8 +127,8 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // ADD PROJECT MEMBER
-        addProjectMember:builder.mutation({
-            query: ({id,data}) => ({
+        addProjectMember: builder.mutation({
+            query: ({ id, data }) => ({
                 url: `/project-member/add-member/${id}`,
                 method: "POST",
                 body: data
@@ -137,7 +137,7 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // REMOVE PROJECT MEMBER
-        removeProjectMember:builder.mutation({
+        removeProjectMember: builder.mutation({
             query: (projectMemberId) => ({
                 url: `/project-member/remove-member/${projectMemberId}`,
                 method: "DELETE",
@@ -146,8 +146,8 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // CREATE PROJECT DOCUMENT
-        createProjectDocument:builder.mutation({
-            query: ({id,data}) => ({
+        createProjectDocument: builder.mutation({
+            query: ({ id, data }) => ({
                 url: `/project-document/create/${id}`,
                 method: "POST",
                 body: data
@@ -156,7 +156,7 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // DELETE PROJECT DOCUMENT
-        deleteProjectDocument:builder.mutation({
+        deleteProjectDocument: builder.mutation({
             query: (id) => ({
                 url: `/project-document/delete/${id}`,
                 method: "DELETE",
@@ -165,8 +165,8 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // CREATE PROJECT IMAGE
-        createProjectImage:builder.mutation({
-            query: ({id,data}) => ({
+        createProjectImage: builder.mutation({
+            query: ({ id, data }) => ({
                 url: `/project-image/create/${id}`,
                 method: "POST",
                 body: data
@@ -175,7 +175,7 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // DELETE PROJECT IMAGE
-        deleteProjectImage:builder.mutation({
+        deleteProjectImage: builder.mutation({
             query: (id) => ({
                 url: `/project-image/delete/${id}`,
                 method: "DELETE",
@@ -184,11 +184,23 @@ const projectApi = baseApi.injectEndpoints({
         }),
 
         // GET ALL USERS
-        getAllUsers:builder.query({
-            query: () => ({
-                url: "/normal-user/get-all-user",
-                method: "GET",
-            }),
+        getAllUsers: builder.query({
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args !== undefined && args.length > 0) {
+                    args.forEach((item) => {
+                        if (item.value) {
+                            params.append(item.name, item.value);
+                        }
+                    });
+                }
+                return {
+                    url: "/normal-user/get-all-user",
+                    method: "GET",
+                    params
+                };
+            },
+            keepUnusedDataFor: 600,
             providesTags: ["PROJECTS"],
         }),
 

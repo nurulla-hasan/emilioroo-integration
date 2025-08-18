@@ -11,7 +11,7 @@ import { toast } from "sonner"
 
 export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEditInstitution }) {
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize] = useState(12)
+  const [pageSize] = useState(2)
   const [activeTab, setActiveTab] = useState("created")
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false)
   const [institutionToDelete, setInstitutionToDelete] = useState(null)

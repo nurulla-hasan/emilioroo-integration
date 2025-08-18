@@ -11,7 +11,7 @@ import {
 
 export default function CustomPagination({
   currentPage,
-  totalPage,
+  totalPages,
   onPageChange,
 }) {
   return (
@@ -27,7 +27,7 @@ export default function CustomPagination({
             className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
           />
         </PaginationItem>
-        {[...Array(totalPage)].map((_, index) => (
+        {[...Array(totalPages)].map((_, index) => (
           <PaginationItem key={index}>
             <PaginationLink
               href="#"
@@ -46,9 +46,9 @@ export default function CustomPagination({
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              onPageChange(Math.min(currentPage + 1, totalPage));
+              onPageChange(Math.min(currentPage + 1, totalPages));
             }}
-            className={currentPage === totalPage ? "pointer-events-none opacity-50" : ""}
+            className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
           />
         </PaginationItem>
       </PaginationContent>

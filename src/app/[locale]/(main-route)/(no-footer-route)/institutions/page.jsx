@@ -20,7 +20,7 @@ const InstitutionsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize] = useState(12); 
+    const [pageSize] = useState(2); 
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [editingInstitution, setEditingInstitution] = useState(null); 
@@ -40,7 +40,7 @@ const InstitutionsPage = () => {
         return () => clearTimeout(timeoutId);
     }, [searchQuery])
 
-    const totalPages = Math.ceil((data?.data?.meta?.total || 0) / pageSize) || 1;
+    const totalPage = data?.data?.meta?.total
 
     const handleOpenCreateModal = () => {
         setIsCreateModalOpen(true);
@@ -99,7 +99,7 @@ const InstitutionsPage = () => {
                             {!isLoading && !isError && data?.data?.result?.length > pageSize && (
                                 <CustomPagination
                                     currentPage={currentPage}
-                                    totalPages={totalPages}
+                                    totalPages={totalPage}
                                     onPageChange={setCurrentPage}
                                 />
                             )}
