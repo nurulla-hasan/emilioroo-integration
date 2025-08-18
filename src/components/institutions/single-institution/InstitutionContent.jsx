@@ -2,11 +2,11 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Trash2, Plus } from 'lucide-react';
-import ConversationTopics from './ConversationTopics'; 
+import ConversationTopics from './ConversationTopics';
 
-const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEditTopic, onDeleteTopic, onRemoveMember, onCreateConversationClick, isLoading, error }) => {
+const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEditTopic, onDeleteTopic, onRemoveMember, onCreateConversationClick, isLoading, error, selectedTopic }) => {
     return (
-        <div className="grid grid-cols-4 gap-4 mt-4"> 
+        <div className="grid grid-cols-4 gap-4 mt-4">
 
             {/* <Innovators /> */}
             <div className="col-span-1">
@@ -44,7 +44,14 @@ const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEdit
                 </div>
                 {isLoading && <p>Loading conversations...</p>}
                 {error && <p className="text-red-500">Error loading conversations.</p>}
-                {!isLoading && !error && <ConversationTopics topics={topics} onTopicClick={onTopicClick} onEditTopic={onEditTopic} onDeleteTopic={onDeleteTopic} />}
+                {!isLoading && !error &&
+                    <ConversationTopics
+                        topics={topics}
+                        onTopicClick={onTopicClick}
+                        onEditTopic={onEditTopic}
+                        onDeleteTopic={onDeleteTopic}
+                        selectedTopic={selectedTopic}
+                    />}
             </div>
 
             {/* <Innovators /> */}
@@ -57,7 +64,7 @@ const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEdit
                                 <div key={thinker._id} className="bg-card p-2 rounded-lg border flex items-center justify-between">
                                     <div className="flex items-center space-x-2">
                                         <Avatar className="h-8 w-8">
-                                            <AvatarImage src={thinker.user.profile_image } />
+                                            <AvatarImage src={thinker.user.profile_image} />
                                             <AvatarFallback>{thinker.user.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div>

@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
-import { Image as ImageIcon, SquarePen, Trash2 } from 'lucide-react';
+import { Image as ImageIcon, MoreHorizontal } from 'lucide-react';
 import { useCreateReplyMutation, useGetCommentRepliesQuery } from "@/lib/features/api/InstitutionApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 const ReplyForm = ({ parentId, conversationId, onReplyCreated }) => {
     const [text, setText] = useState("");
@@ -77,10 +78,6 @@ const ReplyCard = ({ reply, conversationId, onEditClick, onDeleteClick }) => {
     const { data: repliesData, isLoading: areRepliesLoading, refetch } = useGetCommentRepliesQuery(reply._id, { skip: !showReplyForm });
     const replies = repliesData?.data?.result;
 
-    const handleDeleteComment = async () => {
-        onDeleteClick(reply);
-    };
-
     return (
         <>
             <div className="flex items-start space-x-4 mt-4 border rounded-lg p-3">
@@ -93,15 +90,26 @@ const ReplyCard = ({ reply, conversationId, onEditClick, onDeleteClick }) => {
                         <div>
                             <p className="font-semibold text-sm">{reply.commentorName}</p>
                         </div>
-                        <div className="text-xs text-muted-foreground flex items-center space-x-2">
-                            <p>{new Date(reply.createdAt).toLocaleDateString()}</p>
-                            {reply.isMyComment && (
-                                <>
-                                    <SquarePen className="h-4 w-4 cursor-pointer" onClick={() => onEditClick(reply)} />
-                                    <Trash2 className="h-4 w-4 cursor-pointer text-red-500" onClick={handleDeleteComment} />
-                                </>
-                            )}
-                        </div>
+                                                    <div className="text-xs text-muted-foreground flex items-center space-x-2">
+                                <p>{new Date(reply.createdAt).toLocaleDateString()}</p>
+                                {reply.isMyComment && (
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="sm" className="h-auto p-1">
+                                                <MoreHorizontal className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem onClick={() => onEditClick(reply)}>
+                                                Edit
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => onDeleteClick(reply)} className="text-red-500">
+                                                Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                )}
+                            </div>
                     </div>
                     <p className="mt-2 break-words text-xs">{reply.text}</p>
                     <Button variant="ghost" size="sm" onClick={() => setShowReplyForm(!showReplyForm)}>

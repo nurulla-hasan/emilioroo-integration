@@ -215,7 +215,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/delete-comment/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["CommentReplies"],
+            invalidatesTags: ["INSTITUTIONS"],
         }),
 
 

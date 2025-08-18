@@ -165,6 +165,7 @@ const SingleInstitutionPage = () => {
                                 innovators={innovators}
                                 thinkers={thinkers}
                                 topics={institutionConversations}
+                                selectedTopic={selectedTopic}
                                 onTopicClick={handleTopicClick}
                                 onEditTopic={handleEditConversationClick}
                                 onDeleteTopic={handleDeleteConversationClick}

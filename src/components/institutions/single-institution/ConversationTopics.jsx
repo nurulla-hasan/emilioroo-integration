@@ -3,15 +3,15 @@
 import React from 'react';
 import { SquarePen, Trash2 } from 'lucide-react';
 
-const ConversationTopics = ({ topics, onTopicClick, onEditTopic, onDeleteTopic }) => { 
+const ConversationTopics = ({ topics, onTopicClick, onEditTopic, onDeleteTopic, selectedTopic }) => {
     return (
         <div className="space-y-2">
             {topics && topics.length > 0 ? (
                 topics.map(topic => (
-                    <div key={topic._id} onClick={() => onTopicClick(topic)} className="bg-card p-2 rounded-lg border flex items-center justify-between cursor-pointer">
+                    <div key={topic._id} onClick={() => onTopicClick(topic)} className={`${topic._id === selectedTopic?._id ? 'bg-primary/10 dark:bg-primary/50' : ''} bg-card p-2 rounded-lg border flex items-center justify-between cursor-pointer`}>
                         <div className="flex items-center space-x-2">
                             <p className="text-sm font-semibold">{topic.name}</p>
-                                                        <p className="text-xs text-muted-foreground">({topic.totalComments} comments)</p>
+                            <p className="text-xs text-muted-foreground">({topic.totalComments} comments)</p>
                         </div>
                         <div className="flex items-center space-x-2">
                             <span className={`text-xs px-2 py-1 rounded-full ${topic.isPublic ? 'bg-green-100 dark:bg-green-800 dark:text-green-100 text-green-800' : 'bg-red-100 dark:bg-red-800 dark:text-red-100 text-red-800'}`}>

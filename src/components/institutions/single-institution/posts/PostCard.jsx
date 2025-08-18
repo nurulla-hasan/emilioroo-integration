@@ -3,27 +3,24 @@
 import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Share2, Heart, SquarePen, Trash2, Loader2 } from 'lucide-react';
+import { MessageSquare, Heart, Loader2, MoreHorizontal } from 'lucide-react';
 import CommentRepliesModal from './CommentRepliesModal';
 import { DialogTrigger } from '@/components/ui/dialog';
 import { useLikeUnlikeCommentMutation, useDeleteCommentMutation } from '@/lib/features/api/InstitutionApi';
 import { toast } from 'sonner';
 import EditCommentModal from './EditCommentModal';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { timeAgo } from '@/lib/utils';
 
 const PostCard = ({ post }) => {
-    console.log(post);
     const { _id, commentorName, commentorProfileImage, createdAt, text, totalLike, totalReplies, isMyComment, isMyLike } = post;
     const [likeUnlikeComment, { isLoading: isLiking }] = useLikeUnlikeCommentMutation();
     const [deleteComment, { isLoading: isDeleting }] = useDeleteCommentMutation();
-const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
-    const formattedDate = new Date(createdAt).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
+
 
     const handleLikeUnlike = async () => {
         try {
@@ -59,12 +56,23 @@ const [isEditModalOpen, setIsEditModalOpen] = useState(false);
                                 <p className="font-semibold">{commentorName}</p>
                             </div>
                             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                                <p>{formattedDate}</p>
+                                <p>{timeAgo(createdAt)}</p>
                                 {isMyComment && (
-                                    <>
-                                        <SquarePen className="h-4 w-4 cursor-pointer" onClick={() => setIsEditModalOpen(true)} />
-                                        <Trash2 className="h-4 w-4 cursor-pointer text-red-500" onClick={() => setIsDeleteConfirmOpen(true)} />
-                                    </>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="sm" className="h-auto p-1">
+                                                <MoreHorizontal className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
+                                                Edit
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setIsDeleteConfirmOpen(true)} className="text-red-500">
+                                                Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 )}
                             </div>
                         </div>
@@ -89,10 +97,6 @@ const [isEditModalOpen, setIsEditModalOpen] = useState(false);
                                         </Button>
                                     </DialogTrigger>
                                 </CommentRepliesModal>
-                                <Button variant="ghost" size="sm" className="flex items-center space-x-1">
-                                    <Share2 className="h-4 w-4" />
-                                    <span>Share</span>
-                                </Button>
                             </div>
                         </div>
                     </div>

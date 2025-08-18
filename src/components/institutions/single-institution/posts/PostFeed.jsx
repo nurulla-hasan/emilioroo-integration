@@ -6,6 +6,14 @@ import CreatePost from './CreatePost';
 import PostFeedSkeleton from "@/components/skeleton/PostFeedSkeleton";
 
 const PostFeed = ({ posts, selectedTopic, isFetching, isError }) => {
+    if (!selectedTopic) {
+        return (
+            <div className='mt-4 border rounded-lg p-3 text-center text-muted-foreground'>
+                <p>Please select a conversation topic to view comments.</p>
+            </div>
+        );
+    }
+
     return (
         <div className='mt-4 border rounded-lg p-3'>
             <CreatePost selectedTopic={selectedTopic} />
@@ -20,7 +28,7 @@ const PostFeed = ({ posts, selectedTopic, isFetching, isError }) => {
                             <PostCard key={post._id} post={post} />
                         ))
                     ) : (
-                        <p>No comments yet.</p>
+                        <p className='text-sm text-muted-foreground text-center'>No comments yet.</p>
                     )
                 )}
             </div>
