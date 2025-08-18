@@ -180,7 +180,7 @@ const SingleInstitutionPage = () => {
                                 ) : areConversationCommentsError ? (
                                     <p className="text-red-500">Error loading comments.</p>
                                 ) : (
-                                    <PostFeed posts={conversationComments} />
+                                                                    <PostFeed posts={conversationComments} selectedTopic={selectedTopic} />
                                 )
                             )}
                         </>

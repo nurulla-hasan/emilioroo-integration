@@ -24,7 +24,7 @@ const InstitutionNavCard = ({ institution, isActive }) => {
     return (
         <>
             <Card className={cn("w-full overflow-hidden bg-card flex flex-col cursor-pointer hover:bg-muted", isActive && "bg-primary/10 border border-primary/30")} onClick={handleNavigate}>
-                <CardContent className="p-3 flex items-center justify-between gap-3">
+                <CardContent className="p-3 flex flex-col items-start gap-3">
                     <div className="flex items-center gap-3">
                         <div className="relative h-12 w-12 bg-card border rounded-md flex-shrink-0">
                             <Image
@@ -49,7 +49,7 @@ const InstitutionNavCard = ({ institution, isActive }) => {
                         variant="outline"
                         size="sm"
                         onClick={handleJoinClick}
-                        className="flex-shrink-0"
+                        className="flex-shrink-0 w-full"
                     >
                         Join
                     </Button>

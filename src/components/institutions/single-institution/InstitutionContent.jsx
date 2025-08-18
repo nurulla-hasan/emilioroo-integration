@@ -6,7 +6,7 @@ import ConversationTopics from './ConversationTopics';
 
 const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEditTopic, onDeleteTopic, onRemoveMember, onCreateConversationClick, isLoading, error }) => {
     return (
-        <div className="grid grid-cols-4 gap-4 mt-4">
+        <div className="grid grid-cols-4 gap-4 mt-4"> 
 
             {/* <Innovators /> */}
             <div className="col-span-1">

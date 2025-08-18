@@ -78,7 +78,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/get-replies/${id}`,
                 method: "GET",
             }),
-            providesTags: ["INSTITUTIONS"],
+            providesTags: ["CommentReplies"],
         }),
 
         // GET COMMENT LIKERS
@@ -187,7 +187,7 @@ const institutionApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["INSTITUTIONS"],
+            invalidatesTags: ["CommentReplies"],
         }),
 
         // LIKE UNLIKE COMMENT
