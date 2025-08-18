@@ -11,7 +11,7 @@ import { toast } from "sonner"
 
 export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEditInstitution }) {
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize] = useState(2)
+  const [pageSize] = useState(12)
   const [activeTab, setActiveTab] = useState("created")
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false)
   const [institutionToDelete, setInstitutionToDelete] = useState(null)
@@ -50,7 +50,7 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
   const currentData = activeTab === "created" ? createdData : joinedData;
   const currentLoading = activeTab === "created" ? createdLoading : joinedLoading;
   const currentError = activeTab === "created" ? createdError : joinedError;
-  const totalPages = currentData?.data?.meta?.totalPage || 1;
+  const totalPages = currentData?.data?.meta?.totalPage;
 
   const handleDeleteInstitution = (institutionId) => {
     setInstitutionToDelete(institutionId);
@@ -102,15 +102,18 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
               <MyInstitutionCard key={institution._id} institution={institution} onEdit={onEditInstitution} onDelete={handleDeleteInstitution} />
             ))}
           </div>
-          {!currentLoading && !currentError && currentData?.data?.result?.length > pageSize && (
-            <CustomPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          )}
+          <div className="my-4 absolute bottom-0 right-0 left-0">
+            {!currentLoading && !currentError && totalPages > 1 && (
+              <CustomPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
+          </div>
         </div>
       </TabsContent>
+      
       <TabsContent value="joined">
         <div className="mt-4">
           {currentLoading && (
@@ -129,13 +132,15 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
               <MyInstitutionCard key={institution._id} institution={institution} onEdit={onEditInstitution} onDelete={handleDeleteInstitution} />
             ))}
           </div>
-          {!currentLoading && !currentError && currentData?.data?.result?.length > pageSize && (
-            <CustomPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          )}
+          <div className="my-4 absolute bottom-0 right-0 left-0">
+            {!currentLoading && !currentError && totalPages > 1 && (
+              <CustomPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
+          </div>
         </div>
       </TabsContent>
       <ConfirmationModal

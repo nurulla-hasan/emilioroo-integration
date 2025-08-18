@@ -9,6 +9,7 @@ import JoinInstitutionModal from "@/components/institutions/modal/JoinInstitutio
 import { useRouter } from 'next/navigation';
 
 const AllInstitutionsCard = ({ institution }) => {
+    const isJoined = institution.isJoined === true;
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
     const router = useRouter();
 
@@ -22,7 +23,7 @@ const AllInstitutionsCard = ({ institution }) => {
                 <div className="relative h-40 w-full bg-card border-b">
                     <Image
                         src={
-                            institution?.cover_image ||"/placeholder"}
+                            institution?.cover_image || "/placeholder"}
                         alt={institution?.name || "Institution cover"}
                         fill
                         sizes="(max-width: 768px) 100vw, 400px"
@@ -77,10 +78,11 @@ const AllInstitutionsCard = ({ institution }) => {
                     </Button>
                     <Button
                         size="sm"
-                        onClick={() => setIsJoinModalOpen(true)} // Open modal on click
-                        className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm dark:text-white"
+                        onClick={() => setIsJoinModalOpen(true)}
+                        className={`flex-1`}
+                        disabled={isJoined}
                     >
-                        Join Institution
+                        {isJoined ? "Joined" : "Join"}
                     </Button>
                 </div>
             </CardContent>

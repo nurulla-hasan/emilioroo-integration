@@ -67,7 +67,7 @@ const ObjectsPage = () => {
         return () => clearTimeout(timeoutId);
     }, [searchQuery])
 
-    const totalPages = Math.ceil((data?.data?.meta?.total || 0) / pageSize) || 1;
+    const totalPages = data?.data?.meta?.totalPage;
 
     const handleOpenCreateModal = () => {
         setIsCreateModalOpen(true);
@@ -121,6 +121,7 @@ const ObjectsPage = () => {
                             )}
                         </div>
                     </TabsContent>
+
                     <TabsContent value="my-projects">
                         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                             {myProjectsLoading ? (
@@ -138,6 +139,7 @@ const ObjectsPage = () => {
                             )}
                         </div>
                     </TabsContent>
+                    
                     <TabsContent value="joined-projects">
                         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                             {joinedProjectsLoading ? (
@@ -157,13 +159,15 @@ const ObjectsPage = () => {
                     </TabsContent>
                 </Tabs>
 
-                {totalPages > 1 && (
-                    <CustomPagination
-                        currentPage={currentPage}
-                        totalPage={totalPages}
-                        onPageChange={setCurrentPage}
-                    />
-                )}
+                <div className='my-4 absolute bottom-0 right-0 left-0'>
+                    {totalPages > 1 && (
+                        <CustomPagination
+                            currentPage={currentPage}
+                            totalPage={totalPages}
+                            onPageChange={setCurrentPage}
+                        />
+                    )}
+                </div>
 
                 <CreateProjectModal
                     isOpen={isCreateModalOpen}

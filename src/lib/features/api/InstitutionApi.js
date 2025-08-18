@@ -7,7 +7,7 @@ const institutionApi = baseApi.injectEndpoints({
 
         // GET ALL INSTITUTION
         getAllInstitution: builder.query({
-            query: (args) => {
+                        query: (args) => {
                 const params = new URLSearchParams();
                 if (args !== undefined && args.length > 0) {
                     args.forEach((item) => {

@@ -17,7 +17,7 @@ const MyInstitutionCard = ({ institution, onEdit, onDelete }) => {
                 <div onClick={handleNavigate} className="relative h-40 w-full bg-card border-b cursor-pointer">
                     <Image
                         src={
-                            institution?.cover_image ||"/placeholder"}
+                            institution?.cover_image || "/placeholder"}
                         alt={institution?.name || "Institution cover"}
                         fill
                         sizes="(max-width: 768px) 100vw, 400px"
@@ -62,14 +62,17 @@ const MyInstitutionCard = ({ institution, onEdit, onDelete }) => {
 
                 {/* Actions */}
                 <div className="mt-4 flex gap-2">
-                    <Button
-                        // variant="outline"
-                        size={"sm"}
-                        className="flex-1"
-                        onClick={() => onEdit?.(institution)}
-                    >
-                        <Pencil className="h-4 w-4 mr-2" /> Edit
-                    </Button>
+                    {
+                        institution.isCreator && (
+                            <Button
+                                size={"sm"}
+                                className="flex-1"
+                                onClick={() => onEdit?.(institution)}
+                            >
+                                <Pencil className="h-4 w-4 mr-2" /> Edit
+                            </Button>
+                        )
+                    }
                     <Button
                         variant="outline"
                         size={"sm"}

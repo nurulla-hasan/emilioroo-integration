@@ -54,10 +54,10 @@ const ProjectNavCard = ({ project, isActive }) => {
                     loading={isSendingRequest}
                     variant="outline"
                     onClick={handleSendJoinRequest}
-                    disabled={isSendingRequest}
-                    className="flex-shrink-0"
+                    disabled={isSendingRequest || project.isJoined || project.isJoinRequestSent}
+                    className={`flex-shrink-0 ${project.isJoinRequestSent ? "bg-yellow-600" : project.isJoined ? "bg-green-600" : "bg-primary"} text-white`}
                 >
-                    Request to join
+                    {project.isJoinRequestSent ? "Request Sent": project.isJoined ? "Joined" : "Join Project"}
                 </Button>
             </CardContent>
         </Card>

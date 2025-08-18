@@ -1,29 +1,27 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button"; 
+import { Button } from "@/components/ui/button";
 import { Search, Plus } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetAllInstitutionQuery } from "@/lib/features/api/InstitutionApi";
 import { useEffect, useState } from "react";
-import CustomPagination from "@/components/common/CustomPagination";
-import AllInstitutionsCard from "@/components/institutions/all-institutions/AllInstitutionsCard";
 import MyInstitutionsTabs from "@/components/institutions/my-institutions/MyInstitutionsTabs";
-import CardSkeleton from "@/components/skeleton/CardSkeleton";
 import CreateInstitutionModal from "@/components/institutions/modal/CreateInstitutionModal";
 import UpdateInstitutionModal from "@/components/institutions/modal/UpdateInstitutionModal";
 import { useTranslations } from "next-intl";
+import AllInstitutionsTab from "@/components/institutions/all-institutions/AllInstitutionsTab";
 
 const InstitutionsPage = () => {
     const t = useTranslations('Institutions');
     const [searchQuery, setSearchQuery] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize] = useState(2); 
+    const [pageSize] = useState(12);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-    const [editingInstitution, setEditingInstitution] = useState(null); 
+    const [editingInstitution, setEditingInstitution] = useState(null);
 
     const { data, isLoading, isError } = useGetAllInstitutionQuery([
         { name: "page", value: currentPage },
@@ -40,7 +38,8 @@ const InstitutionsPage = () => {
         return () => clearTimeout(timeoutId);
     }, [searchQuery])
 
-    const totalPage = data?.data?.meta?.total
+    const totalPages = data?.data?.meta?.totalPage
+    console.log(totalPages);
 
     const handleOpenCreateModal = () => {
         setIsCreateModalOpen(true);
@@ -66,7 +65,7 @@ const InstitutionsPage = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <Button className="w-full md:w-auto flex items-center gap-2" onClick={handleOpenCreateModal}> 
+                        <Button className="w-full md:w-auto flex items-center gap-2" onClick={handleOpenCreateModal}>
                             <Plus className="h-4 w-4" />
                             {t('createInstitution')}
                         </Button>
@@ -79,34 +78,18 @@ const InstitutionsPage = () => {
                         <TabsTrigger value="my-institutions">{t('myInstitutions')}</TabsTrigger>
                     </TabsList>
                     <TabsContent value="all-institutions">
-                        <div className="mt-4">
-                            {isLoading && (
-                                <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                                    {[...Array(pageSize)].map((_, index) => (
-                                        <CardSkeleton key={index} />
-                                    ))}
-                                </div> 
-                            )}
-                            {isError && <p className="text-red-500">{t('errorFetchingInstitutions')}</p>}
-                            {!isLoading && !isError && data?.data?.result?.length === 0 && (
-                                <p>{t('noInstitutionsFound')}</p>
-                            )}
-                            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                                {!isLoading && !isError && data?.data?.result?.map((institution) => (
-                                    <AllInstitutionsCard key={institution._id} institution={institution} />
-                                ))}
-                            </div>
-                            {!isLoading && !isError && data?.data?.result?.length > pageSize && (
-                                <CustomPagination
-                                    currentPage={currentPage}
-                                    totalPages={totalPage}
-                                    onPageChange={setCurrentPage}
-                                />
-                            )}
-                        </div>
+                        <AllInstitutionsTab
+                            data={data}
+                            isLoading={isLoading}
+                            isError={isError}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            pageSize={pageSize}
+                            totalPages={totalPages}
+                            t={t} />
                     </TabsContent>
                     <TabsContent value="my-institutions">
-                        <MyInstitutionsTabs searchTerm={searchTerm} onEditInstitution={handleOpenEditModal} /> 
+                        <MyInstitutionsTabs searchTerm={searchTerm} onEditInstitution={handleOpenEditModal} />
                     </TabsContent>
                 </Tabs>
 

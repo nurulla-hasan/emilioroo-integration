@@ -44,7 +44,7 @@ const PeoplePage = () => {
                             placeholder="Search..."
                             value={searchTerm}
                             onChange={handleSearchChange}
-                            className="ps-10 w-40 md:max-w-sm"
+                            className="ps-10 w-40 md:w-50"
                         />
                     </div>
                 </div>

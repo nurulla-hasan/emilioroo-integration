@@ -12,7 +12,7 @@ import ProjectDetailsModal from "../modal/ProjectDetailsModal";
 
 const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
   const [isProjectDetailsModalOpen, setIsProjectDetailsModalOpen] = useState(false);
-
+  const isJoinRequestSent = project.isJoinRequestSent === true;
   const [sendJoinRequest, { isLoading: isSendingRequest }] = useSendJoinRequestMutation();
 
   const handleSendJoinRequest = async (projectId) => {
@@ -41,7 +41,7 @@ const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
           <h3 className="text-lg font-semibold">{project.name}</h3>
           <div className="flex flex-wrap gap-1 mb-2">
             {project.status && <Badge variant="secondary">{project.status}</Badge>}
-            {project.joinControll && <Badge variant="outline">{project.joinControll}</Badge>}
+            {project.joinControll && <Badge variant="outline" className={`${project.joinControll === "Private" ? "text-red-500" : "text-green-500"}`}>{project.joinControll}</Badge>}
           </div>
         </CardHeader>
         <CardContent className="flex-grow mb-2">
@@ -80,11 +80,11 @@ const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
           ) : (
             <Button
               loading={isSendingRequest}
-              className="w-full"
+              className={`w-full  ${isJoinRequestSent ? "bg-yellow-800" : ""}`}
               onClick={() => handleSendJoinRequest(project._id)}
-              disabled={isSendingRequest || project?.joinControll === "Private"}
+              disabled={isSendingRequest || project?.joinControll === "Private" || isJoinRequestSent || project.isJoined}
             >
-              Request to join
+              {isJoinRequestSent ? "Request Sent": project.isJoined ? "Joined" : "Join Project"}
             </Button>
           )}
         </CardFooter>
