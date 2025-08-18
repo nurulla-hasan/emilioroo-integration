@@ -1,15 +1,23 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Share2, Heart } from 'lucide-react';
+import { MessageSquare, Share2, Heart, SquarePen, Trash2, Loader2 } from 'lucide-react';
 import CommentRepliesModal from './CommentRepliesModal';
 import { DialogTrigger } from '@/components/ui/dialog';
-import { useLikeUnlikeCommentMutation } from '@/lib/features/api/InstitutionApi';
+import { useLikeUnlikeCommentMutation, useDeleteCommentMutation } from '@/lib/features/api/InstitutionApi';
 import { toast } from 'sonner';
+import EditCommentModal from './EditCommentModal';
+import ConfirmationModal from '@/components/common/ConfirmationModal';
 
 const PostCard = ({ post }) => {
-    const { _id, commentorName, commentorProfileImage, createdAt, text, totalLike, totalReplies, isLikedByMe } = post;
+    console.log(post);
+    const { _id, commentorName, commentorProfileImage, createdAt, text, totalLike, totalReplies, isMyComment, isMyLike } = post;
     const [likeUnlikeComment, { isLoading: isLiking }] = useLikeUnlikeCommentMutation();
+    const [deleteComment, { isLoading: isDeleting }] = useDeleteCommentMutation();
+const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
     const formattedDate = new Date(createdAt).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -26,6 +34,17 @@ const PostCard = ({ post }) => {
         }
     };
 
+    const handleDeleteComment = async () => {
+        try {
+            await deleteComment(_id).unwrap();
+            toast.success("Comment deleted successfully!");
+            setIsDeleteConfirmOpen(false);
+        } catch (error) {
+            console.error("Failed to delete comment:", error);
+            toast.error(error?.data?.message || "Failed to delete comment.");
+        }
+    };
+
     return (
         <>
             <div className="bg-card p-4 rounded-lg border">
@@ -39,8 +58,14 @@ const PostCard = ({ post }) => {
                             <div>
                                 <p className="font-semibold">{commentorName}</p>
                             </div>
-                            <div className="text-xs text-muted-foreground">
+                            <div className="flex items-center space-x-2 text-xs text-muted-foreground">
                                 <p>{formattedDate}</p>
+                                {isMyComment && (
+                                    <>
+                                        <SquarePen className="h-4 w-4 cursor-pointer" onClick={() => setIsEditModalOpen(true)} />
+                                        <Trash2 className="h-4 w-4 cursor-pointer text-red-500" onClick={() => setIsDeleteConfirmOpen(true)} />
+                                    </>
+                                )}
                             </div>
                         </div>
                         <p className="mt-2">{text}</p>
@@ -53,7 +78,7 @@ const PostCard = ({ post }) => {
                                     onClick={handleLikeUnlike}
                                     disabled={isLiking}
                                 >
-                                    <Heart className="h-4 w-4" fill={isLikedByMe ? "red" : "none"} stroke={isLikedByMe ? "red" : "currentColor"} />
+                                    <Heart className="h-4 w-4" fill={isMyLike ? "red" : "none"} stroke={isMyLike ? "red" : "currentColor"} />
                                     <span>Like ({totalLike})</span>
                                 </Button>
                                 <CommentRepliesModal commentId={_id}>
@@ -73,6 +98,19 @@ const PostCard = ({ post }) => {
                     </div>
                 </div>
             </div>
+            <EditCommentModal
+                isOpen={isEditModalOpen}
+                onOpenChange={setIsEditModalOpen}
+                comment={post}
+            />
+            <ConfirmationModal
+                isOpen={isDeleteConfirmOpen}
+                onOpenChange={setIsDeleteConfirmOpen}
+                title="Confirm Deletion"
+                description="Are you sure you want to delete this comment? This action cannot be undone."
+                onConfirm={handleDeleteComment}
+                confirmText={isDeleting ? <><Loader2 className="h-4 w-4 animate-spin" /> Deleting</> : "Delete"}
+            />
         </>
     );
 };

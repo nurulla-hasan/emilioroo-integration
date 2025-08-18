@@ -194,7 +194,7 @@ const institutionApi = baseApi.injectEndpoints({
         likeUnlikeComment: builder.mutation({
             query: (id) => ({
                 url: `/comment/like-unlike/${id}`,
-                method: "PATCH",
+                method: "POST",
             }),
             invalidatesTags: ["INSTITUTIONS"],
         }),
@@ -206,7 +206,7 @@ const institutionApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data,
             }),
-            invalidatesTags: ["INSTITUTIONS"],
+            invalidatesTags: ["CommentReplies"],
         }),
 
         // DELETE COMMENT
@@ -215,7 +215,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/delete-comment/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["INSTITUTIONS"],
+            invalidatesTags: ["CommentReplies"],
         }),
 
 

@@ -17,7 +17,6 @@ import { Loader2 } from "lucide-react";
 import InstitutionHeaderSkeleton from "@/components/skeleton/InstitutionHeaderSkeleton";
 import MediatorsSkeleton from "@/components/skeleton/MediatorsSkeleton";
 import InstitutionContentSkeleton from "@/components/skeleton/InstitutionContentSkeleton";
-import PostFeedSkeleton from "@/components/skeleton/PostFeedSkeleton";
 
 const SingleInstitutionPage = () => {
     const { id } = useParams();
@@ -174,15 +173,12 @@ const SingleInstitutionPage = () => {
                                 isLoading={areInstitutionConversationsLoading}
                                 error={areInstitutionConversationsError}
                             />
-                            {selectedTopic && (
-                                isFetchingConversationComments ? (
-                                    <PostFeedSkeleton />
-                                ) : areConversationCommentsError ? (
-                                    <p className="text-red-500">Error loading comments.</p>
-                                ) : (
-                                                                    <PostFeed posts={conversationComments} selectedTopic={selectedTopic} />
-                                )
-                            )}
+                            <PostFeed
+                                posts={conversationComments}
+                                selectedTopic={selectedTopic}
+                                isFetching={isFetchingConversationComments}
+                                isError={areConversationCommentsError}
+                            />
                         </>
                     )
                 )}
