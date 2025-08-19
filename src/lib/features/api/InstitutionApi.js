@@ -54,22 +54,13 @@ const institutionApi = baseApi.injectEndpoints({
             providesTags: ["INSTITUTIONS"],
         }),
 
-        // GET SINGLE INSTITUTION CONVERSATION
-        getSingleInstitutionConversation: builder.query({
-            query: (id) => ({
-                url: `/institution-conversation/get-single/${id}`,
-                method: "GET",
-            }),
-            providesTags: ["INSTITUTIONS"],
-        }),
-
         // GET CONVERSATION COMMENTS
-        getConversationComments: builder.query({
+                getConversationComments: builder.query({
             query: (id) => ({
                 url: `/comment/get-conversation-comments/${id}`,
                 method: "GET",
             }),
-            providesTags: ["CONVERSATION-COMMENTS"],
+            providesTags: ["COMMENTS"],
         }),
 
         // GET COMMENT REPLIES
@@ -78,7 +69,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/get-replies/${id}`,
                 method: "GET",
             }),
-            providesTags: ["COMMENTS-REPLIES"],
+            providesTags: ["REPLY"],
         }),
 
         // GET COMMENT LIKERS
@@ -87,7 +78,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/get-comment-likers/${id}`,
                 method: "GET",
             }),
-            providesTags: ["CONVERSATION-COMMENTS"],
+            providesTags: ["COMMENTS"],
         }),
 
         // ----------------------------------- End Get Api ----------------------------------------------------------------------------
@@ -177,7 +168,7 @@ const institutionApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["CONVERSATION-COMMENTS"],
+            invalidatesTags: ["COMMENTS", "REPLY"],
         }),
 
         // CREATE REPLY
@@ -187,7 +178,7 @@ const institutionApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["COMMENTS-REPLIES"],
+            invalidatesTags: ["REPLY"],
         }),
 
         // LIKE UNLIKE COMMENT
@@ -196,7 +187,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/like-unlike/${id}`,
                 method: "POST",
             }),
-            invalidatesTags: ["COMMENTS-LIKES"],
+            invalidatesTags: ["LIKES"],
         }),
 
         // UPDATE COMMENT
@@ -206,7 +197,7 @@ const institutionApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data,
             }),
-            invalidatesTags: ["CONVERSATION-COMMENTS"],
+            invalidatesTags: ["REPLY", "COMMENTS"],
         }),
 
         // DELETE COMMENT
@@ -215,7 +206,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/delete-comment/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["CONVERSATION-COMMENTS"],
+            invalidatesTags: ["COMMENTS"],
         }),
 
 
@@ -230,7 +221,6 @@ export const {
     useJoinInstitutionMutation,
     useGetInstitutionMembersQuery,
     useGetInstitutionConversationQuery,
-    useGetSingleInstitutionConversationQuery,
     useRemoveInstitutionMemberMutation,
     useCreateInstitutionConversationMutation,
     useUpdateInstitutionConversationMutation,

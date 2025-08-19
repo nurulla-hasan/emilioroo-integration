@@ -130,9 +130,9 @@ const SingleInstitutionPage = () => {
     };
 
     return (
-        <div className="h-[calc(100vh-80px)] overflow-hidden grid grid-cols-12 gap-8 p-2">
+        <div className="h-[calc(100vh-80px)] overflow-hidden grid grid-cols-1 md:grid-cols-12 gap-8 p-2">
             {/* Sidebar */}
-            <div className="hidden lg:block col-span-3 border rounded-lg p-4 overflow-y-auto">
+            <div className="hidden xl:block col-span-3 border rounded-lg p-4 overflow-y-auto">
                 <div className="flex flex-col gap-2">
                     {areAllInstitutionsLoading ? (
                         <InstitutionNavCardSkeleton count={7} />
@@ -146,7 +146,7 @@ const SingleInstitutionPage = () => {
                 </div>
             </div>
             {/* Main content */}
-            <div className="col-span-12 lg:col-span-9 overflow-y-auto border p-3 rounded-lg">
+            <div className="col-span-12 xl:col-span-9 overflow-y-auto border p-3 rounded-lg">
                 {isSingleInstitutionLoading ? (
                     <>
                         <InstitutionHeaderSkeleton />
@@ -205,13 +205,14 @@ const SingleInstitutionPage = () => {
                 loading={isDeletingConversation}
             />
 
+            {/*{/* Modals */}
             <CreateConversationModal
                 isOpen={isCreateConversationModalOpen}
                 onOpenChange={setIsCreateConversationModalOpen}
                 onCreateConversation={handleCreateConversation}
                 isLoading={isCreatingConversation}
             />
-
+            {/* <EditConversationModal */}
             <EditConversationModal
                 isOpen={isEditConversationModalOpen}
                 onOpenChange={setIsEditConversationModalOpen}

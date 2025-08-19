@@ -4,8 +4,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import EditCommentModal from './EditCommentModal';
 import ConfirmationModal from '@/components/common/ConfirmationModal'; 
-import { ReplyForm, ReplyList } from './ReplyCard';
 import { Skeleton } from "@/components/ui/skeleton";
+import ReplyList from "./ReplyList";
+import ReplyForm from "./ReplyForm";
 
 const CommentRepliesModal = ({ commentId, children }) => {
     const { data: repliesData, isLoading, isError, refetch } = useGetCommentRepliesQuery(commentId, { skip: !commentId });
@@ -54,7 +55,7 @@ const CommentRepliesModal = ({ commentId, children }) => {
                 <DialogHeader>
                     <DialogTitle>Replies</DialogTitle>
                 </DialogHeader>
-                <div className="max-h-[60vh] overflow-y-auto p-4">
+                <div className="max-h-[60vh] overflow-y-auto">
                     {isLoading ? (
                         <div className="space-y-4">
                             <div className="flex items-start space-x-4 mt-4">

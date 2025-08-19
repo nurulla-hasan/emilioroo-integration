@@ -34,7 +34,7 @@ const ProjectWorkspacePage = () => {
 
   const allProjects = allProjectsData?.data?.result;
   const project = singleProjectData?.data;
-  const producers = producersData?.data?.result;
+  const producers = producersData?.data?.result; 
   const consumers = consumersData?.data?.result;
   const documents = documentsData?.data?.result;
   const images = imagesData?.data?.result;

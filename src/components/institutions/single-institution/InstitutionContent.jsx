@@ -6,10 +6,10 @@ import ConversationTopics from './ConversationTopics';
 
 const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEditTopic, onDeleteTopic, onRemoveMember, onCreateConversationClick, isLoading, error, selectedTopic }) => {
     return (
-        <div className="grid grid-cols-4 gap-4 mt-4">
+        <div className="grid lg:grid-cols-4 gap-4 mt-4">
 
             {/* <Innovators /> */}
-            <div className="col-span-1">
+            <div className="lg:col-span-1 col-span-2">
                 <div className='border rounded-lg p-3'>
                     <h2 className="text-md font-semibold mb-2">Innovators Hub</h2>
                     <div className="space-y-2">
@@ -55,7 +55,7 @@ const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEdit
             </div>
 
             {/* <Innovators /> */}
-            <div className="col-span-1">
+            <div className="lg:col-span-1 col-span-2">
                 <div className='border rounded-lg p-3'>
                     <h2 className="text-md font-semibold mb-2">Critical Thinkers</h2>
                     <div className="space-y-2">

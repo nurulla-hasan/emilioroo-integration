@@ -5,13 +5,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Heart, MoreHorizontal } from 'lucide-react';
 import CommentRepliesModal from './CommentRepliesModal';
-import { DialogTrigger } from '@/components/ui/dialog';
+import { DialogTrigger, Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useLikeUnlikeCommentMutation, useDeleteCommentMutation } from '@/lib/features/api/InstitutionApi';
 import { toast } from 'sonner';
 import EditCommentModal from './EditCommentModal';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { timeAgo } from '@/lib/utils';
+import Image from 'next/image';
 
 const PostCard = ({ post }) => {
     const { _id, commentorName, commentorProfileImage, createdAt, text, totalLike, totalReplies, isMyComment, isMyLike } = post;
@@ -19,6 +20,7 @@ const PostCard = ({ post }) => {
     const [deleteComment, { isLoading: isDeleting }] = useDeleteCommentMutation();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
     const [optimisticIsLiked, setOptimisticIsLiked] = useState(isMyLike);
     const [optimisticTotalLikes, setOptimisticTotalLikes] = useState(totalLike);
@@ -88,6 +90,11 @@ const PostCard = ({ post }) => {
                             </div>
                         </div>
                         <p className="mt-2">{text}</p>
+                        {post.image && (
+                            <div className="mt-2 relative h-20 w-20 cursor-pointer" onClick={() => setIsImageModalOpen(true)}>
+                                <Image src={post.image} alt="Comment Image" fill className="object-cover rounded-lg" />
+                            </div>
+                        )}
                         <div className="flex justify-between items-center mt-4 text-sm text-muted-foreground">
                             <div className="flex items-center space-x-4">
                                 <Button
@@ -127,6 +134,15 @@ const PostCard = ({ post }) => {
                 confirmText="Delete"
                 loading={isDeleting}
             />
+
+            <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
+                <DialogContent className="sm:max-w-[800px] p-0">
+                    <DialogTitle className="sr-only">Full size image</DialogTitle>
+                    <div className="relative w-full h-[500px]">
+                        <Image src={post.image} alt="Full size image" fill className="object-contain" />
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };
