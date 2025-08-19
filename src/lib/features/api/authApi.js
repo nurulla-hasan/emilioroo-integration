@@ -143,26 +143,22 @@ const authApis = baseApi.injectEndpoints({
         }),
 
         // GET MY PROFILE
-        getProfile: builder.query({
-            query: () => {
-                return {
-                    url: '/user/get-my-profile',
-                    method: 'GET'
-                }
-            },
-            providesTags: ['PROFILE']
+        getMyProfile: builder.query({
+            query: () => ({
+                url: "/user/get-my-profile",
+                method: "GET",
+            }),
+            providesTags: ["PROFILE"],
         }),
 
-        // UPDATE PROFILE
-        updateProfile: builder.mutation({
-            query: (data) => {
-                return {
-                    url: '/admin/update',
-                    method: 'PUT',
-                    body: data
-                }
-            },
-            invalidatesTags: ['Profile']
+        // UPDATE MY PROFILE
+        updateMyProfile: builder.mutation({
+            query: (data) => ({
+                url: "/normal-user/update-profile",
+                method: "PATCH",
+                body: data,
+            }),
+            invalidatesTags: ["PROFILE"],
         }),
 
         // CHANGE PASSWORD
@@ -193,4 +189,4 @@ const authApis = baseApi.injectEndpoints({
     })
 })
 
-export const { useLoginMutation, useRegisterMutation, useGetSkillsQuery, useVerifyOTPMutation, useVerifyOTPForResetPasswordMutation, useResendOTPMutation, useResendResetOTPMutation, useGetProfileQuery, useChangePasswordMutation, useUpdateProfileMutation, useForgetPasswordMutation, useResetPasswordMutation, useLogoutMutation } = authApis;
+export const { useLoginMutation, useRegisterMutation, useGetSkillsQuery, useVerifyOTPMutation, useVerifyOTPForResetPasswordMutation, useResendOTPMutation, useResendResetOTPMutation, useGetMyProfileQuery, useUpdateMyProfileMutation, useChangePasswordMutation, useForgetPasswordMutation, useResetPasswordMutation, useLogoutMutation } = authApis;

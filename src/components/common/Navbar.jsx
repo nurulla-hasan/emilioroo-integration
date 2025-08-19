@@ -10,7 +10,7 @@ import { Toggle } from "../ui/toggle";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "../ui/input";
-import { useGetProfileQuery, useLogoutMutation } from "@/lib/features/api/authApi";
+import { useGetMyProfileQuery, useLogoutMutation } from "@/lib/features/api/authApi";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import {useTranslations } from "next-intl";
@@ -22,7 +22,7 @@ const Navbar = () => {
     const currentPathname = usePathname(); 
     const { theme, setTheme } = useTheme()
     const { accessToken: token } = useSelector((state) => state.auth);
-    const { data: profile, isLoading: profileLoading } = useGetProfileQuery(undefined, { skip: !token });
+    const { data: profile, isLoading: profileLoading } = useGetMyProfileQuery(undefined, { skip: !token });
     const [logout] = useLogoutMutation();
 
     const isLoggedIn = profile?.data?.email && token

@@ -92,7 +92,7 @@ const PostCard = ({ post }) => {
                         <p className="mt-2">{text}</p>
                         {post.image && (
                             <div className="mt-2 relative h-20 w-20 cursor-pointer" onClick={() => setIsImageModalOpen(true)}>
-                                <Image src={post.image} alt="Comment Image" fill className="object-cover rounded-lg" />
+                                                                <Image src={post.image} alt="Comment Image" fill className="object-cover rounded-lg" />
                             </div>
                         )}
                         <div className="flex justify-between items-center mt-4 text-sm text-muted-foreground">
