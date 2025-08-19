@@ -9,7 +9,7 @@ const bondsApi = baseApi.injectEndpoints({
                 url: "/bond/my-bonds",
                 method: "GET",
             }),
-            providesTags: ["MY_BONDS"],
+            providesTags: ["MY-BONDS"],
         }),
 
         // GET MY BONDS REQUEST
@@ -18,7 +18,7 @@ const bondsApi = baseApi.injectEndpoints({
                 url: "/bond-request/my-bond-requests",
                 method: "GET",
             }),
-            providesTags: ["MY_BONDS_REQUEST"],
+            providesTags: ["MY-BONDS-REQUEST"],
         }),
 
 
@@ -39,7 +39,7 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["MY_BONDS"],
+            invalidatesTags: ["MY-BONDS"],
         }),
 
         // CREATE BOND REQUEST
@@ -49,7 +49,7 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["MY_BONDS_REQUEST"],
+            invalidatesTags: ["MY-BONDS-REQUEST"],
         }),
 
         // UPDATE MY BOND
@@ -59,7 +59,7 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data,
             }),
-            invalidatesTags: ["MY_BONDS"],
+            invalidatesTags: ["MY-BONDS"],
         }),
 
         // DELETE MY BOND
@@ -68,7 +68,7 @@ const bondsApi = baseApi.injectEndpoints({
                 url: `/bond/delete/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["MY_BONDS"],
+            invalidatesTags: ["MY-BONDS"],
         }),
 
         // UPDATE BOND REQUEST
@@ -78,7 +78,7 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data,
             }),
-            invalidatesTags: ["MY_BONDS_REQUEST"],
+            invalidatesTags: ["MY-BONDS-REQUEST"],
         }),
 
         // DELETE BOND REQUEST
@@ -87,7 +87,7 @@ const bondsApi = baseApi.injectEndpoints({
                 url: `/bond-request/delete/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["MY_BONDS_REQUEST"],
+            invalidatesTags: ["MY-BONDS-REQUEST"],
         }),
 
 

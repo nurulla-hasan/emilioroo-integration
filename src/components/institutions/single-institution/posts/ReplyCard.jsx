@@ -8,6 +8,7 @@ import { useCreateReplyMutation, useGetCommentRepliesQuery } from "@/lib/feature
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { timeAgo } from "@/lib/utils";
 
 const ReplyForm = ({ parentId, conversationId, onReplyCreated }) => {
     const [text, setText] = useState("");
@@ -90,26 +91,26 @@ const ReplyCard = ({ reply, conversationId, onEditClick, onDeleteClick }) => {
                         <div>
                             <p className="font-semibold text-sm">{reply.commentorName}</p>
                         </div>
-                                                    <div className="text-xs text-muted-foreground flex items-center space-x-2">
-                                <p>{new Date(reply.createdAt).toLocaleDateString()}</p>
-                                {reply.isMyComment && (
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="sm" className="h-auto p-1">
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem onClick={() => onEditClick(reply)}>
-                                                Edit
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => onDeleteClick(reply)} className="text-red-500">
-                                                Delete
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                )}
-                            </div>
+                        <div className="text-xs text-muted-foreground flex items-center space-x-2">
+                            <p>{timeAgo(reply.createdAt)}</p>
+                            {reply.isMyComment && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="sm" className="h-auto p-1">
+                                            <MoreHorizontal className="h-4 w-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem onClick={() => onEditClick(reply)}>
+                                            Edit
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => onDeleteClick(reply)} className="text-red-500">
+                                            Delete
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+                        </div>
                     </div>
                     <p className="mt-2 break-words text-xs">{reply.text}</p>
                     <Button variant="ghost" size="sm" onClick={() => setShowReplyForm(!showReplyForm)}>

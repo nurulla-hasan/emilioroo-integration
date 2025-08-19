@@ -69,7 +69,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/get-conversation-comments/${id}`,
                 method: "GET",
             }),
-            providesTags: ["INSTITUTIONS"],
+            providesTags: ["CONVERSATION-COMMENTS"],
         }),
 
         // GET COMMENT REPLIES
@@ -78,7 +78,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/get-replies/${id}`,
                 method: "GET",
             }),
-            providesTags: ["CommentReplies"],
+            providesTags: ["COMMENTS-REPLIES"],
         }),
 
         // GET COMMENT LIKERS
@@ -87,7 +87,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/get-comment-likers/${id}`,
                 method: "GET",
             }),
-            providesTags: ["INSTITUTIONS"],
+            providesTags: ["CONVERSATION-COMMENTS"],
         }),
 
         // ----------------------------------- End Get Api ----------------------------------------------------------------------------
@@ -177,7 +177,7 @@ const institutionApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["INSTITUTIONS"],
+            invalidatesTags: ["CONVERSATION-COMMENTS"],
         }),
 
         // CREATE REPLY
@@ -187,7 +187,7 @@ const institutionApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["CommentReplies"],
+            invalidatesTags: ["COMMENTS-REPLIES"],
         }),
 
         // LIKE UNLIKE COMMENT
@@ -196,7 +196,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/like-unlike/${id}`,
                 method: "POST",
             }),
-            invalidatesTags: ["INSTITUTIONS"],
+            invalidatesTags: ["COMMENTS-LIKES"],
         }),
 
         // UPDATE COMMENT
@@ -206,7 +206,7 @@ const institutionApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data,
             }),
-            invalidatesTags: ["CommentReplies"],
+            invalidatesTags: ["CONVERSATION-COMMENTS"],
         }),
 
         // DELETE COMMENT
@@ -215,7 +215,7 @@ const institutionApi = baseApi.injectEndpoints({
                 url: `/comment/delete-comment/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["INSTITUTIONS"],
+            invalidatesTags: ["CONVERSATION-COMMENTS"],
         }),
 
 

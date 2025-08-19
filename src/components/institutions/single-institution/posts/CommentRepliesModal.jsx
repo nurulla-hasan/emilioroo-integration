@@ -3,7 +3,7 @@ import { useGetCommentRepliesQuery, useDeleteCommentMutation } from "@/lib/featu
 import { useState } from "react";
 import { toast } from "sonner";
 import EditCommentModal from './EditCommentModal';
-import ConfirmationModal from '@/components/common/ConfirmationModal';
+import ConfirmationModal from '@/components/common/ConfirmationModal'; 
 import { ReplyForm, ReplyList } from './ReplyCard';
 import { Skeleton } from "@/components/ui/skeleton";
 

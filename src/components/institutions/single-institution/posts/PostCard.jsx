@@ -20,16 +20,27 @@ const PostCard = ({ post }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
+    const [optimisticIsLiked, setOptimisticIsLiked] = useState(isMyLike);
+    const [optimisticTotalLikes, setOptimisticTotalLikes] = useState(totalLike);
 
 
     const handleLikeUnlike = async () => {
+        const previousIsLiked = optimisticIsLiked;
+        const previousTotalLikes = optimisticTotalLikes;
+
+        setOptimisticIsLiked(!previousIsLiked);
+        setOptimisticTotalLikes(!previousIsLiked ? previousTotalLikes + 1 : previousTotalLikes - 1);
+
         try {
             await likeUnlikeComment(_id).unwrap();
         } catch (error) {
+            setOptimisticIsLiked(previousIsLiked);
+            setOptimisticTotalLikes(previousTotalLikes);
             console.error("Failed to like/unlike comment:", error);
             toast.error(error?.data?.message || "Failed to like/unlike comment.");
         }
     };
+
 
     const handleDeleteComment = async () => {
         try {
@@ -86,8 +97,8 @@ const PostCard = ({ post }) => {
                                     onClick={handleLikeUnlike}
                                     disabled={isLiking}
                                 >
-                                    <Heart className="h-4 w-4" fill={isMyLike ? "red" : "none"} stroke={isMyLike ? "red" : "currentColor"} />
-                                    <span>Like ({totalLike})</span>
+                                    <Heart className="h-4 w-4" fill={optimisticIsLiked ? "red" : "none"} stroke={optimisticIsLiked ? "red" : "currentColor"} />
+                                    <span>Like ({optimisticTotalLikes})</span>
                                 </Button>
                                 <CommentRepliesModal commentId={_id}>
                                     <DialogTrigger asChild>
