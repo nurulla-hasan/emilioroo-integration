@@ -32,6 +32,7 @@ const ProjectDetailsPage = () => {
 
     const [removeProjectMember, { isLoading: isRemovingMember }] = useRemoveProjectMemberMutation();
     const { data, isLoading, isError } = useGetSingleProjectQuery(projectId);
+    const project = data?.data;
 
     const {
         data: producersData,
@@ -106,8 +107,6 @@ const ProjectDetailsPage = () => {
         );
     }
 
-    const project = data?.data;
-
     if (!project) {
         return (
             <PageLayout>
@@ -125,6 +124,7 @@ const ProjectDetailsPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <MembersList
+                        project={project}
                         title="Producers"
                         members={producersData?.data?.result}
                         isLoading={isProducersLoading}
@@ -134,6 +134,7 @@ const ProjectDetailsPage = () => {
                         isRemovingMember={isRemovingMember}
                     />
                     <MembersList
+                        project={project}
                         title="Consumers"
                         members={consumersData?.data?.result}
                         isLoading={isConsumersLoading}
@@ -144,11 +145,13 @@ const ProjectDetailsPage = () => {
                     />
                 </div>
 
-                <JoinRequests
-                    requests={joinRequestsData?.data}
-                    isLoading={isJoinRequestsLoading}
-                    isError={isJoinRequestsError}
-                />
+                {project?.isOwner && (
+                    <JoinRequests
+                        requests={joinRequestsData?.data}
+                        isLoading={isJoinRequestsLoading}
+                        isError={isJoinRequestsError}
+                    />
+                )}
 
                 <AddMemberModal
                     isOpen={isAddMemberModalOpen}

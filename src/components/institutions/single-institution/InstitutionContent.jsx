@@ -4,10 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Trash2, Plus } from 'lucide-react';
 import ConversationTopics from './ConversationTopics';
 
-const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEditTopic, onDeleteTopic, onRemoveMember, onCreateConversationClick, isLoading, error, selectedTopic }) => {
+const InstitutionContent = ({ institution, innovators, thinkers, topics, onTopicClick, onEditTopic, onDeleteTopic, onRemoveMember, onCreateConversationClick, isLoading, error, selectedTopic }) => {
+
+    console.log(institution);
     return (
         <div className="grid lg:grid-cols-4 gap-4 mt-4">
-
             {/* <Innovators /> */}
             <div className="lg:col-span-1 col-span-2">
                 <div className='border rounded-lg p-3'>
@@ -26,7 +27,10 @@ const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEdit
                                             <p className="text-xs text-muted-foreground">{innovator.designation}</p>
                                         </div>
                                     </div>
-                                    <Trash2 color='red' className="h-4 w-4 text-muted-foreground cursor-pointer" onClick={() => onRemoveMember(innovator._id)} />
+                                    {
+                                        institution.isCreator &&
+                                        <Trash2 color='red' className="h-4 w-4 text-muted-foreground cursor-pointer" onClick={() => onRemoveMember(innovator._id)} />
+                                    }
                                 </div>
                             ))
                         ) : (
@@ -72,7 +76,10 @@ const InstitutionContent = ({ innovators, thinkers, topics, onTopicClick, onEdit
                                             <p className="text-xs text-muted-foreground">{thinker.designation}</p>
                                         </div>
                                     </div>
-                                    <Trash2 color='red' className="h-4 w-4 text-muted-foreground cursor-pointer" onClick={() => onRemoveMember(thinker._id)} />
+                                    {
+                                        institution.isCreator &&
+                                        <Trash2 color='red' className="h-4 w-4 text-muted-foreground cursor-pointer" onClick={() => onRemoveMember(thinker._id)} />
+                                    }
                                 </div>
                             ))
                         ) : (

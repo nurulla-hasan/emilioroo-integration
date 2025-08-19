@@ -11,6 +11,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 
 const ConversationTopics = ({ topics, onTopicClick, onEditTopic, onDeleteTopic, selectedTopic }) => {
+
     return (
         <div className="space-y-2">
             {topics && topics.length > 0 ? (
@@ -30,7 +31,7 @@ const ConversationTopics = ({ topics, onTopicClick, onEditTopic, onDeleteTopic, 
 
                         <div className="flex items-center justify-end space-x-2">
                             <Badge
-                                variant={ topic.isPublic ? 'default' : 'destructive' }
+                                variant={topic.isPublic ? 'default' : 'destructive'}
                                 className={`text-[10px] ${topic.isPublic
                                     ? 'bg-green-100 dark:text-green-100 text-green-800'
                                     : 'bg-red-100 dark:text-red-100 text-red-800'
@@ -39,33 +40,38 @@ const ConversationTopics = ({ topics, onTopicClick, onEditTopic, onDeleteTopic, 
                                 {topic.isPublic ? 'Public' : 'Private'}
                             </Badge>
 
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <MoreHorizontal className="h-5 w-5 text-muted-foreground cursor-pointer" />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onEditTopic(topic);
-                                        }}
-                                        className="flex items-center space-x-2"
-                                    >
-                                        <SquarePen className="h-4 w-4" />
-                                        <span>Edit</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onDeleteTopic(topic);
-                                        }}
-                                        className="flex items-center space-x-2 text-red-600"
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                        <span>Delete</span>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            {
+                                topic.isMyConversation && (
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <MoreHorizontal className="h-5 w-5 text-muted-foreground cursor-pointer" />
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onEditTopic(topic);
+                                                }}
+                                                className="flex items-center space-x-2"
+                                            >
+                                                <SquarePen className="h-4 w-4" />
+                                                <span>Edit</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onDeleteTopic(topic);
+                                                }}
+                                                className="flex items-center space-x-2 text-red-600"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                                <span>Delete</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                )
+                            }
+
                         </div>
                     </div>
                 ))

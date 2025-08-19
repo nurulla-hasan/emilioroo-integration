@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Users } from 'lucide-react';
 import JoinInstitutionModal from "@/components/institutions/modal/JoinInstitutionModal";
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const AllInstitutionsCard = ({ institution }) => {
     const isJoined = institution.isJoined === true;
@@ -14,6 +15,11 @@ const AllInstitutionsCard = ({ institution }) => {
     const router = useRouter();
 
     const handleNavigate = () => {
+        if(!isJoined) {
+            // setIsJoinModalOpen(true);
+            toast.error("Please join the institution first.");
+            return;
+        }
         router.push(`/institutions/${institution._id}`);
     };
 
@@ -72,6 +78,7 @@ const AllInstitutionsCard = ({ institution }) => {
                         variant="outline"
                         size="sm"
                         className="flex-1 border-border text-foreground hover:bg-accent"
+                        // disabled={!isJoined}
                         onClick={handleNavigate}
                     >
                         Open
@@ -79,8 +86,8 @@ const AllInstitutionsCard = ({ institution }) => {
                     <Button
                         size="sm"
                         onClick={() => setIsJoinModalOpen(true)}
-                        className={`flex-1`}
                         disabled={isJoined}
+                        className={`flex-1 ${isJoined ? "bg-green-700" : ""}`}
                     >
                         {isJoined ? "Joined" : "Join"}
                     </Button>

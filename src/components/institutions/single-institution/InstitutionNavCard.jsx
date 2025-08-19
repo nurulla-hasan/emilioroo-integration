@@ -5,15 +5,21 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useRouter } from 'next/navigation';
 import JoinInstitutionModal from "@/components/institutions/modal/JoinInstitutionModal";
+import { useRouter } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 const InstitutionNavCard = ({ institution, isActive }) => {
     const router = useRouter();
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
     const handleNavigate = () => {
+        if(!institution.isJoined) {
+            // setIsJoinModalOpen(true);
+            toast.error("Please join the institution first.");
+            return;
+        }
         router.push(`/institutions/${institution._id}`);
     };
 

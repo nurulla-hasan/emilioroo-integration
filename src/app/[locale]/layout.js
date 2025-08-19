@@ -27,7 +27,7 @@ export const metadata = {
 export default async function RootLayout({ children, params }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
-    notFound();
+    return notFound()
   }
   return (
     <html lang={locale}>

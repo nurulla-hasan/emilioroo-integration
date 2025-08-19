@@ -40,9 +40,13 @@ const ProjectHeader = ({ project, onEditProject }) => {
                 </div>
 
                 <div className="w-full flex flex-col items-end space-y-2">
-                    <Button size="sm" variant="default" className="flex items-center gap-2" onClick={onEditProject}>
-                        <Pencil className="h-4 w-4" /> Edit Project
-                    </Button>
+                    {
+                        project.isOwner &&
+                        <Button size="sm" onClick={() => onEditProject(project)}>
+                            <Pencil className="h-4 w-4 mr-1" />
+                            Edit
+                        </Button>
+                    }
                     <div className="flex flex-wrap justify-end gap-2">
                         <Badge variant="secondary">{project.status}</Badge>
                         <Badge variant="outline">{project.joinControll}</Badge>

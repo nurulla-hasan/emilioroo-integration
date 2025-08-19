@@ -44,7 +44,7 @@ const SingleInstitutionPage = () => {
     const institution = singleInstitutionData?.data;
     const allInstitutions = allInstitutionsData?.data?.result;
     const institutionMembers = institutionMembersData?.data?.result;
-    const institutionConversations = institutionConversationsData?.data;
+    const institutionConversations = institutionConversationsData?.data?.result;
     const conversationComments = conversationCommentsData?.data?.result;
 
     const innovators = institutionMembers?.filter(member => member.group === "A") || [];
@@ -161,6 +161,7 @@ const SingleInstitutionPage = () => {
                             <InstitutionHeader institution={institution} />
                             <Mediators mediators={mediators} />
                             <InstitutionContent
+                                institution={institution}
                                 innovators={innovators}
                                 thinkers={thinkers}
                                 topics={institutionConversations}

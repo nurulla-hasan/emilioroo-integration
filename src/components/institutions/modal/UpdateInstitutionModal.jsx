@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useUpdateInstitutionMutation } from "@/lib/features/api/InstitutionApi"
 import { Upload } from "lucide-react"
+import { formatFileName } from "@/lib/utils"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -182,7 +183,7 @@ export default function UpdateInstitutionModal({ isOpen, onOpenChange, instituti
                     className="w-full flex items-center justify-center gap-2"
                   >
                     <Upload className="h-4 w-4" />
-                    {value && value[0] ? value[0].name : (institution?.cover_image ? "Change Image" : "Upload Image")}
+                    {value && value[0] ? formatFileName(value[0].name, 50) : (institution?.cover_image ? "Change Image" : "Upload Image")}
                   </Button>
                   {institution?.cover_image && !value && (
                     <p className="text-sm text-muted-foreground">Current: {institution.cover_image.split('/').pop()}</p>

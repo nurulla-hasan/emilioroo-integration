@@ -82,9 +82,9 @@ const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
               loading={isSendingRequest}
               className={`w-full  ${isJoinRequestSent ? "bg-yellow-800" : ""}`}
               onClick={() => handleSendJoinRequest(project._id)}
-              disabled={isSendingRequest || project?.joinControll === "Private" || isJoinRequestSent || project.isJoined}
+              disabled={isSendingRequest || project?.joinControll === "Private" || isJoinRequestSent || project.isJoined || project.isOwner}
             >
-              {isJoinRequestSent ? "Request Sent": project.isJoined ? "Joined" : "Join Project"}
+              {project.isOwner ? "Owner" : isJoinRequestSent ? "Request Sent" : project.isJoined ? "Joined" : "Join Project"}
             </Button>
           )}
         </CardFooter>

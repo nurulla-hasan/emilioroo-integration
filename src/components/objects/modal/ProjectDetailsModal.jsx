@@ -14,7 +14,6 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
     const { data: producersData, isLoading: isProducersLoading, isError: isProducersError } = useGetProjectMemberQuery({ id: projectId, type: "Producer" });
     const { data: consumersData, isLoading: isConsumersLoading, isError: isConsumersError } = useGetProjectMemberQuery({ id: projectId, type: "Consumer" });
     const [sendJoinRequest, { isLoading: isSendingRequest }] = useSendJoinRequestMutation();
-
     const project = projectData?.data;
 
     const handleSendJoinRequest = async () => {
@@ -29,7 +28,7 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
     if (isProjectLoading) {
         return (
             <Dialog open={isOpen} onOpenChange={onOpenChange}>
-                <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-hidden p-0 border">
+                <DialogContent className="sm:max-w-[600px] max-h-[90vh] min-h-96 overflow-hidden p-0 border">
                     <DialogTitle className={"sr-only"}>nothing</DialogTitle>
                     <div className="flex justify-center items-center h-full">
                         <Loader2 className="h-8 w-8 animate-spin" />
@@ -220,8 +219,12 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
 
                 {/* Fixed bottom section with join button */}
                 <div className="border-t  p-4">
-                    <Button loading={isSendingRequest} disabled={project?.joinControll === "Private"} onClick={() => handleSendJoinRequest(project?._id)} className="w-full">
-                       Join Project
+                    <Button
+                        loading={isSendingRequest}
+                        disabled={project?.joinControll === "Private" || isSendingRequest || project?.isOwner || project?.isJoined || project?.isJoinRequestSent}
+                        onClick={() => handleSendJoinRequest(project?._id)}
+                        className="w-full">
+                        {project?.isOwner ? "Owner" : project?.isJoinRequestSent ? "Request Sent" : project?.isJoined ? "Joined" : "Join Project"}
                     </Button>
                 </div>
             </DialogContent>
