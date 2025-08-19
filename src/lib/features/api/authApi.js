@@ -44,6 +44,14 @@ const authApis = baseApi.injectEndpoints({
             },
         }),
 
+        // GET SKILLS
+        getSkills: builder.query({
+            query: () => ({
+                url: '/skill/all-skills',
+                method: 'GET'
+            })
+        }),
+
         // VERIFY OTP
         verifyOTP: builder.mutation({
             query: (data) => ({
@@ -185,4 +193,4 @@ const authApis = baseApi.injectEndpoints({
     })
 })
 
-export const { useLoginMutation, useRegisterMutation, useVerifyOTPMutation, useVerifyOTPForResetPasswordMutation, useResendOTPMutation, useResendResetOTPMutation, useGetProfileQuery, useChangePasswordMutation, useUpdateProfileMutation, useForgetPasswordMutation, useResetPasswordMutation, useLogoutMutation } = authApis;
+export const { useLoginMutation, useRegisterMutation, useGetSkillsQuery, useVerifyOTPMutation, useVerifyOTPForResetPasswordMutation, useResendOTPMutation, useResendResetOTPMutation, useGetProfileQuery, useChangePasswordMutation, useUpdateProfileMutation, useForgetPasswordMutation, useResetPasswordMutation, useLogoutMutation } = authApis;

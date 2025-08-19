@@ -15,16 +15,10 @@ import { useForm } from "react-hook-form";
 import { ArrowLeft, Eye, EyeOff, CalendarIcon } from "lucide-react";
 import { MultipleSelector } from "@/components/ui/multiselect";
 import Link from "next/link";
-import { useRegisterMutation } from "@/lib/features/api/authApi";
+import { useRegisterMutation, useGetSkillsQuery } from "@/lib/features/api/authApi";
 import { useRouter } from "next/navigation";
 
-const frameworks = [
-  { value: "684bd02558c89b118cadc499", label: "Next.js" },
-  { value: "684bcffe1332dc9dbf08664a", label: "React" },
-  { value: "vue", label: "Vue" },
-  { value: "angular", label: "Angular" },
-  { value: "svelte", label: "Svelte" }
-];
+
 
 const signUpSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -49,6 +43,12 @@ export function SignUpForm({ className, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
   const toggleVisibility = () => setShowPassword(!showPassword);
   const [openDatePicker, setOpenDatePicker] = useState(false);
+
+  const { data: skillsData } = useGetSkillsQuery();
+  const skillOptions = skillsData?.data?.result?.map(skill => ({
+    label: skill.name,
+    value: skill._id,
+  })) || [];
 
   const [register, { data, isLoading, isSuccess }] = useRegisterMutation();
 
@@ -85,7 +85,6 @@ export function SignUpForm({ className, ...props }) {
       ...data,
       dateOfBirth: data.dateOfBirth ? data.dateOfBirth.toISOString().slice(0, 10) : undefined,
     };
-    // console.log(formattedData);
     register(formattedData);
   };
 
@@ -267,7 +266,7 @@ export function SignUpForm({ className, ...props }) {
                     <FormItem className="grid gap-3">
                       <FormLabel htmlFor="skills">Skills <span className="text-xs">(Optional)</span></FormLabel>
                       <MultipleSelector
-                        options={frameworks}
+                        options={skillOptions}
                         placeholder="Select skills"
                         {...field}
                       />

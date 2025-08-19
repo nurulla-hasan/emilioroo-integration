@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useCreateInstitutionMutation } from "@/lib/features/api/InstitutionApi"
 import { useTranslations } from "next-intl"
 import { Upload } from "lucide-react"
+import { formatFileName } from "@/lib/utils"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -181,7 +182,7 @@ export default function CreateInstitutionModal({ isOpen, onOpenChange }) {
                     className="w-full flex items-center justify-center gap-2"
                   >
                     <Upload className="h-4 w-4" />
-                    {value && value[0] ? value[0].name : t('uploadImage')}
+                    {value && value[0] ? formatFileName(value[0].name, 50) : t('uploadImage')}
                   </Button>
                   <FormMessage />
                 </FormItem>
