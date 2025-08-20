@@ -32,6 +32,7 @@ const formSchema = z.object({
     socialLinks: z.array(z.object({ value: z.string().url({ message: "Please enter a valid URL." }) })).optional(),
     skills: z.array(z.string()).optional(),
     profile_image: z.any().optional(),
+    cover_image: z.any().optional(),
 });
 
 const EditProfileForm = () => {
@@ -57,6 +58,7 @@ const EditProfileForm = () => {
             socialLinks: [],
             skills: [],
             profile_image: null,
+            cover_image: null,
         },
     });
 
@@ -85,6 +87,9 @@ const EditProfileForm = () => {
         if (values.profile_image && values.profile_image[0]) {
             formData.append("profile_image", values.profile_image[0]);
         }
+        if (values.cover_image && values.cover_image[0]) {
+            formData.append("cover_image", values.cover_image[0]);
+        }
 
         const data = {
             name: values.name,
@@ -111,19 +116,34 @@ const EditProfileForm = () => {
             <CardContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <FormField
-                            control={form.control}
-                            name="profile_image"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Profile Image</FormLabel>
-                                    <FormControl>
-                                        <Input type="file" ref={fileInputRef} onChange={e => field.onChange(e.target.files)} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField
+                                control={form.control}
+                                name="profile_image"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Profile Image</FormLabel>
+                                        <FormControl>
+                                            <Input type="file" ref={fileInputRef} onChange={e => field.onChange(e.target.files)} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="cover_image"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Cover Image</FormLabel>
+                                        <FormControl>
+                                            <Input type="file" onChange={e => field.onChange(e.target.files)} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <FormField
                                 control={form.control}
@@ -214,7 +234,7 @@ const EditProfileForm = () => {
                                 </FormItem>
                             )}
                         />
-                        <div>
+                        <div className="flex flex-col">
                             <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Social Links</label>
                             {fields.map((field, index) => (
                                 <FormField
@@ -227,7 +247,7 @@ const EditProfileForm = () => {
                                                 <FormControl>
                                                     <Input {...field} />
                                                 </FormControl>
-                                                <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                                                <Button type="button" variant="outline" size="icon" onClick={() => remove(index)}>
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
                                             </div>

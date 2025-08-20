@@ -6,7 +6,6 @@ import ConversationTopics from './ConversationTopics';
 
 const InstitutionContent = ({ institution, innovators, thinkers, topics, onTopicClick, onEditTopic, onDeleteTopic, onRemoveMember, onCreateConversationClick, isLoading, error, selectedTopic }) => {
 
-    console.log(institution);
     return (
         <div className="grid lg:grid-cols-4 gap-4 mt-4">
             {/* <Innovators /> */}
@@ -44,7 +43,10 @@ const InstitutionContent = ({ institution, innovators, thinkers, topics, onTopic
             <div className="col-span-2 border rounded-lg p-3">
                 <div className="flex justify-between items-center mb-2">
                     <h2 className="text-md font-semibold">Conversations</h2>
-                    <Plus className="h-5 w-5 cursor-pointer" onClick={onCreateConversationClick} />
+                    {
+                        institution.isCreator &&
+                        <Plus className="h-5 w-5 cursor-pointer" onClick={onCreateConversationClick} />
+                    }
                 </div>
                 {isLoading && <p>Loading conversations...</p>}
                 {error && <p className="text-red-500">Error loading conversations.</p>}

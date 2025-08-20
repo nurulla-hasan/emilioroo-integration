@@ -52,6 +52,7 @@ const authApis = baseApi.injectEndpoints({
             })
         }),
 
+
         // VERIFY OTP
         verifyOTP: builder.mutation({
             query: (data) => ({

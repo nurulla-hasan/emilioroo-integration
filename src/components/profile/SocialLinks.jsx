@@ -17,7 +17,7 @@ const SocialLinks = ({ user }) => {
             <div className="mt-4 space-y-3">
                 {user.socialLinks && user.socialLinks.map((link, index) => (
                     <div key={index} className="flex items-center gap-3 text-sm text-primary dark:text-muted-foreground">
-                        {link.includes("instagram") ? <Instagram /> : link.includes("fb") ? <Facebook /> : <LinkIcon />}
+                        {link.includes("instagram") ? <Instagram /> : link.includes("facebook") ? <Facebook /> : <LinkIcon />}
                         <Link href={link} target="_blank" rel="noopener noreferrer" className="hover:underline">
                             {link}
                         </Link>

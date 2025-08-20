@@ -26,15 +26,21 @@ const ConversationTopics = ({ topics, onTopicClick, onEditTopic, onDeleteTopic, 
                     >
                         <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
                             <p className="text-sm font-semibold">{topic.name}</p>
-                            <p className="text-xs text-muted-foreground">({topic.totalComments} comments)</p>
+                            {
+                                topic.isPublic ? (
+                                    <p className="text-xs text-muted-foreground">(Anyone can view)</p>
+                                ): (
+                                    <p className="text-xs text-muted-foreground">({topic.totalUser} users)</p>
+                                )
+                            }
                         </div>
 
                         <div className="flex items-center justify-end space-x-2">
                             <Badge
                                 variant={topic.isPublic ? 'default' : 'destructive'}
                                 className={`text-[10px] ${topic.isPublic
-                                    ? 'bg-green-100 dark:text-green-100 text-green-800'
-                                    : 'bg-red-100 dark:text-red-100 text-red-800'
+                                    ? 'bg-green-100 dark:bg-green-800 dark:text-green-100 text-green-800'
+                                    : 'bg-red-100 dark:bg-red-800 dark:text-red-100 text-red-800'
                                     }`}
                             >
                                 {topic.isPublic ? 'Public' : 'Private'}

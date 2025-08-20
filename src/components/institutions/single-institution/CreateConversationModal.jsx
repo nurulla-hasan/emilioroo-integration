@@ -6,15 +6,35 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { MultipleSelector } from '../../ui/multiselect';
+import { useGetAllUsersQuery } from '@/lib/features/api/projectApi';
 
 const CreateConversationModal = ({ isOpen, onOpenChange, onCreateConversation, isLoading }) => {
     const [name, setName] = useState("");
-    const [isPublic, setIsPublic] = useState(false);
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [selectedUsers, setSelectedUsers] = useState([]);
+
+    const { data: usersData } = useGetAllUsersQuery();
+
+    const userOptions = usersData?.data?.result?.map(user => ({
+        value: user._id,
+        label: user.name,
+        user: user.user,
+    })) || [];
 
     const handleSubmit = () => {
-        onCreateConversation({ name, isPublic });
+        const conversationData = {
+            name,
+            isPublic: !isPrivate,
+        };
+
+        if (isPrivate) {
+            conversationData.ussers = selectedUsers.map(u => u);
+        }
+        onCreateConversation(conversationData);
         setName("");
-        setIsPublic(false);
+        setIsPrivate(false);
+        setSelectedUsers([]);
     };
 
     return (
@@ -39,16 +59,30 @@ const CreateConversationModal = ({ isOpen, onOpenChange, onCreateConversation, i
                             placeholder="e.g., General Chat"
                         />
                     </div>
+                    {isPrivate && (
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="users">
+                                Select Users
+                            </Label>
+                            <MultipleSelector
+                                value={selectedUsers}
+                                onChange={setSelectedUsers}
+                                options={userOptions}
+                                placeholder="Select users..."
+                            />
+                        </div>
+                    )}
                     <div className="flex items-center space-x-2 mt-2">
                         <Checkbox
-                            id="isPublic-create"
-                            checked={isPublic}
-                            onCheckedChange={setIsPublic}
+                            id="isPrivate-create"
+                            checked={isPrivate}
+                            onCheckedChange={setIsPrivate}
                         />
-                        <Label htmlFor="isPublic-create" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Public (anyone can view this conversation)
+                        <Label htmlFor="isPrivate-create" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            Private <span className='text-muted-foreground text-xs'>(only selected users can view this conversation)</span>
                         </Label>
                     </div>
+
                 </div>
                 <DialogFooter>
                     <DialogClose asChild>
