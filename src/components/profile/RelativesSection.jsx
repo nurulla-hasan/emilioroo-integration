@@ -4,54 +4,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Title2 from "@/components/ui/Title2";
-import { getInitials } from "@/lib/utils";
+import { getInitials, fallbackAvatar } from "@/lib/utils";
 import { Link as LinkIcon, MessageSquare, MoreHorizontal } from "lucide-react";
-import BondItemSkeleton from "../skeleton/BondItemSkeleton";
-import LoadFailed from "../common/LoadFailed";
 
-const RelativesSection = ({ maternalRelatives, paternalRelatives, isLoading, isError, handleEdit, handleDelete, openAddRelativeModal }) => {
-    if (isLoading) {
-        return (
-            <div className="mt-8">
-                <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <Title2>Relatives & Relationships</Title2>
-                    <Button size="sm" disabled>
-                        <LinkIcon /> Add New relatives
-                    </Button>
-                </div>
-                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h4 className="text-md font-semibold mb-4 text-center">Mothers Side</h4>
-                        <div className="space-y-4">
-                            <BondItemSkeleton />
-                            <BondItemSkeleton />
-                        </div>
-                    </div>
-                    <div>
-                        <h4 className="text-md font-semibold mb-4 text-center">Fathers Side</h4>
-                        <div className="space-y-4">
-                            <BondItemSkeleton />
-                            <BondItemSkeleton />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (isError) {
-        return (
-            <div className="mt-8">
-                <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <Title2>Relatives & Relationships</Title2>
-                    <Button size="sm" onClick={openAddRelativeModal}>
-                        <LinkIcon /> Add New relatives
-                    </Button>
-                </div>
-                <LoadFailed />
-            </div>
-        );
-    }
+const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, handleDelete, openAddRelativeModal }) => {
 
     return (
         <div className="mt-8">
@@ -74,7 +30,7 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, isLoading, isE
                                 <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
                                     <div className="flex items-center gap-3">
                                         <Avatar className="w-12 h-12">
-                                            <AvatarImage src={relative.relative?.profile_image} />
+                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar} />
                                             <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
                                         </Avatar>
                                         <div>
@@ -115,7 +71,7 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, isLoading, isE
                                 <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
                                     <div className="flex items-center gap-3">
                                         <Avatar className="w-12 h-12">
-                                            <AvatarImage src={relative.relative?.profile_image} />
+                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar} />
                                             <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
                                         </Avatar>
                                         <div>

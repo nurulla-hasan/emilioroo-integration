@@ -7,6 +7,9 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
+// Fallback Image
+export const fallbackAvatar = "https://avatar.iran.liara.run/public";
+
 // Time Ago
 export const timeAgo = (createdAt) => {
   if (!createdAt) return ""
@@ -66,6 +69,7 @@ export const getInitials = (str) => {
     .map(word => word.charAt(0).toUpperCase())
     .join("");
 }
+
 
 // useAuthRedirect
 // export const useAuthRedirect = () => {

@@ -27,7 +27,7 @@ const relativesApi = baseApi.injectEndpoints({
         updateRelative: builder.mutation({
             query: ({ id, data }) => ({
                 url: `/relative/update-relative/${id}`,
-                method: "PUT",
+                method: "PATCH",
                 body: data,
             }),
             invalidatesTags: ["RELATIVES"],

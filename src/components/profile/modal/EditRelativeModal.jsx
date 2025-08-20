@@ -117,8 +117,8 @@ const EditRelativeModal = ({ isOpen, onOpenChange, relative }) => {
                                     Cancel
                                 </Button>
                             </DialogClose>
-                            <Button type="submit" disabled={isUpdating}>
-                                {isUpdating ? "Updating..." : "Update Relative"}
+                            <Button loading={isUpdating} type="submit" disabled={isUpdating}>
+                                Update Relative
                             </Button>
                         </DialogFooter>
                     </form>

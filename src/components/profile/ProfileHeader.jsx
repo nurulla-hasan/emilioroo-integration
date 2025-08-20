@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Camera, Edit } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { getInitials } from "@/lib/utils";
+import { fallbackAvatar, getInitials } from "@/lib/utils";
 
 const ProfileHeader = ({ user, userSkills, fakeFriends, mother, father }) => {
     return (
@@ -22,7 +22,7 @@ const ProfileHeader = ({ user, userSkills, fakeFriends, mother, father }) => {
                 {mother && (
                     <div className="absolute -bottom-10 left-4 flex flex-col items-center">
                         <Avatar className="w-16 h-16 border-2 border-white">
-                            <AvatarImage src={mother.relative?.profile_image} />
+                            <AvatarImage src={mother.relative?.profile_image || fallbackAvatar} />
                             <AvatarFallback>{getInitials(mother.relative?.name)}</AvatarFallback>
                         </Avatar>
                         <span className="text-sm font-semibold mt-1">Mother</span>
@@ -32,7 +32,7 @@ const ProfileHeader = ({ user, userSkills, fakeFriends, mother, father }) => {
                 {father && (
                     <div className="absolute -bottom-10 right-4 flex flex-col items-center">
                         <Avatar className="w-16 h-16 border-2 border-white">
-                            <AvatarImage src={father.relative?.profile_image} />
+                            <AvatarImage src={father.relative?.profile_image || fallbackAvatar} />
                             <AvatarFallback>{getInitials(father.relative?.name)}</AvatarFallback>
                         </Avatar>
                         <span className="text-sm font-semibold mt-1">Father</span>
