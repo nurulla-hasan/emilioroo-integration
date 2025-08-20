@@ -8,7 +8,7 @@ export function cn(...inputs) {
 }
 
 // Time Ago
-export const  timeAgo =(createdAt)=> {
+export const timeAgo = (createdAt) => {
   if (!createdAt) return ""
   const s = Math.floor((Date.now() - new Date(createdAt).getTime()) / 1000)
   if (s < 60) return "Just now"
@@ -50,12 +50,22 @@ export const formatDate = (dateString) => {
 
 // Format File Name
 export const formatFileName = (url, len) => {
-    const fileName = url.split('/').pop();
-    if (fileName.length > len) {
-        return `${fileName.slice(0, 5)}...${fileName.slice(-10)}`;
-    }
-    return fileName;
+  const fileName = url.split('/').pop();
+  if (fileName.length > len) {
+    return `${fileName.slice(0, 5)}...${fileName.slice(-10)}`;
+  }
+  return fileName;
 };
+
+// Get Initials
+export const getInitials = (str) => {
+  if (!str) return "";
+
+  return str
+    .split(/[\s-]+/)
+    .map(word => word.charAt(0).toUpperCase())
+    .join("");
+}
 
 // useAuthRedirect
 // export const useAuthRedirect = () => {

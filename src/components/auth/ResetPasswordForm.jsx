@@ -11,7 +11,7 @@ import * as z from "zod";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useResetPasswordMutation } from "@/lib/features/api/authApi"; 
+import { useResetPasswordMutation } from "@/lib/features/api/authApi";
 import { toast } from "sonner";
 
 const resetPasswordSchema = z.object({

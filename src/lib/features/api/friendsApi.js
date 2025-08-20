@@ -45,4 +45,4 @@ const friendsApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetAllUsersQuery, useGetMyFriendsQuery, useSentRequestMutation, useCancelRequestMutation, useAcceptAndEjectRequestMutation } = friendsApi;
+export const { useGetMyFriendsQuery, useSentRequestMutation, useCancelRequestMutation, useAcceptAndEjectRequestMutation } = friendsApi;
