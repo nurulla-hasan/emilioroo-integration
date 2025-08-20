@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Edit } from "lucide-react";
+import { Edit } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { fallbackAvatar, getInitials } from "@/lib/utils";
 
@@ -15,9 +15,9 @@ const ProfileHeader = ({ user, userSkills, fakeFriends, mother, father }) => {
                 <div className="relative h-full w-full">
                     <Image src={"/images/cover.jpg"} alt="Cover Image" fill className="object-cover" />
                 </div>
-                <Button variant="secondary" size="icon" className="absolute top-4 right-4 rounded-full">
+                {/* <Button variant="secondary" size="icon" className="absolute top-4 right-4 rounded-full">
                     <Camera className="h-5 w-5" />
-                </Button>
+                </Button> */}
                 {/* Mother Avatar */}
                 {mother && (
                     <div className="absolute -bottom-10 left-4 flex flex-col items-center">
@@ -45,9 +45,9 @@ const ProfileHeader = ({ user, userSkills, fakeFriends, mother, father }) => {
                         <AvatarImage src={user.profile_image || null} />
                         <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                     </Avatar>
-                    <Button variant="secondary" size="icon" className="absolute bottom-0 right-0 rounded-full">
+                    {/* <Button variant="secondary" size="icon" className="absolute bottom-0 right-0 rounded-full">
                         <Camera className="h-5 w-5" />
-                    </Button>
+                    </Button> */}
                 </div>
 
                 <div className="text-center pt-20">
