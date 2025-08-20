@@ -14,10 +14,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useChangePasswordMutation } from "@/lib/features/api/authApi";
+import { useChangePasswordMutation, useLogoutMutation } from "@/lib/features/api/authApi";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
     oldPassword: z.string().min(1, { message: "Old password is required." }),
@@ -30,6 +31,8 @@ const formSchema = z.object({
 
 const ChangePasswordForm = () => {
     const [changePassword, { isLoading: isUpdating }] = useChangePasswordMutation();
+    const [logout] = useLogoutMutation();
+    const router = useRouter();
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -42,7 +45,6 @@ const ChangePasswordForm = () => {
             confirmPassword: "",
         },
     });
-
     const error = form.formState.errors;
 
     const onSubmit = async (values) => {
@@ -50,11 +52,17 @@ const ChangePasswordForm = () => {
             await changePassword({
                 oldPassword: values.oldPassword,
                 newPassword: values.newPassword,
+                confirmNewPassword: values.confirmPassword,
             }).unwrap();
-            toast.success("Password changed successfully");
-            form.reset();
+            toast.success("Password changed successfully. Please log in again.");
+            await logout().unwrap();
+            router.push('/auth/login');
         } catch (error) {
-            toast.error(error.data?.message || "Failed to change password");
+            if (error.data.message === "Password do not match") {
+                toast.error("Old password is incorrect.");
+            } else {
+                toast.error(error.data?.message || "Failed to change password");
+            }
         }
     };
 
@@ -144,8 +152,8 @@ const ChangePasswordForm = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button loading={isUpdating} type="submit" disabled={isUpdating}>
-                            Save Changes
+                        <Button loading={isUpdating} type="submit" disabled={isUpdating || !form.formState.isValid}>
+                            Save changes
                         </Button>
                     </form>
                 </Form>
