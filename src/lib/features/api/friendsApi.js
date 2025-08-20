@@ -13,6 +13,26 @@ const friendsApi = baseApi.injectEndpoints({
             providesTags: ["FRIENDS"],
         }),
 
+        // GET FOLLOWERS
+        getFollowers: builder.query({
+            query: () => ({
+                url: "/friend-request/followers",
+                method: "GET",
+            }),
+            providesTags: ["FRIENDS"],
+        }),
+
+        // GET FOLLOWING
+        getFollowing: builder.query({
+            query: () => ({
+                url: "/friend-request/following",
+                method: "GET",
+            }),
+            providesTags: ["FRIENDS"],
+        }),
+
+        // ------=======================----------------------========================---------------------===============
+
         // SENT REQUEST
         sentRequest: builder.mutation({
             query: (data) => ({
@@ -38,6 +58,15 @@ const friendsApi = baseApi.injectEndpoints({
                 url: `/friend-request/accept-reject/${id}`,
                 method: "PATCH",
                 body: data,
+            }),
+            invalidatesTags: ["FRIENDS"],
+        }),
+
+        // UNFRIEND
+        unfriend: builder.mutation({
+            query: (id) => ({
+                url: `/friend-request/unfriend/${id}`,
+                method: "DELETE",
             }),
             invalidatesTags: ["FRIENDS"],
         }),

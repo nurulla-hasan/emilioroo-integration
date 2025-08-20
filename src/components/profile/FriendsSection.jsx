@@ -4,13 +4,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Title2 from "@/components/ui/Title2";
 import { getInitials } from "@/lib/utils";
+import Link from "next/link";
 
 const FriendsSection = ({ fakeFriends }) => {
     return (
         <div className="mt-8">
             <div className="flex justify-between items-center">
                 <Title2>Friends</Title2>
-                <Button variant="link" size="sm">view more</Button>
+                <Link href="/friends">
+                    <Button variant="link" size="sm">view more</Button>
+                </Link>
             </div>
             <div className="mt-4 flex space-x-6 overflow-x-auto pb-2">
                 {fakeFriends.slice(0, 13).map((friend, index) => (

@@ -2,16 +2,15 @@
 
 import React, { useState, } from "react";
 import { useGetAllUsersQuery } from "@/lib/features/api/projectApi";
+import { useSentRequestMutation } from "@/lib/features/api/friendsApi";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CustomPagination from "@/components/common/CustomPagination";
-import { Card, } from "@/components/ui/card";
 import { Search } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 import Title from "@/components/ui/Title";
-import Link from "next/link";
-import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import PeopleCardSkeleton from "@/components/skeleton/PeopleCardSkeleton";
+import PeopleCard from "@/components/people/PeopleCard";
 
 const PeoplePage = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -24,12 +23,23 @@ const PeoplePage = () => {
         { name: "searchTerm", value: searchTerm },
     ]);
 
+    const [sendFriendRequest, { isLoading: isSendingRequest }] = useSentRequestMutation();
+
     const users = data?.data?.result || [];
     const totalPages = data?.data?.meta?.totalPage || 1;
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
         setCurrentPage(1);
+    };
+
+    const handleConnect = async (userObject) => {
+        try {
+            await sendFriendRequest({ receiver: userObject.user }).unwrap();
+            toast.success("Friend request sent!");
+        } catch (error) {
+            toast.error(error.data?.message || "Failed to send friend request.");
+        }
     };
 
     return (
@@ -51,18 +61,7 @@ const PeoplePage = () => {
 
                 {isLoading ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {[...Array(pageSize)].map((_, index) => (
-                            <Card key={index} className="flex flex-col items-center p-4">
-                                <Avatar className="h-24 w-24 mb-4">
-                                    <AvatarFallback></AvatarFallback>
-                                </Avatar>
-                                <div className="text-center flex flex-col justify-center items-center">
-                                    <Skeleton className="h-6 w-32 rounded mb-2"></Skeleton>
-                                    <Skeleton className="h-4 w-48 rounded"></Skeleton>
-                                </div>
-                                <Button className="mt-4 w-full" disabled>Connect</Button>
-                            </Card>
-                        ))}
+                        <PeopleCardSkeleton count={12} />
                     </div>
                 ) : isError ? (
                     <p className="text-red-500 text-center">Error loading users.</p>
@@ -71,22 +70,12 @@ const PeoplePage = () => {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {users.map((user) => (
-                            <Card key={user._id} className="flex flex-col items-center p-4">
-                                <Avatar className="h-24 w-24 mb-4">
-                                    <AvatarImage src={user.profile_image} />
-                                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <div className="text-center">
-                                    <h2 className="text-lg font-semibold">{user.name}</h2>
-                                    <p className="text-sm text-muted-foreground">{user.email}</p>
-                                </div>
-                                <div className="flex mt-4 w-full gap-2">
-                                    <Button className="flex-1">Connect</Button>
-                                    <Link href={`/profile/${user._id}`} className="flex-1">
-                                        <Button variant="outline" className="w-full">View Profile</Button>
-                                    </Link>
-                                </div>
-                            </Card>
+                            <PeopleCard
+                                key={user._id}
+                                user={user}
+                                handleConnect={handleConnect}
+                                isSendingRequest={isSendingRequest}
+                            />
                         ))}
                     </div>
                 )}

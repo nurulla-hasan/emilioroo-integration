@@ -17,6 +17,6 @@ export const baseApi = createApi({
     reducerPath : 'baseApi',
     baseQuery,
             
-        tagTypes : ['PROFILE', 'MY-BONDS', 'MY-BONDS-REQUEST', 'MATCHING_BONDS', 'PROJECTS', 'USERS', 'INSTITUTIONS', 'DONATION', 'AUDIO', 'COMMENTS', 'REPLY', 'LIKES', 'RELATIVES'],
+        tagTypes : ['PROFILE', 'MY-BONDS', 'MY-BONDS-REQUEST', 'MATCHING_BONDS', 'PROJECTS', 'USERS', 'INSTITUTIONS', 'DONATION', 'AUDIO', 'COMMENTS', 'REPLY', 'LIKES', 'RELATIVES', 'FRIENDS'],
     endpoints : ()=>({})
 })
