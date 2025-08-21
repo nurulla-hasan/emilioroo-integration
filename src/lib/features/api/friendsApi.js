@@ -6,32 +6,68 @@ const friendsApi = baseApi.injectEndpoints({
 
         // GET MY FRIENDS
         getMyFriends: builder.query({
-            query: () => ({
-                url: "/friends/my-friends",
-                method: "GET",
-            }),
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args !== undefined && args.length > 0) {
+                    args.forEach((item) => {
+                        if (item.value) {
+                            params.append(item.name, item.value);
+                        }
+                    });
+                }
+                return {
+                    url: "/friend-request/friends",
+                    method: "GET",
+                    params
+                }
+            },
+            keepUnusedDataFor: 600,
             providesTags: ["FRIENDS"],
         }),
 
         // GET FOLLOWERS
         getFollowers: builder.query({
-            query: () => ({
-                url: "/friend-request/followers",
-                method: "GET",
-            }),
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args !== undefined && args.length > 0) {
+                    args.forEach((item) => {
+                        if (item.value) {
+                            params.append(item.name, item.value);
+                        }
+                    });
+                }
+                return {
+                    url: "/friend-request/followers",
+                    method: "GET",
+                    params
+                }
+            },
+            keepUnusedDataFor: 600,
             providesTags: ["FRIENDS"],
         }),
 
         // GET FOLLOWING
         getFollowing: builder.query({
-            query: () => ({
-                url: "/friend-request/following",
-                method: "GET",
-            }),
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args !== undefined && args.length > 0) {
+                    args.forEach((item) => {
+                        if (item.value) {
+                            params.append(item.name, item.value);
+                        }
+                    });
+                }
+                return {
+                    url: "/friend-request/following",
+                    method: "GET",
+                    params
+                }
+            },
+            keepUnusedDataFor: 600,
             providesTags: ["FRIENDS"],
         }),
 
-        // ------=======================----------------------========================---------------------===============
+        // ------=======================----------------------========================---------------------=====================------//
 
         // SENT REQUEST
         sentRequest: builder.mutation({
@@ -54,7 +90,7 @@ const friendsApi = baseApi.injectEndpoints({
 
         // ACCEPT AND REJECT REQUEST
         acceptAndEjectRequest: builder.mutation({
-            query: ({id, data}) => ({
+            query: ({ id, data }) => ({
                 url: `/friend-request/accept-reject/${id}`,
                 method: "PATCH",
                 body: data,
@@ -74,4 +110,4 @@ const friendsApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetMyFriendsQuery, useSentRequestMutation, useCancelRequestMutation, useAcceptAndEjectRequestMutation } = friendsApi;
+export const { useGetMyFriendsQuery, useGetFollowersQuery, useGetFollowingQuery, useSentRequestMutation, useCancelRequestMutation, useAcceptAndEjectRequestMutation } = friendsApi;

@@ -4,8 +4,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { Link } from '@/i18n/navigation';
 import { fallbackAvatar, getInitials } from '@/lib/utils';
+import PeopleCardButton from './PeopleCardButton';
 
-const PeopleCard = ({ user, handleConnect, isSendingRequest }) => {
+const PeopleCard = ({ user, }) => {
     return (
         <div>
             <Card key={user._id} className="flex flex-col items-center p-4">
@@ -18,14 +19,7 @@ const PeopleCard = ({ user, handleConnect, isSendingRequest }) => {
                     <p className="text-sm text-muted-foreground">{user.email}</p>
                 </div>
                 <div className="flex mt-4 w-full gap-2">
-                    <Button
-                        className="flex-1"
-                        onClick={() => handleConnect(user)}
-                        disabled={isSendingRequest}
-                        loading={isSendingRequest}
-                    >
-                        Connect
-                    </Button>
+                    <PeopleCardButton user={user} />
                     <Link href={`/friends/${user._id}`} className="flex-1">
                         <Button variant="outline" className="w-full">View Profile</Button>
                     </Link>

@@ -90,7 +90,7 @@ const ProfilePage = () => {
 
     return (
         <div className="md:max-w-[1400px] mx-auto mb-5">
-            <Card className="rounded-none overflow-hidden shadow-none "> {/* border-none dark:bg-gradient-to-tl dark:from-gray-700 dark:via-gray-900 dark:to-black bg-gradient-to-tl from-green-200 via-purple-200 to-yellow-200 */}
+            <Card className="rounded-none overflow-hidden shadow-none bg-gradient-to-r from-purple-200 via-red-100 to-green-200 dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900"> {/* border-none dark:bg-gradient-to-tl dark:from-gray-700 dark:via-gray-900 dark:to-black bg-gradient-to-tl from-green-200 via-purple-200 to-yellow-200 */}
                 <ProfileHeader user={user} userSkills={userSkills} fakeFriends={fakeFriends} mother={mother} father={father} />
                 <CardContent className="p-6">
                     <ProfileBio user={user} />

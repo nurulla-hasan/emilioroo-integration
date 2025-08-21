@@ -5,92 +5,38 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search } from "lucide-react";
 import FriendCard from "@/components/friends/FriendCard";
-import FriendRequestCard from "@/components/friends/FriendRequestCard"; // Import new component
+import FriendRequestCard from "@/components/friends/FriendRequestCard";
 import PageLayout from "@/components/layout/PageLayout";
-import { fallbackAvatar } from "@/lib/utils";
+import { useGetFollowersQuery, useGetMyFriendsQuery } from "@/lib/features/api/friendsApi";
+import PeopleCardSkeleton from "@/components/skeleton/PeopleCardSkeleton";
+import LoadFailed from "@/components/common/LoadFailed";
+import CustomPagination from "@/components/common/CustomPagination";
 
-const fakeFriends = [
-    {
-        id: 1,
-        name: "MR. Sarwar",
-        avatar: fallbackAvatar,
-        tags: ["Artist", "Actor", "Teacher"],
-    },
-    {
-        id: 2,
-        name: "MR. Fahad",
-        avatar: fallbackAvatar,
-        tags: ["Artist", "Actor", "Teacher"],
-    },
-    {
-        id: 3,
-        name: "Ahmad musa",
-        avatar: fallbackAvatar,
-        tags: ["Artist", "Actor", "Teacher"],
-    },
-    {
-        id: 4,
-        name: "MR. TA Emon",
-        avatar: fallbackAvatar,
-        tags: ["Artist", "Actor", "Teacher"],
-    },
-    {
-        id: 5,
-        name: "MR. Mehedi",
-        avatar: fallbackAvatar,
-        tags: ["Artist", "Actor", "Teacher"],
-    },
-    {
-        id: 6,
-        name: "MR. Dindinia",
-        avatar: fallbackAvatar,
-        tags: ["Artist", "Actor", "Teacher"],
-    },
-    {
-        id: 7,
-        name: "MR. Nahid",
-        avatar: fallbackAvatar,
-        tags: ["Artist", "Actor", "Teacher"],
-    },
-    {
-        id: 8,
-        name: "MR. Fahad",
-        avatar: fallbackAvatar,
-        tags: ["Artist", "Actor", "Teacher"],
-    },
-    {
-        id: 9,
-        name: "MR. Sarwar",
-        avatar: fallbackAvatar,
-        tags: ["Artist", "Actor", "Teacher"],
-    },
-];
-
-const fakeFriendRequests = [
-    {
-        id: 101,
-        name: "MR. Request 1",
-        avatar: fallbackAvatar,
-        tags: ["Musician", "Student"],
-    },
-    {
-        id: 102,
-        name: "MR. Request 2",
-        avatar: fallbackAvatar,
-        tags: ["Developer", "Gamer"],
-    },
-];
 
 const Friends = () => {
     const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize] = useState(12);
 
-    const filteredFriends = fakeFriends.filter(friend =>
-        friend.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const { data: myFriendData, isLoading: isMyFriendLoading, isError: isMyFriendError } = useGetMyFriendsQuery([
+        { name: "page", value: currentPage },
+        { name: "limit", value: pageSize },
+        { name: "searchTerm", value: searchTerm },
+    ]);
+    const { data: myFollowerData, isLoading: isMyFollowerLoading, isError: isMyFollowerError } = useGetFollowersQuery([
+        { name: "page", value: currentPage },
+        { name: "limit", value: pageSize },
+        { name: "searchTerm", value: searchTerm },
+    ]);
+    const myFriends = myFriendData?.data?.data?.result || [];
+    const myFollower = myFollowerData?.data?.data?.result || [];
+    console.log(myFriends);
+    console.log(myFollower);
 
-    const filteredFriendRequests = fakeFriendRequests.filter(request =>
-        request.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const friendTotalPages = myFriendData?.data?.meta?.totalPage || 1;
+    const followerTotalPages = myFollowerData?.data?.meta?.totalPage || 1;
+
+
 
     return (
         <div className="min-h-minus-header">
@@ -114,22 +60,64 @@ const Friends = () => {
                     </div>
 
                     <TabsContent value="my-friends">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                            {filteredFriends.map((friend) => (
-                                <FriendCard key={friend.id} friend={friend} />
-                            ))}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {
+                                isMyFriendLoading ? (
+                                    <PeopleCardSkeleton count={12} />
+                                ) : isMyFriendError ? (
+                                    <div className="col-span-full mt-20 mx-auto">
+                                        <LoadFailed />
+                                    </div>
+                                ) : myFriends.length === 0 ? (
+                                    <div className="col-span-full mx-auto mt-20 text-muted-foreground">
+                                        No friends for now.
+                                    </div>
+                                ) : (
+                                    myFriends?.map((friend) => (
+                                        <FriendCard key={friend._id} friend={friend} />
+                                    ))
+                                )
+                            }
                         </div>
+
+                        {myFriends.length > 0 && friendTotalPages > 1 && (
+                            <div className="my-4 absolute bottom-0 right-0 left-0">
+                                <CustomPagination
+                                    currentPage={currentPage}
+                                    totalPages={friendTotalPages}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </div>
+                        )}
                     </TabsContent>
                     <TabsContent value="friend-request">
-                        {filteredFriendRequests.length > 0 ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                                {filteredFriendRequests.map((request) => (
-                                    <FriendRequestCard key={request.id} request={request} />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-center py-10 text-muted-foreground">
-                                No friend requests for now.
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {
+                                isMyFollowerLoading ? (
+                                    <PeopleCardSkeleton count={12} />
+                                ) : isMyFollowerError ? (
+                                    <div className="col-span-full mt-20 mx-auto">
+                                        <LoadFailed />
+                                    </div>
+                                ) : myFollower.length === 0 ? (
+                                    <div className="col-span-full mx-auto mt-20 text-muted-foreground">
+                                        No followers for now.
+                                    </div>
+                                ) : (
+                                    myFollower?.map((follower) => (
+                                        <FriendRequestCard key={follower._id} friend={follower} />
+                                    ))
+                                )
+                            }
+                        </div>
+
+                        {myFollower.length > 0 && friendTotalPages > 1 && (
+                            <div className="my-4 absolute bottom-0 right-0 left-0">
+                                <CustomPagination
+                                    currentPage={currentPage}
+                                    totalPages={followerTotalPages}
+                                    onPageChange={setCurrentPage}
+                                />
                             </div>
                         )}
                     </TabsContent>

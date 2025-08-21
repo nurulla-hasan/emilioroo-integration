@@ -6,7 +6,7 @@ import { Button } from '../ui/button';
 
 const PeopleCardSkeleton = ({count = 3}) => {
     return (
-        <div>
+        <>
             {[...Array(count)].map((_, index) => (
                 <Card key={index} className="flex flex-col items-center p-4">
                     <Avatar className="h-24 w-24 mb-4">
@@ -16,10 +16,10 @@ const PeopleCardSkeleton = ({count = 3}) => {
                         <Skeleton className="h-6 w-32 rounded mb-2"></Skeleton>
                         <Skeleton className="h-4 w-48 rounded"></Skeleton>
                     </div>
-                    <Button className="mt-4 w-full" disabled>Connect</Button>
+                    <Button className="mt-4 w-full" disabled></Button>
                 </Card>
             ))}
-        </div>
+        </>
     );
 };
 

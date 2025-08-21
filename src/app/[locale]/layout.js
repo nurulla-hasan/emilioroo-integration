@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import NextTopLoader from "nextjs-toploader";
 
 const poltawski = Poltawski_Nowy({
   variable: "--font-poltawski",
@@ -35,9 +36,10 @@ export default async function RootLayout({ children, params }) {
         className={`
           ${poppins.variable}
           ${poltawski.variable}
-          antialiased container mx-auto max-w-[1920px]
+          antialiased container mx-auto max-w-[1920px] 
         `}
       >
+        <NextTopLoader color="#3b72d8" height={2} showSpinner={false} />
         <StoreProvider>
           <ThemeProvider
             attribute="class"

@@ -1,5 +1,5 @@
 "use client";
-import { usePathname, Link as NextIntlLink , useRouter as useNextRouter} from "@/i18n/navigation";
+import { usePathname, Link as NextIntlLink, useRouter as useNextRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Globe } from "lucide-react";
@@ -10,19 +10,18 @@ import { Toggle } from "../ui/toggle";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "../ui/input";
-import { useGetMyProfileQuery, useLogoutMutation } from "@/lib/features/api/authApi";
-import { useSelector } from "react-redux";
+import { useLogoutMutation } from "@/lib/features/api/authApi";
 import { toast } from "sonner";
-import {useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useGetMe } from "@/hooks/useGetMe";
 
 const Navbar = () => {
     const t = useTranslations('Navbar');
-    const nextRouter = useNextRouter(); 
+    const nextRouter = useNextRouter();
 
-    const currentPathname = usePathname(); 
+    const currentPathname = usePathname();
     const { theme, setTheme } = useTheme()
-    const { accessToken: token } = useSelector((state) => state.auth);
-    const { data: profile, isLoading: profileLoading } = useGetMyProfileQuery(undefined, { skip: !token });
+    const { profile, profileLoading, token } = useGetMe();
     const [logout] = useLogoutMutation();
 
     const isLoggedIn = profile?.data?.email && token

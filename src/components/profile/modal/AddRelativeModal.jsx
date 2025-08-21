@@ -30,7 +30,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useCreateRelativeMutation } from "@/lib/features/api/relativesApi";
-import { useGetAllUsersQuery } from "@/lib/features/api/projectApi";
+import { useGetUsersWithoutMe } from "@/hooks/useGetUsersWithoutMe";
 
 const formSchema = z.object({
     relative: z.string().min(1, { message: "Please select a user." }),
@@ -48,10 +48,9 @@ const AddRelativeModal = ({ isOpen, onOpenChange }) => {
         },
     });
 
-    const { data: usersData, isLoading: isUsersLoading } = useGetAllUsersQuery();
+    const { users, isLoading: isUsersLoading } = useGetUsersWithoutMe();
     const [createRelative, { isLoading: isCreating }] = useCreateRelativeMutation();
 
-    const users = usersData?.data?.result || [];
 
     const onSubmit = async (values) => {
         try {
