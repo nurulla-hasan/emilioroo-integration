@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 
 const FriendCard = ({ friend }) => {
     return (
-        <div className="bg-accent rounded-lg shadow-[0px_0px_2px_1px_rgba(0,_0,_0,_0.1)] hover:shadow-xl transition-all duration-300 p-6 flex flex-col items-center text-center">
+        <div className="bg-accent rounded-lg shadow-[0px_0px_2px_1px_rgba(0,_0,_0,_0.1)] hover:shadow-lg transition-all duration-300 p-6 flex flex-col items-center text-center">
             <Avatar className="w-24 h-24 mb-4">
                 <AvatarImage src={friend.friendInfo?.profile_image} />
                 <AvatarFallback>{getInitials(friend.friendInfo?.name)}</AvatarFallback>

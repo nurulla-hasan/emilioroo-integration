@@ -79,7 +79,7 @@ const friendsApi = baseApi.injectEndpoints({
             invalidatesTags: ["FRIENDS"],
         }),
 
-        // CANCEL REQUEST
+        // CANCEL SEND REQUEST
         cancelRequest: builder.mutation({
             query: (id) => ({
                 url: `/friend-request/cancel/${id}`,

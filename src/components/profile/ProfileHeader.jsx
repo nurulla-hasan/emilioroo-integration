@@ -13,7 +13,7 @@ const ProfileHeader = ({ user, userSkills, fakeFriends, mother, father }) => {
         <div className="relative w-full">
             <div className="relative w-full h-64">
                 <div className="relative h-full w-full">
-                    <Image src={"/images/cover.jpg"} alt="Cover Image" fill className="object-cover" />
+                    <Image src={user.cover_image} alt="Cover Image" fill className="object-cover" />
                 </div>
                 {/* <Button variant="secondary" size="icon" className="absolute top-4 right-4 rounded-full">
                     <Camera className="h-5 w-5" />

@@ -8,7 +8,7 @@ const PeopleCardButton = ({ user }) => {
     const [sendFriendRequest, { isLoading: isSendingRequest }] = useSentRequestMutation();
     const handleConnect = async (userObject) => {
         try {
-            await sendFriendRequest({ receiver: userObject.user }).unwrap();
+            await sendFriendRequest({ receiver: userObject._id }).unwrap();
             toast.success("Friend request sent!");
         } catch (error) {
             toast.error(error.data?.message || "Failed to send friend request.");

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, } from "react";
-// import { useGetAllUsersQuery } from "@/lib/features/api/projectApi";
 import { Input } from "@/components/ui/input";
 import CustomPagination from "@/components/common/CustomPagination";
 import { Search } from "lucide-react";
@@ -10,7 +9,6 @@ import Title from "@/components/ui/Title";
 import PeopleCardSkeleton from "@/components/skeleton/PeopleCardSkeleton";
 import PeopleCard from "@/components/people/PeopleCard";
 import LoadFailed from "@/components/common/LoadFailed";
-// import { useGetMe } from "@/hooks/useGetMe";
 import { useGetUsersWithoutMe } from "@/hooks/useGetUsersWithoutMe";
 
 const PeoplePage = () => {

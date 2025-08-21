@@ -88,7 +88,7 @@ const EditProfileForm = () => {
             formData.append("profile_image", values.profile_image[0]);
         }
         if (values.cover_image && values.cover_image[0]) {
-            formData.append("cover_image", values.cover_image[0]);
+            formData.append("profile_cover", values.cover_image[0]);
         }
 
         const data = {
