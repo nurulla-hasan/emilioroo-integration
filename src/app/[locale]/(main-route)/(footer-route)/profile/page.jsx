@@ -93,7 +93,7 @@ const ProfilePage = () => {
             <div>
                 <Card className="rounded-none overflow-hidden shadow-none bg-transparent border-none"> {/* border-none dark:bg-gradient-to-tl dark:from-gray-700 dark:via-gray-900 dark:to-black bg-gradient-to-tl from-green-200 via-purple-200 to-yellow-200 */}
                     <ProfileHeader user={user} userSkills={userSkills} fakeFriends={fakeFriends} mother={mother} father={father} />
-                    <CardContent className="p-4 md:p-2 md:w-[1400px] md:mx-auto">
+                    <CardContent className="p-4 xl:p-2 xl:w-[1400px] md:mx-auto">
                         <ProfileBio user={user} />
                         <SocialLinks user={user} />
                         <FriendsSection fakeFriends={fakeFriends} />

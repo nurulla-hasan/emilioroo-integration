@@ -2,7 +2,7 @@
 import { usePathname, Link as NextIntlLink, useRouter as useNextRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User, Menu, LogOut, UserPlus, ChevronDown, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Globe } from "lucide-react";
+import { User, Menu, LogOut, UserPlus, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Globe, Users } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -235,7 +235,7 @@ const Navbar = () => {
                                             ) : isLoggedIn && (
                                                 <div className="flex items-center gap-1">
                                                     <span className="hidden md:block text-white text-sm font-medium">{userName}</span>
-                                                    <ChevronDown className="hidden md:block h-4 w-4 text-white" />
+                                                    {/* <ChevronDown className="hidden md:block h-4 w-4 text-white" /> */}
                                                 </div>
                                             )}
                                         </div>
@@ -249,6 +249,13 @@ const Navbar = () => {
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <User2 className="mr-2 h-4 w-4" />
                                                         <span>Profile</span>
+                                                    </DropdownMenuItem>
+                                                </NextIntlLink>
+                                                <DropdownMenuSeparator />
+                                                <NextIntlLink href="/friends">
+                                                    <DropdownMenuItem className={"cursor-pointer"}>
+                                                        <Users className="mr-2 h-4 w-4" />
+                                                        <span>Friends</span>
                                                     </DropdownMenuItem>
                                                 </NextIntlLink>
                                                 <DropdownMenuSeparator />

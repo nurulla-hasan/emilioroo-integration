@@ -23,7 +23,7 @@ const Footer = () => {
     }
 
     return (
-        <footer className="relative dark:bg-accent bg-primary text-white overflow-hidden px-4 md:px-0">
+        <footer className="relative dark:bg-accent bg-primary text-white overflow-hidden px-4 xl:px-0">
             {/* Animated Background Elements */}
             <div className="relative z-10 py-8">
                 <div>

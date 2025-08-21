@@ -22,6 +22,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { MultipleSelector } from "@/components/ui/multiselect";
+import { useRouter } from "@/i18n/navigation";
 
 const formSchema = z.object({
     name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -36,6 +37,7 @@ const formSchema = z.object({
 });
 
 const EditProfileForm = () => {
+    const router = useRouter();
     const { data: profileData, isLoading: isProfileLoading } = useGetMyProfileQuery();
     const { data: skillsData } = useGetSkillsQuery();
     const [updateProfile, { isLoading: isUpdating }] = useUpdateMyProfileMutation();
@@ -106,6 +108,7 @@ const EditProfileForm = () => {
         try {
             await updateProfile(formData).unwrap();
             toast.success("Profile updated successfully");
+            router.push("/profile");
         } catch (error) {
             toast.error(error.data?.message || "Failed to update profile");
         }

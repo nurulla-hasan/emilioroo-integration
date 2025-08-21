@@ -6,8 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search } from "lucide-react";
 import FriendCard from "@/components/friends/FriendCard";
 import FriendRequestCard from "@/components/friends/FriendRequestCard";
+import SentRequestCard from "@/components/friends/SentRequestCard";
 import PageLayout from "@/components/layout/PageLayout";
-import { useGetFollowersQuery, useGetMyFriendsQuery } from "@/lib/features/api/friendsApi";
+import { useGetFollowersQuery, useGetMyFriendsQuery, useGetFollowingQuery } from "@/lib/features/api/friendsApi";
 import PeopleCardSkeleton from "@/components/skeleton/PeopleCardSkeleton";
 import LoadFailed from "@/components/common/LoadFailed";
 import CustomPagination from "@/components/common/CustomPagination";
@@ -28,11 +29,19 @@ const Friends = () => {
         { name: "limit", value: pageSize },
         { name: "searchTerm", value: searchTerm },
     ]);
+    const { data: sentRequestData, isLoading: isSentRequestLoading, isError: isSentRequestError } = useGetFollowingQuery([
+        { name: "page", value: currentPage },
+        { name: "limit", value: pageSize },
+        { name: "searchTerm", value: searchTerm },
+    ]);
+
     const myFriends = myFriendData?.data?.data?.result || [];
     const myFollower = myFollowerData?.data?.result || [];
+    const sentRequests = sentRequestData?.data?.result?.filter(req => req.status === "Pending") || [];
 
     const friendTotalPages = myFriendData?.data?.meta?.totalPage || 1;
     const followerTotalPages = myFollowerData?.data?.meta?.totalPage || 1;
+    const sentRequestTotalPages = sentRequestData?.data?.meta?.totalPage || 1;
 
 
 
@@ -44,6 +53,7 @@ const Friends = () => {
                         <TabsList>
                             <TabsTrigger value="my-friends">My Friends</TabsTrigger>
                             <TabsTrigger value="friend-request">Friend Request</TabsTrigger>
+                            <TabsTrigger value="sent-requests">Sent Requests</TabsTrigger>
                         </TabsList>
                         <div className="relative w-64">
                             <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
@@ -109,11 +119,42 @@ const Friends = () => {
                             }
                         </div>
 
-                        {myFollower.length > 0 && friendTotalPages > 1 && (
+                        {myFollower.length > 0 && followerTotalPages > 1 && (
                             <div className="my-4 absolute bottom-0 right-0 left-0">
                                 <CustomPagination
                                     currentPage={currentPage}
                                     totalPages={followerTotalPages}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </div>
+                        )}
+                    </TabsContent>
+                    <TabsContent value="sent-requests">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {
+                                isSentRequestLoading ? (
+                                    <PeopleCardSkeleton count={12} />
+                                ) : isSentRequestError ? (
+                                    <div className="col-span-full mt-20 mx-auto">
+                                        <LoadFailed />
+                                    </div>
+                                ) : sentRequests.length === 0 ? (
+                                    <div className="col-span-full mx-auto mt-20 text-muted-foreground">
+                                        No sent requests for now.
+                                    </div>
+                                ) : (
+                                    sentRequests?.map((request) => (
+                                        <SentRequestCard key={request._id} request={request} />
+                                    ))
+                                )
+                            }
+                        </div>
+
+                        {sentRequests.length > 0 && sentRequestTotalPages > 1 && (
+                            <div className="my-4 absolute bottom-0 right-0 left-0">
+                                <CustomPagination
+                                    currentPage={currentPage}
+                                    totalPages={sentRequestTotalPages}
                                     onPageChange={setCurrentPage}
                                 />
                             </div>
