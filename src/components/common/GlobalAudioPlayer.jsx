@@ -1,28 +1,30 @@
 "use client"
 
-import { useRef, useEffect, useCallback } from "react"
+import { useRef, useEffect, useCallback, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { pauseAudio, updateProgress, playAudio } from "@/lib/features/slices/audio/audioSlice"
-import { Play, Pause, Heart } from "lucide-react"
+import { pauseAudio, playAudio, updateProgress } from "@/lib/features/slices/audio/audioSlice"
+import { Play, Pause, Heart, Shuffle, Repeat, Volume2, VolumeX, SkipForward, SkipBack } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import Image from "next/image"
 import useFavoriteToggle from "@/hooks/useFavoriteToggle"
 import useGetFavoriteIds from "@/hooks/useGetFavoriteIds"
 
-const formatTime = (seconds) => {
-    if (isNaN(seconds) || seconds < 0) {
-        return "0:00"
-    }
-    const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = Math.floor(seconds % 60)
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
-}
+// const formatTime = (seconds) => {
+//     if (isNaN(seconds) || seconds < 0) {
+//         return "0:00"
+//     }
+//     const minutes = Math.floor(seconds / 60)
+//     const remainingSeconds = Math.floor(seconds % 60)
+//     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
+// }
 
 const GlobalAudioPlayer = () => {
     const dispatch = useDispatch()
     const { currentAudio, isPlaying, progress } = useSelector((state) => state.audio)
     const audioRef = useRef(null)
+    const [volume, setVolume] = useState(1)
+    const [isMuted, setIsMuted] = useState(false)
 
     const [favouriteIds] = useGetFavoriteIds();
     const { toggleFavorite } = useFavoriteToggle();
@@ -31,21 +33,18 @@ const GlobalAudioPlayer = () => {
         toggleFavorite(currentAudio._id);
     };
 
-    // Pause audio on component mount (page reload)
     useEffect(() => {
         dispatch(pauseAudio())
     }, [dispatch])
 
-    // Effect to handle audio source and playback when currentAudio or isPlaying changes
     useEffect(() => {
         if (audioRef.current) {
             if (currentAudio) {
-                // Check if a new audio is being set (different URL)
                 if (audioRef.current.src !== currentAudio.audio_url) {
                     audioRef.current.src = currentAudio.audio_url
-                    audioRef.current.load() // Load only when audio source changes
+                    audioRef.current.load()
                 }
-                audioRef.current.volume = 1 // Ensure volume is set
+                audioRef.current.volume = isMuted ? 0 : volume
 
                 if (isPlaying) {
                     audioRef.current.play().catch((e) => console.log("Error playing audio:", e))
@@ -53,14 +52,12 @@ const GlobalAudioPlayer = () => {
                     audioRef.current.pause()
                 }
             } else {
-                // No current audio, so pause and clear source
                 audioRef.current.pause()
                 audioRef.current.src = ""
             }
         }
-    }, [currentAudio, isPlaying])
+    }, [currentAudio, isPlaying, volume, isMuted])
 
-    // Update progress bar
     const handleTimeUpdate = useCallback(() => {
         if (audioRef.current && audioRef.current.duration) {
             const newProgress = (audioRef.current.currentTime / audioRef.current.duration) * 100
@@ -68,12 +65,10 @@ const GlobalAudioPlayer = () => {
         }
     }, [dispatch])
 
-    // Handle audio ending
     const handleAudioEnded = useCallback(() => {
         dispatch(pauseAudio())
     }, [dispatch])
 
-    // Handle play/pause button click
     const handlePlayPauseClick = () => {
         if (isPlaying) {
             dispatch(pauseAudio())
@@ -84,7 +79,6 @@ const GlobalAudioPlayer = () => {
         }
     }
 
-    // Handle progress bar change
     const handleProgressChange = (value) => {
         if (audioRef.current && audioRef.current.duration) {
             audioRef.current.currentTime = (value[0] / 100) * audioRef.current.duration
@@ -92,30 +86,28 @@ const GlobalAudioPlayer = () => {
         }
     }
 
-    if (!currentAudio) {
-        return (
-            <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border/50 shadow-2xl">
-                {/* Animated gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 animate-pulse" />
+    const handleVolumeChange = (value) => {
+        setVolume(value[0])
+        setIsMuted(false)
+    }
 
-                <div className="relative px-3 py-1.5">
-                    <div className="flex items-center justify-center max-w-7xl mx-auto">
-                        No audio playing
-                    </div>
-                </div>
-            </div>
-        )
+    const toggleMute = () => {
+        setIsMuted(!isMuted)
+    }
+
+    if (!currentAudio) {
+        return null // Or a placeholder
     }
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border/50">
-            {/* Animated gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10" />
-
-            {/* Subtle animated bars for visual appeal */}
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-secondary to-pink-500 opacity-60 animate-pulse">
-                <div className="h-full bg-gradient-to-r from-transparent via-green-300 to-transparent animate-pulse" />
-            </div>
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-t border-border/60 shadow-2xl animate-slide-up">
+            <Slider
+                value={[progress]}
+                max={100}
+                step={0.1}
+                onValueChange={handleProgressChange}
+                className="w-full h-1 rounded-none [&>span:first-child]:rounded-none [&>span:first-child]:h-1 [&>span:first-child]:bg-primary"
+            />
 
             <audio
                 ref={audioRef}
@@ -126,76 +118,69 @@ const GlobalAudioPlayer = () => {
                 onPause={() => dispatch(pauseAudio())}
             />
 
-            <div className="relative px-3 py-1.5">
-                <div className="flex items-center justify-between max-w-7xl mx-auto">
+            <div className="container mx-auto px-4">
+                <div className="flex items-center justify-between h-20">
                     {/* Left: Audio Info */}
-                    <div className="flex items-center gap-3 w-64 min-w-0">
-                        <div className="relative h-10 w-10 flex-shrink-0 rounded-lg overflow-hidden shadow-lg ring-2 ring-white/50">
+                    <div className="flex items-center gap-4 w-1/3 min-w-0">
+                        <div className="relative h-14 w-14 flex-shrink-0 rounded-md overflow-hidden shadow-lg">
                             <Image
-                                src={currentAudio?.cover_image || "/placeholder.svg?height=40&width=40&query=music+cover"}
+                                src={currentAudio?.cover_image || "/placeholder.svg"}
                                 alt={currentAudio?.title || "Audio cover"}
                                 fill
-                                sizes="40px"
+                                sizes="56px"
                                 className="object-cover"
                             />
-                            {/* Subtle overlay for better text contrast */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-
-                            {/* Playing indicator */}
-                            {isPlaying && (
-                                <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                                    <div className="flex gap-0.5">
-                                        <div className="w-0.5 h-3 bg-white rounded-full animate-pulse" style={{ animationDelay: "0ms" }} />
-                                        <div className="w-0.5 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: "150ms" }} />
-                                        <div className="w-0.5 h-4 bg-white rounded-full animate-pulse" style={{ animationDelay: "300ms" }} />
-                                    </div>
-                                </div>
-                            )}
                         </div>
                         <div className="flex flex-col min-w-0">
-                            <span className="font-semibold text-foreground truncate text-sm">{currentAudio?.title}</span>
-                            <span className="text-xs text-muted-foreground truncate">{currentAudio?.description || "No description"}</span>
+                            <h3 className="font-semibold text-foreground truncate">{currentAudio?.title}</h3>
+                            <p className="text-sm text-muted-foreground truncate">{currentAudio?.description || "No description"}</p>
                         </div>
                     </div>
 
                     {/* Center: Controls */}
-                    <div>
+                    <div className="flex items-center gap-2 md:gap-4">
+                        <Button variant="ghost" size="icon" className="hidden md:inline-flex">
+                            <Shuffle className="h-5 w-5" />
+                        </Button>
+                        <Button variant="ghost" size="icon">
+                            <SkipBack className="h-5 w-5" />
+                        </Button>
                         <Button
                             variant="default"
                             size="icon"
                             onClick={handlePlayPauseClick}
-                            className="rounded-full h-10 w-10 bg-gradient-to-r from-primary to-green-300 hover:from-primary/90 hover:to-secondary/90 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                            className="rounded-full h-12 w-12 bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-transform duration-200 hover:scale-105"
                         >
-                            {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
+                            {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-1" />}
+                        </Button>
+                        <Button variant="ghost" size="icon">
+                            <SkipForward className="h-5 w-5" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="hidden md:inline-flex">
+                            <Repeat className="h-5 w-5" />
                         </Button>
                     </div>
 
-                    {/* Right: Progress & Actions */}
-                    <div className="md:flex items-center gap-3 w-64 justify-end hidden">
-                        <div className="flex items-center gap-2 min-w-0">
-                            <span className="text-xs text-muted-foreground font-mono tabular-nums">
-                                {formatTime(audioRef.current?.currentTime || 0)}
-                            </span>
-                            <div className="flex-1 group">
-                                <Slider
-                                    value={[progress]}
-                                    max={100}
-                                    step={0.1}
-                                    onValueChange={handleProgressChange}
-                                    className="w-[150px] opacity-100 audio-progress-bar"
-                                />
-                            </div>
-                            <span className="text-xs text-muted-foreground font-mono tabular-nums">
-                                {formatTime(audioRef.current?.duration || 0)}
-                            </span>
+                    {/* Right: Volume & Actions */}
+                    <div className="flex items-center gap-4 w-1/3 justify-end">
+                        <div className="flex items-center gap-2 w-full max-w-[120px]">
+                            <Button onClick={toggleMute} variant="ghost" size="icon">
+                                {isMuted || volume === 0 ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+                            </Button>
+                            <Slider
+                                value={[isMuted ? 0 : volume]}
+                                max={1}
+                                step={0.01}
+                                onValueChange={handleVolumeChange}
+                            />
                         </div>
                         <Button
                             onClick={handleFavoriteClick}
                             variant="ghost"
-                            size="sm"
-                            className={`rounded-full h-8 w-8  text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200`}
+                            size="icon"
+                            className="text-muted-foreground hover:text-destructive"
                         >
-                            <Heart className={`h-4 w-4 ${favouriteIds.includes(currentAudio._id) ? "fill-red-500 text-red-500" : "text-gray-500"}`} />
+                            <Heart className={`h-5 w-5 ${favouriteIds.includes(currentAudio._id) ? "fill-red-500 text-red-500" : ""}`} />
                         </Button>
                     </div>
                 </div>
