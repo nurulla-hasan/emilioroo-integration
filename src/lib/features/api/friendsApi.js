@@ -46,7 +46,7 @@ const friendsApi = baseApi.injectEndpoints({
             providesTags: ["FRIENDS"],
         }),
 
-        // GET FOLLOWING
+                // GET FOLLOWING
         getFollowing: builder.query({
             query: (args) => {
                 const params = new URLSearchParams();

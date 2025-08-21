@@ -89,35 +89,37 @@ const ProfilePage = () => {
     }
 
     return (
-        <div className="md:max-w-[1400px] mx-auto mb-5">
-            <Card className="rounded-none overflow-hidden shadow-none bg-gradient-to-r from-purple-200 via-red-100 to-green-200 dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900"> {/* border-none dark:bg-gradient-to-tl dark:from-gray-700 dark:via-gray-900 dark:to-black bg-gradient-to-tl from-green-200 via-purple-200 to-yellow-200 */}
-                <ProfileHeader user={user} userSkills={userSkills} fakeFriends={fakeFriends} mother={mother} father={father} />
-                <CardContent className="p-6">
-                    <ProfileBio user={user} />
-                    <SocialLinks user={user} />
-                    <FriendsSection fakeFriends={fakeFriends} />
-                    <RelativesSection
-                        maternalRelatives={maternalRelatives}
-                        paternalRelatives={paternalRelatives}
-                        isLoading={isRelativesLoading}
-                        isError={isRelativesError}
-                        handleEdit={handleEdit}
-                        handleDelete={handleDelete}
-                        openAddRelativeModal={() => setIsModalOpen(true)}
-                    />
-                </CardContent>
-            </Card>
-            <AddRelativeModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
-            <EditRelativeModal isOpen={isEditModalOpen} onOpenChange={setIsEditModalOpen} relative={selectedRelative} />
-            <ConfirmationModal
-                isOpen={isDeleteModalOpen}
-                onOpenChange={setIsDeleteModalOpen}
-                title="Are you sure?"
-                description="This action cannot be undone. This will permanently delete the relative."
-                onConfirm={confirmDelete}
-                loading={isDeleting}
-                confirmText="Delete"
-            />
+        <div className="bg-gradient-to-r from-green-300 to-indigo-400  dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 pb-5">
+            <div>
+                <Card className="rounded-none overflow-hidden shadow-none bg-transparent border-none"> {/* border-none dark:bg-gradient-to-tl dark:from-gray-700 dark:via-gray-900 dark:to-black bg-gradient-to-tl from-green-200 via-purple-200 to-yellow-200 */}
+                    <ProfileHeader user={user} userSkills={userSkills} fakeFriends={fakeFriends} mother={mother} father={father} />
+                    <CardContent className="p-4 md:p-2 md:w-[1400px] md:mx-auto">
+                        <ProfileBio user={user} />
+                        <SocialLinks user={user} />
+                        <FriendsSection fakeFriends={fakeFriends} />
+                        <RelativesSection
+                            maternalRelatives={maternalRelatives}
+                            paternalRelatives={paternalRelatives}
+                            isLoading={isRelativesLoading}
+                            isError={isRelativesError}
+                            handleEdit={handleEdit}
+                            handleDelete={handleDelete}
+                            openAddRelativeModal={() => setIsModalOpen(true)}
+                        />
+                    </CardContent>
+                </Card>
+                <AddRelativeModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
+                <EditRelativeModal isOpen={isEditModalOpen} onOpenChange={setIsEditModalOpen} relative={selectedRelative} />
+                <ConfirmationModal
+                    isOpen={isDeleteModalOpen}
+                    onOpenChange={setIsDeleteModalOpen}
+                    title="Are you sure?"
+                    description="This action cannot be undone. This will permanently delete the relative."
+                    onConfirm={confirmDelete}
+                    loading={isDeleting}
+                    confirmText="Delete"
+                />
+            </div>
         </div>
     );
 };

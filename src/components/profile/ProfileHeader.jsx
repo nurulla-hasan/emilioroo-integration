@@ -13,36 +13,40 @@ const ProfileHeader = ({ user, userSkills, fakeFriends, mother, father }) => {
         <div className="relative w-full">
             <div className="relative w-full h-64">
                 <div className="relative h-full w-full">
-                    <Image src={user.cover_image} alt="Cover Image" fill className="object-cover" />
+                    <Image src={user.cover_image || "/images/placeholder-image.jpg"} alt="Cover Image" fill className="object-cover" />
                 </div>
                 {/* <Button variant="secondary" size="icon" className="absolute top-4 right-4 rounded-full">
                     <Camera className="h-5 w-5" />
                 </Button> */}
                 {/* Mother Avatar */}
-                {mother && (
-                    <div className="absolute -bottom-10 left-4 flex flex-col items-center">
-                        <Avatar className="w-16 h-16 border-2 border-white">
-                            <AvatarImage src={mother.relative?.profile_image || fallbackAvatar} />
-                            <AvatarFallback>{getInitials(mother.relative?.name)}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm font-semibold mt-1">Mother</span>
-                    </div>
-                )}
-                {/* Father Avatar */}
-                {father && (
-                    <div className="absolute -bottom-10 right-4 flex flex-col items-center">
-                        <Avatar className="w-16 h-16 border-2 border-white">
-                            <AvatarImage src={father.relative?.profile_image || fallbackAvatar} />
-                            <AvatarFallback>{getInitials(father.relative?.name)}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm font-semibold mt-1">Father</span>
-                    </div>
-                )}
+                <div className="max-w-[1400px] mx-auto relative">
+                    {mother && (
+                        <div className="absolute -bottom-16 left-2 flex flex-col items-center">
+                            <Avatar className="md:w-16 md:h-16 w-12 h-12 border-2 border-white">
+                                <AvatarImage src={mother.relative?.profile_image || fallbackAvatar} />
+                                <AvatarFallback>{getInitials(mother.relative?.name)}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm font-semibold mt-1">{mother.relative?.name}</span>
+                            <span className="text-xs text-muted-foreground mt-1">Mother</span>
+                        </div>
+                    )}
+                    {/* Father Avatar */}
+                    {father && (
+                        <div className="absolute -bottom-16 right-2 flex flex-col items-center">
+                            <Avatar className="md:w-16 md:h-16 w-12 h-12 border-2 border-white">
+                                <AvatarImage src={father.relative?.profile_image || fallbackAvatar} />
+                                <AvatarFallback>{getInitials(father.relative?.name)}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm font-semibold mt-1">{father.relative?.name}</span>
+                            <span className="text-xs text-muted-foreground mt-1">Father</span>
+                        </div>
+                    )}
+                </div>
             </div>
             <div className="relative p-6 pt-0">
-                <div className="absolute -top-16 left-1/2 -translate-x-1/2">
-                    <Avatar className="w-32 h-32 border-4 border-white shadow-lg">
-                        <AvatarImage src={user.profile_image || null} />
+                <div className="absolute md:-top-16 -top-12 left-1/2 -translate-x-1/2">
+                    <Avatar className="md:w-32 md:h-32 w-20 h-20 border-4 border-white shadow-lg">
+                        <AvatarImage src={user.profile_image || fallbackAvatar} />
                         <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                     </Avatar>
                     {/* <Button variant="secondary" size="icon" className="absolute bottom-0 right-0 rounded-full">

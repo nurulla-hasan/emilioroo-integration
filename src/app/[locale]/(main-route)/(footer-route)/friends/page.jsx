@@ -7,7 +7,7 @@ import { Search } from "lucide-react";
 import FriendCard from "@/components/friends/FriendCard";
 import FriendRequestCard from "@/components/friends/FriendRequestCard";
 import PageLayout from "@/components/layout/PageLayout";
-import { useGetFollowingQuery, useGetMyFriendsQuery } from "@/lib/features/api/friendsApi";
+import { useGetFollowersQuery, useGetMyFriendsQuery } from "@/lib/features/api/friendsApi";
 import PeopleCardSkeleton from "@/components/skeleton/PeopleCardSkeleton";
 import LoadFailed from "@/components/common/LoadFailed";
 import CustomPagination from "@/components/common/CustomPagination";
@@ -23,17 +23,16 @@ const Friends = () => {
         { name: "limit", value: pageSize },
         { name: "searchTerm", value: searchTerm },
     ]);
-    const { data: myFollowingData, isLoading: isMyFollowingLoading, isError: isMyFollowingError } = useGetFollowingQuery([
+    const { data: myFollowerData, isLoading: isMyFollowerLoading, isError: isMyFollowerError } = useGetFollowersQuery([
         { name: "page", value: currentPage },
         { name: "limit", value: pageSize },
         { name: "searchTerm", value: searchTerm },
     ]);
     const myFriends = myFriendData?.data?.data?.result || [];
-    const myFollowing = myFollowingData?.data?.result || [];
-    console.log(myFollowing);
+    const myFollower = myFollowerData?.data?.result || [];
 
     const friendTotalPages = myFriendData?.data?.meta?.totalPage || 1;
-    const followingTotalPages = myFollowingData?.data?.meta?.totalPage || 1;
+    const followerTotalPages = myFollowerData?.data?.meta?.totalPage || 1;
 
 
 
@@ -92,29 +91,29 @@ const Friends = () => {
                     <TabsContent value="friend-request">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                             {
-                                isMyFollowingLoading ? (
+                                isMyFollowerLoading ? (
                                     <PeopleCardSkeleton count={12} />
-                                ) : isMyFollowingError ? (
+                                ) : isMyFollowerError ? (
                                     <div className="col-span-full mt-20 mx-auto">
                                         <LoadFailed />
                                     </div>
-                                ) : myFollowing.length === 0 ? (
+                                ) : myFollower.length === 0 ? (
                                     <div className="col-span-full mx-auto mt-20 text-muted-foreground">
                                         No followers for now.
                                     </div>
                                 ) : (
-                                    myFollowing?.map((following) => (
-                                        <FriendRequestCard key={following._id} request={following} />
+                                    myFollower?.map((follower) => (
+                                        <FriendRequestCard key={follower._id} request={follower} />
                                     ))
                                 )
                             }
                         </div>
 
-                        {myFollowing.length > 0 && friendTotalPages > 1 && (
+                        {myFollower.length > 0 && friendTotalPages > 1 && (
                             <div className="my-4 absolute bottom-0 right-0 left-0">
                                 <CustomPagination
                                     currentPage={currentPage}
-                                    totalPages={followingTotalPages}
+                                    totalPages={followerTotalPages}
                                     onPageChange={setCurrentPage}
                                 />
                             </div>
