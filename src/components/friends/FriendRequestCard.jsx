@@ -8,7 +8,7 @@ import Reject from "./request-card-button/Reject";
 
 const FriendRequestCard = ({ request }) => {
     return (
-        <div className="bg-accent rounded-lg shadow-[0px_0px_2px_1px_rgba(0,_0,_0,_0.1)] hover:shadow-lg transition-all duration-300 p-6 flex flex-col items-center text-center">
+        <div className="bg-accent rounded-lg shadow-[0px_0px_2px_1px_rgba(0,_0,_0,_0.1)] hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center text-center">
             <Avatar className="w-24 h-24 mb-4">
                 <AvatarImage src={request.followerInfo?.profile_image || fallbackAvatar} />
                 <AvatarFallback>{getInitials(request.followerInfo?.name)}</AvatarFallback>
@@ -19,13 +19,15 @@ const FriendRequestCard = ({ request }) => {
                     <Badge key={index} variant="outline">{skill}</Badge>
                 ))}
             </div>
-            <div className="flex gap-2 w-full mb-4">
-                <Accept request={request} />
-                <Reject request={request} />
+            <div className="flex flex-col gap-2 w-full">
+                <div className="flex gap-2">
+                    <Accept request={request} />
+                    <Reject request={request} />
+                </div>
+                <Link href={`/friends/${request.followerInfo?._id}`} className="w-full">
+                    <Button variant="outline" className="w-full">View profile</Button>
+                </Link>
             </div>
-            <Link href={`/friends/${request.followerInfo?._id}`} className="w-full">
-                <Button variant="outline" className="w-full">View profile</Button>
-            </Link>
         </div>
     );
 };

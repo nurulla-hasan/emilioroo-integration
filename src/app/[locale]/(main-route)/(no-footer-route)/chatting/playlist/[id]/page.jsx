@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import SinglePlaylistSkeleton from "@/components/skeleton/SinglePlaylistSkeleton";
 import TrendingAudioCard from "@/components/chatting/trending/TrendingAudioCard";
 import { useTranslations } from 'next-intl';
+import { fallbackAvatar, getInitials } from "@/lib/utils";
 
 const PlaylistDetailPage = () => {
   const t = useTranslations('PlaylistDetailPage');
@@ -65,7 +66,7 @@ const PlaylistDetailPage = () => {
   }
 
   if (!playlist) {
-    return <div className="text-center text-gray-500">{t('playlistNotFound')}</div>;
+    return <div className="text-center text-muted-foreground">{t('playlistNotFound')}</div>;
   }
 
   return (
@@ -73,7 +74,7 @@ const PlaylistDetailPage = () => {
       {/* Banner Image */}
       <div className="relative w-full h-48 rounded-lg overflow-hidden mb-6">
         <Image
-          src={playlist.cover_image || "/placeholder.png"}
+          src={playlist.cover_image || fallbackAvatar}
           alt={playlist.name || "Playlist Banner"}
           fill
           className="object-cover"
@@ -83,20 +84,20 @@ const PlaylistDetailPage = () => {
       {/* Playlist Header Info */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">{playlist.name}</h1>
-        <p className="text-gray-600 text-sm mb-4">
+        <p className="text-muted-foreground text-sm mb-4">
           {playlist.audios?.length || 0}+ {t('audio')} | {formatDuration(totalPlaylistDuration)}
         </p>
-        <p className="text-gray-500 text-xs mb-4">{t('lastUpdated')}: {new Date(playlist.updatedAt).toLocaleDateString()}</p>
+        <p className="text-muted-foreground text-xs mb-4">{t('lastUpdated')}: {new Date(playlist.updatedAt).toLocaleDateString()}</p>
 
         {/* Creator Info */}
         <div className="flex items-center gap-3 mb-6">
           <Avatar className="w-10 h-10">
-            <AvatarImage src={playlist.user?.profile_image || "/placeholder.png"} alt={playlist.user?.name || "Creator"} />
-            <AvatarFallback>{playlist.user?.name ? playlist.user.name.charAt(0) : "CN"}</AvatarFallback>
+            <AvatarImage src={playlist.user?.profile_image || fallbackAvatar} alt={playlist.user?.name || "Creator"} />
+            <AvatarFallback>{playlist.user?.name ? getInitials(playlist.user.name) : "CN"}</AvatarFallback>
           </Avatar>
           <div>
             <p className="font-semibold">{playlist.user?.name}</p>
-            <p className="text-sm text-gray-500">{t('creator')}</p>
+            <p className="text-sm text-muted-foreground">{t('creator')}</p>
           </div>
         </div>
 
@@ -115,7 +116,7 @@ const PlaylistDetailPage = () => {
       {playlist.description && (
         <div className="mb-6">
           <h2 className="text-xl font-semibold mb-2">{t('description')}</h2>
-          <p className="text-gray-700">{playlist.description}</p>
+          <p className="text-muted-foreground">{playlist.description}</p>
         </div>
       )}
 
@@ -127,7 +128,7 @@ const PlaylistDetailPage = () => {
             <TrendingAudioCard key={audio._id} audio={audio} />
           ))
         ) : (
-          <p className="text-center text-gray-500">{t('noAudiosInPlaylist')}</p>
+          <p className="text-center text-muted-foreground">{t('noAudiosInPlaylist')}</p>
         )}
       </div>
 

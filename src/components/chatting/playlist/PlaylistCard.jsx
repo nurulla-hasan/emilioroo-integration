@@ -47,12 +47,12 @@ const PlaylistCard = ({ playlist = {} }) => {
 
         <div className="flex gap-2">
           {/* View as link button */}
-          <Button asChild size="sm" className="flex-1">
-            <Link href={`/chatting/playlist/${playlist?._id || ""}`}>
+          <Link className="flex-1" href={`/chatting/playlist/${playlist?._id || ""}`}>
+            <Button size="sm" className="w-full">
               <Eye className="mr-1 h-4 w-4" />
               View
-            </Link>
-          </Button>
+            </Button>
+          </Link>
 
           {/* Share button (UI only) */}
           <Button

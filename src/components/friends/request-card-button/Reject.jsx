@@ -14,7 +14,7 @@ const Reject = ({ request }) => {
     };
     return (
         <>
-            <Button loading={isLoading} variant="outline" className="w-[50%]" onClick={handleDecline} disabled={isLoading}>Decline</Button>
+            <Button loading={isLoading} variant="outline" className={"flex-1"} onClick={handleDecline} disabled={isLoading}>Decline</Button>
         </>
     );
 };

@@ -8,7 +8,8 @@ import { Edit } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { fallbackAvatar, getInitials } from "@/lib/utils";
 
-const ProfileHeader = ({ user, userSkills, fakeFriends, mother, father }) => {
+const ProfileHeader = ({ user, userSkills, mother, father, friends }) => {
+
     return (
         <div className="relative w-full">
             <div className="relative w-full h-64">
@@ -70,7 +71,7 @@ const ProfileHeader = ({ user, userSkills, fakeFriends, mother, father }) => {
                             </Badge>
                         ))}
                     </div>
-                    <p className="text-sm text-muted-foreground mt-2">{fakeFriends.length} Followers</p>
+                    <p className="text-sm text-muted-foreground mt-2">{friends.length} Friends</p>
                 </div>
             </div>
         </div>

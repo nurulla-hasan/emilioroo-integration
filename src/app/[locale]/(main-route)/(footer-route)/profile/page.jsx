@@ -4,6 +4,7 @@ import { useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import { useGetMyProfileQuery, useGetSkillsQuery } from "@/lib/features/api/authApi";
 import { useGetAllRelativesQuery, useDeleteRelativeMutation } from "@/lib/features/api/relativesApi";
+import { useGetMyFriendsQuery } from "@/lib/features/api/friendsApi";
 import { toast } from "sonner";
 import AddRelativeModal from "@/components/profile/modal/AddRelativeModal";
 import EditRelativeModal from "@/components/profile/modal/EditRelativeModal";
@@ -25,11 +26,13 @@ const ProfilePage = () => {
     const { data: profileData, isLoading: isProfileLoading, isError: isProfileError } = useGetMyProfileQuery();
     const { data: skillsData, isLoading: isSkillsLoading, isError: isSkillsError } = useGetSkillsQuery();
     const { data: relativesData, isLoading: isRelativesLoading, isError: isRelativesError } = useGetAllRelativesQuery();
+    const { data: friendsData, isLoading: isFriendsLoading, isError: isFriendsError } = useGetMyFriendsQuery();
     const [deleteRelative, { isLoading: isDeleting }] = useDeleteRelativeMutation();
 
     const user = profileData?.data;
     const allSkills = skillsData?.data?.result || [];
     const relatives = relativesData?.data?.result || [];
+    const friends = friendsData?.data?.result || [];
 
     const userSkills = user?.skills?.map(skillId => {
         const skill = allSkills.find(s => s._id === skillId);
@@ -64,23 +67,11 @@ const ProfilePage = () => {
         }
     };
 
-    // Fake Data (will be replaced by real data)
-    const fakeFriends = [
-        { name: "MR. Sarwar", role: "Artist", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cfd975fe?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-        { name: "MR. Fahad", role: "Engineer", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cfd975fe?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-        { name: "Ahmad Musa", role: "Emam", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cfd975fe?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-        { name: "MR. TA Emon", role: "Biker", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cfd975fe?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-        { name: "MR. Mehehi", role: "Artist", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cfd975fe?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-        { name: "MR. Dindinia", role: "Artist", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cfd975fe?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-        { name: "MR. Nahid", role: "Scientist", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cfd975fe?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-        { name: "Ahmad Mus", role: "Emam", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cfd975fe?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
-    ];
-
-    if (isProfileLoading || isSkillsLoading || isRelativesLoading) {
+    if (isProfileLoading || isSkillsLoading || isRelativesLoading || isFriendsLoading) {
         return <PageLayout><div className="min-h-minus-header"><ProfilePageSkeleton /></div></PageLayout>;
     }
 
-    if (isProfileError || isSkillsError || isRelativesError) {
+    if (isProfileError || isSkillsError || isRelativesError || isFriendsError) {
         return <PageLayout><div className="min-h-minus-header not-[]:text-red-500">Error loading profile.</div></PageLayout>;
     }
 
@@ -91,12 +82,12 @@ const ProfilePage = () => {
     return (
         <div className="bg-gradient-to-r from-green-300 to-indigo-400  dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 pb-5">
             <div>
-                <Card className="rounded-none overflow-hidden shadow-none bg-transparent border-none"> {/* border-none dark:bg-gradient-to-tl dark:from-gray-700 dark:via-gray-900 dark:to-black bg-gradient-to-tl from-green-200 via-purple-200 to-yellow-200 */}
-                    <ProfileHeader user={user} userSkills={userSkills} fakeFriends={fakeFriends} mother={mother} father={father} />
+                <Card className="rounded-none overflow-hidden shadow-none bg-transparent border-none"> 
+                    <ProfileHeader user={user} userSkills={userSkills} mother={mother} father={father} friends={friends} />
                     <CardContent className="p-4 xl:p-2 xl:w-[1400px] md:mx-auto">
                         <ProfileBio user={user} />
                         <SocialLinks user={user} />
-                        <FriendsSection fakeFriends={fakeFriends} />
+                        <FriendsSection friends={friends} />
                         <RelativesSection
                             maternalRelatives={maternalRelatives}
                             paternalRelatives={paternalRelatives}

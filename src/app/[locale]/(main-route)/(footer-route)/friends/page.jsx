@@ -35,9 +35,9 @@ const Friends = () => {
         { name: "searchTerm", value: searchTerm },
     ]);
 
-    const myFriends = myFriendData?.data?.data?.result || [];
+    const myFriends = myFriendData?.data?.result || [];
     const myFollower = myFollowerData?.data?.result || [];
-    const sentRequests = sentRequestData?.data?.result?.filter(req => req.status === "Pending") || [];
+    const sentRequests = sentRequestData?.data?.result || [];
 
     const friendTotalPages = myFriendData?.data?.meta?.totalPage || 1;
     const followerTotalPages = myFollowerData?.data?.meta?.totalPage || 1;

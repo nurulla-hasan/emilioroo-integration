@@ -201,7 +201,7 @@ const projectApi = baseApi.injectEndpoints({
                 };
             },
             keepUnusedDataFor: 600,
-            providesTags: ["PROJECTS"],
+            providesTags: ["PROJECTS","FRIENDS"],
         }),
 
     }),

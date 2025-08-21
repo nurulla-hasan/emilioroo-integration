@@ -13,7 +13,7 @@ const Accept = ({ request }) => {
     };
     return (
         <>
-            <Button loading={isLoading} variant="default" className="w-[50%]" onClick={handleAccept} disabled={isLoading}>Accept</Button>
+            <Button loading={isLoading} variant="default" className={"flex-1"} onClick={handleAccept} disabled={isLoading}>Accept</Button>
         </>
     );
 };

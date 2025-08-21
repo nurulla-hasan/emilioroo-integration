@@ -6,10 +6,10 @@ import { Link } from "@/i18n/navigation";
 import CancelSentRequest from "./request-card-button/CancelSentRequest";
 
 const SentRequestCard = ({ request }) => {
-    
+
 
     return (
-        <div className="bg-accent rounded-lg shadow-[0px_0px_2px_1px_rgba(0,_0,_0,_0.1)] hover:shadow-lg transition-all duration-300 p-6 flex flex-col items-center text-center">
+        <div className="bg-accent rounded-lg shadow-[0px_0px_2px_1px_rgba(0,_0,_0,_0.1)] hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center text-center">
             <Avatar className="w-24 h-24 mb-4">
                 <AvatarImage src={request.followingInfo?.profile_image || fallbackAvatar} />
                 <AvatarFallback>{getInitials(request.followingInfo?.name)}</AvatarFallback>
@@ -20,12 +20,12 @@ const SentRequestCard = ({ request }) => {
                     <Badge key={index} variant="outline">{skill}</Badge>
                 ))}
             </div>
-            <div className="flex gap-2 w-full mb-4">
+            <div className="flex flex-col gap-2 w-full">
                 <CancelSentRequest request={request} />
+                <Link href={`/friends/${request.followingInfo?._id}`} className="w-full">
+                    <Button variant="outline" className="w-full">View profile</Button>
+                </Link>
             </div>
-            <Link href={`/friends/${request.followingInfo?._id}`} className="w-full">
-                <Button variant="outline" className="w-full">View profile</Button>
-            </Link>
         </div>
     );
 };
