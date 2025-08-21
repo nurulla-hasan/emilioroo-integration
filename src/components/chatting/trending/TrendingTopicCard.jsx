@@ -52,17 +52,14 @@ export default function TrendingTopicCard({topic}) {
           {typeof topic.totalAudios === "number" ? topic.totalAudios : ""} Audio
         </p>
 
-        <Link href={`/chatting/trending/${topic._id}`} passHref>
+        <Link href={`/chatting/trending/${topic._id}`}>
           <Button
-            asChild
             size="sm"
             variant="outline"
             className="mt-1 w-full border-white/50 bg-white/10 text-white hover:bg-white/20 hover:text-white"
           >
-            <div>
-              <Play className="mr-2 h-4 w-4" />
-              Listen Now
-            </div>
+            <Play className="mr-2 h-4 w-4" />
+            Listen Now
           </Button>
         </Link>
       </div>

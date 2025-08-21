@@ -39,20 +39,22 @@ export default async function RootLayout({ children, params }) {
           antialiased container mx-auto max-w-[1920px] 
         `}
       >
-        <NextTopLoader color="#3b72d8" height={2} showSpinner={false} />
-        <StoreProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NextIntlClientProvider>
-              {children}
-            </NextIntlClientProvider>
-            <Toaster richColors />
-          </ThemeProvider>
-        </StoreProvider>
+        <>
+          <NextTopLoader color="#3b72d8" height={2} showSpinner={false} />
+          <StoreProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <NextIntlClientProvider>
+                {children}
+              </NextIntlClientProvider>
+              <Toaster richColors />
+            </ThemeProvider>
+          </StoreProvider>
+        </>
       </body>
     </html>
   );
