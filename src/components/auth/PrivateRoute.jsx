@@ -1,40 +1,29 @@
 "use client";
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import { useGetMe } from '@/hooks/useGetMe';
-import Lottie from "lottie-react";
-import loadingAnimation from "../../../public/lottie/Loading.json";
-import useAuthStore from '@/store/auth';
+import Lottie from 'lottie-react';
+import loadingAnimation from '../../../public/animation/Loading.json';
+import { useRouter } from '@/i18n/navigation';
+import { useEffect } from 'react';
 
 const PrivateRoute = ({ children }) => {
+  const { profile, profileLoading, token } = useGetMe();
   const router = useRouter();
-  const token = useAuthStore.getState().token;
-  const { user, isLoading, isError } = useGetMe();
 
   useEffect(() => {
-
-    if (!token) {
-      toast.error('You need to be logged in to access this page.');
-      router.push('/');
-      return;
-    }
-
-    if (!isLoading && isError) {
-      // toast.error('Your session has expired or is invalid. Please log in again.');
+    if (!profileLoading && !token) {
       router.push('/auth/login');
     }
-  }, [isLoading, isError, user, router, token]);
+  }, [profileLoading, token, router]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-minus-header">
-        <Lottie animationData={loadingAnimation} loop={true} style={{ width: 150, height: 150 }} />
-      </div>
-    );
+  if (profile && token) {
+    return <>{children}</>;
   }
 
-  return <>{children}</>;
+  return (
+    <div className="flex items-center justify-center min-h-minus-header">
+      <Lottie animationData={loadingAnimation} loop={true} style={{ width: 150, height: 150 }} />
+    </div>
+  );
 };
 
 export default PrivateRoute;

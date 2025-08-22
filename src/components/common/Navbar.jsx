@@ -50,7 +50,7 @@ const Navbar = () => {
     const handleLogOut = () => {
         logout()
         toast.success("Logout successful!");
-        window.location.reload();
+        window.location.href = "/";
     }
     const handleNavClick = () => {
         setIsMobileMenuOpen(false)
