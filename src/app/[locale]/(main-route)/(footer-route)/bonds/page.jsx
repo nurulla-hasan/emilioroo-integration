@@ -13,6 +13,7 @@ import { ArrowBigRight } from "lucide-react";
 import Link from "next/link";
 import MatchingBondCard from "@/components/bonds/MatchingBondCard";
 import { useTranslations } from "next-intl";
+import Title from "@/components/ui/Title";
 
 const BondsPage = () => {
     const t = useTranslations('Bonds');
@@ -23,7 +24,7 @@ const BondsPage = () => {
         <div className="min-h-minus-header">
             <PageLayout>
                 <CardHeader className="flex flex-row justify-between items-center p-0 mb-6">
-                    <CardTitle className="text-xl font-bold text-primary dark:text-white">{t('exchangeServicesGoods')}</CardTitle>
+                    <Title>{t('exchangeServicesGoods')}</Title>
                     <Link href="/bonds/all-bonds">
                         <Button className="text-sm font-semibold">
                             {t('allBonds')} <ArrowBigRight className="h-4 w-4" />

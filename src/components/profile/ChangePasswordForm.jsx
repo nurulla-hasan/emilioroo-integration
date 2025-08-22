@@ -152,7 +152,7 @@ const ChangePasswordForm = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button loading={isUpdating} type="submit" disabled={isUpdating || !form.formState.isValid}>
+                        <Button loading={isUpdating} type="submit" disabled={isUpdating}>
                             Save changes
                         </Button>
                     </form>

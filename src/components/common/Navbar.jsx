@@ -1,8 +1,9 @@
 "use client";
 import { usePathname, Link as NextIntlLink, useRouter as useNextRouter } from "@/i18n/navigation";
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User, Menu, LogOut, UserPlus, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Globe, Users } from "lucide-react";
+import { User, Menu, LogOut, UserPlus, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Users } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,14 +13,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "../ui/input";
 import { useLogoutMutation } from "@/lib/features/api/authApi";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
 import { useGetMe } from "@/hooks/useGetMe";
+import Image from "next/image";
 
 const Navbar = () => {
     const t = useTranslations('Navbar');
     const nextRouter = useNextRouter();
+    const locale = useLocale();
 
     const currentPathname = usePathname();
+
+    const localeToFlagMap = {
+        'en': '/images/flags/en.png',
+        'es': '/images/flags/es.png',
+    };
     const { theme, setTheme } = useTheme()
     const { profile, profileLoading, token } = useGetMe();
     const [logout] = useLogoutMutation();
@@ -50,7 +57,7 @@ const Navbar = () => {
     }
 
     const handleLanguageChange = (locale) => {
-        nextRouter.push(currentPathname, { locale });
+        nextRouter.push(currentPathname, { locale, scroll: false });
     };
 
     return (
@@ -185,6 +192,7 @@ const Navbar = () => {
                             <div className="hidden xl:flex items-center gap-7">
                                 {navLinks.map((link) => (
                                     <NextIntlLink
+                                        scroll={false}
                                         key={link.name}
                                         href={link.href}
                                         className={`hover:opacity-70 transition-colors font-medium duration-200 text-sm ${currentPathname === link.href ? "border-b-2 border-white text-white font-bold" : "text-white"}`}
@@ -323,13 +331,17 @@ const Navbar = () => {
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button variant="ghost" size="icon" className="hover:bg-brand">
-                                            <Globe className="h-6 w-6 text-white" />
+                                            <Image src={localeToFlagMap[locale]} width={20} height={20} alt={locale} className="w-6 h-6 border-2 border-gray-400 rounded-full object-cover" />
                                             <span className="sr-only">Language</span>
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>English</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => handleLanguageChange('es')}>Spanish</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
+                                            <Image src="/images/flags/en.png" width={20} height={20} alt="English" className="w-5 h-5 rounded-full object-cover mr-2" /> EN
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleLanguageChange('es')}>
+                                            <Image src="/images/flags/es.png" width={20} height={20} alt="Spanish" className="w-5 h-5 rounded-full object-cover mr-2" /> ES
+                                        </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </div>
