@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, Music, Music2, Music3, Music4, Headphones, Radio, Volume2, Disc3, Activity } from 'lucide-react'
+import { ArrowRight, Music, Music2, Music3, Music4, Headphones, Radio, Volume2, Disc3 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 
@@ -19,21 +19,6 @@ const Hero = () => {
     <div className="relative w-full min-h-minus-header flex flex-col items-center justify-center text-center bg-primary dark:bg-accent overflow-hidden">
       {/* Animated Background Bubbles */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Large Bubbles */}
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={`bubble-${i}`}
-            className={`absolute rounded-full bg-white/10 backdrop-blur-sm animate-float-${i % 4}`}
-            style={{
-              width: `${60 + Math.random() * 100}px`,
-              height: `${60 + Math.random() * 100}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${8 + Math.random() * 4}s`,
-            }}
-          />
-        ))}
 
         {/* Medium Bubbles */}
         {[...Array(12)].map((_, i) => (
@@ -126,23 +111,6 @@ const Hero = () => {
       {/* ENHANCED ANIMATED PULSE WAVES - MAIN FEATURE */}
       <div className="absolute inset-0 overflow-hidden">
 
-        {/* Medium Rhythm Pulse Waves */}
-        {[...Array(16)].map((_, i) => (
-          <div
-            key={`medium-pulse-${i}`}
-            className="absolute animate-rhythm-pulse-wave"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${1.8 + Math.random() * 1.5}s`,
-              transform: `rotate(${Math.random() * 360}deg)`,
-            }}
-          >
-            <Activity className="text-white/80 drop-shadow-sm" />
-          </div>
-        ))}
-
         {/* Small Quick Pulse Waves */}
         {[...Array(20)].map((_, i) => (
           <div
@@ -195,38 +163,6 @@ const Hero = () => {
               <path d="M5 25 L15 25 L18 10 L22 40 L26 15 L30 35 L34 20 L38 30 L42 25 L50 25 L54 12 L58 38 L62 18 L66 32 L70 25 L78 25 L82 15 L86 35 L90 25 L95 25" />
               <path d="M5 28 L15 28 L20 15 L24 38 L28 20 L32 33 L36 25 L40 32 L44 28 L52 28 L56 18 L60 36 L64 22 L68 30 L72 28 L80 28 L84 20 L88 32 L92 28 L95 28" opacity="0.4" strokeWidth="1.5" />
             </svg>
-          </div>
-        ))}
-
-        {/* Pulsing Dots for Rhythm */}
-        {[...Array(25)].map((_, i) => (
-          <div
-            key={`pulse-dot-${i}`}
-            className="absolute animate-pulse-dot-rhythm"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${1.5 + Math.random() * 1}s`,
-            }}
-          >
-            <div className="w-2 h-2 bg-white/20 rounded-full shadow-lg"></div>
-          </div>
-        ))}
-
-        {/* Expanding Pulse Rings */}
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={`pulse-ring-${i}`}
-            className="absolute animate-expanding-pulse-ring"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 4}s`,
-              animationDuration: `${3 + Math.random() * 2}s`,
-            }}
-          >
-            <div className="w-8 h-8 border border-white/15 rounded-full"></div>
           </div>
         ))}
       </div>

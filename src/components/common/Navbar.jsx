@@ -39,7 +39,7 @@ const Navbar = () => {
     const navLinks = [
         { name: t('Home'), href: "/", icon: Home },
         { name: t('DonateUs'), href: "/donate-us", icon: UserPlus },
-        { name: t('Bonds'), href: "/bonds", icon: ShoppingCart },
+        { name: t('Bonds'), href: "/bonds", icon: ShoppingCart, },
         { name: t('People'), href: "/people", icon: User },
         { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
         { name: t('Institutions'), href: "/institutions", icon: User },
@@ -59,6 +59,7 @@ const Navbar = () => {
     const handleLanguageChange = (locale) => {
         nextRouter.push(currentPathname, { locale, scroll: false });
     };
+
 
     return (
         <nav className="h-[80px] ">
@@ -188,33 +189,36 @@ const Navbar = () => {
                                 </NextIntlLink>
                             </div>
 
-                            {/* Desktop Navigation Links */}
-                            <div className="hidden xl:flex items-center gap-7">
-                                {navLinks.map((link) => (
-                                    <NextIntlLink
-                                        scroll={false}
-                                        key={link.name}
-                                        href={link.href}
-                                        className={`hover:opacity-70 transition-colors font-medium duration-200 text-sm ${currentPathname === link.href ? "border-b-2 border-white text-white font-bold" : "text-white"}`}
-                                    >
-                                        {link.name}
-                                    </NextIntlLink>
-                                ))}
-                            </div>
+                            <div className="flex items-center gap-8">
+                                {/* Desktop Navigation Links */}
+                                <div className="hidden xl:flex items-center gap-8">
+                                    {navLinks.map((link) => (
+                                        <NextIntlLink
+                                            scroll={false}
+                                            key={link.name}
+                                            href={link.href}
+                                            className={`hover:opacity-70 transition-colors font-medium duration-200 text-sm ${currentPathname === link.href ? "border-b-2 border-white text-white font-bold" : "text-white"}`}
+                                        >
+                                            {link.name}
+                                        </NextIntlLink>
+                                    ))}
+                                </div>
 
-                            {/* Search Input */}
-                            <div className="hidden xl:block relative">
-                                <Input
-                                    className="peer ps-9 placeholder:text-white placeholder:text-xs text-white border-none bg-white/5 rounded-full"
-                                    placeholder="Search..."
-                                    type="search"
-                                />
-                                <div className="text-white pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                                    <SearchIcon size={16} />
+                                {/* Search Input */}
+                                <div className="hidden xl:block relative">
+                                    <Input
+                                        className="w-50 ps-9 placeholder:text-white placeholder:text-xs text-white border-none bg-white/5 rounded-full"
+                                        placeholder="Search..."
+                                        type="search"
+                                    />
+                                    <div className="text-white pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                                        <SearchIcon size={16} />
+                                    </div>
                                 </div>
                             </div>
+
                             {/* Right Action Icons */}
-                            <div className="flex items-center justify-end xl:justify-start space-x-2">
+                            <div className="flex items-center justify-end xl:justify-start space-x-2 md:space-x-4">
                                 {/* User Profile Icon */}
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -231,7 +235,9 @@ const Navbar = () => {
                                                         </AvatarFallback>
                                                     </Avatar>
                                                 ) : !profileLoading && (
-                                                    <User className="h-6 w-6 text-white" />
+                                                    <span className="flex p-2 items-center justify-center rounded-full bg-white/10">
+                                                        <User className="h-5 w-5 text-white" />
+                                                    </span>
                                                 )}
                                                 <span className="sr-only">Profile</span>
                                             </Button>
@@ -308,8 +314,8 @@ const Navbar = () => {
 
                                 {/* Theme Toggle */}
                                 <Toggle
-                                    variant="ghost"
-                                    className="group data-[state=on]:bg-transparent text-white hover:bg-primary dark:hover:bg-primary justify-end"
+                                    variant="outline"
+                                    className="group data-[state=off]:hover:bg-white/10 data-[state=on]:hover:bg-white/10 border-0 rounded-full"
                                     pressed={theme === "dark"}
                                     onPressedChange={() =>
                                         setTheme((prev) => (prev === "dark" ? "light" : "dark"))
@@ -317,13 +323,13 @@ const Navbar = () => {
                                     aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                                 >
                                     <MoonIcon
-                                        size={16}
+                                        size={12}
                                         className="shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
                                         aria-hidden="true"
                                     />
                                     <SunIcon
-                                        size={16}
-                                        className="absolute shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
+                                        size={12}
+                                        className="absolute shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0 text-white"
                                         aria-hidden="true"
                                     />
                                 </Toggle>
