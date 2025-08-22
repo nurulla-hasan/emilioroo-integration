@@ -12,6 +12,7 @@ import CustomPagination from '@/components/common/CustomPagination';
 import ProjectCardSkeleton from '@/components/skeleton/ProjectCardSkeleton';
 import LoadFailed from '@/components/common/LoadFailed';
 import { useTranslations } from "next-intl";
+import NoData from '@/components/common/NoData';
 
 
 const ObjectsPage = () => {
@@ -95,11 +96,8 @@ const ObjectsPage = () => {
                     </div>
                 </div>
 
-                <Tabs defaultValue="all-projects" className="mt-12" onValueChange={(value) => {
-                    setActiveTab(value);
-                    setCurrentPage(1); // Reset page when tab changes
-                }}> {/* Similar to InstitutionsPage */}
-                    <TabsList className="w-fit"> {/* Horizontal TabsList */}
+                <Tabs defaultValue="all-projects" className="mt-12" onValueChange={(value) => {setActiveTab(value); setCurrentPage(1);}}>
+                    <TabsList className="w-fit">
                         <TabsTrigger value="all-projects">{t('allProjects')}</TabsTrigger>
                         <TabsTrigger value="my-projects">{t('myProjects')}</TabsTrigger>
                         <TabsTrigger value="joined-projects">{t('joinedProjects')}</TabsTrigger>
@@ -117,7 +115,7 @@ const ObjectsPage = () => {
                                     <ProjectCard key={project._id} project={project} />
                                 ))
                             ) : (
-                                <p className="col-span-full text-center text-muted-foreground">{t('noProjectsFound')}</p>
+                                <NoData msg={t('noProjectsFound')} />
                             )}
                         </div>
                     </TabsContent>
@@ -135,11 +133,11 @@ const ObjectsPage = () => {
                                     <ProjectCard key={project._id} project={project} isMyOrJoinedProject={true} />
                                 ))
                             ) : (
-                                <p className="col-span-full text-center text-muted-foreground">{t('noMyProjectsFound')}</p>
+                                <NoData msg={t('noMyProjectsFound')} />
                             )}
                         </div>
                     </TabsContent>
-                    
+
                     <TabsContent value="joined-projects">
                         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                             {joinedProjectsLoading ? (
@@ -153,7 +151,7 @@ const ObjectsPage = () => {
                                     <ProjectCard key={project._id} project={project} isMyOrJoinedProject={true} />
                                 ))
                             ) : (
-                                <p className="col-span-full text-center text-muted-foreground">{t('noJoinedProjectsFound')}</p>
+                                <NoData msg={t('noJoinedProjectsFound')} />
                             )}
                         </div>
                     </TabsContent>

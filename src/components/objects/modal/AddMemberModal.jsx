@@ -31,6 +31,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useGetAllUsersQuery, useAddProjectMemberMutation } from "@/lib/features/api/projectApi";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { fallbackAvatar, getInitials } from "@/lib/utils";
 
 const formSchema = z.object({
   userId: z.string().min(1, { message: "User is required." }),
@@ -117,6 +119,10 @@ const AddMemberModal = ({ isOpen, onOpenChange, projectId, onMemberAdded }) => {
                       {usersData?.data?.result?.length > 0 ? (
                         usersData.data.result.map((user) => (
                           <SelectItem key={user._id} value={user._id}>
+                            <Avatar className="mr-2">
+                              <AvatarImage src={user.profile_image || fallbackAvatar} />
+                              <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                            </Avatar>
                             {user.name}
                           </SelectItem>
                         ))
@@ -175,7 +181,7 @@ const AddMemberModal = ({ isOpen, onOpenChange, projectId, onMemberAdded }) => {
                 </Button>
               </DialogClose>
               <Button loading={isAddingMember} type="submit" disabled={isAddingMember || !form.formState.isValid}>
-               Add Member
+                Add Member
               </Button>
             </DialogFooter>
           </form>

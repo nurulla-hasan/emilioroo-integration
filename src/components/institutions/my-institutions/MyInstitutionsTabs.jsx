@@ -8,6 +8,8 @@ import CustomPagination from "@/components/common/CustomPagination"
 import CardSkeleton from "@/components/skeleton/CardSkeleton"
 import ConfirmationModal from "@/components/common/ConfirmationModal"
 import { toast } from "sonner"
+import NoData from "@/components/common/NoData"
+import LoadFailed from "@/components/common/LoadFailed"
 
 export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEditInstitution }) {
   const [currentPage, setCurrentPage] = useState(1)
@@ -93,9 +95,9 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
               ))}
             </div>
           )}
-          {currentError && <p className="text-red-500">Error loading created institutions.</p>}
+          {currentError && <LoadFailed msg="Failed to load created institutions." />}
           {!currentLoading && !currentError && currentData?.data?.result?.length === 0 && (
-            <p>No created institutions found.</p>
+            <NoData msg="No created institutions found." />
           )}
           <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
             {!currentLoading && !currentError && currentData?.data?.result?.map((institution) => (

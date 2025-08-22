@@ -8,6 +8,7 @@ import { Loader2, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useGetProjectMemberQuery, useGetSingleProjectQuery, useSendJoinRequestMutation } from "@/lib/features/api/projectApi"
 import { toast } from "sonner"
+import { fallbackAvatar, getInitials } from "@/lib/utils"
 
 export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId }) {
     const { data: projectData, isLoading: isProjectLoading, isError: isProjectError } = useGetSingleProjectQuery(projectId);
@@ -132,7 +133,7 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
                         {/* Participant count */}
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Users className="h-4 w-4" />
-                            <span className="font-medium">{project?.totalParticipate} Participant</span>
+                            <span className="font-medium">{project?.totalParticipants} Participant</span>
                         </div>
 
                         {/* Producer and User columns */}
@@ -150,14 +151,11 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
                                             <div key={producer._id} className="flex items-center gap-2">
                                                 <Avatar className="h-8 w-8">
                                                     <AvatarImage
-                                                        src={producer.user?.profile_image}
+                                                        src={producer.user?.profile_image || fallbackAvatar}
                                                         alt={producer.user?.name}
                                                     />
                                                     <AvatarFallback className="text-xs">
-                                                        {producer.user?.name
-                                                            ?.split(" ")
-                                                            .map((n) => n[0])
-                                                            .join("") || "U"}
+                                                        {getInitials(producer.user?.name) || "U"}
                                                     </AvatarFallback>
                                                 </Avatar>
                                                 <div className="min-w-0 flex-1">
@@ -189,14 +187,11 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
                                                 </div>
                                                 <Avatar className="h-8 w-8">
                                                     <AvatarImage
-                                                        src={consumer.user?.profile_image}
+                                                        src={consumer.user?.profile_image || fallbackAvatar}
                                                         alt={consumer.user?.name}
                                                     />
                                                     <AvatarFallback className="text-xs">
-                                                        {consumer.user?.name
-                                                            ?.split(" ")
-                                                            .map((n) => n[0])
-                                                            .join("") || "U"}
+                                                        {getInitials(consumer.user?.name) || "U"}
                                                     </AvatarFallback>
                                                 </Avatar>
                                             </div>

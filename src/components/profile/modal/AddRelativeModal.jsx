@@ -31,6 +31,8 @@ import {
 } from "@/components/ui/select";
 import { useCreateRelativeMutation } from "@/lib/features/api/relativesApi";
 import { useGetUsersWithoutMe } from "@/hooks/useGetUsersWithoutMe";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { fallbackAvatar, getInitials } from "@/lib/utils";
 
 const formSchema = z.object({
     relative: z.string().min(1, { message: "Please select a user." }),
@@ -89,6 +91,10 @@ const AddRelativeModal = ({ isOpen, onOpenChange }) => {
                                             ) : (
                                                 users.map((user) => (
                                                     <SelectItem key={user._id} value={user._id}>
+                                                        <Avatar className="mr-2">
+                                                            <AvatarImage src={user.profile_image || fallbackAvatar} />
+                                                            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                                                        </Avatar>
                                                         {user.name}
                                                     </SelectItem>
                                                 ))

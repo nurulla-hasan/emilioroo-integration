@@ -2,6 +2,8 @@ import CardSkeleton from '@/components/skeleton/CardSkeleton';
 import React from 'react';
 import AllInstitutionsCard from './AllInstitutionsCard';
 import CustomPagination from '@/components/common/CustomPagination';
+import NoData from '@/components/common/NoData';
+import LoadFailed from '@/components/common/LoadFailed';
 
 const AllInstitutionsTab = ({ data, isLoading, isError, currentPage, setCurrentPage, pageSize, totalPages, t }) => {
     return (
@@ -14,9 +16,9 @@ const AllInstitutionsTab = ({ data, isLoading, isError, currentPage, setCurrentP
                         ))}
                     </div>
                 )}
-                {isError && <p className="text-red-500">{t('errorFetchingInstitutions')}</p>}
+                {isError && <LoadFailed msg={t('errorFetchingInstitutions')} />}
                 {!isLoading && !isError && data?.data?.result?.length === 0 && (
-                    <p>{t('noInstitutionsFound')}</p>
+                    <NoData msg={t('noInstitutionsFound')} />
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
                     {!isLoading && !isError && data?.data?.result?.map((institution) => (
