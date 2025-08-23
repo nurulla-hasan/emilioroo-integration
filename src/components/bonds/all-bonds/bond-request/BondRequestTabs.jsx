@@ -3,13 +3,17 @@
 import { useState } from 'react';
 import Title from '@/components/ui/Title';
 import { useTranslations } from 'next-intl';
-import { useGetMyBondsRequestQuery } from '@/lib/features/api/bondsApi';
+import { useGetMyBondsRequestQuery, useDeleteRequestBondMutation } from '@/lib/features/api/bondsApi';
 import BondRequestCard from './BondRequestCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import NoData from '@/components/common/NoData';
 import CustomPagination from '@/components/common/CustomPagination';
 import { Input } from '@/components/ui/input';
 import LoadFailed from '@/components/common/LoadFailed';
+import MatchingBondsModal from '../../MatchingBondsModal';
+import EditBondRequestModal from './EditBondRequestModal';
+import ConfirmationModal from '@/components/common/ConfirmationModal';
+import { toast } from 'sonner';
 
 export default function BondRequestTabs() {
   const t = useTranslations('Bonds');
@@ -17,13 +21,54 @@ export default function BondRequestTabs() {
   const [pageSize] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // State for modals
+  const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  
+  // State for the currently selected request for modals
+  const [selectedRequest, setSelectedRequest] = useState(null);
+
   const { data: bondRequests, isLoading, isError } = useGetMyBondsRequestQuery({
     page: currentPage,
     limit: pageSize,
     searchTerm
   });
+  const [deleteRequestBond, { isLoading: isDeleting }] = useDeleteRequestBondMutation();
 
   const totalPages = bondRequests?.data?.meta?.totalPage;
+
+  // Handlers to open modals
+  const handleFindMatch = (request) => {
+    setSelectedRequest(request);
+    setIsMatchModalOpen(true);
+  };
+
+  const handleEdit = (request) => {
+    setSelectedRequest(request);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = (request) => {
+    setSelectedRequest(request);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handlePause = () => {
+    toast.info("Pause functionality is not implemented yet.");
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedRequest) return;
+    try {
+      await deleteRequestBond(selectedRequest._id).unwrap();
+      toast.success("Bond request deleted successfully!");
+      setIsDeleteModalOpen(false);
+      setSelectedRequest(null);
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to delete bond request.");
+    }
+  };
 
   return (
     <>
@@ -41,7 +86,7 @@ export default function BondRequestTabs() {
 
       <div className='md:mt-12'>
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {[...Array(9)].map((_, i) => (
               <Skeleton key={i} className="h-42 w-full rounded-lg" />
             ))}
@@ -49,9 +94,16 @@ export default function BondRequestTabs() {
         ) : isError ? (
           <LoadFailed msg="Failed to fetch bond requests." />
         ) : bondRequests?.data?.result?.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {bondRequests.data.result.map((request) => (
-              <BondRequestCard key={request._id} request={request} />
+              <BondRequestCard 
+                key={request._id} 
+                request={request} 
+                onFindMatch={handleFindMatch} 
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onPause={handlePause}
+              />
             ))}
           </div>
         ) : (
@@ -60,13 +112,37 @@ export default function BondRequestTabs() {
       </div>
 
       {bondRequests?.data?.result?.length > 0 && totalPages > 1 && (
-        <div className="my-4 absolute bottom-0 right-0 left-0">
+        <div className="my-4">
           <CustomPagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
         </div>
+      )}
+
+      {selectedRequest && (
+        <>
+          <MatchingBondsModal
+            isOpen={isMatchModalOpen}
+            onOpenChange={setIsMatchModalOpen}
+            bondRequestId={selectedRequest._id}
+          />
+          <EditBondRequestModal
+            isOpen={isEditModalOpen}
+            onOpenChange={setIsEditModalOpen}
+            request={selectedRequest}
+          />
+          <ConfirmationModal
+            isOpen={isDeleteModalOpen}
+            onOpenChange={setIsDeleteModalOpen}
+            title="Are you sure?"
+            description="This will permanently delete this bond request. This action cannot be undone."
+            onConfirm={confirmDelete}
+            loading={isDeleting}
+            confirmText="Delete"
+          />
+        </>
       )}
     </>
   );

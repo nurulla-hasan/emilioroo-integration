@@ -36,10 +36,9 @@ const bondsApi = baseApi.injectEndpoints({
 
         // GET MATCHING BONDS
         getMatchingBonds: builder.query({
-            query: (id) => ({
-                url: "/bond-request/matching-bond",
+            query: (bondRequestId) => ({
+                url: `/bond-request/matching-bond?bondRequest=${bondRequestId}`,
                 method: "GET",
-                body: id,
             }),
             providesTags: ["BONDS"],
         }),
