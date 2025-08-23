@@ -42,7 +42,7 @@ const BondRequestCard =({ request, onFindMatch, onEdit, onDelete, onPause }) =>{
                     Created ({timeAgo(request.createdAt)})
                 </p>
                 <div className="flex items-center gap-1">
-                    <Button variant="outline" size="sm" onClick={() => onFindMatch(request)}>
+                    <Button variant="ghost" size="sm" onClick={() => onFindMatch(request)}>
                         <Search className="h-4 w-4 mr-2" />
                         Find Match
                     </Button>
