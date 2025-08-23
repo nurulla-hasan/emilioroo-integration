@@ -42,7 +42,10 @@
     "enterYourLocation": "Enter your location",
     "radiusKm": "Radius (km):",
     "matchingBonds": "Matching Bonds",
-    "searchBond": "Search Bond"
+    "searchBond": "Search Bond",
+    "bondRequests": "My Bond Request",
+    "createBondRequest": "Create Bond Request",
+    "createANewBondRequest": "Create a New Bond Request"
   },
   "MyBonds": {
     "addNewBond": "Add New Bond",

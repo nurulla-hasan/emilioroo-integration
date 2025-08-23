@@ -1,128 +1,208 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import PageLayout from "@/components/layout/PageLayout";
-import { ArrowBigRight } from "lucide-react";
-import Link from "next/link";
-import MatchingBondCard from "@/components/bonds/MatchingBondCard";
-import { useTranslations } from "next-intl";
-import Title from "@/components/ui/Title";
+import { useCallback } from 'react';
+import dynamic from 'next/dynamic';
+import { useCreateRequestBondMutation } from '@/lib/features/api/bondsApi';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import PageLayout from '@/components/layout/PageLayout';
+import Title from '@/components/ui/Title';
+import { useTranslations } from 'next-intl';
+import { Card, CardContent } from '@/components/ui/card';
+import Link from 'next/link';
+import { ArrowBigRight } from 'lucide-react';
 
-const BondsPage = () => {
-    const t = useTranslations('Bonds');
-    const [showLocationFilter, setShowLocationFilter] = useState(true);
-    const [radius, setRadius] = useState([10]);
+const MapPicker = dynamic(() => import('@/components/bonds/all-bonds/my-bonds/MapPicker'), { ssr: false });
+
+const defaultLocation = { lat: -34.6037, lng: -58.3816 };
+
+const formSchema = z.object({
+    offer: z.string().min(1, { message: 'Offer is required.' }),
+    want: z.string().min(1, { message: 'Want is required.' }),
+    tag: z.string().min(1, { message: 'Tag is required.' }),
+    radius: z.coerce.number().min(1, { message: 'Radius must be a positive number.' }),
+    location: z
+        .object({
+            lat: z.number(),
+            lng: z.number(),
+        })
+        .nullable()
+        .refine((val) => val !== null, { message: 'Please select a location from the map.' }),
+});
+
+const Bonds = () => {
+    const t = useTranslations('AddNewBondModal');
+    const bondsT = useTranslations('Bonds');
+    const [createRequestBond, { isLoading }] = useCreateRequestBondMutation();
+
+    const form = useForm({
+        resolver: zodResolver(formSchema),
+        mode: 'onChange',
+        defaultValues: {
+            offer: '',
+            want: '',
+            tag: '',
+            radius: 5,
+            location: defaultLocation,
+        },
+    });
+
+    const { reset, setValue, watch, formState: { errors } } = form;
+    const location = watch('location');
+
+    const onLocationChange = useCallback((loc) => {
+        setValue('location', loc, { shouldValidate: true });
+    }, [setValue]);
+
+    const onSubmit = async (values) => {
+        const newBond = {
+            offer: values.offer,
+            want: values.want,
+            tag: values.tag,
+            location: {
+                type: 'Point',
+                coordinates: [values.location.lng, values.location.lat],
+            },
+            radius: values.radius,
+        };
+
+        try {
+            await createRequestBond(newBond).unwrap();
+            toast.success('Bond created successfully!');
+            reset();
+        } catch (error) {
+            toast.error(error?.data?.message || 'Failed to create bond.');
+        }
+    };
 
     return (
-        <div className="min-h-minus-header">
-            <PageLayout>
-                <CardHeader className="flex flex-row justify-between items-center p-0 mb-6">
-                    <Title>{t('exchangeServicesGoods')}</Title>
-                    <Link href="/bonds/all-bonds">
-                        <Button className="text-sm font-semibold">
-                            {t('allBonds')} <ArrowBigRight className="h-4 w-4" />
-                        </Button>
-                    </Link>
-                </CardHeader>
+        <PageLayout>
+            <div className="flex md:flex-row flex-col gap-2 justify-between items-center mb-6">
+                <Title>{bondsT('exchangeServicesGoods')}</Title>
+                <Link href="/bonds/all-bonds">
+                    <Button>
+                        {bondsT('allBonds')} <ArrowBigRight className="h-4 w-4" />
+                    </Button>
+                </Link>
+            </div>
 
-                {/* Main card containing the filter options */}
-                <div className="flex justify-center items-center md:p-6">
-                    <Card className="w-full max-w-4xl p-3 md:p-6">
-                        <CardContent className="p-0">
-                            {/* "Offer" and "Want" selects */}
-                            <div className="flex flex-col lg:flex-row justify-between gap-6">
-                                <div className="flex flex-col space-y-1.5 w-full">
-                                    <Label htmlFor="offer" className="text-sm font-medium">{t('offer')}</Label>
-                                    <Select>
-                                        <SelectTrigger id="give" className="w-full">
-                                            <SelectValue placeholder={t('typeWhatYouCanOffer')} />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="teaching-math">Teaching Math</SelectItem>
-                                            <SelectItem value="computer">Firing Computer</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+            <div className="flex justify-center items-center md:p-6">
+                <Card className="w-full max-w-4xl p-3 md:p-6">
+                    <Title>{bondsT('createANewBondRequest')}</Title>
+                    <CardContent className="p-0 pt-6">
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="offer"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>{t('offer')}</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder={t('exampleLaptop')}
+                                                        {...field}
+                                                        aria-invalid={errors.offer ? 'true' : 'false'}
+                                                        className={errors.offer ? 'border-red-500' : ''}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="want"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>{t('want')}</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder={t('exampleCamera')}
+                                                        {...field}
+                                                        aria-invalid={errors.want ? 'true' : 'false'}
+                                                        className={errors.want ? 'border-red-500' : ''}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                 </div>
-                                <div className="flex flex-col justify-between space-y-1.5 w-full">
-                                    <Label htmlFor="want" className="text-sm flex justify-end font-medium">{t('want')}</Label>
-                                    <Select>
-                                        <SelectTrigger id="get" className="w-full">
-                                            <SelectValue placeholder={t('typeWhatYouWant')} />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="cooking-cake">Cooking Cake</SelectItem>
-                                            <SelectItem value="firing-computer">Firing Computer</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-
-                            {/* "Hide location filter" checkbox */}
-                            <div className="flex items-center space-x-2 mt-6">
-                                <Checkbox
-                                    id="location-filter"
-                                    checked={!showLocationFilter}
-                                    onCheckedChange={(checked) => setShowLocationFilter(!checked)}
-                                    className="primary"
+                                <FormField
+                                    control={form.control}
+                                    name="tag"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t('tag')} <span className="text-muted-foreground">({t('forBetterMatching')})</span></FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder={t('exampleElectronics')}
+                                                    {...field}
+                                                    aria-invalid={errors.tag ? 'true' : 'false'}
+                                                    className={errors.tag ? 'border-red-500' : ''}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
                                 />
-                                <Label
-                                    htmlFor="location-filter"
-                                    className="text-sm font-medium primary cursor-pointer"
-                                >
-                                    {t('hideLocationFilter')}
-                                </Label>
-                            </div>
-
-                            {/* Location filter (conditionally rendered) */}
-                            {showLocationFilter && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 justify-between gap-6 mt-6">
-                                    <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="location" className="text-sm font-medium">{t('location')}</Label>
-                                        <Input id="location" placeholder={t('enterYourLocation')} />
-                                    </div>
-                                    <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="radius" className="text-sm font-medium">{t('radiusKm')} {radius[0]}</Label>
-                                        <Slider
-                                            id="radius"
-                                            defaultValue={[10]}
-                                            max={100}
-                                            step={1}
-                                            value={radius}
-                                            onValueChange={setRadius}
-                                            className="w-full"
-                                        />
-                                    </div>
+                                <FormItem>
+                                    <FormLabel>Select Location</FormLabel>
+                                    <FormControl>
+                                        <div className="rounded-md overflow-hidden border h-64">
+                                            <MapPicker
+                                                onLocationChange={onLocationChange}
+                                                center={location}
+                                            />
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage>{errors.location?.message}</FormMessage>
+                                </FormItem>
+                                <FormField
+                                    control={form.control}
+                                    name="radius"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Radius (km)</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    {...field}
+                                                    aria-invalid={errors.radius ? 'true' : 'false'}
+                                                    className={errors.radius ? 'border-red-500' : ''}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <div className="flex items-center gap-4 justify-end">
+                                    <p className='text-sm text-muted-foreground'>Create a bond request and see matching bonds.</p>
+                                    <Button loading={isLoading} type="submit" disabled={isLoading}>
+                                        {t('createBond')}
+                                    </Button>
                                 </div>
-                            )}
-
-                            {/* Matching Bonds section with title and component */}
-                            <Card className="w-full mt-8 gap-0">
-                                <CardHeader className="flex flex-row items-center justify-between gap-4 p-4 md:p-6">
-                                    <CardTitle className="text-lg md:text-xl font-bold">{t('matchingBonds')}</CardTitle>
-                                </CardHeader>
-                                <MatchingBondCard />
-                            </Card>
-
-                            {/* Search Button */}
-                            <div className="flex justify-center mt-8">
-                                <Button>
-                                    {t('searchBond')}
-                                </Button>
-                            </div>
-
-                        </CardContent>
-                    </Card>
-                </div>
-            </PageLayout>
-        </div>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+            </div>
+        </PageLayout>
     );
-};
+}
 
-export default BondsPage;
+export default Bonds;

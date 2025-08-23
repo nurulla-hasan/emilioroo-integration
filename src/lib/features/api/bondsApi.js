@@ -9,16 +9,28 @@ const bondsApi = baseApi.injectEndpoints({
                 url: "/bond/my-bonds",
                 method: "GET",
             }),
-            providesTags: ["MY-BONDS"],
+            providesTags: ["BONDS"],
         }),
 
         // GET MY BONDS REQUEST
         getMyBondsRequest: builder.query({
-            query: () => ({
-                url: "/bond-request/my-bond-requests",
-                method: "GET",
-            }),
-            providesTags: ["MY-BONDS-REQUEST"],
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args) {
+                    Object.entries(args).forEach(([key, value]) => {
+                        if (value) {
+                            params.append(key, value);
+                        }
+                    });
+                }
+
+                return {
+                    url: `/bond-request/my-bond-requests`,
+                    method: "GET",
+                    params
+                };
+            },
+            providesTags: ["BONDS"],
         }),
 
 
@@ -29,8 +41,19 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "GET",
                 body: id,
             }),
-            providesTags: ["MATCHING_BONDS"],
+            providesTags: ["BONDS"],
         }),
+
+        // GET MY BOND SELECT ITEMS
+        getMyBondSelectItems: builder.query({
+            query: () => ({
+                url: "/bond/get-filter-items",
+                method: "GET",
+            }),
+            providesTags: ["BONDS"],
+        }),
+
+        // =================================================================================
 
         // CREATE MY BOND
         createMyBond: builder.mutation({
@@ -39,7 +62,7 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["MY-BONDS"],
+            invalidatesTags: ["BONDS"],
         }),
 
         // CREATE BOND REQUEST
@@ -49,7 +72,7 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["MY-BONDS-REQUEST"],
+            invalidatesTags: ["BONDS"],
         }),
 
         // UPDATE MY BOND
@@ -59,7 +82,7 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data,
             }),
-            invalidatesTags: ["MY-BONDS"],
+            invalidatesTags: ["BONDS"],
         }),
 
         // DELETE MY BOND
@@ -68,7 +91,7 @@ const bondsApi = baseApi.injectEndpoints({
                 url: `/bond/delete/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["MY-BONDS"],
+            invalidatesTags: ["BONDS"],
         }),
 
         // UPDATE BOND REQUEST
@@ -78,7 +101,7 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data,
             }),
-            invalidatesTags: ["MY-BONDS-REQUEST"],
+            invalidatesTags: ["BONDS"],
         }),
 
         // DELETE BOND REQUEST
@@ -87,11 +110,11 @@ const bondsApi = baseApi.injectEndpoints({
                 url: `/bond-request/delete/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["MY-BONDS-REQUEST"],
+            invalidatesTags: ["BONDS"],
         }),
 
 
     }),
 });
 
-export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteBondMutation } = bondsApi;
+export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery } = bondsApi;

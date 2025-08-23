@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { useCreateRequestBondMutation } from '@/lib/features/api/bondsApi';
+import { useUpdateRequestBondMutation } from '@/lib/features/api/bondsApi';
 import { toast } from 'sonner';
 import {
   Dialog,
@@ -27,9 +27,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-const MapPicker = dynamic(() => import('./MapPicker'), { ssr: false });
-
-const defaultLocation = { lat: -34.6037, lng: -58.3816 };
+const MapPicker = dynamic(() => import('../my-bonds/MapPicker'), { ssr: false });
 
 const formSchema = z.object({
   offer: z.string().min(1, { message: 'Offer is required.' }),
@@ -44,36 +42,33 @@ const formSchema = z.object({
     .refine((val) => val !== null, { message: 'Please select a location from the map.' }),
 });
 
-export default function AddNewBondRequestModal({ isOpen, onOpenChange }) {
-  const [createRequestBond, { isLoading }] = useCreateRequestBondMutation();
+export default function EditBondRequestModal({ isOpen, onOpenChange, request }) {
+  const [updateRequestBond, { isLoading }] = useUpdateRequestBondMutation();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
-    defaultValues: {
-      offer: '',
-      want: '',
-      radius: 5,
-      location: defaultLocation,
-    },
   });
 
   const { reset, setValue, watch, formState: { errors } } = form;
   const location = watch('location');
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && request) {
       reset({
-        offer: '',
-        want: '',
-        radius: 5,
-        location: defaultLocation,
+        offer: request.offer,
+        want: request.want,
+        radius: request.radius,
+        location: {
+            lat: request.location.coordinates[1],
+            lng: request.location.coordinates[0],
+        },
       });
     }
-  }, [isOpen, reset]);
+  }, [isOpen, request, reset]);
 
   const onSubmit = async (values) => {
-    const newBondRequest = {
+    const updatedBondRequest = {
       offer: values.offer,
       want: values.want,
       location: {
@@ -84,11 +79,11 @@ export default function AddNewBondRequestModal({ isOpen, onOpenChange }) {
     };
 
     try {
-      await createRequestBond(newBondRequest).unwrap();
-      toast.success('Bond request created successfully!');
+      await updateRequestBond({ id: request._id, data: updatedBondRequest }).unwrap();
+      toast.success('Bond request updated successfully!');
       onOpenChange(false);
     } catch (error) {
-      toast.error(error?.data?.message || 'Failed to create bond request.');
+      toast.error(error?.data?.message || 'Failed to update bond request.');
     }
   };
 
@@ -96,7 +91,7 @@ export default function AddNewBondRequestModal({ isOpen, onOpenChange }) {
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create Bond Request</DialogTitle>
+          <DialogTitle>Edit Bond Request</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
@@ -109,7 +104,6 @@ export default function AddNewBondRequestModal({ isOpen, onOpenChange }) {
                     <FormLabel>Offer</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="e.g., A study table"
                         {...field}
                         aria-invalid={errors.offer ? 'true' : 'false'}
                         className={errors.offer ? 'border-red-500' : ''}
@@ -127,7 +121,6 @@ export default function AddNewBondRequestModal({ isOpen, onOpenChange }) {
                     <FormLabel>Want</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="e.g., A bookshelf"
                         {...field}
                         aria-invalid={errors.want ? 'true' : 'false'}
                         className={errors.want ? 'border-red-500' : ''}
@@ -177,7 +170,7 @@ export default function AddNewBondRequestModal({ isOpen, onOpenChange }) {
                 </Button>
               </DialogClose>
               <Button loading={isLoading} type="submit" disabled={isLoading}>
-                Create Request
+                Save Changes
               </Button>
             </DialogFooter>
           </form>

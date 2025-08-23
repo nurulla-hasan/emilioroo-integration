@@ -7,7 +7,7 @@ const institutionApi = baseApi.injectEndpoints({
 
         // GET ALL INSTITUTION
         getAllInstitution: builder.query({
-                        query: (args) => {
+            query: (args) => {
                 const params = new URLSearchParams();
                 if (args !== undefined && args.length > 0) {
                     args.forEach((item) => {
@@ -55,7 +55,7 @@ const institutionApi = baseApi.injectEndpoints({
         }),
 
         // GET CONVERSATION COMMENTS
-                getConversationComments: builder.query({
+        getConversationComments: builder.query({
             query: (id) => ({
                 url: `/comment/get-conversation-comments/${id}`,
                 method: "GET",

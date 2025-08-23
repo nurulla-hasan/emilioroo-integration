@@ -3,7 +3,7 @@
 import { CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { MapPin, Star, Pause, Trash2 } from 'lucide-react'
+import { MapPin, Star, Pause } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const defaultBond = {
@@ -19,7 +19,6 @@ const defaultBond = {
 export default function MatchingBondCard({
   bond = defaultBond,
   onPause,
-  onDelete,
   onRate,
   onConfirm,
 }) {
@@ -70,12 +69,6 @@ export default function MatchingBondCard({
               onClick={() => onPause?.(bond.id)}
             >
               <Pause className="h-4 w-4" />
-            </button>
-            <button
-              aria-label="Delete"
-              onClick={() => onDelete?.(bond.id)}
-            >
-              <Trash2 className="h-4 w-4" />
             </button>
           </div>
         </div>

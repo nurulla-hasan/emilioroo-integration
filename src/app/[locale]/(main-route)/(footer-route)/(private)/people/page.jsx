@@ -26,9 +26,9 @@ const PeoplePage = () => {
     return (
         <div className="min-h-minus-header">
             <PageLayout>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mb-6">
                     <Title>Find People</Title>
-                    <div className="relative mb-6 flex items-center space-x-4">
+                    <div className="relative flex items-center space-x-4">
                         <Search className="h-4 w-4 text-muted-foreground absolute left-2" />
                         <Input
                             type="text"

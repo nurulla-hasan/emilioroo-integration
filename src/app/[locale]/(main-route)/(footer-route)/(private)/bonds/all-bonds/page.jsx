@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import EditBondModal from '@/components/bonds/all-bonds/my-bonds/EditBondModal';
 import AddNewBondModal from '@/components/bonds/all-bonds/my-bonds/AddNewBondModal';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 const AllBonds = () => {
     const [createMyBond, { isLoading: isCreatingBond }] = useCreateMyBondMutation();
@@ -79,12 +80,15 @@ const AllBonds = () => {
         <div className='min-h-minus-header'>
             <PageLayout>
                 <Tabs defaultValue="my-bonds" className="w-full">
-                    <TabsList className="flex flex-wrap justify-center md:grid md:grid-cols-4 w-full">
-                        <TabsTrigger value="my-bonds">My Bonds</TabsTrigger>
-                        <TabsTrigger value="bond-request">Bond Request</TabsTrigger>
-                        <TabsTrigger value="ongoing-bonds">Ongoing Bonds</TabsTrigger>
-                        <TabsTrigger value="completed-bonds">Completed Bonds</TabsTrigger>
-                    </TabsList>
+                    <ScrollArea className="w-full">
+                        <TabsList className="flex justify-center md:grid md:grid-cols-4">
+                            <TabsTrigger value="my-bonds">My Bonds</TabsTrigger>
+                            <TabsTrigger value="bond-request">Bond Request</TabsTrigger>
+                            <TabsTrigger value="ongoing-bonds">Ongoing Bonds</TabsTrigger>
+                            <TabsTrigger value="completed-bonds">Completed Bonds</TabsTrigger>
+                        </TabsList>
+                        <ScrollBar orientation='horizontal'/>
+                    </ScrollArea>
                     <TabsContent value="my-bonds">
                         <div className="mt-4">
                             <MyBonds

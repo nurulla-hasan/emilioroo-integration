@@ -12,6 +12,7 @@ import CreateInstitutionModal from "@/components/institutions/modal/CreateInstit
 import UpdateInstitutionModal from "@/components/institutions/modal/UpdateInstitutionModal";
 import { useTranslations } from "next-intl";
 import AllInstitutionsTab from "@/components/institutions/all-institutions/AllInstitutionsTab";
+import Title from "@/components/ui/Title";
 
 const InstitutionsPage = () => {
     const t = useTranslations('Institutions');
@@ -54,7 +55,7 @@ const InstitutionsPage = () => {
         <div className="min-h-minus-header">
             <PageLayout>
                 <div className="flex flex-col md:flex-row items-center justify-between">
-                    <h1 className="text-xl md:text-2xl font-bold text-primary mb-4 md:mb-0 dark:text-white">{t('bePartOfIt')}</h1>
+                    <Title>{t('bePartOfIt')}</Title>
                     <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
                         <div className="relative w-full md:w-[250px]">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

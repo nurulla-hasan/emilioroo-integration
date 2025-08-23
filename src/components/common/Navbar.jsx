@@ -62,8 +62,8 @@ const Navbar = () => {
 
 
     return (
-        <nav className="h-[80px] ">
-            <div className="bg-primary dark:bg-accent max-w-[1920px] mx-auto fixed top-0 left-0 right-0 z-50">
+        <nav className="h-[80px]">
+            <div className="bg-primary dark:bg-accent max-w-[1920px] mx-auto fixed top-0 left-0 right-0 z-[1100]">
                 <div className="max-w-[1400] mx-auto px-4 xl:px-0 py-2">
                     <div className="flex items-center justify-between h-16">
                         {/* Mobile menu */}

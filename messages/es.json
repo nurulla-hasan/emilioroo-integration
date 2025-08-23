@@ -42,7 +42,10 @@
     "enterYourLocation": "Ingresa tu ubicación",
     "radiusKm": "Radio (Km):",
     "matchingBonds": "Vínculos Coincidentes",
-    "searchBond": "Buscar Vínculo"
+    "searchBond": "Buscar Vínculo",
+    "bondRequests": "Solicitudes de Bonos",
+    "createBondRequest": "Crear Solicitud de Bono",
+    "createANewBondRequest": "Crear un Nuevo Vínculo de Bonos"
   },
   "MyBonds": {
     "addNewBond": "Añadir Nuevo Vínculo",

@@ -159,145 +159,6 @@ body {
 /* Custom animation */
 /* Add these animations to your global CSS file */
 
-@keyframes float-0 {
-  0%,
-  100% {
-    transform: translateY(0px) translateX(0px) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-20px) translateX(10px) rotate(90deg);
-  }
-  50% {
-    transform: translateY(-10px) translateX(-10px) rotate(180deg);
-  }
-  75% {
-    transform: translateY(-30px) translateX(5px) rotate(270deg);
-  }
-}
-
-@keyframes float-1 {
-  0%,
-  100% {
-    transform: translateY(0px) translateX(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-25px) translateX(-15px) rotate(120deg);
-  }
-  66% {
-    transform: translateY(-5px) translateX(15px) rotate(240deg);
-  }
-}
-
-@keyframes float-2 {
-  0%,
-  100% {
-    transform: translateY(0px) translateX(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-35px) translateX(20px) rotate(180deg);
-  }
-}
-
-@keyframes float-3 {
-  0%,
-  100% {
-    transform: translateY(0px) translateX(0px) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-15px) translateX(-20px) rotate(90deg);
-  }
-  50% {
-    transform: translateY(-25px) translateX(10px) rotate(180deg);
-  }
-  75% {
-    transform: translateY(-10px) translateX(-5px) rotate(270deg);
-  }
-}
-
-@keyframes music-float-0 {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.2;
-  }
-  50% {
-    transform: translateY(-30px) rotate(180deg);
-    opacity: 0.4;
-  }
-}
-
-@keyframes music-float-1 {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.1;
-  }
-  33% {
-    transform: translateY(-20px) rotate(120deg);
-    opacity: 0.3;
-  }
-  66% {
-    transform: translateY(-40px) rotate(240deg);
-    opacity: 0.2;
-  }
-}
-
-@keyframes music-float-2 {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.3;
-  }
-  50% {
-    transform: translateY(-25px) rotate(180deg);
-    opacity: 0.1;
-  }
-}
-
-@keyframes music-float-3 {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.2;
-  }
-  25% {
-    transform: translateY(-35px) rotate(90deg);
-    opacity: 0.4;
-  }
-  75% {
-    transform: translateY(-15px) rotate(270deg);
-    opacity: 0.1;
-  }
-}
-
-@keyframes music-float-4 {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.15;
-  }
-  40% {
-    transform: translateY(-45px) rotate(144deg);
-    opacity: 0.35;
-  }
-  80% {
-    transform: translateY(-10px) rotate(288deg);
-    opacity: 0.25;
-  }
-}
-
-@keyframes music-float-5 {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.25;
-  }
-  60% {
-    transform: translateY(-30px) rotate(216deg);
-    opacity: 0.4;
-  }
-}
-
 @keyframes bounce-slow {
   0%,
   100% {
@@ -305,25 +166,6 @@ body {
   }
   50% {
     transform: translateY(-20px);
-  }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
-  }
-}
-
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }
 
@@ -345,95 +187,6 @@ body {
   to {
     opacity: 1;
     transform: translateY(0px);
-  }
-}
-
-@keyframes equalizer {
-  0%,
-  100% {
-    height: 20px;
-  }
-  50% {
-    height: 40px;
-  }
-}
-
-/* ENHANCED PULSE WAVE ANIMATIONS */
-
-@keyframes mega-pulse-wave {
-  0% {
-    opacity: 0.1;
-    transform: scale(0.8) translateY(0px) translateX(0px);
-  }
-  25% {
-    opacity: 0.4;
-    transform: scale(1.3) translateY(-15px) translateX(10px);
-  }
-  50% {
-    opacity: 0.25;
-    transform: scale(1.1) translateY(-8px) translateX(-5px);
-  }
-  75% {
-    opacity: 0.35;
-    transform: scale(1.2) translateY(-12px) translateX(8px);
-  }
-  100% {
-    opacity: 0.1;
-    transform: scale(0.8) translateY(0px) translateX(0px);
-  }
-}
-
-@keyframes large-heartbeat-pulse {
-  0% {
-    opacity: 0.15;
-    transform: scale(1) translateY(0px);
-  }
-  15% {
-    opacity: 0.4;
-    transform: scale(1.4) translateY(-10px);
-  }
-  30% {
-    opacity: 0.2;
-    transform: scale(1.1) translateY(-3px);
-  }
-  45% {
-    opacity: 0.45;
-    transform: scale(1.5) translateY(-12px);
-  }
-  60% {
-    opacity: 0.18;
-    transform: scale(1.05) translateY(-2px);
-  }
-  100% {
-    opacity: 0.15;
-    transform: scale(1) translateY(0px);
-  }
-}
-
-@keyframes rhythm-pulse-wave {
-  0% {
-    opacity: 0.12;
-    transform: scale(1) rotate(0deg) translateX(0px);
-  }
-  20% {
-    opacity: 0.35;
-    transform: scale(1.3) rotate(5deg) translateX(5px);
-  }
-  40% {
-    opacity: 0.2;
-    transform: scale(1.1) rotate(-2deg) translateX(-2px);
-  }
-  60% {
-    opacity: 0.4;
-    transform: scale(1.25) rotate(3deg) translateX(3px);
-  }
-  80% {
-    opacity: 0.18;
-    transform: scale(1.05) rotate(-1deg) translateX(-1px);
-  }
-  100% {
-    opacity: 0.12;
-    transform: scale(1) rotate(0deg) translateX(0px);
   }
 }
 
@@ -495,137 +248,23 @@ body {
   }
 }
 
-@keyframes pulse-dot-rhythm {
-  0% {
-    opacity: 0.1;
-    transform: scale(1);
-  }
-  25% {
-    opacity: 0.4;
-    transform: scale(1.8);
-  }
-  50% {
-    opacity: 0.2;
-    transform: scale(1.3);
-  }
-  75% {
-    opacity: 0.35;
-    transform: scale(1.6);
-  }
-  100% {
-    opacity: 0.1;
-    transform: scale(1);
-  }
-}
-
-@keyframes expanding-pulse-ring {
-  0% {
-    opacity: 0.3;
-    transform: scale(0.5);
-  }
-  50% {
-    opacity: 0.1;
-    transform: scale(2.5);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(4);
-  }
-}
-
-@keyframes pulse-dot {
-  0%,
-  100% {
-    opacity: 0.2;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.5);
-  }
-}
-
 /* Apply animations */
-.animate-float-0 {
-  animation: float-0 8s ease-in-out infinite;
-}
-.animate-float-1 {
-  animation: float-1 10s ease-in-out infinite;
-}
-.animate-float-2 {
-  animation: float-2 12s ease-in-out infinite;
-}
-.animate-float-3 {
-  animation: float-3 9s ease-in-out infinite;
-}
-
-.animate-music-float-0 {
-  animation: music-float-0 12s ease-in-out infinite;
-}
-.animate-music-float-1 {
-  animation: music-float-1 15s ease-in-out infinite;
-}
-.animate-music-float-2 {
-  animation: music-float-2 10s ease-in-out infinite;
-}
-.animate-music-float-3 {
-  animation: music-float-3 13s ease-in-out infinite;
-}
-.animate-music-float-4 {
-  animation: music-float-4 11s ease-in-out infinite;
-}
-.animate-music-float-5 {
-  animation: music-float-5 14s ease-in-out infinite;
-}
-
 .animate-bounce-slow {
   animation: bounce-slow 3s ease-in-out infinite;
 }
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-.animate-spin-slow {
-  animation: spin-slow 20s linear infinite;
-}
+
 .animate-bounce-gentle {
   animation: bounce-gentle 2s ease-in-out infinite;
 }
 .animate-fade-in-up {
   animation: fade-in-up 3s ease-out forwards;
 }
-.animate-equalizer {
-  animation: equalizer 3s ease-in-out infinite;
-}
 
 /* Enhanced Pulse Wave Animations */
-.animate-mega-pulse-wave {
-  animation: mega-pulse-wave 4s ease-in-out infinite;
-}
-
-.animate-large-heartbeat-pulse {
-  animation: large-heartbeat-pulse 3.5s ease-in-out infinite;
-}
-
-.animate-rhythm-pulse-wave {
-  animation: rhythm-pulse-wave 4.5s ease-in-out infinite;
-}
-
 .animate-quick-pulse-wave {
   animation: quick-pulse-wave 4.8s ease-in-out infinite;
 }
 
 .animate-ekg-pulse-complex {
   animation: ekg-pulse-complex 5s ease-in-out infinite;
-}
-
-.animate-pulse-dot-rhythm {
-  animation: pulse-dot-rhythm 4s ease-in-out infinite;
-}
-
-.animate-expanding-pulse-ring {
-  animation: expanding-pulse-ring 4s ease-out infinite;
-}
-
-.animate-pulse-dot {
-  animation: pulse-dot 4.5s ease-in-out infinite;
 }

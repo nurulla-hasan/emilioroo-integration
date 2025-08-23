@@ -26,7 +26,7 @@ const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
 
   return (
     <>
-      <Card className="overflow-hidden rounded-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
+      <Card>
         <div className="relative w-full h-48 cursor-pointer" onClick={() => setIsProjectDetailsModalOpen(true)}>
           <Image
             src={project.cover_image || "/images/placeholder-image.jpg"}
