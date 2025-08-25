@@ -6,7 +6,7 @@ import { ConversationList } from "@/components/message/ConversationList";
 import { MessagePanel } from "@/components/message/MessagePanel";
 import { MediaPanel } from "@/components/message/MediaPanel";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { fakeConversations, fakeMessages } from "@/components/message/data";
+import { fakeConversations, fakeMessages, fakeMediaByConversation } from "@/components/message/data";
 
 const MessagePage = () => {
     const [activeConversation, setActiveConversation] = useState(fakeConversations[0]);
@@ -78,7 +78,7 @@ const MessagePage = () => {
                         )}
                     </div>
                     <div className="hidden xl:flex w-1/4 border-l">
-                        <MediaPanel />
+                        <MediaPanel media={activeConversation ? fakeMediaByConversation[activeConversation.id] : []} />
                     </div>
                 </div>
 
@@ -88,7 +88,7 @@ const MessagePage = () => {
                             <SheetTitle>Media and files</SheetTitle>
                             <SheetDescription>Media and files shared in this conversation.</SheetDescription>
                         </SheetHeader>
-                        <MediaPanel />
+                        <MediaPanel media={activeConversation ? fakeMediaByConversation[activeConversation.id] : []} />
                     </SheetContent>
                 </Sheet>
             </div>
