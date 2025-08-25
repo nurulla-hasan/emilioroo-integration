@@ -52,6 +52,26 @@ const bondsApi = baseApi.injectEndpoints({
             providesTags: ["BONDS"],
         }),
 
+        // GETYY ONGOING BONDS
+        getOngoingBonds: builder.query({
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args) {
+                    Object.entries(args).forEach(([key, value]) => {
+                        if (value) {
+                            params.append(key, value);
+                        }
+                    });
+                }
+                return {
+                    url: "/bond-link/my-bond-links",
+                    method: "GET",
+                    params
+                }
+            },
+            providesTags: ["BONDS"],
+        }),
+
         // =================================================================================
 
         // CREATE MY BOND
@@ -112,8 +132,18 @@ const bondsApi = baseApi.injectEndpoints({
             invalidatesTags: ["BONDS"],
         }),
 
+        // CREATE BOND LINK
+        createBondLink: builder.mutation({
+            query: (data) => ({
+                url: "/bond-link/create",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["BONDS"],
+        }),
+
 
     }),
 });
 
-export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery } = bondsApi;
+export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation } = bondsApi;

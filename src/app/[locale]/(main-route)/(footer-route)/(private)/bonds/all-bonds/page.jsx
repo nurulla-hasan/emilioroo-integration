@@ -11,6 +11,8 @@ import EditBondModal from '@/components/bonds/all-bonds/my-bonds/EditBondModal';
 import AddNewBondModal from '@/components/bonds/all-bonds/my-bonds/AddNewBondModal';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import OngoingBonds from '@/components/bonds/all-bonds/ongoing-bonds/OngoingBonds';
+import CompletedBonds from '@/components/bonds/all-bonds/completed-bonds/CompletedBonds';
 
 const AllBonds = () => {
     const [createMyBond, { isLoading: isCreatingBond }] = useCreateMyBondMutation();
@@ -105,13 +107,13 @@ const AllBonds = () => {
                         </div>
                     </TabsContent>
                     <TabsContent value="ongoing-bonds">
-                        <div className="p-4 border rounded-md mt-4">
-                            Ongoing Bonds Content
+                        <div className="mt-4">
+                            <OngoingBonds />
                         </div>
                     </TabsContent>
                     <TabsContent value="completed-bonds">
-                        <div className="p-4 border rounded-md mt-4">
-                            Completed Bonds Content
+                        <div className="mt-4">
+                            <CompletedBonds />
                         </div>
                     </TabsContent>
                 </Tabs>

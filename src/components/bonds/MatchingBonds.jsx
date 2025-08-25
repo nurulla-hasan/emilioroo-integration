@@ -15,7 +15,7 @@ export default function MatchingBonds({ bondRequestId }) {
   if (isLoading) {
     return (
       <div className="space-y-4 p-1">
-        {[...Array(3)].map((_, i) => (
+        {[...Array(2)].map((_, i) => (
           <Skeleton key={i} className="h-40 w-full" />
         ))}
       </div>
