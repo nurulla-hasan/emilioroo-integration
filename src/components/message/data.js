@@ -12,7 +12,7 @@ export const fakeMessages = {
     ],
     2: [],
     3: [
-        { id: 1, sender: 'Md Hasibul Islam', avatar: 'https://d19ily4n4ue4ad.cloudfront.net/uploads/images/profile/1755675565059-avatar.jpg', text: 'MD আসসালামু আলাইকুম।...', time: '3w', type: 'text' },
+        { id: 1, sender: 'Md Hasibul Islam', avatar: 'https://d19ily4n4ue4ad.cloudfront.net/uploads/images/profile/1755675565059-avatar.jpg', text: 'MD আসসালামু আলাইকুম।', time: '3w', type: 'text' },
         { id: 2, sender: 'Istiyak', avatar: 'https://d19ily4n4ue4ad.cloudfront.net/uploads/images/profile/1755770786543-leaf-3707549.jpg', src: '/images/placeholder-image.jpg', time: '3w', type: 'image' },
     ],
 };
