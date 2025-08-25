@@ -13,6 +13,7 @@ import UpdateInstitutionModal from "@/components/institutions/modal/UpdateInstit
 import { useTranslations } from "next-intl";
 import AllInstitutionsTab from "@/components/institutions/all-institutions/AllInstitutionsTab";
 import Title from "@/components/ui/Title";
+import CustomBreadcrumb from "@/components/common/CustomBreadcrumb";
 
 const InstitutionsPage = () => {
     const t = useTranslations('Institutions');
@@ -51,9 +52,15 @@ const InstitutionsPage = () => {
         setIsUpdateModalOpen(true);
     };
 
+    const breadcrumbLinks = [
+        { name: 'Home', href: '/' },
+        { name: 'Institutions', href: '/institutions', isCurrent: true },
+    ]
+
     return (
         <div className="min-h-minus-header">
             <PageLayout>
+                 <CustomBreadcrumb links={breadcrumbLinks} />
                 <div className="flex flex-col md:flex-row items-center justify-between">
                     <Title>{t('bePartOfIt')}</Title>
                     <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">

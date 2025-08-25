@@ -13,6 +13,7 @@ import ProjectCardSkeleton from '@/components/skeleton/ProjectCardSkeleton';
 import LoadFailed from '@/components/common/LoadFailed';
 import { useTranslations } from "next-intl";
 import NoData from '@/components/common/NoData';
+import CustomBreadcrumb from '@/components/common/CustomBreadcrumb';
 
 
 const ObjectsPage = () => {
@@ -74,9 +75,15 @@ const ObjectsPage = () => {
         setIsCreateModalOpen(true);
     };
 
+    const breadcrumbLinks = [
+        { name: 'Home', href: '/' },
+        { name: 'Objects', href: '/objects', isCurrent: true },
+    ]
+
     return (
         <div className="min-h-minus-header">
             <PageLayout>
+                <CustomBreadcrumb links={breadcrumbLinks} />
                 <div className="flex flex-col md:flex-row items-center justify-between">
                     <h1 className="text-xl md:text-2xl font-bold text-primary mb-4 md:mb-0 dark:text-white">{t('cocreateProducts')}</h1>
                     <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">

@@ -13,6 +13,7 @@ import { fallbackAvatar, formatDate, getSocialIcon } from "@/lib/utils"
 import Image from "next/image";
 import { Link } from "@/i18n/navigation"
 import PeopleCardButton from "@/components/people/PeopleCardButton"
+import CustomBreadcrumb from "@/components/common/CustomBreadcrumb"
 
 const UserProfilePage = () => {
     const { id } = useParams()
@@ -51,11 +52,10 @@ const UserProfilePage = () => {
         )
     }
 
-
     return (
-        <div className="min-h-screen bg-background mb-4">
+        <div className="min-h-screen bg-background mb-4 relative">
             {/* Cover Image Section */}
-            <div className="relative h-80 bg-gradient-to-r from-primary/20 to-accent/20">
+            <div className="relative h-60 bg-gradient-to-r from-primary/20 to-accent/20">
                 {user.cover_image ? (
                     <Image src={user.cover_image || "/placeholder-image.jpg"} alt="Cover" fill className="object-cover" />
                 ) : (

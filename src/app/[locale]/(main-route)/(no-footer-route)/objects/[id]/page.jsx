@@ -17,6 +17,7 @@ import MembersList from "@/components/objects/single-projects/MembersList";
 import JoinRequests from "@/components/objects/single-projects/JoinRequests";
 import UpdateProjectModal from "@/components/objects/modal/UpdateProjectModal";
 import { useState } from "react";
+import CustomBreadcrumb from "@/components/common/CustomBreadcrumb";
 
 const ProjectDetailsPage = () => {
     const params = useParams();
@@ -87,6 +88,7 @@ const ProjectDetailsPage = () => {
         }
     };
 
+
     if (isLoading) {
         return (
             <PageLayout>
@@ -117,8 +119,15 @@ const ProjectDetailsPage = () => {
         );
     }
 
+    const breadcrumbLinks = [
+        { name: "Home", href: "/" },
+        { name: "Objects", href: "/objects" },
+        { name: "Project Details", isCurrent: true },
+    ];
+
     return (
         <PageLayout>
+            <CustomBreadcrumb links={breadcrumbLinks} />
             <ProjectHeader project={project} onEditProject={() => setIsUpdateProjectModalOpen(true)} />
             <div className="border rounded-lg p-4">
 

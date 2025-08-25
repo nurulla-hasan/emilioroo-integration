@@ -13,6 +13,7 @@ import ConfirmationModal from '@/components/common/ConfirmationModal';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import OngoingBonds from '@/components/bonds/all-bonds/ongoing-bonds/OngoingBonds';
 import CompletedBonds from '@/components/bonds/all-bonds/completed-bonds/CompletedBonds';
+import CustomBreadcrumb from '@/components/common/CustomBreadcrumb';
 
 const AllBonds = () => {
     const [createMyBond, { isLoading: isCreatingBond }] = useCreateMyBondMutation();
@@ -78,9 +79,16 @@ const AllBonds = () => {
         setIsAddBondModalOpen(true);
     };
 
+    const breadcrumbLinks = [
+        { name: 'Home', href: '/' },
+        { name: 'Bonds', href: '/bonds' },
+        { name: 'All Bonds', href: '/bonds/all-bonds', isCurrent: true },
+    ];
+
     return (
         <div className='min-h-minus-header'>
             <PageLayout>
+                <CustomBreadcrumb links={breadcrumbLinks} />
                 <Tabs defaultValue="my-bonds" className="w-full">
                     <ScrollArea className="w-full">
                         <TabsList className="flex justify-center md:grid md:grid-cols-4">
@@ -89,7 +97,7 @@ const AllBonds = () => {
                             <TabsTrigger value="ongoing-bonds">Ongoing Bonds</TabsTrigger>
                             <TabsTrigger value="completed-bonds">Completed Bonds</TabsTrigger>
                         </TabsList>
-                        <ScrollBar orientation='horizontal'/>
+                        <ScrollBar orientation='horizontal' />
                     </ScrollArea>
                     <TabsContent value="my-bonds">
                         <div className="mt-4">

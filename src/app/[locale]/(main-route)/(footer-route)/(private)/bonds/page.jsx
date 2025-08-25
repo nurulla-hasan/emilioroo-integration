@@ -24,6 +24,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { ArrowBigRight } from 'lucide-react';
 import MatchingBondsModal from '@/components/bonds/MatchingBondsModal';
+import CustomBreadcrumb from '@/components/common/CustomBreadcrumb';
 
 const MapPicker = dynamic(() => import('@/components/bonds/all-bonds/my-bonds/MapPicker'), { ssr: false });
 
@@ -87,7 +88,7 @@ const Bonds = () => {
       const response = await createRequestBond(newBond).unwrap();
       toast.success('Bond created successfully!');
       reset();
-      
+
       // Open MatchingBondsModal with the new bond's ID
       if (response?.data?._id) {
         setNewlyCreatedBondId(response.data._id);
@@ -101,126 +102,132 @@ const Bonds = () => {
     }
   };
 
+  const breadcrumbLinks = [
+    { name: "Home", href: "/" },
+    { name: "Bonds", isCurrent: true }
+  ];
+
   return (
     <PageLayout>
-        <div className="flex md:flex-row flex-col gap-2 justify-between items-center mb-6">
-            <Title>{bondsT('exchangeServicesGoods')}</Title>
-            <Link href="/bonds/all-bonds">
-                <Button>
-                    {bondsT('allBonds')} <ArrowBigRight className="h-4 w-4" />
-                </Button>
-            </Link>
-        </div>
+      <CustomBreadcrumb links={breadcrumbLinks} />
+      <div className="flex md:flex-row flex-col gap-2 justify-between items-center mb-6">
+        <Title>{bondsT('exchangeServicesGoods')}</Title>
+        <Link href="/bonds/all-bonds">
+          <Button>
+            {bondsT('allBonds')} <ArrowBigRight className="h-4 w-4" />
+          </Button>
+        </Link>
+      </div>
 
-        <div className="flex justify-center items-center md:p-6">
-            <Card className="w-full max-w-4xl p-3 md:p-6">
-                <Title>{t('createANewBond')}</Title>
-                <CardContent className="p-0 pt-6">
-                    <Form {...form}>
-                      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="offer"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{t('offer')}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder={t('exampleLaptop')}
-                                    {...field}
-                                    aria-invalid={errors.offer ? 'true' : 'false'}
-                                    className={errors.offer ? 'border-red-500' : ''}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+      <div className="flex justify-center items-center md:p-6">
+        <Card className="w-full max-w-4xl p-3 md:p-6">
+          <Title>{t('createANewBond')}</Title>
+          <CardContent className="p-0 pt-6">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="offer"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('offer')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={t('exampleLaptop')}
+                            {...field}
+                            aria-invalid={errors.offer ? 'true' : 'false'}
+                            className={errors.offer ? 'border-red-500' : ''}
                           />
-                          <FormField
-                            control={form.control}
-                            name="want"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{t('want')}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder={t('exampleCamera')}
-                                    {...field}
-                                    aria-invalid={errors.want ? 'true' : 'false'}
-                                    className={errors.want ? 'border-red-500' : ''}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="want"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('want')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={t('exampleCamera')}
+                            {...field}
+                            aria-invalid={errors.want ? 'true' : 'false'}
+                            className={errors.want ? 'border-red-500' : ''}
                           />
-                        </div>
-                        <FormField
-                            control={form.control}
-                            name="tag"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{t('tag')} <span className="text-muted-foreground">({t('forBetterMatching')})</span></FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder={t('exampleElectronics')}
-                                    {...field}
-                                    aria-invalid={errors.tag ? 'true' : 'false'}
-                                    className={errors.tag ? 'border-red-500' : ''}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="tag"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('tag')} <span className="text-muted-foreground">({t('forBetterMatching')})</span></FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={t('exampleElectronics')}
+                          {...field}
+                          aria-invalid={errors.tag ? 'true' : 'false'}
+                          className={errors.tag ? 'border-red-500' : ''}
                         />
-                        <FormItem>
-                          <FormLabel>Select Location</FormLabel>
-                          <FormControl>
-                            <div className="rounded-md overflow-hidden border h-64">
-                                <MapPicker
-                                  onLocationChange={onLocationChange}
-                                  center={location}
-                                />
-                            </div>
-                          </FormControl>
-                          <FormMessage>{errors.location?.message}</FormMessage>
-                        </FormItem>
-                        <FormField
-                          control={form.control}
-                          name="radius"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Radius (km)</FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="number"
-                                  {...field}
-                                  aria-invalid={errors.radius ? 'true' : 'false'}
-                                  className={errors.radius ? 'border-red-500' : ''}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormItem>
+                  <FormLabel>Select Location</FormLabel>
+                  <FormControl>
+                    <div className="rounded-md overflow-hidden border h-64">
+                      <MapPicker
+                        onLocationChange={onLocationChange}
+                        center={location}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage>{errors.location?.message}</FormMessage>
+                </FormItem>
+                <FormField
+                  control={form.control}
+                  name="radius"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Radius (km)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          aria-invalid={errors.radius ? 'true' : 'false'}
+                          className={errors.radius ? 'border-red-500' : ''}
                         />
-                        <div className="flex items-center gap-4 justify-end">
-                            <p className='text-sm text-muted-foreground'>Create a bond request and see matching bonds.</p>
-                            <Button loading={isLoading} type="submit" disabled={isLoading}>
-                                {t('createBond')}
-                            </Button>
-                        </div>
-                      </form>
-                    </Form>
-                </CardContent>
-            </Card>
-        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex items-center gap-4 justify-end">
+                  <p className='text-sm text-muted-foreground'>Create a bond request and see matching bonds.</p>
+                  <Button loading={isLoading} type="submit" disabled={isLoading}>
+                    {t('createBond')}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </div>
 
-        <MatchingBondsModal
-          isOpen={isMatchModalOpen}
-          onOpenChange={setIsMatchModalOpen}
-          bondRequestId={newlyCreatedBondId}
-        />
+      <MatchingBondsModal
+        isOpen={isMatchModalOpen}
+        onOpenChange={setIsMatchModalOpen}
+        bondRequestId={newlyCreatedBondId}
+      />
     </PageLayout>
   );
 }

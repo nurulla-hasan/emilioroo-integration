@@ -12,7 +12,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends }) => {
 
     return (
         <div className="relative w-full">
-            <div className="relative w-full h-80">
+            <div className="relative w-full h-60">
                 <div className="relative h-full w-full">
                     <Image src={user.cover_image || "/images/placeholder-image.jpg"} alt="Cover Image" fill className="object-cover" priority />
                 </div>

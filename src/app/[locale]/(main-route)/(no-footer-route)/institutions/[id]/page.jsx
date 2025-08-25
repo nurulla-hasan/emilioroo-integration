@@ -16,6 +16,7 @@ import InstitutionHeader from "@/components/institutions/single-institution/Inst
 import InstitutionHeaderSkeleton from "@/components/skeleton/InstitutionHeaderSkeleton";
 import MediatorsSkeleton from "@/components/skeleton/MediatorsSkeleton";
 import InstitutionContentSkeleton from "@/components/skeleton/InstitutionContentSkeleton";
+import CustomBreadcrumb from "@/components/common/CustomBreadcrumb";
 
 const SingleInstitutionPage = () => {
     const { id } = useParams();
@@ -129,99 +130,108 @@ const SingleInstitutionPage = () => {
         }
     };
 
+    const breadcrumbLinks = [
+        { name: "Home", href: "/" },
+        { name: "Institutions", href: "/institutions" },
+        { name: "Institution Details", href: `/institutions/${id}`, isCurrent: true },
+    ];
+
     return (
-        <div className="h-[calc(100vh-80px)] overflow-hidden grid grid-cols-1 md:grid-cols-12 gap-8 p-2">
-            {/* Sidebar */}
-            <div className="hidden xl:block col-span-3 border rounded-lg p-4 overflow-y-auto">
-                <div className="flex flex-col gap-2">
-                    {areAllInstitutionsLoading ? (
-                        <InstitutionNavCardSkeleton count={7} />
-                    ) : areAllInstitutionsError ? (
-                        <p className="text-red-500">Error loading institutions.</p>
+        <>
+            <div className='mt-2 ml-2 hidden md:block'> <CustomBreadcrumb links={breadcrumbLinks} /></div>
+            <div className="h-[calc(100vh-108px)] md:-mt-4 overflow-hidden grid grid-cols-1 md:grid-cols-12 gap-8 p-2">
+                {/* Sidebar */}
+                <div className="hidden xl:block col-span-3 border rounded-lg p-4 overflow-y-auto">
+                    <div className="flex flex-col gap-2">
+                        {areAllInstitutionsLoading ? (
+                            <InstitutionNavCardSkeleton count={7} />
+                        ) : areAllInstitutionsError ? (
+                            <p className="text-red-500">Error loading institutions.</p>
+                        ) : (
+                            allInstitutions && allInstitutions.map(inst => (
+                                <InstitutionNavCard key={inst._id} institution={inst} isActive={inst._id === id} />
+                            ))
+                        )}
+                    </div>
+                </div>
+                {/* Main content */}
+                <div className="col-span-12 xl:col-span-9 overflow-y-auto border p-3 rounded-lg">
+                    {isSingleInstitutionLoading ? (
+                        <>
+                            <InstitutionHeaderSkeleton />
+                            <MediatorsSkeleton />
+                            <InstitutionContentSkeleton />
+                        </>
+                    ) : isSingleInstitutionError ? (
+                        <p className="text-red-500">Error loading institution.</p>
                     ) : (
-                        allInstitutions && allInstitutions.map(inst => (
-                            <InstitutionNavCard key={inst._id} institution={inst} isActive={inst._id === id} />
-                        ))
+                        institution && (
+                            <>
+                                <InstitutionHeader institution={institution} />
+                                <Mediators mediators={mediators} />
+                                <InstitutionContent
+                                    institution={institution}
+                                    innovators={innovators}
+                                    thinkers={thinkers}
+                                    topics={institutionConversations}
+                                    selectedTopic={selectedTopic}
+                                    onTopicClick={handleTopicClick}
+                                    onEditTopic={handleEditConversationClick}
+                                    onDeleteTopic={handleDeleteConversationClick}
+                                    onRemoveMember={handleRemoveMemberClick}
+                                    onCreateConversationClick={handleCreateConversationClick}
+                                    isLoading={areInstitutionConversationsLoading}
+                                    error={areInstitutionConversationsError}
+                                />
+                                <PostFeed
+                                    posts={conversationComments}
+                                    selectedTopic={selectedTopic}
+                                    isFetching={isFetchingConversationComments}
+                                    isError={areConversationCommentsError}
+                                />
+                            </>
+                        )
                     )}
                 </div>
+
+                {/* Confirmation Modals */}
+                <ConfirmationModal
+                    isOpen={isConfirmModalOpen}
+                    onOpenChange={setIsConfirmModalOpen}
+                    title="Confirm Removal"
+                    description="Are you sure you want to remove this member? This action cannot be undone."
+                    onConfirm={handleConfirmRemove}
+                    confirmText="Remove"
+                    loading={isRemovingMember}
+                />
+
+                <ConfirmationModal
+                    isOpen={isDeleteConversationModalOpen}
+                    onOpenChange={setIsDeleteConversationModalOpen}
+                    title="Confirm Deletion"
+                    description="Are you sure you want to delete this conversation? This action cannot be undone."
+                    onConfirm={handleConfirmDeleteConversation}
+                    confirmText="Delete"
+                    loading={isDeletingConversation}
+                />
+
+                {/*{/* Modals */}
+                <CreateConversationModal
+                    isOpen={isCreateConversationModalOpen}
+                    onOpenChange={setIsCreateConversationModalOpen}
+                    onCreateConversation={handleCreateConversation}
+                    isLoading={isCreatingConversation}
+                />
+                {/* <EditConversationModal */}
+                <EditConversationModal
+                    isOpen={isEditConversationModalOpen}
+                    onOpenChange={setIsEditConversationModalOpen}
+                    onUpdateConversation={handleUpdateConversation}
+                    isLoading={isUpdatingConversation}
+                    topic={selectedConversation}
+                />
             </div>
-            {/* Main content */}
-            <div className="col-span-12 xl:col-span-9 overflow-y-auto border p-3 rounded-lg">
-                {isSingleInstitutionLoading ? (
-                    <>
-                        <InstitutionHeaderSkeleton />
-                        <MediatorsSkeleton />
-                        <InstitutionContentSkeleton />
-                    </>
-                ) : isSingleInstitutionError ? (
-                    <p className="text-red-500">Error loading institution.</p>
-                ) : (
-                    institution && (
-                        <>
-                            <InstitutionHeader institution={institution} />
-                            <Mediators mediators={mediators} />
-                            <InstitutionContent
-                                institution={institution}
-                                innovators={innovators}
-                                thinkers={thinkers}
-                                topics={institutionConversations}
-                                selectedTopic={selectedTopic}
-                                onTopicClick={handleTopicClick}
-                                onEditTopic={handleEditConversationClick}
-                                onDeleteTopic={handleDeleteConversationClick}
-                                onRemoveMember={handleRemoveMemberClick}
-                                onCreateConversationClick={handleCreateConversationClick}
-                                isLoading={areInstitutionConversationsLoading}
-                                error={areInstitutionConversationsError}
-                            />
-                            <PostFeed
-                                posts={conversationComments}
-                                selectedTopic={selectedTopic}
-                                isFetching={isFetchingConversationComments}
-                                isError={areConversationCommentsError}
-                            />
-                        </>
-                    )
-                )}
-            </div>
-
-            {/* Confirmation Modals */}
-            <ConfirmationModal
-                isOpen={isConfirmModalOpen}
-                onOpenChange={setIsConfirmModalOpen}
-                title="Confirm Removal"
-                description="Are you sure you want to remove this member? This action cannot be undone."
-                onConfirm={handleConfirmRemove}
-                confirmText="Remove"
-                loading={isRemovingMember}
-            />
-
-            <ConfirmationModal
-                isOpen={isDeleteConversationModalOpen}
-                onOpenChange={setIsDeleteConversationModalOpen}
-                title="Confirm Deletion"
-                description="Are you sure you want to delete this conversation? This action cannot be undone."
-                onConfirm={handleConfirmDeleteConversation}
-                confirmText="Delete"
-                loading={isDeletingConversation}
-            />
-
-            {/*{/* Modals */}
-            <CreateConversationModal
-                isOpen={isCreateConversationModalOpen}
-                onOpenChange={setIsCreateConversationModalOpen}
-                onCreateConversation={handleCreateConversation}
-                isLoading={isCreatingConversation}
-            />
-            {/* <EditConversationModal */}
-            <EditConversationModal
-                isOpen={isEditConversationModalOpen}
-                onOpenChange={setIsEditConversationModalOpen}
-                onUpdateConversation={handleUpdateConversation}
-                isLoading={isUpdatingConversation}
-                topic={selectedConversation}
-            />
-        </div>
+        </>
     );
 };
 

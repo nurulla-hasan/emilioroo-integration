@@ -80,7 +80,7 @@ const ProfilePage = () => {
     }
 
     return (
-        <div className="bg-gradient-to-r from-green-300 to-indigo-400  dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 pb-5">
+        <div className="bg-gradient-to-r from-green-200 to-indigo-300  dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 pb-5">
             <div>
                 <Card className="rounded-none overflow-hidden shadow-none bg-transparent border-none"> 
                     <ProfileHeader user={user} userSkills={userSkills} mother={mother} father={father} friends={friends} />
