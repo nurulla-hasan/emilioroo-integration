@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from 'next/image';
+import { timeAgo } from "@/lib/utils";
 
 export const Message = ({ msg }) => {
     if (msg.sender === 'me') {
@@ -10,7 +11,7 @@ export const Message = ({ msg }) => {
                 <div className={`p-3 rounded-2xl max-w-md bg-primary text-primary-foreground dark:text-white rounded-br-none`}>
                     {msg.type === 'text' && <p>{msg.text}</p>}
                     {msg.type === 'image' && <Image src={msg.src} alt="sent image" width={200} height={150} className="rounded-lg" />}
-                    <p className="text-xs text-right mt-1 opacity-70">{msg.time}</p>
+                    <p className="text-xs text-right mt-1 opacity-70">{timeAgo(msg.time)}</p>
                 </div>
             </div>
         );
@@ -27,7 +28,7 @@ export const Message = ({ msg }) => {
                 <div className={`p-3 rounded-2xl max-w-md bg-muted rounded-bl-none`}>
                     {msg.type === 'text' && <p>{msg.text}</p>}
                     {msg.type === 'image' && <Image src={msg.src} alt="sent image" width={200} height={150} className="rounded-lg" />}
-                    <p className="text-xs text-right mt-1 opacity-70">{msg.time}</p>
+                    <p className="text-xs text-right mt-1 opacity-70">{timeAgo(msg.time)}</p>
                 </div>
             </div>
         </div>

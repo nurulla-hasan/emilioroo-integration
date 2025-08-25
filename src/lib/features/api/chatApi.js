@@ -5,14 +5,25 @@ const chatApi = baseApi.injectEndpoints({
 
         // GET CHAT LIST
         getChatList: builder.query({
-            query: () => ({
-                url: "/conversation/get-chat-list",
-                method: "GET",
-            }),
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args) {
+                    Object.entries(args).forEach(([key, value]) => {
+                        if (value) {
+                            params.append(key, value);
+                        }
+                    });
+                }
+                return {
+                    url: "/conversation/get-chat-list",
+                    method: "GET",
+                    params
+                }
+            },
             providesTags: ["CONVERSATIONS"],
         }),
 
-        
+
     }),
 });
 

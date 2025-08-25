@@ -1,18 +1,48 @@
-
-'use client';
-
-import { useState } from 'react';
+"use client";
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { ConversationList } from "@/components/message/ConversationList";
 import { MessagePanel } from "@/components/message/MessagePanel";
 import { MediaPanel } from "@/components/message/MediaPanel";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { fakeConversations, fakeMessages, fakeMediaByConversation } from "@/components/message/data";
+import { fakeMessages, fakeMediaByConversation } from "@/components/message/data";
+import { useGetChatListQuery } from "@/lib/features/api/chatApi";
+import { Skeleton } from "@/components/ui/skeleton";
+import LoadFailed from "@/components/common/LoadFailed";
+import { fallbackAvatar, timeAgo } from "@/lib/utils";
 
 const MessagePage = () => {
-    const [activeConversation, setActiveConversation] = useState(fakeConversations[0]);
-    const [messages, setMessages] = useState(fakeMessages[fakeConversations[0].id]);
+    const [searchTerm, setSearchTerm] = useState('');
+    console.log(searchTerm);
+    const { data: chatListData, isLoading: isChatListLoading, isError: isChatListError } = useGetChatListQuery(
+        {
+            searchTerm
+        }
+    );
+
+    const conversations = useMemo(() => {
+        return chatListData?.data?.data?.map(conv => ({
+            id: conv._id,
+            name: conv.type === 'group' ? conv.bondLink.name : conv.userData.name,
+            avatar: conv.userData.profile_image || fallbackAvatar,
+            lastMessage: conv.lastMessage?.text || 'No messages yet',
+            time: timeAgo(conv.updated_at),
+            online: false, // Not available in API
+        })) || [];
+    }, [chatListData]);
+
+    const [activeConversation, setActiveConversation] = useState(null);
+    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [isMediaSheetOpen, setIsMediaSheetOpen] = useState(false);
+    const initialConversationSet = useRef(false);
+
+    useEffect(() => {
+        if (conversations.length > 0 && !initialConversationSet.current) {
+            setActiveConversation(conversations[0]);
+            setMessages(fakeMessages[conversations[0].id] || []);
+            initialConversationSet.current = true; // Mark as set
+        }
+    }, [conversations]);
 
     const handleConversationClick = (conv) => {
         setActiveConversation(conv);
@@ -33,6 +63,22 @@ const MessagePage = () => {
         setActiveConversation(null);
     };
 
+    if (isChatListLoading) {
+        return (
+            <div className="h-[calc(100vh-80px)] w-full flex items-center justify-center">
+                <Skeleton className="h-full w-full" />
+            </div>
+        );
+    }
+
+    if (isChatListError) {
+        return (
+            <div className="h-[calc(100vh-80px)] w-full flex items-center justify-center">
+                <LoadFailed msg="Failed to load conversations." />
+            </div>
+        );
+    }
+
     return (
         <div className="h-[calc(100vh-80px)] w-full">
             <div className="flex h-full bg-card border rounded-lg">
@@ -40,9 +86,11 @@ const MessagePage = () => {
                 <div className="w-full lg:hidden">
                     {!activeConversation ? (
                         <ConversationList
-                            conversations={fakeConversations}
+                            conversations={conversations}
                             activeConversation={activeConversation}
-                            onConversationClick={handleConversationClick} />
+                            onConversationClick={handleConversationClick}
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm} />
                     ) : (
                         <MessagePanel
                             conversation={activeConversation}
@@ -59,9 +107,11 @@ const MessagePage = () => {
                 <div className="hidden lg:flex w-full">
                     <div className="w-1/3 xl:w-1/4 border-r">
                         <ConversationList
-                            conversations={fakeConversations}
+                            conversations={conversations}
                             activeConversation={activeConversation}
-                            onConversationClick={handleConversationClick} />
+                            onConversationClick={handleConversationClick}
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm} />
                     </div>
                     <div className="w-2/3 xl:w-1/2">
                         {activeConversation ? (
