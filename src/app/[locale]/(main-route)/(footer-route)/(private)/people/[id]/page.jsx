@@ -13,7 +13,6 @@ import { fallbackAvatar, formatDate, getSocialIcon } from "@/lib/utils"
 import Image from "next/image";
 import { Link } from "@/i18n/navigation"
 import PeopleCardButton from "@/components/people/PeopleCardButton"
-import CustomBreadcrumb from "@/components/common/CustomBreadcrumb"
 
 const UserProfilePage = () => {
     const { id } = useParams()
