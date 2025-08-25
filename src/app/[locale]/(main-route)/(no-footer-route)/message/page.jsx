@@ -37,22 +37,42 @@ const MessagePage = () => {
         <div className="h-[calc(100vh-80px)] w-full">
             <div className="flex h-full bg-card border rounded-lg">
                 {/* Mobile View */}
-                <div className="w-full md:hidden">
+                <div className="w-full lg:hidden">
                     {!activeConversation ? (
-                        <ConversationList conversations={fakeConversations} activeConversation={activeConversation} onConversationClick={handleConversationClick} />
+                        <ConversationList
+                            conversations={fakeConversations}
+                            activeConversation={activeConversation}
+                            onConversationClick={handleConversationClick} />
                     ) : (
-                        <MessagePanel conversation={activeConversation} messages={messages} onBack={handleBack} onOpenMedia={() => setIsMediaSheetOpen(true)} newMessage={newMessage} setNewMessage={setNewMessage} onSendMessage={handleSendMessage} />
+                        <MessagePanel
+                            conversation={activeConversation}
+                            messages={messages}
+                            onBack={handleBack}
+                            onOpenMedia={() => setIsMediaSheetOpen(true)}
+                            newMessage={newMessage}
+                            setNewMessage={setNewMessage}
+                            onSendMessage={handleSendMessage} />
                     )}
                 </div>
 
                 {/* Desktop View */}
-                <div className="hidden md:flex w-full">
+                <div className="hidden lg:flex w-full">
                     <div className="w-1/3 xl:w-1/4 border-r">
-                        <ConversationList conversations={fakeConversations} activeConversation={activeConversation} onConversationClick={handleConversationClick} />
+                        <ConversationList
+                            conversations={fakeConversations}
+                            activeConversation={activeConversation}
+                            onConversationClick={handleConversationClick} />
                     </div>
                     <div className="w-2/3 xl:w-1/2">
                         {activeConversation ? (
-                            <MessagePanel conversation={activeConversation} messages={messages} onBack={handleBack} onOpenMedia={() => setIsMediaSheetOpen(true)} newMessage={newMessage} setNewMessage={setNewMessage} onSendMessage={handleSendMessage} />
+                            <MessagePanel
+                                conversation={activeConversation}
+                                messages={messages}
+                                onBack={handleBack}
+                                onOpenMedia={() => setIsMediaSheetOpen(true)}
+                                newMessage={newMessage}
+                                setNewMessage={setNewMessage}
+                                onSendMessage={handleSendMessage} />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-muted-foreground"><p>Select a conversation to start chatting.</p></div>
                         )}

@@ -21,7 +21,7 @@ export const MessagePanel = ({
         <div className="w-full bg-card flex flex-col h-full">
             <div className="p-3 border-b flex items-center justify-between shadow-sm">
                 <div className="flex items-center">
-                    <Button variant="ghost" size="icon" className="md:hidden mr-2" onClick={onBack}>
+                    <Button variant="ghost" size="icon" className="lg:hidden mr-2" onClick={onBack}>
                         <ArrowLeft />
                     </Button>
                     <Avatar className="h-10 w-10 mr-4">
