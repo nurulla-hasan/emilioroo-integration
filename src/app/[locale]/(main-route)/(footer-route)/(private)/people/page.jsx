@@ -10,6 +10,7 @@ import PeopleCardSkeleton from "@/components/skeleton/PeopleCardSkeleton";
 import PeopleCard from "@/components/people/PeopleCard";
 import LoadFailed from "@/components/common/LoadFailed";
 import { useGetUsersWithoutMe } from "@/hooks/useGetUsersWithoutMe";
+import NoData from "@/components/common/NoData";
 
 const PeoplePage = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -44,9 +45,9 @@ const PeoplePage = () => {
                     {isLoading ? (
                         <PeopleCardSkeleton count={12} />
                     ) : isError ? (
-                        <div className="col-span-full mx-auto mt-20"><LoadFailed /></div>
+                        <div className="col-span-full mx-auto mt-20"><LoadFailed msg={"Failed to load users."}/></div>
                     ) : users.length === 0 ? (
-                        <p className="text-muted-foreground text-center col-span-full mt-20">No users found.</p>
+                        <NoData msg={"No users found."} />
                     ) : (
                         users.map((user) => (
                             <PeopleCard

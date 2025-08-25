@@ -32,7 +32,7 @@ const FriendCard = ({ friend }) => {
             <div className="flex flex-col gap-2 justify-between w-full">
                 <div className="flex gap-2">
                     <Button loading={isLoading} variant="outline" className="flex-1" onClick={handleUnFriend}>Unfriend</Button>
-                    <Link href={`/friends/${friend.friendInfo?._id}`} className="flex-1">
+                    <Link href={`/people/${friend.friendInfo?._id}`} className="flex-1">
                         <Button variant="outline" className="w-full">View profile</Button>
                     </Link>
                 </div>

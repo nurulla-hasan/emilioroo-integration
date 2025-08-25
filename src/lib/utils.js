@@ -1,5 +1,6 @@
 "use client";
 import { clsx } from "clsx";
+import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import { twMerge } from "tailwind-merge"
 
 // cn
@@ -70,4 +71,14 @@ export const getInitials = (str) => {
     .join("");
 }
 
+
+// Get social link
+
+export const getSocialIcon = (url) => {
+  if (url.includes("facebook")) return <Facebook className="h-5 w-5" />
+  if (url.includes("instagram")) return <Instagram className="h-5 w-5" />
+  if (url.includes("x")) return <Twitter className="h-5 w-5" />
+  if (url.includes("linkedin")) return <Linkedin className="h-5 w-5" />
+  return null
+}
 

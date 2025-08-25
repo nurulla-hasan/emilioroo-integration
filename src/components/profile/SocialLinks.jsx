@@ -2,8 +2,8 @@
 
 // import { Button } from "@/components/ui/button";
 import Title2 from "@/components/ui/Title2";
-import {  Facebook, Instagram, Link as LinkIcon } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { getSocialIcon } from "@/lib/utils";
 
 const SocialLinks = ({ user }) => {
     return (
@@ -14,14 +14,17 @@ const SocialLinks = ({ user }) => {
                     <Edit />
                 </Button> */}
             </div>
-            <div className="mt-4 space-y-3">
+            <div className="mt-4 flex gap-3">
                 {user.socialLinks && user.socialLinks.map((link, index) => (
-                    <div key={index} className="flex items-center gap-3 text-sm text-primary dark:text-muted-foreground">
-                        {link.includes("instagram") ? <Instagram /> : link.includes("facebook") ? <Facebook /> : <LinkIcon />}
-                        <Link href={link} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                            {link}
-                        </Link>
-                    </div>
+                    <Link
+                        key={index}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 bg-primary/10 hover:bg-primary dark:bg-primary dark:text-white hover:text-primary-foreground text-primary rounded-lg transition-colors duration-200"
+                    >
+                        {getSocialIcon(link)}
+                    </Link>
                 ))}
             </div>
         </div>

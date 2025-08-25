@@ -22,7 +22,7 @@ const SentRequestCard = ({ request }) => {
             </div>
             <div className="flex flex-col gap-2 w-full">
                 <CancelSentRequest request={request} />
-                <Link href={`/friends/${request.followingInfo?._id}`} className="w-full">
+                <Link href={`/people/${request.followingInfo?._id}`} className="w-full">
                     <Button variant="outline" className="w-full">View profile</Button>
                 </Link>
             </div>

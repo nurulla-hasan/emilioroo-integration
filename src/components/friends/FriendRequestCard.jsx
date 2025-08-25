@@ -24,7 +24,7 @@ const FriendRequestCard = ({ request }) => {
                     <Accept request={request} />
                     <Reject request={request} />
                 </div>
-                <Link href={`/friends/${request.followerInfo?._id}`} className="w-full">
+                <Link href={`/people/${request.followerInfo?._id}`} className="w-full">
                     <Button variant="outline" className="w-full">View profile</Button>
                 </Link>
             </div>

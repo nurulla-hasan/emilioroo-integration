@@ -20,7 +20,7 @@ const PeopleCard = ({ user, }) => {
                 </div>
                 <div className="flex mt-4 w-full gap-2">
                     <PeopleCardButton user={user} />
-                    <Link href={`/friends/${user._id}`} className="flex-1">
+                    <Link href={`/people/${user._id}`} className="flex-1">
                         <Button variant="outline" className="w-full">View Profile</Button>
                     </Link>
                 </div>

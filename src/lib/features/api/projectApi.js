@@ -204,6 +204,15 @@ const projectApi = baseApi.injectEndpoints({
             providesTags: ["PROJECTS","FRIENDS"],
         }),
 
+        // GET SINGLE USER
+        getSingleUser: builder.query({
+            query: (id) => ({
+                url: `/normal-user/single-user/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["PROJECTS"],
+        }),
+
     }),
 })
 
@@ -226,5 +235,6 @@ export const {
     useGetProjectImageQuery,
     useCreateProjectImageMutation,
     useDeleteProjectImageMutation,
-    useGetAllUsersQuery
+    useGetAllUsersQuery,
+    useGetSingleUserQuery
 } = projectApi
