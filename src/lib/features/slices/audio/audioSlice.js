@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    currentAudio: null, // Stores the full audio object that is currently playing
+    currentAudio: null,
     isPlaying: false,
-    progress: 0, // Current playback progress in percentage (0-100)
-    volume: 1, // Current volume (0-1)
+    progress: 0,
+    volume: 1,
 };
 
 const audioSlice = createSlice({

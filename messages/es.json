@@ -303,7 +303,8 @@
   },
   "TrendingDetailPage": {
     "errorLoadingAudios": "Error al cargar los audios.",
-    "audiosForTopic": "Audios para este tema"
+    "audiosForTopic": "Audios para este tema",
+    "noAudiosFoundOnThisTopic": "No se encontraron audios en este tema."
   },
   "Footer": {
     "joinCommunity": "Únete a nuestra comunidad",

@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from "next-intl";
+import Title2 from '@/components/ui/Title2';
+import NoData from '@/components/common/NoData';
+import LoadFailed from '@/components/common/LoadFailed';
 
 const TrendingTopicsContent = () => {
     const t = useTranslations('Chatting');
@@ -13,9 +16,9 @@ const TrendingTopicsContent = () => {
 
     const topics = data?.data?.result || [];
     return (
-        <div>
+        <>
             <div className='flex justify-between items-center mb-6'>
-                <h1 className="text-lg font-bold text-primary dark:text-white">{t('trendingTopicsTitle')}</h1>
+                <Title2>{t('trendingTopicsTitle')}</Title2>
                 <Link href="/chatting/trending" passHref>
                     <Button variant="ghost" size="sm" className="text-primary dark:text-white">
                         {t('seeAll')} <ArrowRight className="ml-1 h-4 w-4" />
@@ -28,16 +31,20 @@ const TrendingTopicsContent = () => {
                         <TrendingTopicCardSkeleton key={index} />
                     ))
                 ) : isError ? (
-                    <p className="col-span-full text-center text-red-500">{t('errorLoadingTrendingTopics')}</p>
+                    <div className="col-span-full mx-auto">
+                        <LoadFailed msg={t('errorLoadingTrendingTopics')} />
+                    </div>
                 ) : topics.length > 0 ? (
                     topics.slice(0, 4).map((topic) => (
                         <TrendingTopicCard key={topic._id} topic={topic} />
                     ))
                 ) : (
-                    <p className="col-span-full text-center text-gray-500">{t('noTrendingTopicsFound')}</p>
+                    <div className="col-span-full mx-auto">
+                       <NoData msg= {t('noTrendingTopicsFound')} />
+                    </div>
                 )}
             </div>
-        </div>
+        </>
     );
 };
 

@@ -5,7 +5,7 @@ const LoadFailed = ({ msg }) => {
     return (
         <>
             <div className='col-span-full flex flex-col justify-center items-center mt-10 '>
-                <Lottie animationData={error} loop={true} style={{ width: 300, height: 300, }} />
+                <Lottie animationData={error} loop={true} style={{ width: 200, height: 200, }} />
                 <span>{msg}</span>
             </div>
         </>

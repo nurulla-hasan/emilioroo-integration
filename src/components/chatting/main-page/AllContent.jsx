@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Mic, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import UploadAudioModal from './UploadAudioModal';
 import MostPlayedContent from './all-content/MostPlayedContent';
 import TrendingTopicsContent from './all-content/TrendingTopicsContent';
 import ConversionContent from './all-content/ConversionContent';
 import { useTranslations } from "next-intl";
+import Title from '@/components/ui/Title';
 
 const AllContent = () => {
     const t = useTranslations('Chatting');
@@ -15,12 +16,15 @@ const AllContent = () => {
 
     return (
         <>
-            <div className="flex justify-between items-center mb-10">
-                <h1 className="text-2xl font-bold text-primary dark:text-white">{t('realConversation')}</h1>
-                <div className="flex items-center gap-2">
-                    <Button onClick={() => setIsModalOpen(true)}><Plus /> {t('uploadNewAudio')}</Button>
-                    <Button variant="outline">
-                        <Mic />
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-10">
+                <Title>
+                    {t('realConversation')}
+                </Title>
+
+                <div className="flex justify-center sm:justify-end">
+                    <Button onClick={() => setIsModalOpen(true)} >
+                        <Plus />
+                        {t('uploadNewAudio')}
                     </Button>
                 </div>
             </div>

@@ -7,6 +7,9 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from "next-intl";
+import Title2 from '@/components/ui/Title2';
+import LoadFailed from '@/components/common/LoadFailed';
+import NoData from '@/components/common/NoData';
 
 const MostPlayedContent = () => {
     const t = useTranslations('Chatting');
@@ -17,31 +20,37 @@ const MostPlayedContent = () => {
     const audios = data?.data?.result || [];
 
     return (
-        <div>
+        <>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-lg font-bold text-primary dark:text-white">{t('mostPlayedInThisWeek')}</h1>
+                <Title2>{t('mostPlayedInThisWeek')}</Title2>
                 <Link href="/chatting/most-played" passHref>
                     <Button variant="ghost" size="sm" className="text-primary dark:text-white">
                         {t('seeAll')} <ArrowRight className="ml-1 h-4 w-4" />
                     </Button>
                 </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4  gap-6">
-                {audios?.length > 0 ? (
-                    audios?.slice(0, 4).map((audio) => (
-                        <AudioCard key={audio._id} audio={audio} favouriteIds={favouriteIds} />
-                    ))
-                ) : (!isLoading && !isError) && (
-                    audios?.length === 0 && (
-                        <p className="col-span-full text-center text-gray-500">{t('noMostPlayedAudiosFound')}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+                {
+                    isLoading ? (
+                        [...Array(4)].map((_, index) => (
+                            <AudioCardSkeleton key={index} />
+                        ))
+                    ) : isError ? (
+                        <div className="col-span-full mx-auto">
+                            <LoadFailed msg={t('errorLoadingMostPlayedAudios')} />
+                        </div>
+                    ) : audios?.length > 0 ? (
+                        audios.slice(0, 4).map((audio) => (
+                            <AudioCard key={audio._id} audio={audio} favouriteIds={favouriteIds} />
+                        ))
+                    ) : (
+                        <div className="col-span-full mx-auto">
+                            <NoData msg={t('noMostPlayedAudiosFound')} />
+                        </div>
                     )
-                )}
-                {isLoading && [...Array(4)].map((_, index) => (
-                    <AudioCardSkeleton key={index} />
-                ))}
-                {isError && <p className="col-span-full text-center text-red-500">{t('errorLoadingMostPlayedAudios')}</p>}
+                }
             </div>
-        </div>
+        </>
     );
 };
 

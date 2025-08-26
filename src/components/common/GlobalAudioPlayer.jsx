@@ -3,21 +3,12 @@
 import { useRef, useEffect, useCallback, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { pauseAudio, playAudio, updateProgress } from "@/lib/features/slices/audio/audioSlice"
-import { Play, Pause, Heart, Shuffle, Repeat, Volume2, VolumeX, SkipForward, SkipBack } from "lucide-react"
+import { Play, Pause, Heart, Volume2, VolumeX } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import Image from "next/image"
 import useFavoriteToggle from "@/hooks/useFavoriteToggle"
 import useGetFavoriteIds from "@/hooks/useGetFavoriteIds"
-
-// const formatTime = (seconds) => {
-//     if (isNaN(seconds) || seconds < 0) {
-//         return "0:00"
-//     }
-//     const minutes = Math.floor(seconds / 60)
-//     const remainingSeconds = Math.floor(seconds % 60)
-//     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
-// }
 
 const GlobalAudioPlayer = () => {
     const dispatch = useDispatch()
@@ -96,7 +87,7 @@ const GlobalAudioPlayer = () => {
     }
 
     if (!currentAudio) {
-        return null // Or a placeholder
+        return null
     }
 
     return (
@@ -129,6 +120,7 @@ const GlobalAudioPlayer = () => {
                                 fill
                                 sizes="56px"
                                 className="object-cover"
+                                priority
                             />
                         </div>
                         <div className="flex flex-col min-w-0">
@@ -139,12 +131,12 @@ const GlobalAudioPlayer = () => {
 
                     {/* Center: Controls */}
                     <div className="flex items-center gap-2 md:gap-4">
-                        <Button variant="ghost" size="icon" className="hidden md:inline-flex">
+                        {/* <Button variant="ghost" size="icon" className="hidden md:inline-flex">
                             <Shuffle className="h-5 w-5" />
                         </Button>
                         <Button variant="ghost" size="icon">
                             <SkipBack className="h-5 w-5" />
-                        </Button>
+                        </Button> */}
                         <Button
                             variant="default"
                             size="icon"
@@ -153,12 +145,12 @@ const GlobalAudioPlayer = () => {
                         >
                             {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-1" />}
                         </Button>
-                        <Button variant="ghost" size="icon">
+                        {/* <Button variant="ghost" size="icon">
                             <SkipForward className="h-5 w-5" />
                         </Button>
                         <Button variant="ghost" size="icon" className="hidden md:inline-flex">
                             <Repeat className="h-5 w-5" />
-                        </Button>
+                        </Button> */}
                     </div>
 
                     {/* Right: Volume & Actions */}

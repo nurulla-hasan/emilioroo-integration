@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { useGetAllAudioQuery } from "@/lib/features/api/chattingApi";
-import CustomPagination from "@/components/common/CustomPagination"; 
+import CustomPagination from "@/components/common/CustomPagination";
 import ConversationAudioCardSkeleton from "@/components/skeleton/ConversationAudioCardSkeleton";
 import TrendingAudioCard from "@/components/chatting/trending/TrendingAudioCard";
-import { useTranslations } from 'next-intl';
+import LoadFailed from "@/components/common/LoadFailed";
+import NoData from "@/components/common/NoData";
+import { useTranslations } from "next-intl";
+import Title from "@/components/ui/Title";
 
 const ConversationsPage = () => {
-  const t = useTranslations('ConversationsPage');
+  const t = useTranslations("ConversationsPage");
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
 
-
-  const { data, isLoading, isError } = useGetAllAudioQuery({ page, limit });
+  const { data, isLoading, isError, error } = useGetAllAudioQuery({ page, limit });
 
   const audios = data?.data?.result || [];
   const meta = data?.data?.meta || {};
@@ -22,37 +24,35 @@ const ConversationsPage = () => {
     setPage(newPage);
   };
 
-
-  if (isLoading) {
-    return (
-      <div>
-        <h1 className="text-2xl font-bold mb-6">{t('conversations')}</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[...Array(limit)].map((_, index) => (
-            <ConversationAudioCardSkeleton key={index} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return <div className="text-center text-red-500 min-h-minus-header">{t('errorLoadingConversations')}</div>;
-  }
-
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6 text-primary dark:text-white">{t('conversations')}</h1>
+      <div className="flex justify-between items-center mb-6">
+        <Title>
+          {t("conversations")}
+        </Title>
+      </div>
+
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {audios.length > 0 ? (
+        {isLoading ? (
+          Array.from({ length: limit }).map((_, index) => (
+            <ConversationAudioCardSkeleton key={index} />
+          ))
+        ) : isError ? (
+          <div className="col-span-full mx-auto flex items-center justify-center md:h-[60vh]">
+            <LoadFailed msg={error?.message || t("errorLoadingConversations")} />
+          </div>
+        ) : audios.length === 0 ? (
+          <div className="col-span-full mx-auto flex items-center justify-center md:h-[60vh]">
+            <NoData msg={t("noConversationsFound")} />
+          </div>
+        ) : (
           audios.map((audio) => (
             <TrendingAudioCard key={audio._id} audio={audio} />
           ))
-        ) : (
-          <p className="col-span-full text-center text-gray-500">{t('noConversationsFound')}</p>
         )}
       </div>
-      {meta.totalPage > 1 && (
+
+      {meta.totalPage > 1 && !isLoading && !isError && audios.length > 0 && (
         <div className="mt-8 flex justify-center">
           <CustomPagination
             currentPage={meta.page}
