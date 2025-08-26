@@ -14,7 +14,7 @@ const ConversationListItem = ({ conv, active, onClick }) => (
 
         <div className="flex-1">
             <p className="font-semibold">{conv.name}</p>
-            <p className="text-sm text-muted-foreground truncate">{conv.lastMessage}</p>
+            <p className="text-sm text-muted-foreground truncate">{conv.lastMessage.length > 25 ? `${conv.lastMessage.slice(0, 25)}...` : conv.lastMessage}</p>
         </div>
         <p className="text-xs text-muted-foreground self-start">{conv.time}</p>
     </div>

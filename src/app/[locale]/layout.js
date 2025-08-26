@@ -7,6 +7,7 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import NextTopLoader from "nextjs-toploader";
+import { SocketProvider } from "@/context/soket-context/SocketContext";
 
 const poltawski = Poltawski_Nowy({
   variable: "--font-poltawski",
@@ -49,7 +50,9 @@ export default async function RootLayout({ children, params }) {
               disableTransitionOnChange
             >
               <NextIntlClientProvider>
-                {children}
+                <SocketProvider>
+                  {children}
+                </SocketProvider>
               </NextIntlClientProvider>
               <Toaster richColors />
             </ThemeProvider>

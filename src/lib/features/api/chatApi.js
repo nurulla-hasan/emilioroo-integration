@@ -25,10 +25,20 @@ const chatApi = baseApi.injectEndpoints({
 
         // GET SINGLE CONVERSATION
         getSingleConversation: builder.query({
-            query: (id) => ({
-                url: `/message/get-messages?userId=${id}`,
-                method: "GET",
-            }),
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args) {
+                    Object.entries(args).forEach(([key, value]) => {
+                        if (value) {
+                            params.append(key, value);
+                        }
+                    });
+                }
+                return {
+                    url: `/message/get-messages?${params.toString()}`,
+                    method: "GET",
+                }
+            },
             providesTags: ["CONVERSATIONS"],
         }),
 

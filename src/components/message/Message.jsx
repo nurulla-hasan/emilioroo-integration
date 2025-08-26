@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { timeAgo } from "@/lib/utils";
 
 export const Message = ({ msg }) => {
-    if (msg.sender === 'me') {
+    if (msg.isMyMessage) {
         return (
             <div className="flex justify-end my-2">
                 <div className={`p-3 rounded-2xl max-w-md bg-primary text-primary-foreground dark:text-white rounded-br-none`}>
@@ -21,7 +21,7 @@ export const Message = ({ msg }) => {
         <div className="flex items-start gap-3 my-2">
             <Avatar className="h-8 w-8 hidden md:block">
                 <AvatarImage src={msg.avatar} alt={msg.sender} />
-                <AvatarFallback>{msg.sender[0]}</AvatarFallback>
+                <AvatarFallback>{msg.sender ? msg.sender[0] : ''}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
                 <p className="font-semibold text-xs mb-1 hidden md:block">{msg.sender}</p>

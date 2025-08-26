@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { ConversationList } from "@/components/message/ConversationList";
 import { MessagePanel } from "@/components/message/MessagePanel";
 import { MediaPanel } from "@/components/message/MediaPanel";
@@ -10,10 +10,18 @@ import { useGetChatListQuery, useGetSingleConversationQuery } from "@/lib/featur
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadFailed from "@/components/common/LoadFailed";
 import { fallbackAvatar, timeAgo } from "@/lib/utils";
+import { useSocket } from '@/context/soket-context/SocketContext';
 
 const MessagePage = () => {
+    const { socket, sendMessage, sendSeen } = useSocket();
+
+    const markAsSeen = useCallback((messageId) => {
+        sendSeen({ messageId });
+    }, [sendSeen]);
     const [searchTerm, setSearchTerm] = useState('');
-    console.log(searchTerm);
+    const [page, setPage] = useState(1);
+    const [limit] = useState(20); // Fetch 20 messages at a time
+
     const { data: chatListData, isLoading: isChatListLoading, isError: isChatListError } = useGetChatListQuery(
         {
             searchTerm
@@ -25,6 +33,10 @@ const MessagePage = () => {
             id: conv._id,
             conversationId: conv._id,
             userId: conv.userData._id,
+            type: conv.type, // Add conversation type
+            bondLinkId: conv.type === 'group' && conv.bondLink ? conv.bondLink._id : undefined, // Add bondLinkId for group type
+            projectId: conv.type === 'project' && conv.project ? conv.project._id : undefined, // Add projectId for project type
+            chatGroupId: conv.type === 'chatGroup' && conv.chatGroup ? conv.chatGroup._id : undefined, // Add chatGroupId for chatGroup type
             name: conv.type === 'group' ? conv.bondLink.name : conv.userData.name,
             avatar: conv.userData.profile_image || fallbackAvatar,
             lastMessage: conv.lastMessage?.text || 'No messages yet',
@@ -40,25 +52,125 @@ const MessagePage = () => {
     const initialConversationSet = useRef(false);
 
     const { data: messagesData, isLoading: isMessagesLoading, isError: isMessagesError } = useGetSingleConversationQuery(
-        activeConversation?.userId,
+        {
+            userId: activeConversation?.userId,
+            page,
+            limit
+        },
         {
             skip: !activeConversation?.userId,
         }
     );
 
     useEffect(() => {
-        if (messagesData) {
-            const transformedMessages = messagesData?.data?.result?.map(msg => ({
+        if (!socket || !activeConversation) return;
+
+        let eventName = '';
+        if (activeConversation.type === 'one-two-one') {
+            eventName = `message-${activeConversation.userId}`;
+        } else if (activeConversation.type === 'group' && activeConversation.bondLinkId) {
+            eventName = `message-${activeConversation.bondLinkId}`;
+        } else if (activeConversation.type === 'project' && activeConversation.projectId) {
+            eventName = `message-${activeConversation.projectId}`;
+        } else if (activeConversation.type === 'chatGroup' && activeConversation.chatGroupId) {
+            eventName = `message-${activeConversation.chatGroupId}`;
+        }
+
+        if (eventName) {
+            const handleNewMessage = (msg) => {
+                console.log("📥 Received message:", msg);
+                setMessages((prevMessages) => {
+                    // Transform the incoming message to match frontend expectations
+                    const transformedMsg = {
+                        ...msg,
+                        id: msg._id, // Ensure 'id' is always '_id'
+                        sender: msg.isMyMessage ? 'me' : (msg.userDetails?.name || 'Unknown User'), // Set sender string with fallback
+                        avatar: msg.userDetails?.profile_image || fallbackAvatar, // Set avatar with fallback
+                        time: timeAgo(msg.createdAt), // Set formatted time
+                    };
+
+                    // Try to find and replace an optimistic message
+                    let replaced = false;
+                    const updated = prevMessages.map(m => {
+                        // Match the first optimistic message. This assumes messages are processed in order.
+                        if (!replaced && m._id && typeof m._id === 'string' && m._id.startsWith('optimistic-')) {
+                            replaced = true;
+                            // Replace optimistic msg with server-confirmed one, but preserve essential client-side data.
+                            return {
+                                ...transformedMsg, // Take real ID and timestamp from server
+                                text: m.text,      // But use the text from our optimistic message
+                                isMyMessage: true, // And enforce that it's our message
+                                sender: 'me',
+                                avatar: m.avatar,
+                                type: 'text'       // Ensure the type is preserved
+                            };
+                        }
+                        return m;
+                    });
+
+                    // If no optimistic message was replaced, and the message doesn't already exist by its real _id, add it
+                    const existsByRealId = updated.some(m => m._id === transformedMsg.id);
+                    if (!existsByRealId) {
+                        const newMessages = [...updated, transformedMsg];
+                        newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                        return newMessages;
+                    }
+                    updated.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    return updated;
+                });
+            };
+
+            socket.on(eventName, handleNewMessage);
+
+            return () => {
+                socket.off(eventName, handleNewMessage);
+            };
+        }
+    }, [socket, activeConversation]);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        // Listen for seen events
+        socket.on("seen", (data) => {
+            console.log("👁 Received seen event:", data);
+        });
+
+        return () => {
+            socket.off("seen");
+        };
+    }, [socket])
+
+    useEffect(() => {
+        if (messagesData?.data?.result) {
+            const { result, meta } = messagesData.data;
+            const transformedMessages = result.map(msg => ({
                 ...msg,
-                id: msg._id, 
+                id: msg._id,
                 sender: msg.isMyMessage ? 'me' : msg.userDetails.name,
-                avatar: msg.userDetails.profile_image || fallbackAvatar, 
+                avatar: msg.userDetails.profile_image || fallbackAvatar,
                 time: timeAgo(msg.createdAt),
                 type: 'text'
             })) || [];
-            setMessages(transformedMessages);
+            // Sort messages by createdAt in ascending order
+            transformedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+            setMessages(prevMessages => {
+                if (meta.page === 1) {
+                    return transformedMessages;
+                } else {
+                    // Prepend new messages for pagination
+                    return [...transformedMessages, ...prevMessages];
+                }
+            });
+
+            // Mark messages as seen when they are loaded
+            if (transformedMessages.length > 0) {
+                const lastMessageId = transformedMessages[transformedMessages.length - 1].id;
+                markAsSeen(lastMessageId);
+            }
         }
-    }, [messagesData]);
+    }, [messagesData, markAsSeen, page, limit]);
 
     useEffect(() => {
         if (conversations.length > 0 && !initialConversationSet.current) {
@@ -67,21 +179,71 @@ const MessagePage = () => {
         }
     }, [conversations]);
 
+    // Reset page to 1 when activeConversation changes
+    useEffect(() => {
+        setPage(1);
+    }, [activeConversation]);
+
     const handleConversationClick = (conv) => {
         setActiveConversation(conv);
     };
 
     const handleSendMessage = () => {
         if (newMessage.trim() && activeConversation) {
-            const newMsg = { id: messages.length + 1, text: newMessage, sender: 'me', time: 'Now', type: 'text' };
-            const updatedMessages = [...messages, newMsg];
-            setMessages(updatedMessages);
+            let payload = {
+                text: newMessage,
+                imageUrl: [],
+                videoUrl: [],
+            };
+
+            switch (activeConversation.type) {
+                case 'one-two-one':
+                    payload.receiver = activeConversation.userId;
+                    break;
+                case 'group':
+                    payload.bondLinkId = activeConversation.bondLinkId;
+                    break;
+                default:
+                    console.warn("Unknown conversation type or missing ID for sending message:", activeConversation.type, activeConversation);
+                    return; // Do not send message for unhandled types
+            }
+
+            sendMessage(payload);
+
+            // Optimistically update local UI
+            const tempId = `optimistic-${Date.now()}`;
+            const newMsg = {
+                _id: tempId,
+                id: tempId, // Use id for key prop consistency
+                text: newMessage,
+                sender: 'me',
+                time: 'Just now', // Display 'Just now' for optimistic message
+                createdAt: new Date().toISOString(), // Use current time for sorting
+                type: 'text',
+                isMyMessage: true, // Explicitly mark as my message
+                avatar: fallbackAvatar // Use fallback avatar for optimistic message
+            };
+            setMessages((prevMessages) => {
+                const updatedMessages = [...prevMessages, newMsg];
+                updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                return updatedMessages;
+            });
             setNewMessage('');
         }
     };
 
+    const handleSend = () => {
+        handleSendMessage();
+    };
+
     const handleBack = () => {
         setActiveConversation(null);
+    };
+
+    const fetchMoreMessages = () => {
+        if (!isMessagesLoading && messagesData?.data?.meta?.totalPage > page) {
+            setPage(prevPage => prevPage + 1);
+        }
     };
 
     if (isChatListLoading) {
@@ -129,7 +291,9 @@ const MessagePage = () => {
                                 onOpenMedia={() => setIsMediaSheetOpen(true)}
                                 newMessage={newMessage}
                                 setNewMessage={setNewMessage}
-                                onSendMessage={handleSendMessage} />
+                                                                onSendMessage={handleSend}
+                                fetchMoreMessages={fetchMoreMessages}
+                                isMessagesLoading={isMessagesLoading} />
                         )
                     )}
                 </div>
@@ -162,7 +326,9 @@ const MessagePage = () => {
                                     onOpenMedia={() => setIsMediaSheetOpen(true)}
                                     newMessage={newMessage}
                                     setNewMessage={setNewMessage}
-                                    onSendMessage={handleSendMessage} />
+                                    onSendMessage={handleSend}
+                                    fetchMoreMessages={fetchMoreMessages}
+                                    isMessagesLoading={isMessagesLoading} />
                             )
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-muted-foreground"><p>Select a conversation to start chatting.</p></div>
