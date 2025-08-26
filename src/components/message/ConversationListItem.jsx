@@ -2,7 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const ConversationListItem = ({ conv, active, onClick }) => (
-    <div onClick={onClick} className={`flex items-center p-2 cursor-pointer rounded-lg ${active ? 'bg-primary/10' : 'hover:bg-muted/50'} transition-colors`}>
+    <div onClick={onClick} className={`flex items-center p-2 cursor-pointer rounded-lg ${active ? 'bg-primary/10' : 'bg-muted/50'} transition-colors`}>
         <div className="relative">
             <Avatar className="h-14 w-14 mr-4">
                 <AvatarImage src={conv.avatar} alt={conv.name} />

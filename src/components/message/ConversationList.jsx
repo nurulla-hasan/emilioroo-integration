@@ -26,7 +26,7 @@ export const ConversationList = ({ conversations, activeConversation, onConversa
                 <div className="p-2 space-y-1">
                     {conversations.map(conv =>
                         <ConversationListItem
-                            key={conv.id}
+                            key={conv.conversationId}
                             conv={conv}
                             active={activeConversation?.id === conv.id}
                             onClick={() => onConversationClick(conv)}

@@ -1,11 +1,12 @@
 "use client";
+
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { ConversationList } from "@/components/message/ConversationList";
 import { MessagePanel } from "@/components/message/MessagePanel";
 import { MediaPanel } from "@/components/message/MediaPanel";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { fakeMessages, fakeMediaByConversation } from "@/components/message/data";
-import { useGetChatListQuery } from "@/lib/features/api/chatApi";
+import { fakeMediaByConversation } from "@/components/message/data";
+import { useGetChatListQuery, useGetSingleConversationQuery } from "@/lib/features/api/chatApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadFailed from "@/components/common/LoadFailed";
 import { fallbackAvatar, timeAgo } from "@/lib/utils";
@@ -22,6 +23,8 @@ const MessagePage = () => {
     const conversations = useMemo(() => {
         return chatListData?.data?.data?.map(conv => ({
             id: conv._id,
+            conversationId: conv._id,
+            userId: conv.userData._id,
             name: conv.type === 'group' ? conv.bondLink.name : conv.userData.name,
             avatar: conv.userData.profile_image || fallbackAvatar,
             lastMessage: conv.lastMessage?.text || 'No messages yet',
@@ -36,17 +39,36 @@ const MessagePage = () => {
     const [isMediaSheetOpen, setIsMediaSheetOpen] = useState(false);
     const initialConversationSet = useRef(false);
 
+    const { data: messagesData, isLoading: isMessagesLoading, isError: isMessagesError } = useGetSingleConversationQuery(
+        activeConversation?.userId,
+        {
+            skip: !activeConversation?.userId,
+        }
+    );
+
+    useEffect(() => {
+        if (messagesData) {
+            const transformedMessages = messagesData?.data?.result?.map(msg => ({
+                ...msg,
+                id: msg._id, 
+                sender: msg.isMyMessage ? 'me' : msg.userDetails.name,
+                avatar: msg.userDetails.profile_image || fallbackAvatar, 
+                time: timeAgo(msg.createdAt),
+                type: 'text'
+            })) || [];
+            setMessages(transformedMessages);
+        }
+    }, [messagesData]);
+
     useEffect(() => {
         if (conversations.length > 0 && !initialConversationSet.current) {
             setActiveConversation(conversations[0]);
-            setMessages(fakeMessages[conversations[0].id] || []);
-            initialConversationSet.current = true; // Mark as set
+            initialConversationSet.current = true;
         }
     }, [conversations]);
 
     const handleConversationClick = (conv) => {
         setActiveConversation(conv);
-        setMessages(fakeMessages[conv.id] || []);
     };
 
     const handleSendMessage = () => {
@@ -54,7 +76,6 @@ const MessagePage = () => {
             const newMsg = { id: messages.length + 1, text: newMessage, sender: 'me', time: 'Now', type: 'text' };
             const updatedMessages = [...messages, newMsg];
             setMessages(updatedMessages);
-            fakeMessages[activeConversation.id] = updatedMessages;
             setNewMessage('');
         }
     };
@@ -92,14 +113,24 @@ const MessagePage = () => {
                             searchTerm={searchTerm}
                             setSearchTerm={setSearchTerm} />
                     ) : (
-                        <MessagePanel
-                            conversation={activeConversation}
-                            messages={messages}
-                            onBack={handleBack}
-                            onOpenMedia={() => setIsMediaSheetOpen(true)}
-                            newMessage={newMessage}
-                            setNewMessage={setNewMessage}
-                            onSendMessage={handleSendMessage} />
+                        isMessagesLoading ? (
+                            <div className="h-full w-full flex items-center justify-center">
+                                <Skeleton className="h-full w-full" />
+                            </div>
+                        ) : isMessagesError ? (
+                            <div className="h-full w-full flex items-center justify-center">
+                                <LoadFailed msg="Failed to load messages." />
+                            </div>
+                        ) : (
+                            <MessagePanel
+                                conversation={activeConversation}
+                                messages={messages}
+                                onBack={handleBack}
+                                onOpenMedia={() => setIsMediaSheetOpen(true)}
+                                newMessage={newMessage}
+                                setNewMessage={setNewMessage}
+                                onSendMessage={handleSendMessage} />
+                        )
                     )}
                 </div>
 
@@ -115,14 +146,24 @@ const MessagePage = () => {
                     </div>
                     <div className="w-2/3 xl:w-1/2">
                         {activeConversation ? (
-                            <MessagePanel
-                                conversation={activeConversation}
-                                messages={messages}
-                                onBack={handleBack}
-                                onOpenMedia={() => setIsMediaSheetOpen(true)}
-                                newMessage={newMessage}
-                                setNewMessage={setNewMessage}
-                                onSendMessage={handleSendMessage} />
+                            isMessagesLoading ? (
+                                <div className="h-full w-full flex items-center justify-center">
+                                    <Skeleton className="h-full w-full" />
+                                </div>
+                            ) : isMessagesError ? (
+                                <div className="h-full w-full flex items-center justify-center">
+                                    <LoadFailed msg="Failed to load messages." />
+                                </div>
+                            ) : (
+                                <MessagePanel
+                                    conversation={activeConversation}
+                                    messages={messages}
+                                    onBack={handleBack}
+                                    onOpenMedia={() => setIsMediaSheetOpen(true)}
+                                    newMessage={newMessage}
+                                    setNewMessage={setNewMessage}
+                                    onSendMessage={handleSendMessage} />
+                            )
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-muted-foreground"><p>Select a conversation to start chatting.</p></div>
                         )}

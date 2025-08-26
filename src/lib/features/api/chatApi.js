@@ -23,8 +23,16 @@ const chatApi = baseApi.injectEndpoints({
             providesTags: ["CONVERSATIONS"],
         }),
 
+        // GET SINGLE CONVERSATION
+        getSingleConversation: builder.query({
+            query: (id) => ({
+                url: `/message/get-messages?userId=${id}`,
+                method: "GET",
+            }),
+            providesTags: ["CONVERSATIONS"],
+        }),
 
     }),
 });
 
-export const { useGetChatListQuery } = chatApi;
+export const { useGetChatListQuery, useGetSingleConversationQuery } = chatApi;
