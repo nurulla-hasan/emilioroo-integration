@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { MultipleSelector } from "@/components/ui/multiselect";
 import { useGetUsersWithoutMe } from '@/hooks/useGetUsersWithoutMe';
@@ -10,6 +10,7 @@ import { Label } from '../ui/label';
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useCreateGroupMutation } from '@/lib/features/api/chatApi';
 import { toast } from 'sonner';
+import { ImageUp } from 'lucide-react';
 
 export const CreateGroupModal = ({ isOpen, onClose }) => {
     const [groupName, setGroupName] = useState('');
@@ -77,6 +78,9 @@ export const CreateGroupModal = ({ isOpen, onClose }) => {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Create a New Group</DialogTitle>
+                    <DialogDescription>
+                        Enter group details and select members to create a new chat group.
+                    </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                     {/* Group Image selection */}
@@ -96,7 +100,7 @@ export const CreateGroupModal = ({ isOpen, onClose }) => {
                                 <AvatarImage src={groupImagePreview} alt="Group Avatar" className="object-cover" />
                             </Avatar>
                         ) : (
-                            <span className="text-muted-foreground text-4xl">+</span>
+                            <span className="text-muted-foreground text-4xl"><ImageUp /></span>
                         )}
                     </div>
                     {/* Existing Group Name field */}

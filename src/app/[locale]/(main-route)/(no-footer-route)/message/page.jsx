@@ -13,6 +13,7 @@ import { fallbackAvatar, timeAgo } from "@/lib/utils";
 import { useSocket } from '@/context/soket-context/SocketContext';
 import { useGetChatListQuery, useGetSingleConversationQuery } from "@/lib/features/api/chatApi";
 import { baseApi } from "@/lib/features/api/baseApi";
+import MessagePanelSkeleton from "@/components/skeleton/MessagePanelSkeleton";
 
 const MessagePage = () => {
     const { socket, sendMessage, sendSeen } = useSocket();
@@ -225,19 +226,6 @@ const MessagePage = () => {
         };
     }, [socket, dispatch]);
 
-    useEffect(() => {
-        if (!socket) return;
-
-        // Listen for seen events
-        socket.on("seen", () => {
-
-        });
-
-        return () => {
-            socket.off("seen");
-        };
-    }, [socket])
-
     const transformMessage = (msg) => {
         const userDetails = msg.userDetails || msg.msgByUserId;
 
@@ -337,10 +325,6 @@ const MessagePage = () => {
         }
     };
 
-    const handleSend = () => {
-        handleSendMessage();
-    };
-
     const handleSendMedia = (url, mediaType) => {
         if (!activeConversation) return;
 
@@ -431,9 +415,7 @@ const MessagePage = () => {
                             setSearchTerm={setSearchTerm} />
                     ) : (
                         isMessagesLoading ? (
-                            <div className="h-full w-full flex items-center justify-center">
-                                <Skeleton className="h-full w-full" />
-                            </div>
+                            <MessagePanelSkeleton />
                         ) : isMessagesError ? (
                             <div className="h-full w-full flex items-center justify-center">
                                 <LoadFailed msg="Failed to load messages." />
@@ -446,7 +428,7 @@ const MessagePage = () => {
                                 onOpenMedia={() => setIsMediaSheetOpen(true)}
                                 newMessage={newMessage}
                                 setNewMessage={setNewMessage}
-                                onSendMessage={handleSend}
+                                onSendMessage={handleSendMessage}
                                 onSendMedia={handleSendMedia}
                                 fetchMoreMessages={fetchMoreMessages}
                                 isMessagesLoading={isMessagesLoading} />
@@ -467,9 +449,7 @@ const MessagePage = () => {
                     <div className="w-2/3 xl:w-1/2">
                         {activeConversation ? (
                             isMessagesLoading ? (
-                                <div className="h-full w-full flex items-center justify-center">
-                                    <Skeleton className="h-full w-full" />
-                                </div>
+                                <MessagePanelSkeleton />
                             ) : isMessagesError ? (
                                 <div className="h-full w-full flex items-center justify-center">
                                     <LoadFailed msg="Failed to load messages." />
@@ -482,7 +462,7 @@ const MessagePage = () => {
                                     onOpenMedia={() => setIsMediaSheetOpen(true)}
                                     newMessage={newMessage}
                                     setNewMessage={setNewMessage}
-                                    onSendMessage={handleSend}
+                                    onSendMessage={handleSendMessage}
                                     onSendMedia={handleSendMedia}
                                     fetchMoreMessages={fetchMoreMessages}
                                     isMessagesLoading={isMessagesLoading} />
