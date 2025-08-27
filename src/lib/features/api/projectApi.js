@@ -95,7 +95,7 @@ const projectApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: formData,
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // DELETE PROJECT
@@ -104,7 +104,7 @@ const projectApi = baseApi.injectEndpoints({
                 url: `/project/delete/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // SEND JOIN REQUEST
@@ -113,7 +113,7 @@ const projectApi = baseApi.injectEndpoints({
                 url: `/project-join-request/send-request/${id}`,
                 method: "POST",
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // ACCEPT AND REJECT JOIN REQUEST
@@ -123,7 +123,7 @@ const projectApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // ADD PROJECT MEMBER
@@ -133,7 +133,7 @@ const projectApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // REMOVE PROJECT MEMBER
@@ -142,7 +142,7 @@ const projectApi = baseApi.injectEndpoints({
                 url: `/project-member/remove-member/${projectMemberId}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // CREATE PROJECT DOCUMENT
@@ -152,7 +152,7 @@ const projectApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // DELETE PROJECT DOCUMENT
@@ -161,7 +161,7 @@ const projectApi = baseApi.injectEndpoints({
                 url: `/project-document/delete/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // CREATE PROJECT IMAGE
@@ -171,7 +171,7 @@ const projectApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // DELETE PROJECT IMAGE
@@ -180,7 +180,7 @@ const projectApi = baseApi.injectEndpoints({
                 url: `/project-image/delete/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // GET ALL USERS

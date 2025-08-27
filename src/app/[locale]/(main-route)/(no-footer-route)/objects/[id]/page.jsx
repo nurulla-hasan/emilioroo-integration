@@ -175,7 +175,8 @@ const ProjectDetailsPage = () => {
                     title="Remove Member"
                     description={`Are you sure you want to remove ${memberToRemove?.user?.name || "this member"}?`}
                     onConfirm={handleConfirmRemoveMember}
-                    confirmText={isRemovingMember ? <><Loader2 className="animate-spin" />Removing</> : "Remove"}
+                    confirmText="Remove"
+                    loading={isRemovingMember}
                 />
                 <UpdateProjectModal
                     isOpen={isUpdateProjectModalOpen}

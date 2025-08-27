@@ -56,10 +56,11 @@ const ProjectNavCard = ({ project, isActive }) => {
                     loading={isSendingRequest}
                     variant="outline"
                     onClick={handleSendJoinRequest}
-                    disabled={isSendingRequest || project.isJoined || project.isJoinRequestSent || project?.joinControll === "Private"}
+                    disabled={isSendingRequest || project.isJoined || project.isJoinRequestSent || project?.joinControll === "Private" || project?.isOwner}
                     className={`flex-shrink-0 ${project.isJoinRequestSent ? "bg-yellow-700" : project.isJoined ? "bg-green-700" : "bg-primary"} text-white`}
                 >
-                    {project.isJoinRequestSent ? "Request Sent" : project.isJoined ? "Joined" : "Join Project"}
+                    {/* {project.isJoinRequestSent ? "Request Sent" : project.isJoined ? "Joined" : "Join Project"} */}
+                    {project?.isOwner ? "Owner" : project?.isJoinRequestSent ? "Request Sent" : project?.isJoined ? "Joined" : "Join Project"}
                 </Button>
             </CardContent>
         </Card>

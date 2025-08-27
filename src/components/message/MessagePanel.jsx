@@ -86,14 +86,14 @@ export const MessagePanel = ({
                     <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}>
                         <ArrowLeft />
                     </Button>
-                    <Avatar className="h-10 w-10 mr-4">
+                    <Avatar className="h-12 w-12 mr-4 border-2">
                         <AvatarImage src={conversation.avatar} />
                         <AvatarFallback>
                             {conversation.name[0]}
                         </AvatarFallback>
                     </Avatar>
                     <div>
-                        <h2 className="text-lg font-semibold">{conversation.name}</h2>
+                        <h2 className="font-semibold">{conversation.name}</h2>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">

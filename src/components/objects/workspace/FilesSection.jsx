@@ -11,7 +11,7 @@ import UploadImageModal from '@/components/objects/modal/UploadImageModal';
 import { formatFileName } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 
-const FilesSection = ({ documents, images, isLoadingDocuments, isErrorDocuments, isLoadingImages, isErrorImages }) => {
+const FilesSection = ({ documents, images, isLoadingDocuments, isErrorDocuments, isLoadingImages, isErrorImages, project }) => {
     const [isUploadDocumentModalOpen, setIsUploadDocumentModalOpen] = useState(false);
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
 
@@ -23,10 +23,14 @@ const FilesSection = ({ documents, images, isLoadingDocuments, isErrorDocuments,
             <div className="mb-8 max-h-96 overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-md font-semibold">Document</h3>
-                    <Button variant="outline" size="sm" onClick={() => setIsUploadDocumentModalOpen(true)}>
-                        <Upload className="h-4 w-4 mr-2" />
-                        Upload file
-                    </Button>
+                    {
+                        project?.isOwner && (
+                            <Button variant="outline" size="sm" onClick={() => setIsUploadDocumentModalOpen(true)}>
+                                <Upload className="h-4 w-4 mr-2" />
+                                Upload file
+                            </Button>
+                        )
+                    }
                 </div>
                 {isLoadingDocuments && <CardSkeleton count={4} />}
                 {isErrorDocuments && <p className="text-red-500">Error loading documents.</p>}
@@ -44,16 +48,20 @@ const FilesSection = ({ documents, images, isLoadingDocuments, isErrorDocuments,
                 </div>
             </div>
 
-                    <Separator className="my-4" />
+            <Separator className="my-4" />
 
             {/* Images Section */}
             <div className='max-h-[500px] overflow-y-auto'>
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-md font-semibold">Image</h3>
-                    <Button variant="outline" size="sm" onClick={() => setIsUploadImageModalOpen(true)}>
-                        <Upload className="h-4 w-4 mr-2" />
-                        Upload file
-                    </Button>
+                    {
+                        project?.isOwner && (
+                            <Button variant="outline" size="sm" onClick={() => setIsUploadImageModalOpen(true)}>
+                                <Upload className="h-4 w-4 mr-2" />
+                                Upload file
+                            </Button>
+                        )
+                    }
                 </div>
                 {isLoadingImages && <CardSkeleton count={4} />}
                 {isErrorImages && <p className="text-red-500">Error loading images.</p>}

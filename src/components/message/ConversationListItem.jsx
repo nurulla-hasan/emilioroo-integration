@@ -1,4 +1,5 @@
 "use client";
+import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const ConversationListItem = ({ conv, active, onClick }) => (
@@ -6,7 +7,7 @@ const ConversationListItem = ({ conv, active, onClick }) => (
         <div className="relative">
             <Avatar className="h-14 w-14 mr-4">
                 <AvatarImage src={conv.avatar} alt={conv.name} />
-                <AvatarFallback>{conv.name[0]}</AvatarFallback>
+                <AvatarFallback>{getInitials(conv.name)}</AvatarFallback>
             </Avatar>
             {/* Online Indicator */}
             {conv.online && <div className="absolute bottom-0 right-4 w-3 h-3 bg-green-500 rounded-full border-2 border-card"></div>}

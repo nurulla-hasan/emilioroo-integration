@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { ConversationList } from "@/components/message/ConversationList";
 import { MessagePanel } from "@/components/message/MessagePanel";
@@ -35,7 +35,6 @@ const MessagePage = () => {
     const conversations = useMemo(() => {
         return chatListData?.data?.data?.map(conv => {
             const isGroup = conv.type === 'group';
-
             const subtype = isGroup
                 ? conv.chatGroup
                     ? 'chatGroup'
@@ -57,8 +56,12 @@ const MessagePage = () => {
 
             const avatar =
                 subtype === 'chatGroup'
-                    ? conv.chatGroup.image || fallbackAvatar
-                    : conv.userData.profile_image || fallbackAvatar;
+                    ? conv.chatGroup?.image || fallbackAvatar
+                    : subtype === 'project'
+                        ? conv.project?.cover_image || fallbackAvatar
+                        : subtype === 'bondLink'
+                            ? conv.bondLink?.cover_image || "/images/groupFallback.jpg"
+                            : conv.userData?.profile_image || fallbackAvatar;
 
             return {
                 id: conv._id,
@@ -82,7 +85,6 @@ const MessagePage = () => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [isMediaSheetOpen, setIsMediaSheetOpen] = useState(false);
-    const initialConversationSet = useRef(false);
 
     const { data: messagesData, isLoading: isMessagesLoading, isError: isMessagesError } = useGetSingleConversationQuery(
         {
@@ -282,12 +284,7 @@ const MessagePage = () => {
         }
     }, [messagesData, markAsSeen, page, limit]);
 
-    useEffect(() => {
-        if (conversations.length > 0 && !initialConversationSet.current) {
-            setActiveConversation(conversations[0]);
-            initialConversationSet.current = true;
-        }
-    }, [conversations]);
+
 
     // Reset page to 1 when activeConversation changes
     useEffect(() => {

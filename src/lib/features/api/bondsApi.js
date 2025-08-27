@@ -139,7 +139,7 @@ const bondsApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["BONDS"],
+            invalidatesTags: ["BONDS", "CONVERSATIONS"],
         }),
 
 
