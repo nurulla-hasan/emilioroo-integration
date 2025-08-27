@@ -7,8 +7,7 @@ import Image from 'next/image';
 export const MediaPanel = ({ media = [] }) => {
     return (
         <div className="w-full bg-card flex-col h-full flex">
-            {/* The header is now in the parent sheet, so we can remove it from here if needed */}
-            {/* <div className="p-4 border-b"><h2 className="text-lg font-semibold">Media and files</h2></div> */}
+            
             <ScrollArea className="flex-1">
                 <div className="p-4">
                     {media.length > 0 ? (

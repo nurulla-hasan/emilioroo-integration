@@ -78,47 +78,34 @@ const MessagePage = () => {
 
         if (eventName) {
             const handleNewMessage = (msg) => {
-                console.log("📥 Received message:", msg);
                 setMessages((prevMessages) => {
-                    // Transform the incoming message to match frontend expectations
-                    const transformedMsg = {
-                        ...msg,
-                        id: msg._id, // Ensure 'id' is always '_id'
-                        text: msg.text, // Explicitly include the text content
-                        sender: msg.isMyMessage ? 'me' : (msg.msgByUserId?.name || 'Unknown User'), // Set sender string with fallback
-                        avatar: msg.msgByUserId?.profile_image || fallbackAvatar, // Set avatar with fallback
-                        time: timeAgo(msg.createdAt), // Set formatted time
-                        type: 'text' // Ensure type is set
-                    };
+                    const transformedMsg = transformMessage(msg);
 
-                    // Try to find and replace an optimistic message
-                    let replaced = false;
-                    const updated = prevMessages.map(m => {
-                        // Match the first optimistic message. This assumes messages are processed in order.
-                        if (!replaced && m._id && typeof m._id === 'string' && m._id.startsWith('optimistic-')) {
-                            replaced = true;
-                            // Replace optimistic msg with server-confirmed one, but preserve essential client-side data.
-                            return {
-                                ...transformedMsg, // Take real ID and timestamp from server
-                                text: m.text,      // But use the text from our optimistic message
-                                isMyMessage: true, // And enforce that it's our message
-                                sender: 'me',
-                                avatar: m.avatar,
-                                type: 'text'       // Ensure the type is preserved
-                            };
+                    const optimisticIndex = prevMessages.findIndex(m => m._id && typeof m._id === 'string' && m._id.startsWith('optimistic-'));
+
+                    let newMessages;
+
+                    if (optimisticIndex > -1) {
+                        newMessages = [...prevMessages];
+                        newMessages[optimisticIndex] = {
+                            ...transformedMsg,
+                            text: prevMessages[optimisticIndex].text,
+                            isMyMessage: true,
+                            sender: 'me',
+                            avatar: prevMessages[optimisticIndex].avatar,
+                            type: 'text'
+                        };
+                    } else {
+                        const exists = prevMessages.some(m => m._id === transformedMsg.id);
+                        if (!exists) {
+                            newMessages = [...prevMessages, transformedMsg];
+                        } else {
+                            newMessages = [...prevMessages];
                         }
-                        return m;
-                    });
-
-                    // If no optimistic message was replaced, and the message doesn't already exist by its real _id, add it
-                    const existsByRealId = updated.some(m => m._id === transformedMsg.id);
-                    if (!existsByRealId) {
-                        const newMessages = [...updated, transformedMsg];
-                        newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                        return newMessages;
                     }
-                    updated.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                    return updated;
+
+                    newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    return newMessages;
                 });
             };
 
@@ -135,7 +122,7 @@ const MessagePage = () => {
 
         // Listen for seen events
         socket.on("seen", (data) => {
-            console.log("👁 Received seen event:", data);
+            
         });
 
         return () => {
@@ -143,30 +130,45 @@ const MessagePage = () => {
         };
     }, [socket])
 
+    const transformMessage = (msg) => {
+        const userDetails = msg.userDetails || msg.msgByUserId;
+
+        return {
+            ...msg,
+            id: msg._id,
+            text: msg.text,
+            sender: msg.isMyMessage ? 'me' : (userDetails?.name || 'Unknown User'),
+            avatar: userDetails?.profile_image || fallbackAvatar,
+            time: timeAgo(msg.createdAt),
+            type: 'text'
+        };
+    };
+
     useEffect(() => {
         if (messagesData?.data?.result) {
             const { result, meta } = messagesData.data;
-            const transformedMessages = result.map(msg => ({
-                ...msg,
-                id: msg._id,
-                sender: msg.isMyMessage ? 'me' : msg.userDetails.name,
-                avatar: msg.userDetails.profile_image || fallbackAvatar,
-                time: timeAgo(msg.createdAt),
-                type: 'text'
-            })) || [];
-            // Sort messages by createdAt in ascending order
+            const transformedMessages = result.map(transformMessage) || [];
             transformedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
             setMessages(prevMessages => {
+                let combinedMessages;
                 if (meta.page === 1) {
-                    return transformedMessages;
+                    combinedMessages = transformedMessages;
                 } else {
-                    // Prepend new messages for pagination
-                    return [...transformedMessages, ...prevMessages];
+                    combinedMessages = [...transformedMessages, ...prevMessages];
                 }
+
+                const messageMap = new Map();
+                combinedMessages.forEach(msg => {
+                    messageMap.set(msg.id, msg);
+                });
+
+                const uniqueMessages = Array.from(messageMap.values());
+                uniqueMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                
+                return uniqueMessages;
             });
 
-            // Mark messages as seen when they are loaded
             if (transformedMessages.length > 0) {
                 const lastMessageId = transformedMessages[transformedMessages.length - 1].id;
                 markAsSeen(lastMessageId);
@@ -212,18 +214,17 @@ const MessagePage = () => {
 
             sendMessage(payload);
 
-            // Optimistically update local UI
             const tempId = `optimistic-${Date.now()}`;
             const newMsg = {
                 _id: tempId,
-                id: tempId, // Use id for key prop consistency
+                id: tempId,
                 text: newMessage,
                 sender: 'me',
-                time: 'Just now', // Display 'Just now' for optimistic message
-                createdAt: new Date().toISOString(), // Use current time for sorting
+                time: 'Just now',
+                createdAt: new Date().toISOString(),
                 type: 'text',
-                isMyMessage: true, // Explicitly mark as my message
-                avatar: fallbackAvatar // Use fallback avatar for optimistic message
+                isMyMessage: true,
+                avatar: fallbackAvatar
             };
             setMessages((prevMessages) => {
                 const updatedMessages = [...prevMessages, newMsg];

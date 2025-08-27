@@ -19,16 +19,16 @@ export const Message = ({ msg }) => {
 
     return (
         <div className="flex items-start gap-3 my-2">
-            <Avatar className="h-8 w-8 hidden md:block">
+            <Avatar className="h-8 w-8">
                 <AvatarImage src={msg.avatar} alt={msg.sender} />
                 <AvatarFallback>{msg.sender ? msg.sender[0] : ''}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-                <p className="font-semibold text-xs mb-1 hidden md:block">{msg.sender}</p>
+                <p className="font-semibold text-xs mb-1">{msg.sender}</p>
                 <div className={`p-3 rounded-2xl max-w-md bg-muted rounded-bl-none`}>
                     {msg.type === 'text' && <p>{msg.text}</p>}
                     {msg.type === 'image' && <Image src={msg.src} alt="sent image" width={200} height={150} className="rounded-lg" />}
-                    <p className="text-xs text-right mt-1 opacity-70">{timeAgo(msg.createdAt)}</p>
+                    <p className="text-xs text-left mt-1 opacity-70">{timeAgo(msg.createdAt)}</p>
                 </div>
             </div>
         </div>
