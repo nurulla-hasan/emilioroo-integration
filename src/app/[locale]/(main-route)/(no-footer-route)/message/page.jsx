@@ -1,26 +1,30 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { ConversationList } from "@/components/message/ConversationList";
 import { MessagePanel } from "@/components/message/MessagePanel";
 import { MediaPanel } from "@/components/message/MediaPanel";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { fakeMediaByConversation } from "@/components/message/data";
-import { useGetChatListQuery, useGetSingleConversationQuery } from "@/lib/features/api/chatApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadFailed from "@/components/common/LoadFailed";
 import { fallbackAvatar, timeAgo } from "@/lib/utils";
 import { useSocket } from '@/context/soket-context/SocketContext';
+import { useGetChatListQuery, useGetSingleConversationQuery } from "@/lib/features/api/chatApi";
+import { baseApi } from "@/lib/features/api/baseApi";
 
 const MessagePage = () => {
     const { socket, sendMessage, sendSeen } = useSocket();
+
+    const dispatch = useDispatch();
 
     const markAsSeen = useCallback((messageId) => {
         sendSeen({ messageId });
     }, [sendSeen]);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
-    const [limit] = useState(20); // Fetch 20 messages at a time
+    const [limit] = useState(20);
 
     const { data: chatListData, isLoading: isChatListLoading, isError: isChatListError } = useGetChatListQuery(
         {
@@ -33,14 +37,14 @@ const MessagePage = () => {
             id: conv._id,
             conversationId: conv._id,
             userId: conv.userData._id,
-            type: conv.type, // Add conversation type
-            bondLinkId: conv.type === 'group' && conv.bondLink ? conv.bondLink._id : undefined, // Add bondLinkId for group type
-            projectId: conv.type === 'project' && conv.project ? conv.project._id : undefined, // Add projectId for project type
-            chatGroupId: conv.type === 'chatGroup' && conv.chatGroup ? conv.chatGroup._id : undefined, // Add chatGroupId for chatGroup type
+            type: conv.type, 
+            bondLinkId: conv.type === 'group' && conv.bondLink ? conv.bondLink._id : undefined, 
+            projectId: conv.type === 'project' && conv.project ? conv.project._id : undefined,
+            chatGroupId: conv.type === 'chatGroup' && conv.chatGroup ? conv.chatGroup._id : undefined,
             name: conv.type === 'group' ? conv.bondLink.name : conv.userData.name,
             avatar: conv.userData.profile_image || fallbackAvatar,
             lastMessage: conv.lastMessage?.text || 'No messages yet',
-            time: timeAgo(conv.updated_at),
+            time: timeAgo(conv.lastMessage?.createdAt || conv.updated_at),
             online: false, // Not available in API
         })) || [];
     }, [chatListData]);
@@ -120,8 +124,54 @@ const MessagePage = () => {
     useEffect(() => {
         if (!socket) return;
 
+        const handleConversationUpdate = (newConvData) => {
+            console.log("💬 Received conversation update from socket:", newConvData);
+
+            dispatch(baseApi.util.updateQueryData('getChatList', { searchTerm: '' }, (draft) => {
+                if (!draft.data) {
+                    draft.data = {};
+                }
+                if (!draft.data.data) {
+                    draft.data.data = [];
+                }
+
+                if (!newConvData || !newConvData._id) {
+                    console.warn("Received invalid conversation data from socket:", newConvData);
+                    return;
+                }
+
+                const existingConvIndex = draft.data.data.findIndex(
+                    (conv) => conv._id === newConvData._id
+                );
+
+                if (existingConvIndex !== -1) {
+                    draft.data.data[existingConvIndex].lastMessage = newConvData.lastMessage;
+                    draft.data.data[existingConvIndex].updated_at = newConvData.updated_at || newConvData.lastMessage?.updatedAt;
+                    draft.data.data[existingConvIndex].unseenMsg = newConvData.unseenMsg;
+                    const updatedConv = draft.data.data.splice(existingConvIndex, 1)[0];
+                    draft.data.data.unshift(updatedConv);
+
+                } else {
+                    const newConversation = { ...newConvData };
+                    newConversation.updated_at = newConvData.updated_at || newConvData.lastMessage?.updatedAt || new Date().toISOString();
+                    draft.data.data.unshift(newConversation);
+                }
+                draft.data.data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+            }));
+        };
+
+        socket.on("conversation", handleConversationUpdate);
+
+        return () => {
+            socket.off("conversation", handleConversationUpdate);
+        };
+    }, [socket, dispatch]);
+
+    useEffect(() => {
+        if (!socket) return;
+
         // Listen for seen events
-        socket.on("seen", (data) => {
+        socket.on("seen", () => {
             
         });
 
@@ -209,9 +259,10 @@ const MessagePage = () => {
                     break;
                 default:
                     console.warn("Unknown conversation type or missing ID for sending message:", activeConversation.type, activeConversation);
-                    return; // Do not send message for unhandled types
+                    return;
             }
 
+            console.log("🚀 Sending message payload:", payload);
             sendMessage(payload);
 
             const tempId = `optimistic-${Date.now()}`;
@@ -237,6 +288,56 @@ const MessagePage = () => {
 
     const handleSend = () => {
         handleSendMessage();
+    };
+
+    const handleSendMedia = (url, mediaType) => {
+        if (!activeConversation) return;
+
+        let payload = {
+            text: '',
+            imageUrl: [],
+            videoUrl: [],
+        };
+
+        if (mediaType === 'image') {
+            payload.imageUrl.push(url);
+        } else {
+            payload.videoUrl.push(url);
+        }
+
+        switch (activeConversation.type) {
+            case 'one-two-one':
+                payload.receiver = activeConversation.userId;
+                break;
+            case 'group':
+                payload.bondLinkId = activeConversation.bondLinkId;
+                break;
+            default:
+                console.warn("Unknown conversation type or missing ID for sending message:", activeConversation.type, activeConversation);
+                return;
+        }
+
+        console.log("🚀 Sending media message payload:", payload);
+        sendMessage(payload);
+
+        const tempId = `optimistic-${Date.now()}`;
+        const newMsg = {
+            _id: tempId,
+            id: tempId,
+            text: '',
+            imageUrl: mediaType === 'image' ? [url] : [],
+            videoUrl: mediaType === 'video' ? [url] : [],
+            sender: 'me',
+            time: 'Just now',
+            createdAt: new Date().toISOString(),
+            isMyMessage: true,
+            avatar: fallbackAvatar
+        };
+        setMessages((prevMessages) => {
+            const updatedMessages = [...prevMessages, newMsg];
+            updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            return updatedMessages;
+        });
     };
 
     const handleBack = () => {
@@ -294,7 +395,8 @@ const MessagePage = () => {
                                 onOpenMedia={() => setIsMediaSheetOpen(true)}
                                 newMessage={newMessage}
                                 setNewMessage={setNewMessage}
-                                                                onSendMessage={handleSend}
+                                onSendMessage={handleSend}
+                                onSendMedia={handleSendMedia}
                                 fetchMoreMessages={fetchMoreMessages}
                                 isMessagesLoading={isMessagesLoading} />
                         )
@@ -330,6 +432,7 @@ const MessagePage = () => {
                                     newMessage={newMessage}
                                     setNewMessage={setNewMessage}
                                     onSendMessage={handleSend}
+                                    onSendMedia={handleSendMedia}
                                     fetchMoreMessages={fetchMoreMessages}
                                     isMessagesLoading={isMessagesLoading} />
                             )

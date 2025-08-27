@@ -4,10 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 import { Message } from './Message';
-import { ArrowLeft, ImageUpIcon, Info, PlusCircle, Send, Smile } from "lucide-react";
+import { ArrowLeft, Info, PlusCircle, Send, X } from "lucide-react";
 
 export const MessagePanel = ({
     conversation,
@@ -18,11 +19,13 @@ export const MessagePanel = ({
     onSendMessage,
     fetchMoreMessages,
     isMessagesLoading,
-    onBack // Add onBack prop
+    onBack
 }) => {
     const messagesEndRef = useRef(null);
     const scrollViewportRef = useRef(null);
     const prevScrollHeightRef = useRef(null);
+    const fileInputRef = useRef(null);
+    const [stagedFiles, setStagedFiles] = useState([]);
 
     const lastMessage = messages[messages.length - 1];
     useEffect(() => {
@@ -50,11 +53,37 @@ export const MessagePanel = ({
         }
     };
 
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        setStagedFiles([file]); // For now, only one file
+        if(fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
+    const removeStagedFile = (fileToRemove) => {
+        setStagedFiles(stagedFiles.filter(file => file !== fileToRemove));
+    };
+
+    const handleSendClick = () => {
+        if (newMessage.trim() === '' && stagedFiles.length === 0) {
+            return; // Nothing to send
+        }
+        onSendMessage(newMessage, stagedFiles);
+        setNewMessage('');
+        setStagedFiles([]);
+    };
+
     return (
         <div className="w-full bg-card flex flex-col h-full">
             <div className="p-3 border-b flex items-center justify-between shadow-sm">
                 <div className="flex items-center">
-                    <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}> {/* Back button for mobile */}
+                    <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}>
                         <ArrowLeft />
                     </Button>
                     <Avatar className="h-10 w-10 mr-4">
@@ -74,34 +103,43 @@ export const MessagePanel = ({
                 </div>
             </div>
             <ScrollArea className="flex-1 p-4 h-96 bg-background/50" onScroll={handleScroll}>
-                {isMessagesLoading && prevScrollHeightRef.current !== null && (
-                    <div className="text-center text-muted-foreground py-2">Loading older messages...</div>
-                )}
                 {messages.map(msg => <Message key={msg._id} msg={msg} />)}
                 <div ref={messagesEndRef} />
             </ScrollArea>
             <div className="p-4 border-t bg-card">
+                {stagedFiles.length > 0 && (
+                    <div className="p-2">
+                        {stagedFiles.map((file, index) => (
+                            <div key={index} className="relative w-16 h-16 inline-block">
+                                <Image src={URL.createObjectURL(file)} layout="fill" className="object-cover rounded-lg" alt={`Staged file ${index + 1}`} />
+                                <button onClick={() => removeStagedFile(file)} className="absolute top-1 right-1 bg-gray-800/70 text-white rounded-full p-1 cursor-pointer">
+                                    <X className="w-3 h-3" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
                 <div className="relative flex items-center gap-2">
-                    <Button variant="ghost" size="icon">
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept="image/*,video/*"
+                    />
+                    <Button variant="ghost" size="icon" onClick={handleUploadClick}>
                         <PlusCircle />
                     </Button>
-                    <Button variant="ghost" size="icon">
-                        <ImageUpIcon />
-                    </Button><div className="flex-1 relative">
+                    <div className="flex-1 relative">
                         <Input
                             placeholder="Aa" value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && onSendMessage()}
-                            className="rounded-full bg-muted pr-12" />
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-2 top-1/2 -translate-y-1/2">
-                            <Smile />
-                        </Button>
+                            onKeyPress={(e) => e.key === 'Enter' && handleSendClick()}
+                            className="rounded-full bg-muted"
+                        />
                     </div>
                     <Button
-                        onClick={onSendMessage}
+                        onClick={handleSendClick}
                         size="icon" variant="ghost">
                         <Send />
                     </Button>
