@@ -49,7 +49,7 @@ const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
     });
 
     // Fetch all audios (assuming the API supports a way to get all without pagination, or a high limit)
-    const { data: audioData, isLoading: isAudioLoading } = useGetAllAudioQuery({ limit: 500 }); // High limit to get all audios
+    const { data: audioData, isLoading: isAudioLoading } = useGetAllAudioQuery(); 
     const [createPlaylist, { isLoading: isCreating }] = useCreatePlaylistMutation();
 
     const audioOptions = useMemo(() => {
@@ -57,8 +57,10 @@ const CreatePlaylistModal = ({ isOpen, onOpenChange }) => {
         return audioData.data.result.map(audio => ({
             value: audio._id,
             label: audio.title,
+            avatar: audio.cover_image
         }));
     }, [audioData]);
+
 
     const form = useForm({
         resolver: zodResolver(formSchema),

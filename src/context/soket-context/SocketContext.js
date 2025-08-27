@@ -57,7 +57,7 @@ export function SocketProvider({ children }) {
     const sendMessage = (payload) => {
         if (socket) {
             socket.emit("send-message", payload);
-            console.log("📤 Sent message:", payload);
+            // console.log("📤 Sent message:", payload);
         }
     };
 

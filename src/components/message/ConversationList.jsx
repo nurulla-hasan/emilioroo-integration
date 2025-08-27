@@ -2,19 +2,28 @@
 
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import ConversationListItem from "./ConversationListItem";
+import { Button } from "../ui/button";
+import { useState } from "react";
+import { CreateGroupModal } from "./CreateGroupModal";
 
 
 
 export const ConversationList = ({ conversations, activeConversation, onConversationClick, searchTerm, setSearchTerm }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
     return (
         <div className="bg-card border-r flex-col h-full flex w-full">
             <div className="p-4 border-b">
-                <h1 className="text-2xl font-bold">Chats</h1>
+                <div className="flex items-start justify-between">
+                    <h1 className="text-2xl font-bold">Chats</h1>
+                    <Button variant="outline" className="" onClick={() => setIsModalOpen(true)}>
+                        <Plus />Create Group
+                    </Button>
+                </div>
                 <div className="relative mt-4">
-                    <Input 
-                        placeholder="Search Messenger" 
+                    <Input
+                        placeholder="Search Messenger"
                         className="pl-10 rounded-full bg-muted"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -34,6 +43,7 @@ export const ConversationList = ({ conversations, activeConversation, onConversa
                     )}
                 </div>
             </ScrollArea>
+            <CreateGroupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
     );
 };

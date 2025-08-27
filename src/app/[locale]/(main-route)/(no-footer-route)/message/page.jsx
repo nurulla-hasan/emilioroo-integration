@@ -84,9 +84,11 @@ const MessagePage = () => {
                     const transformedMsg = {
                         ...msg,
                         id: msg._id, // Ensure 'id' is always '_id'
-                        sender: msg.isMyMessage ? 'me' : (msg.userDetails?.name || 'Unknown User'), // Set sender string with fallback
-                        avatar: msg.userDetails?.profile_image || fallbackAvatar, // Set avatar with fallback
+                        text: msg.text, // Explicitly include the text content
+                        sender: msg.isMyMessage ? 'me' : (msg.msgByUserId?.name || 'Unknown User'), // Set sender string with fallback
+                        avatar: msg.msgByUserId?.profile_image || fallbackAvatar, // Set avatar with fallback
                         time: timeAgo(msg.createdAt), // Set formatted time
+                        type: 'text' // Ensure type is set
                     };
 
                     // Try to find and replace an optimistic message
