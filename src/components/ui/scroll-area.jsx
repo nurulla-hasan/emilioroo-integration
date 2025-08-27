@@ -26,7 +26,6 @@ function ScrollArea({
   );
 }
 
-const ScrollAreaWithRef = React.forwardRef(ScrollArea);
 
 function ScrollBar({
   className,

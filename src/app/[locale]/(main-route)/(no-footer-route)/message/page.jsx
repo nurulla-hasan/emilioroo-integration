@@ -33,20 +33,49 @@ const MessagePage = () => {
     );
 
     const conversations = useMemo(() => {
-        return chatListData?.data?.data?.map(conv => ({
-            id: conv._id,
-            conversationId: conv._id,
-            userId: conv.userData._id,
-            type: conv.type, 
-            bondLinkId: conv.type === 'group' && conv.bondLink ? conv.bondLink._id : undefined, 
-            projectId: conv.type === 'project' && conv.project ? conv.project._id : undefined,
-            chatGroupId: conv.type === 'chatGroup' && conv.chatGroup ? conv.chatGroup._id : undefined,
-            name: conv.type === 'group' ? conv.bondLink.name : conv.userData.name,
-            avatar: conv.userData.profile_image || fallbackAvatar,
-            lastMessage: conv.lastMessage?.text || 'No messages yet',
-            time: timeAgo(conv.lastMessage?.createdAt || conv.updated_at),
-            online: false, // Not available in API
-        })) || [];
+        return chatListData?.data?.data?.map(conv => {
+            const isGroup = conv.type === 'group';
+
+            const subtype = isGroup
+                ? conv.chatGroup
+                    ? 'chatGroup'
+                    : conv.bondLink
+                        ? 'bondLink'
+                        : conv.project
+                            ? 'project'
+                            : 'oneToOne'
+                : 'oneToOne';
+
+            const name =
+                subtype === 'chatGroup'
+                    ? conv.chatGroup.name
+                    : subtype === 'bondLink'
+                        ? conv.bondLink.name
+                        : subtype === 'project'
+                            ? conv.project.name
+                            : conv.userData.name;
+
+            const avatar =
+                subtype === 'chatGroup'
+                    ? conv.chatGroup.image || fallbackAvatar
+                    : conv.userData.profile_image || fallbackAvatar;
+
+            return {
+                id: conv._id,
+                conversationId: conv._id,
+                userId: conv.userData._id,
+                type: conv.type,
+                subtype,
+                bondLinkId: conv.bondLink?._id,
+                projectId: conv.project?._id,
+                chatGroupId: conv.chatGroup?._id,
+                name,
+                avatar,
+                lastMessage: conv.lastMessage?.text || 'No messages yet',
+                time: timeAgo(conv.lastMessage?.createdAt || conv.updated_at),
+                online: false,
+            };
+        }) || [];
     }, [chatListData]);
 
     const [activeConversation, setActiveConversation] = useState(null);
@@ -124,9 +153,36 @@ const MessagePage = () => {
     useEffect(() => {
         if (!socket) return;
 
-        const handleConversationUpdate = (newConvData) => {
-            console.log("💬 Received conversation update from socket:", newConvData);
+        const handleGenericMessage = (msg) => {
+            console.log("✉️ Received generic message:", msg);
 
+            // If the message is for the currently active conversation, let the existing handler manage it
+            if (activeConversation && msg.conversationId === activeConversation.conversationId) {
+                // The existing handleNewMessage in the other useEffect will handle this
+                return;
+            }
+
+            // Message is for a non-active conversation
+            const targetConversation = conversations.find(conv => conv.conversationId === msg.conversationId);
+
+            if (targetConversation) {
+                // Invalidate the cache for getSingleConversation for this specific userId
+                // This will force a refetch when the user navigates to this conversation
+                dispatch(baseApi.util.invalidateQueries('getSingleConversation', { userId: targetConversation.userId }));
+            }
+        };
+
+        socket.on("message", handleGenericMessage);
+
+        return () => {
+            socket.off("message", handleGenericMessage);
+        };
+    }, [socket, activeConversation, conversations, dispatch]);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleConversationUpdate = (newConvData) => {
             dispatch(baseApi.util.updateQueryData('getChatList', { searchTerm: '' }, (draft) => {
                 if (!draft.data) {
                     draft.data = {};
@@ -172,7 +228,7 @@ const MessagePage = () => {
 
         // Listen for seen events
         socket.on("seen", () => {
-            
+
         });
 
         return () => {
@@ -215,7 +271,7 @@ const MessagePage = () => {
 
                 const uniqueMessages = Array.from(messageMap.values());
                 uniqueMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                
+
                 return uniqueMessages;
             });
 
@@ -261,8 +317,6 @@ const MessagePage = () => {
                     console.warn("Unknown conversation type or missing ID for sending message:", activeConversation.type, activeConversation);
                     return;
             }
-
-            console.log("🚀 Sending message payload:", payload);
             sendMessage(payload);
 
             const tempId = `optimistic-${Date.now()}`;

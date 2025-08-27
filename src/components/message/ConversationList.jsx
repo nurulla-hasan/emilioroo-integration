@@ -31,7 +31,7 @@ export const ConversationList = ({ conversations, activeConversation, onConversa
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 </div>
             </div>
-            <ScrollArea className="flex-1">
+            <ScrollArea className="flex-1 h-96">
                 <div className="p-2 space-y-1">
                     {conversations.map(conv =>
                         <ConversationListItem

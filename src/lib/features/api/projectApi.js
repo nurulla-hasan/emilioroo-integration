@@ -85,7 +85,7 @@ const projectApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["PROJECTS"],
+            invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
         // UPDATE PROJECT

@@ -42,7 +42,17 @@ const chatApi = baseApi.injectEndpoints({
             providesTags: ["CONVERSATIONS"],
         }),
 
+        // CREATE GROUP CHAT
+        createGroup: builder.mutation({
+            query: (data) => ({
+                url: "/chat-group/create",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["CONVERSATIONS"],
+        }),
+
     }),
 });
 
-export const { useGetChatListQuery, useGetSingleConversationQuery } = chatApi;
+export const { useGetChatListQuery, useGetSingleConversationQuery, useCreateGroupMutation } = chatApi;

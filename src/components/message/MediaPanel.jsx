@@ -8,7 +8,7 @@ export const MediaPanel = ({ media = [] }) => {
     return (
         <div className="w-full bg-card flex-col h-full flex">
             
-            <ScrollArea className="flex-1">
+            <ScrollArea className="flex-1 h-96">
                 <div className="p-4">
                     {media.length > 0 ? (
                         <div className="grid grid-cols-3 gap-2">
