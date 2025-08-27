@@ -34,7 +34,7 @@ export const CreateGroupModal = ({ isOpen, onClose }) => {
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                     <div>
-                        <Label htmlFor="groupName">Group Name</Label>
+                        <Label className="mb-2" htmlFor="groupName">Group Name</Label>
                         <Input
                             id="groupName"
                             value={groupName}
@@ -43,7 +43,7 @@ export const CreateGroupModal = ({ isOpen, onClose }) => {
                         />
                     </div>
                     <div>
-                        <Label>Select Members</Label>
+                        <Label className="mb-2">Select Members</Label>
                         <MultipleSelector
                             options={userOptions}
                             value={selectedUsers}
