@@ -12,6 +12,7 @@ import { useGetFollowersQuery, useGetMyFriendsQuery, useGetFollowingQuery } from
 import PeopleCardSkeleton from "@/components/skeleton/PeopleCardSkeleton";
 import LoadFailed from "@/components/common/LoadFailed";
 import CustomPagination from "@/components/common/CustomPagination";
+import NoData from "@/components/common/NoData";
 
 
 const Friends = () => {
@@ -73,12 +74,12 @@ const Friends = () => {
                                 isMyFriendLoading ? (
                                     <PeopleCardSkeleton count={12} />
                                 ) : isMyFriendError ? (
-                                    <div className="col-span-full mt-20 mx-auto">
-                                        <LoadFailed />
+                                    <div className="col-span-full flex justify-center md:h-[60vh]">
+                                        <LoadFailed msg={"Failed to load friends."}/>
                                     </div>
                                 ) : myFriends.length === 0 ? (
-                                    <div className="col-span-full mx-auto mt-20 text-muted-foreground">
-                                        No friends for now.
+                                    <div className="col-span-full flex justify-center md:h-[60vh]">
+                                        <NoData msg="No friends for now." />
                                     </div>
                                 ) : (
                                     myFriends?.map((friend) => (
@@ -104,12 +105,12 @@ const Friends = () => {
                                 isMyFollowerLoading ? (
                                     <PeopleCardSkeleton count={12} />
                                 ) : isMyFollowerError ? (
-                                    <div className="col-span-full mt-20 mx-auto">
-                                        <LoadFailed />
+                                    <div className="col-span-full flex justify-center md:h-[60vh]">
+                                        <LoadFailed msg={"Failed to load followers."}/>
                                     </div>
                                 ) : myFollower.length === 0 ? (
-                                    <div className="col-span-full mx-auto mt-20 text-muted-foreground">
-                                        No followers for now.
+                                    <div className="col-span-full flex justify-center md:h-[60vh]">
+                                        <NoData msg="No follower for now." />
                                     </div>
                                 ) : (
                                     myFollower?.map((follower) => (
@@ -135,12 +136,12 @@ const Friends = () => {
                                 isSentRequestLoading ? (
                                     <PeopleCardSkeleton count={12} />
                                 ) : isSentRequestError ? (
-                                    <div className="col-span-full mt-20 mx-auto">
-                                        <LoadFailed />
+                                    <div className="col-span-full flex justify-center md:h-[60vh]">
+                                        <LoadFailed msg={"Failed to load sent requests."}/>
                                     </div>
                                 ) : sentRequests.length === 0 ? (
-                                    <div className="col-span-full mx-auto mt-20 text-muted-foreground">
-                                        No sent requests for now.
+                                    <div className="col-span-full flex justify-center md:h-[60vh]">
+                                        <NoData msg="No sent requests for now." />
                                     </div>
                                 ) : (
                                     sentRequests?.map((request) => (

@@ -17,75 +17,84 @@ import MessagePanelSkeleton from "@/components/skeleton/MessagePanelSkeleton";
 
 const MessagePage = () => {
     const { socket, sendMessage, sendSeen } = useSocket();
-
     const dispatch = useDispatch();
-
     const markAsSeen = useCallback((messageId) => {
         sendSeen({ messageId });
     }, [sendSeen]);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const [limit] = useState(20);
-
     const { data: chatListData, isLoading: isChatListLoading, isError: isChatListError } = useGetChatListQuery(
         {
             searchTerm
         }
     );
-
     const conversations = useMemo(() => {
-        return chatListData?.data?.data?.map(conv => {
+        const conversationData = chatListData?.data?.data || [];
+
+        const uniqueConversationMap = new Map();
+
+        for (const conv of conversationData) {
+            let uniqueKey;
+            if (conv.type === 'one-two-one') {
+                uniqueKey = conv.userData?._id;
+            } else if (conv.type === 'group') {
+                uniqueKey = conv.chatGroup?._id || conv.bondLink?._id || conv.project?._id;
+            }
+            
+            if (uniqueKey && !uniqueConversationMap.has(uniqueKey)) {
+                uniqueConversationMap.set(uniqueKey, conv);
+            }
+        }
+
+        const uniqueConversations = Array.from(uniqueConversationMap.values());
+
+        return uniqueConversations.map(conv => {
             const isGroup = conv.type === 'group';
-            const subtype = isGroup
-                ? conv.chatGroup
-                    ? 'chatGroup'
-                    : conv.bondLink
-                        ? 'bondLink'
-                        : conv.project
-                            ? 'project'
-                            : 'oneToOne'
-                : 'oneToOne';
+            let subtype = 'oneToOne';
+            let name = conv.userData?.name;
+            let avatar = conv.userData?.profile_image || fallbackAvatar;
 
-            const name =
-                subtype === 'chatGroup'
-                    ? conv.chatGroup.name
-                    : subtype === 'bondLink'
-                        ? conv.bondLink.name
-                        : subtype === 'project'
-                            ? conv.project.name
-                            : conv.userData.name;
-
-            const avatar =
-                subtype === 'chatGroup'
-                    ? conv.chatGroup?.image || fallbackAvatar
-                    : subtype === 'project'
-                        ? conv.project?.cover_image || fallbackAvatar
-                        : subtype === 'bondLink'
-                            ? conv.bondLink?.cover_image || "/images/groupFallback.jpg"
-                            : conv.userData?.profile_image || fallbackAvatar;
+            if (isGroup) {
+                if (conv.chatGroup) {
+                    subtype = 'chatGroup';
+                    name = conv.chatGroup.name;
+                    avatar = conv.chatGroup.image || fallbackAvatar;
+                } else if (conv.bondLink) {
+                    subtype = 'bondLink';
+                    name = conv.bondLink.name;
+                    avatar = conv.bondLink.cover_image || "/images/groupFallback.jpg";
+                } else if (conv.project) {
+                    subtype = 'project';
+                    name = conv.project.name;
+                    avatar = conv.project.cover_image || fallbackAvatar;
+                }
+            }
 
             return {
                 id: conv._id,
                 conversationId: conv._id,
-                userId: conv.userData._id,
+                userId: conv.userData?._id,
                 type: conv.type,
                 subtype,
                 bondLinkId: conv.bondLink?._id,
                 projectId: conv.project?._id,
                 chatGroupId: conv.chatGroup?._id,
-                name,
+                name: name || (isGroup ? 'Group' : 'Unknown User'),
                 avatar,
                 lastMessage: conv.lastMessage?.text || 'No messages yet',
                 time: timeAgo(conv.lastMessage?.createdAt || conv.updated_at),
                 online: false,
             };
-        }) || [];
+        });
     }, [chatListData]);
 
     const [activeConversation, setActiveConversation] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [isMediaSheetOpen, setIsMediaSheetOpen] = useState(false);
+    const [mediaUrls, setMediaUrls] = useState([]);
+    const [isUploading, setIsUploading] = useState(false);
 
     const { data: messagesData, isLoading: isMessagesLoading, isError: isMessagesError } = useGetSingleConversationQuery(
         {
@@ -118,9 +127,7 @@ const MessagePage = () => {
                     const transformedMsg = transformMessage(msg);
 
                     const optimisticIndex = prevMessages.findIndex(m => m._id && typeof m._id === 'string' && m._id.startsWith('optimistic-'));
-
                     let newMessages;
-
                     if (optimisticIndex > -1) {
                         newMessages = [...prevMessages];
                         newMessages[optimisticIndex] = {
@@ -157,26 +164,15 @@ const MessagePage = () => {
         if (!socket) return;
 
         const handleGenericMessage = (msg) => {
-            console.log("✉️ Received generic message:", msg);
-
-            // If the message is for the currently active conversation, let the existing handler manage it
             if (activeConversation && msg.conversationId === activeConversation.conversationId) {
-                // The existing handleNewMessage in the other useEffect will handle this
                 return;
             }
-
-            // Message is for a non-active conversation
             const targetConversation = conversations.find(conv => conv.conversationId === msg.conversationId);
-
             if (targetConversation) {
-                // Invalidate the cache for getSingleConversation for this specific userId
-                // This will force a refetch when the user navigates to this conversation
                 dispatch(baseApi.util.invalidateQueries('getSingleConversation', { userId: targetConversation.userId }));
             }
         };
-
         socket.on("message", handleGenericMessage);
-
         return () => {
             socket.off("message", handleGenericMessage);
         };
@@ -184,7 +180,6 @@ const MessagePage = () => {
 
     useEffect(() => {
         if (!socket) return;
-
         const handleConversationUpdate = (newConvData) => {
             dispatch(baseApi.util.updateQueryData('getChatList', { searchTerm: '' }, (draft) => {
                 if (!draft.data) {
@@ -272,9 +267,6 @@ const MessagePage = () => {
         }
     }, [messagesData, markAsSeen, page, limit]);
 
-
-
-    // Reset page to 1 when activeConversation changes
     useEffect(() => {
         setPage(1);
     }, [activeConversation]);
@@ -283,23 +275,60 @@ const MessagePage = () => {
         setActiveConversation(conv);
     };
 
+    const handleFileSelect = async (file) => {
+        if (!file) return;
+
+        setIsUploading(true);
+
+        // --- Placeholder for file upload logic ---
+        // TODO: Replace this with the actual file upload API call tomorrow.
+        const uploadFile = async (fileToUpload) => {
+            console.log("Uploading file:", fileToUpload.name);
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            // Return a dummy URL. The real function will return the URL from the backend.
+            const dummyUrl = `https://dummy-url.com/uploads/${fileToUpload.name}`;
+            console.log("File uploaded, got URL:", dummyUrl);
+            return dummyUrl;
+        };
+        // --- End of placeholder ---
+
+        try {
+            const url = await uploadFile(file);
+            // Assuming for now that we only handle one file at a time,
+            // and it's an image. This can be expanded.
+            setMediaUrls(prev => [...prev, { type: 'image', url }]);
+        } catch (error) {
+            console.error("File upload failed:", error);
+            // Optionally, show an error to the user
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     const handleSendMessage = () => {
-        if (newMessage.trim() && activeConversation) {
-            let payload = {
+        if ((newMessage.trim() || mediaUrls.length > 0) && activeConversation) {
+            const payload = {
                 text: newMessage,
-                imageUrl: [],
-                videoUrl: [],
+                imageUrl: mediaUrls.filter(m => m.type === 'image').map(m => m.url),
+                videoUrl: mediaUrls.filter(m => m.type === 'video').map(m => m.url),
             };
 
-            switch (activeConversation.type) {
-                case 'one-two-one':
+            switch (activeConversation.subtype) {
+                case 'oneToOne':
                     payload.receiver = activeConversation.userId;
                     break;
-                case 'group':
+                case 'chatGroup':
+                    payload.groupId = activeConversation.chatGroupId;
+                    break;
+                case 'bondLink':
                     payload.bondLinkId = activeConversation.bondLinkId;
                     break;
+                case 'project':
+                    payload.projectId = activeConversation.projectId;
+                    break;
                 default:
-                    console.warn("Unknown conversation type or missing ID for sending message:", activeConversation.type, activeConversation);
+                    console.warn("Unknown conversation subtype for sending message:", activeConversation.subtype, activeConversation);
                     return;
             }
             sendMessage(payload);
@@ -309,10 +338,11 @@ const MessagePage = () => {
                 _id: tempId,
                 id: tempId,
                 text: newMessage,
+                imageUrl: payload.imageUrl,
+                videoUrl: payload.videoUrl,
                 sender: 'me',
                 time: 'Just now',
                 createdAt: new Date().toISOString(),
-                type: 'text',
                 isMyMessage: true,
                 avatar: fallbackAvatar
             };
@@ -322,57 +352,8 @@ const MessagePage = () => {
                 return updatedMessages;
             });
             setNewMessage('');
+            setMediaUrls([]);
         }
-    };
-
-    const handleSendMedia = (url, mediaType) => {
-        if (!activeConversation) return;
-
-        let payload = {
-            text: '',
-            imageUrl: [],
-            videoUrl: [],
-        };
-
-        if (mediaType === 'image') {
-            payload.imageUrl.push(url);
-        } else {
-            payload.videoUrl.push(url);
-        }
-
-        switch (activeConversation.type) {
-            case 'one-two-one':
-                payload.receiver = activeConversation.userId;
-                break;
-            case 'group':
-                payload.bondLinkId = activeConversation.bondLinkId;
-                break;
-            default:
-                console.warn("Unknown conversation type or missing ID for sending message:", activeConversation.type, activeConversation);
-                return;
-        }
-
-        console.log("🚀 Sending media message payload:", payload);
-        sendMessage(payload);
-
-        const tempId = `optimistic-${Date.now()}`;
-        const newMsg = {
-            _id: tempId,
-            id: tempId,
-            text: '',
-            imageUrl: mediaType === 'image' ? [url] : [],
-            videoUrl: mediaType === 'video' ? [url] : [],
-            sender: 'me',
-            time: 'Just now',
-            createdAt: new Date().toISOString(),
-            isMyMessage: true,
-            avatar: fallbackAvatar
-        };
-        setMessages((prevMessages) => {
-            const updatedMessages = [...prevMessages, newMsg];
-            updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-            return updatedMessages;
-        });
     };
 
     const handleBack = () => {
@@ -429,9 +410,10 @@ const MessagePage = () => {
                                 newMessage={newMessage}
                                 setNewMessage={setNewMessage}
                                 onSendMessage={handleSendMessage}
-                                onSendMedia={handleSendMedia}
                                 fetchMoreMessages={fetchMoreMessages}
-                                isMessagesLoading={isMessagesLoading} />
+                                isMessagesLoading={isMessagesLoading}
+                                onFileSelect={handleFileSelect}
+                                isUploadingMedia={isUploading} />
                         )
                     )}
                 </div>
@@ -463,9 +445,10 @@ const MessagePage = () => {
                                     newMessage={newMessage}
                                     setNewMessage={setNewMessage}
                                     onSendMessage={handleSendMessage}
-                                    onSendMedia={handleSendMedia}
                                     fetchMoreMessages={fetchMoreMessages}
-                                    isMessagesLoading={isMessagesLoading} />
+                                    isMessagesLoading={isMessagesLoading}
+                                    onFileSelect={handleFileSelect}
+                                    isUploadingMedia={isUploading} />
                             )
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-muted-foreground"><p>Select a conversation to start chatting.</p></div>
