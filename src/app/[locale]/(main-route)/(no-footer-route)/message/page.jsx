@@ -25,23 +25,16 @@ const MessagePage = () => {
     const { profile } = useGetMe();
     const me = profile.data;
     const transformMessage = useTransformMessage(me || {});
-
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const [limit] = useState(20);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-
     const { conversations, isLoading: isChatListLoading, isError: isChatListError } = useConversationsList(searchTerm);
-
-
-
     const [activeConversation, setActiveConversation] = useState(null);
     const [isMediaSheetOpen, setIsMediaSheetOpen] = useState(false);
-
     // Single Conversation
     const singleConversationQueryParams = useMemo(() => {
-        console.log("Calculating singleConversationQueryParams:", activeConversation);
         if (!activeConversation) return null;
 
         const params = { page, limit };
@@ -66,7 +59,6 @@ const MessagePage = () => {
         return hasId ? params : null;
 
     }, [activeConversation, page, limit]);
-
     // Single Conversation
     const { data: messagesData, isLoading: isMessagesLoading, isError: isMessagesError } = useGetSingleConversationQuery(
         singleConversationQueryParams,
@@ -74,24 +66,17 @@ const MessagePage = () => {
             skip: !singleConversationQueryParams,
         }
     );
-
     const handleConversationClick = (conv) => {
         setActiveConversation(conv);
     };
-
-
     const handleBack = () => {
         setActiveConversation(null);
     };
-
     const fetchMoreMessages = () => {
         if (!isMessagesLoading && messagesData?.data?.meta?.totalPage > page) {
             setPage(prevPage => prevPage + 1);
         }
     };
-
-
-
     const handleSendMessage = () => {
         if (newMessage.trim() && activeConversation) {
             const payload = {
@@ -123,7 +108,7 @@ const MessagePage = () => {
                     return;
             }
             sendMessage(payload);
-            dispatch(baseApi.util.invalidateTags(['CONVERSATIONS'])); // Invalidate cache after sending message
+            dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
 
             setNewMessage('');
         }
@@ -208,19 +193,15 @@ const MessagePage = () => {
     }, [socket, activeConversation, transformMessage, me, dispatch]);
 
     useEffect(() => {
-        console.log("Attempting to set up generic message listener. Socket:", !!socket);
         if (!socket) return;
 
         const handleGenericMessage = (msg) => {
-            console.log("Received generic message:", msg);
-            // If the message is for the currently active conversation, it will be handled by the specific eventName listener
             if (activeConversation && (
                 (activeConversation.type === 'one-two-one' && activeConversation.userId === msg.msgByUserId?._id) ||
                 (activeConversation.type === 'chat-group' && activeConversation.chatGroupId === msg.chatGroupId) ||
-                (activeConversation.type === 'bondLink' && activeConversation.bondLinkId === msg.bondLinkId) ||
-                (activeConversation.type === 'project' && activeConversation.projectId === msg.projectId)
+                (activeConversation.type === 'bond-link-group' && activeConversation.bondLinkId === msg.bondLinkId) ||
+                (activeConversation.type === 'project-group' && activeConversation.projectId === msg.projectId)
             )) {
-                // This case should ideally be handled by the specific eventName listener, but as a fallback/double check
                 setMessages((prevMessages) => {
                     const transformedMsg = transformMessage(msg);
                     const tempMsgIndex = prevMessages.findIndex(

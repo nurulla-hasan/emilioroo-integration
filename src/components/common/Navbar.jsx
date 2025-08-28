@@ -337,7 +337,7 @@ const Navbar = () => {
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button variant="ghost" size="icon" className="hover:bg-brand">
-                                            <Image src={localeToFlagMap[locale]} width={20} height={20} alt={locale} className="w-6 h-6 border-2 border-gray-400 rounded-full object-cover" />
+                                            <Image src={localeToFlagMap[locale]} width={20} height={20} alt={locale} priority className="w-6 h-6 border-2 border-gray-400 rounded-full object-cover" />
                                             <span className="sr-only">Language</span>
                                         </Button>
                                     </DropdownMenuTrigger>
