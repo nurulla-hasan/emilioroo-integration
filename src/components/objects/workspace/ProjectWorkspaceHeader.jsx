@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { formatDate } from "@/lib/utils";
+import { fallbackAvatar, formatDate } from "@/lib/utils";
 
 const ProjectWorkspaceHeader = ({ project }) => {
     return (
@@ -24,7 +24,7 @@ const ProjectWorkspaceHeader = ({ project }) => {
                     <h1 className="text-lg md:text-2xl font-bold">{project.name}</h1>
                     <div className="flex items-center gap-2 mt-2">
                         <Avatar className="h-10 w-10">
-                            <AvatarImage src={project.owner.avatar} />
+                            <AvatarImage src={project.owner.profile_image || fallbackAvatar("MALE")} />
                             <AvatarFallback>{project.owner.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>

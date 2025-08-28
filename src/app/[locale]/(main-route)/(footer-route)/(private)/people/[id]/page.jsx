@@ -15,6 +15,8 @@ import PeopleCardButton from "@/components/people/PeopleCardButton"
 import { useSocket } from "@/context/soket-context/SocketContext";
 import { SendMessageModal } from "@/components/friends/SendMessageModal";
 import { toast } from "sonner";
+import { baseApi } from "@/lib/features/api/baseApi"
+import { useDispatch } from "react-redux"
 
 const UserProfilePage = () => {
     const { id } = useParams()
@@ -22,6 +24,7 @@ const UserProfilePage = () => {
     const { data: skillsData, isLoading: areSkillsLoading } = useGetSkillsQuery()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { sendMessage } = useSocket();
+    const dispatch = useDispatch();
 
     const user = userData?.data
 
@@ -53,6 +56,7 @@ const UserProfilePage = () => {
         sendMessage(payload);
         setIsModalOpen(false);
         toast.success(`Message sent to ${user.name}`);
+        dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
     };
 
     if (isUserLoading || areSkillsLoading) {
@@ -93,7 +97,7 @@ const UserProfilePage = () => {
                     <div className="flex justify-center mb-6">
                         <div className="relative">
                             <Image
-                                src={user.profile_image || fallbackAvatar}
+                                src={user.profile_image || fallbackAvatar(user.gender)}
                                 alt={user.name}
                                 width={160}
                                 height={160}

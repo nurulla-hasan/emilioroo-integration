@@ -72,7 +72,7 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
                 {/* Header with background image */}
                 <div className="relative h-32 w-full">
                     <Image
-                        src={project?.cover_image || "/images/placeholder-image.jpg"}
+                        src={project?.cover_image || fallbackAvatar("MALE")}
                         alt={project?.name || "Project"}
                         fill
                         className="object-cover"
@@ -94,7 +94,7 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
                             <div className="flex items-center gap-3">
                                 <Avatar className="h-10 w-10">
                                     <AvatarImage
-                                        src={project?.owner?.profile_image}
+                                        src={project?.owner?.profile_image || fallbackAvatar("MALE")}
                                         alt={project?.owner?.name}
                                     />
                                     <AvatarFallback>
@@ -151,7 +151,7 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
                                             <div key={producer._id} className="flex items-center gap-2">
                                                 <Avatar className="h-8 w-8">
                                                     <AvatarImage
-                                                        src={producer.user?.profile_image || fallbackAvatar}
+                                                        src={producer.user?.profile_image || fallbackAvatar("MALE")}
                                                         alt={producer.user?.name}
                                                     />
                                                     <AvatarFallback className="text-xs">
@@ -187,7 +187,7 @@ export default function ProjectDetailsModal({ isOpen, onOpenChange, projectId })
                                                 </div>
                                                 <Avatar className="h-8 w-8">
                                                     <AvatarImage
-                                                        src={consumer.user?.profile_image || fallbackAvatar}
+                                                        src={consumer.user?.profile_image || fallbackAvatar("MALE")}
                                                         alt={consumer.user?.name}
                                                     />
                                                     <AvatarFallback className="text-xs">

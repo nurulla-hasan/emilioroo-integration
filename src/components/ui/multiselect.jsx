@@ -3,7 +3,7 @@
 import React, { useState, useCallback } from "react";
 import { Check, ChevronDown } from "lucide-react";
 
-import { cn, getInitials } from "@/lib/utils";
+import { cn, fallbackAvatar, getInitials } from "@/lib/utils";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,6 @@ export function MultipleSelector({
   ...props
 }) {
   const [open, setOpen] = useState(false);
-  // console.log(options);
 
   const handleSelect = useCallback((currentValue) => {
     const newValue = (value || []).includes(currentValue)
@@ -61,7 +60,7 @@ export function MultipleSelector({
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarImage
-                      src={option.avatar?.trim()}
+                      src={option.avatar?.trim() || fallbackAvatar(option.gender)}
                       alt={option.label}
                     />
                     <AvatarFallback>{getInitials(option.label)}</AvatarFallback>

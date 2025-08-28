@@ -80,71 +80,92 @@ export default function MyInstitutionsTabs({ searchTerm: parentSearchTerm, onEdi
 
   return (
     <Tabs defaultValue="created" className="w-full" onValueChange={setActiveTab}>
-      <div className="flex justify-end mb-4">
+      <div className="flex md:justify-end mb-4">
         <TabsList className="w-fit">
           <TabsTrigger value="created">Created</TabsTrigger>
           <TabsTrigger value="joined">Joined</TabsTrigger>
         </TabsList>
       </div>
       <TabsContent value="created">
-        <div className="mt-4">
-          {currentLoading && (
-            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
-              {[...Array(pageSize)].map((_, index) => (
-                <CardSkeleton key={index} />
-              ))}
-            </div>
-          )}
-          {currentError && <LoadFailed msg="Failed to load created institutions." />}
-          {!currentLoading && !currentError && currentData?.data?.result?.length === 0 && (
-            <NoData msg="No created institutions found." />
-          )}
-          <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
-            {!currentLoading && !currentError && currentData?.data?.result?.map((institution) => (
-              <MyInstitutionCard key={institution._id} institution={institution} onEdit={onEditInstitution} onDelete={handleDeleteInstitution} />
-            ))}
-          </div>
-          <div className="my-4 absolute bottom-0 right-0 left-0">
-            {!currentLoading && !currentError && totalPages > 1 && (
+        <div>
+          {
+            currentLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                {[...Array(pageSize)].map((_, index) => (
+                  <CardSkeleton key={index} />
+                ))}
+              </div>
+            ) : currentError ? (
+              <LoadFailed msg="Failed to load created institutions." />
+            ) : currentData.data.result.length === 0 ? (
+              <NoData msg="No created institutions found." />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                {currentData.data.result.map((institution) => (
+                  <MyInstitutionCard
+                    key={institution._id}
+                    institution={institution}
+                    onEdit={onEditInstitution}
+                    onDelete={handleDeleteInstitution}
+                  />
+                ))}
+              </div>
+            )
+          }
+
+          {/* Pagination */}
+          {!currentLoading && !currentError && totalPages > 1 && (
+            <div className="my-4 absolute bottom-0 right-0 left-0">
               <CustomPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
               />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </TabsContent>
-      
+
       <TabsContent value="joined">
-        <div className="mt-4">
-          {currentLoading && (
-            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
-              {[...Array(pageSize)].map((_, index) => (
-                <CardSkeleton key={index} />
-              ))}
-            </div>
-          )}
-          {currentError && <p className="text-red-500">Error loading joined institutions.</p>}
-          {!currentLoading && !currentError && currentData?.data?.result?.length === 0 && (
-            <p>No joined institutions found.</p>
-          )}
-          <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
-            {!currentLoading && !currentError && currentData?.data?.result?.map((institution) => (
-              <MyInstitutionCard key={institution._id} institution={institution} onEdit={onEditInstitution} onDelete={handleDeleteInstitution} />
-            ))}
-          </div>
-          <div className="my-4 absolute bottom-0 right-0 left-0">
-            {!currentLoading && !currentError && totalPages > 1 && (
+        <div>
+          {
+            currentLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                {[...Array(pageSize)].map((_, index) => (
+                  <CardSkeleton key={index} />
+                ))}
+              </div>
+            ) : currentError ? (
+              <LoadFailed msg="Failed to load joined institutions." />
+            ) : currentData.data.result.length === 0 ? (
+              <NoData msg="No joined institutions found." />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                {currentData.data.result.map((institution) => (
+                  <MyInstitutionCard
+                    key={institution._id}
+                    institution={institution}
+                    onEdit={onEditInstitution}
+                    onDelete={handleDeleteInstitution}
+                  />
+                ))}
+              </div>
+            )
+          }
+
+          {/* Pagination */}
+          {!currentLoading && !currentError && totalPages > 1 && (
+            <div className="my-4 absolute bottom-0 right-0 left-0">
               <CustomPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
               />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </TabsContent>
+
       <ConfirmationModal
         isOpen={isDeleteConfirmOpen}
         onOpenChange={setIsDeleteConfirmOpen}

@@ -41,7 +41,6 @@ const InstitutionsPage = () => {
     }, [searchQuery])
 
     const totalPages = data?.data?.meta?.totalPage
-    console.log(totalPages);
 
     const handleOpenCreateModal = () => {
         setIsCreateModalOpen(true);
@@ -60,27 +59,27 @@ const InstitutionsPage = () => {
     return (
         <div className="min-h-minus-header">
             <PageLayout>
-                 <CustomBreadcrumb links={breadcrumbLinks} />
-                <div className="flex flex-col md:flex-row items-center justify-between">
+                <CustomBreadcrumb links={breadcrumbLinks} />
+                <div className="flex flex-col md:flex-row items-center justify-between space-y-2">
                     <Title>{t('bePartOfIt')}</Title>
-                    <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
-                        <div className="relative w-full md:w-[250px]">
+                    <div className="flex items-center gap-4">
+                        <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
                                 placeholder={t('searchInstitution')}
-                                className="pl-9"
+                                className="pl-9 "
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <Button className="w-full md:w-auto flex items-center gap-2" onClick={handleOpenCreateModal}>
-                            <Plus className="h-4 w-4" />
+                        <Button className="w-fit" onClick={handleOpenCreateModal}>
+                            <Plus />
                             {t('createInstitution')}
                         </Button>
                     </div>
                 </div>
 
-                <Tabs defaultValue="all-institutions" className="mt-12">
+                <Tabs defaultValue="all-institutions" className="mt-8">
                     <TabsList className="w-fit">
                         <TabsTrigger value="all-institutions">{t('allInstitutions')}</TabsTrigger>
                         <TabsTrigger value="my-institutions">{t('myInstitutions')}</TabsTrigger>
@@ -97,7 +96,9 @@ const InstitutionsPage = () => {
                             t={t} />
                     </TabsContent>
                     <TabsContent value="my-institutions">
-                        <MyInstitutionsTabs searchTerm={searchTerm} onEditInstitution={handleOpenEditModal} />
+                        <MyInstitutionsTabs
+                            searchTerm={searchTerm}
+                            onEditInstitution={handleOpenEditModal} />
                     </TabsContent>
                 </Tabs>
 

@@ -60,6 +60,10 @@ const ObjectsPage = () => {
         }
     }, [activeTab, allProjectsData, allProjectsLoading, allProjectsError, myProjectsData, myProjectsLoading, myProjectsError, joinedProjectsData, joinedProjectsLoading, joinedProjectsError]);
 
+    const allProject = data?.data?.result;
+    const myProject = myProjectsData?.data?.result;
+    const joinedProject = joinedProjectsData?.data?.result;
+
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             setSearchTerm(searchQuery);
@@ -84,10 +88,12 @@ const ObjectsPage = () => {
         <div className="min-h-minus-header">
             <PageLayout>
                 <CustomBreadcrumb links={breadcrumbLinks} />
-                <div className="flex flex-col md:flex-row items-center justify-between">
-                    <h1 className="text-xl md:text-2xl font-bold text-primary mb-4 md:mb-0 dark:text-white">{t('cocreateProducts')}</h1>
-                    <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
-                        <div className="relative w-full md:w-[250px]">
+                <div className="flex flex-col md:flex-row items-center justify-between space-y-2">
+                    <h1 className="text-xl md:text-2xl font-bold text-primary dark:text-white">
+                        {t('cocreateProducts')}
+                    </h1>
+                    <div className="flex items-center gap-4">
+                        <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
                                 placeholder={t('searchProject')}
@@ -96,14 +102,14 @@ const ObjectsPage = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <Button className="w-full md:w-auto flex items-center gap-2" onClick={handleOpenCreateModal}>
+                        <Button className="w-fit" onClick={handleOpenCreateModal}>
                             <Plus />
                             {t('createProject')}
                         </Button>
                     </div>
                 </div>
 
-                <Tabs defaultValue="all-projects" className="mt-12" onValueChange={(value) => {setActiveTab(value); setCurrentPage(1);}}>
+                <Tabs defaultValue="all-projects" className="mt-8" onValueChange={(value) => { setActiveTab(value); setCurrentPage(1); }}>
                     <TabsList className="w-fit">
                         <TabsTrigger value="all-projects">{t('allProjects')}</TabsTrigger>
                         <TabsTrigger value="my-projects">{t('myProjects')}</TabsTrigger>
@@ -114,15 +120,15 @@ const ObjectsPage = () => {
                             {allProjectsLoading ? (
                                 <ProjectCardSkeleton count={12} />
                             ) : allProjectsError ? (
-                                <div className='col-span-4 justify-items-center'>
-                                    <LoadFailed />
-                                </div>
-                            ) : allProjectsData?.data?.result?.length > 0 ? (
-                                allProjectsData.data.result.map((project) => (
-                                    <ProjectCard key={project._id} project={project} />
-                                ))
-                            ) : (
+                                <LoadFailed />
+                            ) : allProject?.length === 0 ? (
                                 <NoData msg={t('noProjectsFound')} />
+                            ) : (
+                                allProject?.map((project) => (
+                                    <ProjectCard
+                                        key={project._id}
+                                        project={project} />
+                                ))
                             )}
                         </div>
                     </TabsContent>
@@ -132,15 +138,17 @@ const ObjectsPage = () => {
                             {myProjectsLoading ? (
                                 <ProjectCardSkeleton count={12} />
                             ) : myProjectsError ? (
-                                <div className='col-span-4 justify-items-center'>
-                                    <LoadFailed />
-                                </div>
-                            ) : myProjectsData?.data?.result?.length > 0 ? (
-                                myProjectsData.data.result.map((project) => (
-                                    <ProjectCard key={project._id} project={project} isMyOrJoinedProject={true} />
-                                ))
-                            ) : (
+                                <LoadFailed />
+                            ) : myProject?.length === 0 ? (
                                 <NoData msg={t('noMyProjectsFound')} />
+                            ) : (
+                                myProject?.map((project) => (
+                                    <ProjectCard
+                                        key={project._id}
+                                        project={project}
+                                        isMyOrJoinedProject={true}
+                                    />
+                                ))
                             )}
                         </div>
                     </TabsContent>
@@ -150,15 +158,17 @@ const ObjectsPage = () => {
                             {joinedProjectsLoading ? (
                                 <ProjectCardSkeleton count={12} />
                             ) : joinedProjectsError ? (
-                                <div className='col-span-4 justify-items-center'>
-                                    <LoadFailed />
-                                </div>
-                            ) : joinedProjectsData?.data?.result?.length > 0 ? (
-                                joinedProjectsData.data.result.map((project) => (
-                                    <ProjectCard key={project._id} project={project} isMyOrJoinedProject={true} />
-                                ))
-                            ) : (
+                                <LoadFailed />
+                            ) : joinedProject?.length === 0 ? (
                                 <NoData msg={t('noJoinedProjectsFound')} />
+                            ) : (
+                                joinedProject?.map((project) => (
+                                    <ProjectCard
+                                        key={project._id}
+                                        project={project}
+                                        isMyOrJoinedProject={true}
+                                    />
+                                ))
                             )}
                         </div>
                     </TabsContent>

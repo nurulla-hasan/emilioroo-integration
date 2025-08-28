@@ -10,12 +10,16 @@ import { useUnfriendMutation } from "@/lib/features/api/friendsApi";
 import { useSocket } from "@/context/soket-context/SocketContext";
 import { SendMessageModal } from "./SendMessageModal";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { baseApi } from "@/lib/features/api/baseApi";
 
 const FriendCard = ({ friend }) => {
 
     const [unfriend, { isLoading }] = useUnfriendMutation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { sendMessage } = useSocket();
+    const dispatch = useDispatch();
+
 
     const handleUnFriend = async () => {
         try {
@@ -41,10 +45,10 @@ const FriendCard = ({ friend }) => {
             videoUrl: []
         };
 
-        console.log(payload);
         sendMessage(payload);
         setIsModalOpen(false);
         toast.success(`Message sent to ${friend.friendInfo.name}`);
+        dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
     };
 
     return (

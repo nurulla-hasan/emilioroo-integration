@@ -7,7 +7,6 @@ import { io } from "socket.io-client";
 const SocketContext = createContext({
     socket: null,
     sendMessage: () => { },
-    // sendSeen: () => { },
 });
 
 export const useSocket = () => useContext(SocketContext);
@@ -18,7 +17,7 @@ export function SocketProvider({ children }) {
 
     useEffect(() => {
 
-        const newSocket = io("http://10.10.20.70:4000", {
+        const newSocket = io("http://10.10.20.9:4000", {
             query: { token },
         });
 
@@ -29,19 +28,12 @@ export function SocketProvider({ children }) {
         };
     }, [ token ]);
 
-    // 👉 Send message
+    // Send message
     const sendMessage = (payload) => {
         if (socket) {
             socket.emit("send-message", payload);
         }
     };
-
-    // 👉 Send seen event
-    // const sendSeen = (payload) => {
-    //     if (socket) {
-    //         socket.emit("seen", payload);
-    //     }
-    // };
 
     return (
         <SocketContext.Provider value={{ socket, sendMessage }}>

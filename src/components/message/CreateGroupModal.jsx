@@ -27,7 +27,8 @@ export const CreateGroupModal = ({ isOpen, onClose }) => {
         .map(user => ({
             label: user.name,
             value: user._id,
-            avatar: user.profile_image
+            avatar: user.profile_image,
+            gender: user.gender
         }));
 
     const handleCreateGroup = async () => {

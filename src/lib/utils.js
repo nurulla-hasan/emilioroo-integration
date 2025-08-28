@@ -9,7 +9,16 @@ export function cn(...inputs) {
 }
 
 // Fallback Image
-export const fallbackAvatar = "https://avatar.iran.liara.run/public";
+// export const fallbackAvatar = "https://avatar.iran.liara.run/public";
+export const fallbackAvatar = (gender) => {
+  if (gender === 'MALE') {
+    return 'https://avatar.iran.liara.run/public/boy';
+  } else if (gender === 'FEMALE') {
+    return 'https://avatar.iran.liara.run/public/girl';
+  } else {
+    return '/images/placeholder-image.jpg';
+  }
+};
 
 // Time Ago
 export const timeAgo = (createdAt) => {

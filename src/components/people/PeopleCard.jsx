@@ -7,11 +7,12 @@ import { fallbackAvatar, getInitials } from '@/lib/utils';
 import PeopleCardButton from './PeopleCardButton';
 
 const PeopleCard = ({ user, }) => {
+    console.log(user);
     return (
         <div>
             <Card key={user._id} className="flex flex-col items-center p-4">
                 <Avatar className="h-24 w-24 mb-4">
-                    <AvatarImage src={user.profile_image || fallbackAvatar} />
+                    <AvatarImage src={user.profile_image || fallbackAvatar(user.gender)} />
                     <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                 </Avatar>
                 <div className="text-center">

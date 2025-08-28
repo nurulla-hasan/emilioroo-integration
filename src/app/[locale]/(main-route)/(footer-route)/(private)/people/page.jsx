@@ -18,7 +18,7 @@ const PeoplePage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(12);
 
-    const { users, isLoading, isError, totalPages} = useGetUsersWithoutMe(currentPage, pageSize, searchTerm);
+    const { users, isLoading, isError, totalPages } = useGetUsersWithoutMe(currentPage, pageSize, searchTerm);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
@@ -52,9 +52,9 @@ const PeoplePage = () => {
                     {isLoading ? (
                         <PeopleCardSkeleton count={12} />
                     ) : isError ? (
-                        <div className="col-span-full mx-auto mt-20"><LoadFailed msg={"Failed to load users."}/></div>
+                            <LoadFailed msg={"Failed to load users."} />
                     ) : users.length === 0 ? (
-                        <NoData msg={"No users found."} />
+                            <NoData msg={"No users found."} />
                     ) : (
                         users.map((user) => (
                             <PeopleCard

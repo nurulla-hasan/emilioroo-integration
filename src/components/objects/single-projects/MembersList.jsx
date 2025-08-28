@@ -3,6 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { fallbackAvatar } from "@/lib/utils";
 
 const MembersList = ({ project, title, members, isLoading, isError, onAddMember, onRemoveMember, isRemovingMember, memberType }) => {
     return (
@@ -23,7 +24,7 @@ const MembersList = ({ project, title, members, isLoading, isError, onAddMember,
                         <div key={member._id} className="flex items-center justify-between p-3 border rounded-lg">
                             <div className="flex items-center space-x-3">
                                 <Avatar className="h-9 w-9">
-                                    <AvatarImage src={member.user?.profile_image} />
+                                    <AvatarImage src={member.user?.profile_image || fallbackAvatar("MALE")} />
                                     <AvatarFallback>{member.user?.name?.charAt(0) || "U"}</AvatarFallback>
                                 </Avatar>
                                 <div>

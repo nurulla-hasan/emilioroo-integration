@@ -120,7 +120,7 @@ const AddMemberModal = ({ isOpen, onOpenChange, projectId, onMemberAdded }) => {
                         usersData.data.result.map((user) => (
                           <SelectItem key={user._id} value={user._id}>
                             <Avatar className="mr-2">
-                              <AvatarImage src={user.profile_image || fallbackAvatar} />
+                              <AvatarImage src={user.profile_image || fallbackAvatar(user.gender)} />
                               <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                             </Avatar>
                             {user.name}

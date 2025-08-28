@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Pencil, Users } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 
 const ProjectHeader = ({ project, onEditProject }) => {
     return (
@@ -40,13 +41,20 @@ const ProjectHeader = ({ project, onEditProject }) => {
                 </div>
 
                 <div className="w-full flex flex-col items-end space-y-2">
-                    {
-                        project.isOwner &&
-                        <Button size="sm" onClick={() => onEditProject(project)}>
-                            <Pencil className="h-4 w-4 mr-1" />
-                            Edit
-                        </Button>
-                    }
+                    <div className="flex flex-col-reverse md:flex-row md:items-center gap-2">
+                        <Link href={`/objects/${project._id}/workspace`} className="flex-1">
+                            <Button variant="outline" className="w-full">Open Workspace</Button>
+                        </Link>
+                        {
+                            project.isOwner &&
+                            <div className="text-end">
+                                <Button className="w-fit" size="sm" onClick={() => onEditProject(project)}>
+                                    <Pencil className="h-4 w-4 mr-1" />
+                                    Edit
+                                </Button>
+                            </div>
+                        }
+                    </div>
                     <div className="flex flex-wrap justify-end gap-2">
                         <Badge variant="secondary">{project.status}</Badge>
                         <Badge variant="outline">{project.joinControll}</Badge>

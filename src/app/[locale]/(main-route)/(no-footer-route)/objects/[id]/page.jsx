@@ -1,7 +1,6 @@
 "use client";
 
 import PageLayout from "@/components/layout/PageLayout";
-import { Loader2 } from "lucide-react";
 import {
     useGetSingleProjectQuery,
     useGetJoinRequestQuery,
@@ -18,6 +17,9 @@ import JoinRequests from "@/components/objects/single-projects/JoinRequests";
 import UpdateProjectModal from "@/components/objects/modal/UpdateProjectModal";
 import { useState } from "react";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb";
+import NoData from "@/components/common/NoData";
+import LoadFailed from "@/components/common/LoadFailed";
+import ProjectDetailsPageSkeleton from "@/components/skeleton/ProjectDetailsPageSkeleton";
 
 const ProjectDetailsPage = () => {
     const params = useParams();
@@ -89,36 +91,6 @@ const ProjectDetailsPage = () => {
     };
 
 
-    if (isLoading) {
-        return (
-            <PageLayout>
-                <div className="flex justify-center items-center">
-                    <Loader2 className="h-8 w-8 animate-spin" />
-                </div>
-            </PageLayout>
-        );
-    }
-
-    if (isError) {
-        return (
-            <PageLayout>
-                <div className="flex justify-center items-center">
-                    <p className="text-red-500">Error loading project details.</p>
-                </div>
-            </PageLayout>
-        );
-    }
-
-    if (!project) {
-        return (
-            <PageLayout>
-                <div className="flex justify-center items-center">
-                    <p>Project not found.</p>
-                </div>
-            </PageLayout>
-        );
-    }
-
     const breadcrumbLinks = [
         { name: "Home", href: "/" },
         { name: "Objects", href: "/objects" },
@@ -126,65 +98,80 @@ const ProjectDetailsPage = () => {
     ];
 
     return (
-        <PageLayout>
-            <CustomBreadcrumb links={breadcrumbLinks} />
-            <ProjectHeader project={project} onEditProject={() => setIsUpdateProjectModalOpen(true)} />
-            <div className="border rounded-lg p-4">
+        <div className="min-h-minus-header">
+            <PageLayout>
+                {isLoading ? (
+                    <ProjectDetailsPageSkeleton />
+                ) : isError ? (
+                    <LoadFailed />
+                ) : !project ? (
+                    <NoData msg="Project not found." />
+                ) : (
+                    <>
+                        <CustomBreadcrumb links={breadcrumbLinks} />
+                        <ProjectHeader
+                            project={project}
+                            onEditProject={() => setIsUpdateProjectModalOpen(true)}
+                        />
+                        <div className="border rounded-lg p-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                                <MembersList
+                                    project={project}
+                                    title="Producers"
+                                    members={producersData?.data?.result}
+                                    isLoading={isProducersLoading}
+                                    isError={isProducersError}
+                                    onAddMember={() => handleOpenAddMemberModal("Producer")}
+                                    onRemoveMember={handleOpenRemoveMemberModal}
+                                    isRemovingMember={isRemovingMember}
+                                />
+                                <MembersList
+                                    project={project}
+                                    title="Consumers"
+                                    members={consumersData?.data?.result}
+                                    isLoading={isConsumersLoading}
+                                    isError={isConsumersError}
+                                    onAddMember={() => handleOpenAddMemberModal("Consumer")}
+                                    onRemoveMember={handleOpenRemoveMemberModal}
+                                    isRemovingMember={isRemovingMember}
+                                />
+                            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <MembersList
-                        project={project}
-                        title="Producers"
-                        members={producersData?.data?.result}
-                        isLoading={isProducersLoading}
-                        isError={isProducersError}
-                        onAddMember={() => handleOpenAddMemberModal("Producer")}
-                        onRemoveMember={handleOpenRemoveMemberModal}
-                        isRemovingMember={isRemovingMember}
-                    />
-                    <MembersList
-                        project={project}
-                        title="Consumers"
-                        members={consumersData?.data?.result}
-                        isLoading={isConsumersLoading}
-                        isError={isConsumersError}
-                        onAddMember={() => handleOpenAddMemberModal("Consumer")}
-                        onRemoveMember={handleOpenRemoveMemberModal}
-                        isRemovingMember={isRemovingMember}
-                    />
-                </div>
+                            {project?.isOwner && (
+                                <JoinRequests
+                                    requests={joinRequestsData?.data}
+                                    isLoading={isJoinRequestsLoading}
+                                    isError={isJoinRequestsError}
+                                />
+                            )}
 
-                {project?.isOwner && (
-                    <JoinRequests
-                        requests={joinRequestsData?.data}
-                        isLoading={isJoinRequestsLoading}
-                        isError={isJoinRequestsError}
-                    />
+                            <AddMemberModal
+                                isOpen={isAddMemberModalOpen}
+                                onOpenChange={setIsAddMemberModalOpen}
+                                projectId={projectId}
+                                memberType={memberTypeToAdd}
+                                onMemberAdded={handleMemberAdded}
+                            />
+                            <ConfirmationModal
+                                isOpen={isRemoveMemberModalOpen}
+                                onOpenChange={setIsRemoveMemberModalOpen}
+                                title="Remove Member"
+                                description={`Are you sure you want to remove ${memberToRemove?.user?.name || "this member"
+                                    }?`}
+                                onConfirm={handleConfirmRemoveMember}
+                                confirmText="Remove"
+                                loading={isRemovingMember}
+                            />
+                            <UpdateProjectModal
+                                isOpen={isUpdateProjectModalOpen}
+                                onOpenChange={setIsUpdateProjectModalOpen}
+                                project={project}
+                            />
+                        </div>
+                    </>
                 )}
-
-                <AddMemberModal
-                    isOpen={isAddMemberModalOpen}
-                    onOpenChange={setIsAddMemberModalOpen}
-                    projectId={projectId}
-                    memberType={memberTypeToAdd}
-                    onMemberAdded={handleMemberAdded}
-                />
-                <ConfirmationModal
-                    isOpen={isRemoveMemberModalOpen}
-                    onOpenChange={setIsRemoveMemberModalOpen}
-                    title="Remove Member"
-                    description={`Are you sure you want to remove ${memberToRemove?.user?.name || "this member"}?`}
-                    onConfirm={handleConfirmRemoveMember}
-                    confirmText="Remove"
-                    loading={isRemovingMember}
-                />
-                <UpdateProjectModal
-                    isOpen={isUpdateProjectModalOpen}
-                    onOpenChange={setIsUpdateProjectModalOpen}
-                    project={project}
-                />
-            </div>
-        </PageLayout>
+            </PageLayout>
+        </div>
     );
 };
 

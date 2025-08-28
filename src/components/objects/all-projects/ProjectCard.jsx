@@ -9,6 +9,7 @@ import { useSendJoinRequestMutation } from "@/lib/features/api/projectApi";
 import { toast } from "sonner";
 import { useState } from "react";
 import ProjectDetailsModal from "../modal/ProjectDetailsModal";
+import { fallbackAvatar } from "@/lib/utils";
 
 const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
   const [isProjectDetailsModalOpen, setIsProjectDetailsModalOpen] = useState(false);
@@ -51,7 +52,7 @@ const ProjectCard = ({ project, isMyOrJoinedProject = false }) => {
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center space-x-2">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={project.owner?.avatar} />
+                <AvatarImage src={project.owner?.profile_image|| fallbackAvatar("MALE")} />
                 <AvatarFallback>{project.owner?.name?.charAt(0) || "U"}</AvatarFallback>
               </Avatar>
               <div>
