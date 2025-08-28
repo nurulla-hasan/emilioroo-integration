@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { useGetSingleUserQuery } from "@/lib/features/api/projectApi"
 import { useGetSkillsQuery } from "@/lib/features/api/authApi"
 import { useParams } from "next/navigation"
@@ -9,15 +9,19 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Mail, Phone, MapPin, Calendar } from "lucide-react"
 import { fallbackAvatar, formatDate, getSocialIcon } from "@/lib/utils"
-
 import Image from "next/image";
 import { Link } from "@/i18n/navigation"
 import PeopleCardButton from "@/components/people/PeopleCardButton"
+import { useSocket } from "@/context/soket-context/SocketContext";
+import { SendMessageModal } from "@/components/friends/SendMessageModal";
+import { toast } from "sonner";
 
 const UserProfilePage = () => {
     const { id } = useParams()
     const { data: userData, isLoading: isUserLoading, isError: isUserError } = useGetSingleUserQuery(id)
     const { data: skillsData, isLoading: areSkillsLoading } = useGetSkillsQuery()
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { sendMessage } = useSocket();
 
     const user = userData?.data
 
@@ -31,6 +35,25 @@ const UserProfilePage = () => {
             })
             .filter(Boolean)
     }, [user?.skills, skillsData])
+
+    const handleSendMessage = (messageText) => {
+        if (!user?._id) {
+            console.error("User ID is missing");
+            toast.error("Could not send message, user ID is missing.");
+            return;
+        }
+
+        const payload = {
+            text: messageText,
+            receiver: user._id,
+            imageUrl: [],
+            videoUrl: []
+        };
+
+        sendMessage(payload);
+        setIsModalOpen(false);
+        toast.success(`Message sent to ${user.name}`);
+    };
 
     if (isUserLoading || areSkillsLoading) {
         return (
@@ -52,132 +75,140 @@ const UserProfilePage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-background mb-4 relative">
-            {/* Cover Image Section */}
-            <div className="relative h-60 bg-gradient-to-r from-primary/20 to-accent/20">
-                {user.cover_image ? (
-                    <Image src={user.cover_image || "/placeholder-image.jpg"} alt="Cover" fill className="object-cover" />
-                ) : (
-                    <div className="w-full h-full bg-gradient-to-r from-primary to-accent opacity-20"></div>
-                )}
-                <div className="absolute inset-0 bg-black/20"></div>
-            </div>
-
-            {/* Profile Section */}
-            <div className="relative max-w-7xl mx-auto px-4 -mt-20">
-                {/* Profile Image */}
-                <div className="flex justify-center mb-6">
-                    <div className="relative">
-                        <Image
-                            src={user.profile_image || fallbackAvatar}
-                            alt={user.name}
-                            width={160}
-                            height={160}
-                            className="w-40 h-40 rounded-full border-4 border-background shadow-xl object-cover"
-                        />
-                        {/* <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full border-4 border-background"></div> */}
-                    </div>
+        <>
+            <div className="min-h-screen bg-background mb-4 relative">
+                {/* Cover Image Section */}
+                <div className="relative h-60 bg-gradient-to-r from-primary/20 to-accent/20">
+                    {user.cover_image ? (
+                        <Image src={user.cover_image || "/placeholder-image.jpg"} alt="Cover" fill className="object-cover" />
+                    ) : (
+                        <div className="w-full h-full bg-gradient-to-r from-primary to-accent opacity-20"></div>
+                    )}
+                    <div className="absolute inset-0 bg-black/20"></div>
                 </div>
 
-                {/* Name and Basic Info */}
-                <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-foreground mb-2">{user.name}</h1>
-                    <p className="text-lg text-muted-foreground mb-4">{user.email}</p>
-                    <div className="flex justify-center gap-4">
-                        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                            <Mail className="h-4 w-4 mr-2" />
-                            Message
-                        </Button>
-                        {/* <Button
-                            variant="outline"
-                            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground bg-transparent"
-                        >
-                            Connect
-                        </Button> */}
-                        <div className="w-fit">
-                            <PeopleCardButton user={user} />
+                {/* Profile Section */}
+                <div className="relative max-w-7xl mx-auto px-4 -mt-20">
+                    {/* Profile Image */}
+                    <div className="flex justify-center mb-6">
+                        <div className="relative">
+                            <Image
+                                src={user.profile_image || fallbackAvatar}
+                                alt={user.name}
+                                width={160}
+                                height={160}
+                                className="w-40 h-40 rounded-full border-4 border-background shadow-xl object-cover"
+                            />
+                            {/* <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full border-4 border-background"></div> */}
                         </div>
                     </div>
-                </div>
 
-                {/* Main Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                    {/* Bio Section */}
-                    <div className="lg:col-span-2">
-                        <Card className="bg-card border-border">
-                            <CardContent className="p-6">
-                                <h2 className="text-2xl font-bold text-card-foreground mb-4">About</h2>
-                                <p className="text-card-foreground leading-relaxed text-base">{user.bio}</p>
-                            </CardContent>
-                        </Card>
+                    {/* Name and Basic Info */}
+                    <div className="text-center mb-8">
+                        <h1 className="text-4xl font-bold text-foreground mb-2">{user.name}</h1>
+                        <p className="text-lg text-muted-foreground mb-4">{user.email}</p>
+                        <div className="flex justify-center gap-4">
+                            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => setIsModalOpen(true)}>
+                                <Mail className="h-4 w-4 mr-2" />
+                                Message
+                            </Button>
+                            {/* <Button
+                                variant="outline"
+                                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground bg-transparent"
+                            >
+                                Connect
+                            </Button> */}
+                            <div className="w-fit">
+                                <PeopleCardButton user={user} />
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Skills and Info Sidebar */}
-                    <div className="space-y-6">
-                        {/* Skills */}
-                        <Card className="bg-card border-border">
-                            <CardContent className="p-6">
-                                <h3 className="text-xl font-bold text-card-foreground mb-4">Skills</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {userSkillNames.map((skill, index) => (
-                                        <Badge key={index} className="bg-accent text-accent-foreground hover:bg-accent/90 px-3 py-1">
-                                            {skill}
-                                        </Badge>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Contact Information */}
-                        <Card className="bg-card border-border">
-                            <CardContent className="p-6">
-                                <h3 className="text-xl font-bold text-card-foreground mb-4">Contact Info</h3>
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-3 text-card-foreground">
-                                        <Mail className="h-5 w-5 text-primary" />
-                                        <span className="text-sm">{user.email}</span>
-                                    </div>
-                                    <div className="flex items-center gap-3 text-card-foreground">
-                                        <Phone className="h-5 w-5 text-primary" />
-                                        <span className="text-sm">{user.phone}</span>
-                                    </div>
-                                    <div className="flex items-center gap-3 text-card-foreground">
-                                        <MapPin className="h-5 w-5 text-primary" />
-                                        <span className="text-sm">{user.address}</span>
-                                    </div>
-                                    <div className="flex items-center gap-3 text-card-foreground">
-                                        <Calendar className="h-5 w-5 text-primary" />
-                                        <span className="text-sm">Born {formatDate(user.dateOfBirth)}</span>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Social Links */}
-                        {user.socialLinks && user.socialLinks.length > 0 && (
+                    {/* Main Content Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                        {/* Bio Section */}
+                        <div className="lg:col-span-2">
                             <Card className="bg-card border-border">
                                 <CardContent className="p-6">
-                                    <h3 className="text-xl font-bold text-card-foreground mb-4">Social Links</h3>
-                                    <div className="flex gap-3">
-                                        {user.socialLinks.map((link, index) => (
-                                            <Link
-                                                key={index}
-                                                href={link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="p-3 bg-primary/10 hover:bg-primary dark:bg-primary dark:text-white hover:text-primary-foreground text-primary rounded-lg transition-colors duration-200"
-                                            >
-                                                {getSocialIcon(link)}
-                                            </Link>
+                                    <h2 className="text-2xl font-bold text-card-foreground mb-4">About</h2>
+                                    <p className="text-card-foreground leading-relaxed text-base">{user.bio}</p>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        {/* Skills and Info Sidebar */}
+                        <div className="space-y-6">
+                            {/* Skills */}
+                            <Card className="bg-card border-border">
+                                <CardContent className="p-6">
+                                    <h3 className="text-xl font-bold text-card-foreground mb-4">Skills</h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {userSkillNames.map((skill, index) => (
+                                            <Badge key={index} className="bg-accent text-accent-foreground hover:bg-accent/90 px-3 py-1">
+                                                {skill}
+                                            </Badge>
                                         ))}
                                     </div>
                                 </CardContent>
                             </Card>
-                        )}
+
+                            {/* Contact Information */}
+                            <Card className="bg-card border-border">
+                                <CardContent className="p-6">
+                                    <h3 className="text-xl font-bold text-card-foreground mb-4">Contact Info</h3>
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-3 text-card-foreground">
+                                            <Mail className="h-5 w-5 text-primary" />
+                                            <span className="text-sm">{user.email}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3 text-card-foreground">
+                                            <Phone className="h-5 w-5 text-primary" />
+                                            <span className="text-sm">{user.phone}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3 text-card-foreground">
+                                            <MapPin className="h-5 w-5 text-primary" />
+                                            <span className="text-sm">{user.address}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3 text-card-foreground">
+                                            <Calendar className="h-5 w-5 text-primary" />
+                                            <span className="text-sm">Born {formatDate(user.dateOfBirth)}</span>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Social Links */}
+                            {user.socialLinks && user.socialLinks.length > 0 && (
+                                <Card className="bg-card border-border">
+                                    <CardContent className="p-6">
+                                        <h3 className="text-xl font-bold text-card-foreground mb-4">Social Links</h3>
+                                        <div className="flex gap-3">
+                                            {user.socialLinks.map((link, index) => (
+                                                <Link
+                                                    key={index}
+                                                    href={link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="p-3 bg-primary/10 hover:bg-primary dark:bg-primary dark:text-white hover:text-primary-foreground text-primary rounded-lg transition-colors duration-200"
+                                                >
+                                                    {getSocialIcon(link)}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <SendMessageModal
+                isOpen={isModalOpen}
+                onOpenChange={setIsModalOpen}
+                receiverName={user?.name}
+                onSend={handleSendMessage}
+            />
+        </>
     )
 }
 

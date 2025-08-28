@@ -37,14 +37,14 @@ export function SocketProvider({ children }) {
     };
 
     // 👉 Send seen event
-    const sendSeen = (payload) => {
-        if (socket) {
-            socket.emit("seen", payload);
-        }
-    };
+    // const sendSeen = (payload) => {
+    //     if (socket) {
+    //         socket.emit("seen", payload);
+    //     }
+    // };
 
     return (
-        <SocketContext.Provider value={{ socket, sendMessage, sendSeen }}>
+        <SocketContext.Provider value={{ socket, sendMessage }}>
             {children}
         </SocketContext.Provider>
     );

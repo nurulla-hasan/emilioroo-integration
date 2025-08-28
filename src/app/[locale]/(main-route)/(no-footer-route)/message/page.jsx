@@ -1,111 +1,164 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { ConversationList } from "@/components/message/ConversationList";
 import { MessagePanel } from "@/components/message/MessagePanel";
 import { MediaPanel } from "@/components/message/MediaPanel";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { fakeMediaByConversation } from "@/components/message/data";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadFailed from "@/components/common/LoadFailed";
-import { fallbackAvatar, timeAgo } from "@/lib/utils";
 import { useSocket } from '@/context/soket-context/SocketContext';
-import { useGetChatListQuery, useGetSingleConversationQuery } from "@/lib/features/api/chatApi";
+import { useGetSingleConversationQuery } from "@/lib/features/api/chatApi";
 import { baseApi } from "@/lib/features/api/baseApi";
+
 import MessagePanelSkeleton from "@/components/skeleton/MessagePanelSkeleton";
+import { useGetMe } from '@/hooks/useGetMe';
+import { useTransformMessage } from '@/hooks/useTransformMessage';
+import { useConversationsList } from '@/hooks/useConversationsList';
 
 const MessagePage = () => {
-    const { socket, sendMessage, sendSeen } = useSocket();
+    const { socket, sendMessage } = useSocket();
     const dispatch = useDispatch();
-    const markAsSeen = useCallback((messageId) => {
-        sendSeen({ messageId });
-    }, [sendSeen]);
+    const { profile } = useGetMe();
+    const me = profile.data;
+    const transformMessage = useTransformMessage(me || {});
+
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const [limit] = useState(20);
-    const { data: chatListData, isLoading: isChatListLoading, isError: isChatListError } = useGetChatListQuery(
-        {
-            searchTerm
-        }
-    );
-    const conversations = useMemo(() => {
-        const conversationData = chatListData?.data?.data || [];
-
-        const uniqueConversationMap = new Map();
-
-        for (const conv of conversationData) {
-            let uniqueKey;
-            if (conv.type === 'one-two-one') {
-                uniqueKey = conv.userData?._id;
-            } else if (conv.type === 'group') {
-                uniqueKey = conv.chatGroup?._id || conv.bondLink?._id || conv.project?._id;
-            }
-            
-            if (uniqueKey && !uniqueConversationMap.has(uniqueKey)) {
-                uniqueConversationMap.set(uniqueKey, conv);
-            }
-        }
-
-        const uniqueConversations = Array.from(uniqueConversationMap.values());
-
-        return uniqueConversations.map(conv => {
-            const isGroup = conv.type === 'group';
-            let subtype = 'oneToOne';
-            let name = conv.userData?.name;
-            let avatar = conv.userData?.profile_image || fallbackAvatar;
-
-            if (isGroup) {
-                if (conv.chatGroup) {
-                    subtype = 'chatGroup';
-                    name = conv.chatGroup.name;
-                    avatar = conv.chatGroup.image || fallbackAvatar;
-                } else if (conv.bondLink) {
-                    subtype = 'bondLink';
-                    name = conv.bondLink.name;
-                    avatar = conv.bondLink.cover_image || "/images/groupFallback.jpg";
-                } else if (conv.project) {
-                    subtype = 'project';
-                    name = conv.project.name;
-                    avatar = conv.project.cover_image || fallbackAvatar;
-                }
-            }
-
-            return {
-                id: conv._id,
-                conversationId: conv._id,
-                userId: conv.userData?._id,
-                type: conv.type,
-                subtype,
-                bondLinkId: conv.bondLink?._id,
-                projectId: conv.project?._id,
-                chatGroupId: conv.chatGroup?._id,
-                name: name || (isGroup ? 'Group' : 'Unknown User'),
-                avatar,
-                lastMessage: conv.lastMessage?.text || 'No messages yet',
-                time: timeAgo(conv.lastMessage?.createdAt || conv.updated_at),
-                online: false,
-            };
-        });
-    }, [chatListData]);
-
-    const [activeConversation, setActiveConversation] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const [isMediaSheetOpen, setIsMediaSheetOpen] = useState(false);
-    const [mediaUrls, setMediaUrls] = useState([]);
-    const [isUploading, setIsUploading] = useState(false);
 
+    const { conversations, isLoading: isChatListLoading, isError: isChatListError } = useConversationsList(searchTerm);
+
+
+
+    const [activeConversation, setActiveConversation] = useState(null);
+    const [isMediaSheetOpen, setIsMediaSheetOpen] = useState(false);
+
+    // Single Conversation
+    const singleConversationQueryParams = useMemo(() => {
+        console.log("Calculating singleConversationQueryParams:", activeConversation);
+        if (!activeConversation) return null;
+
+        const params = { page, limit };
+        switch (activeConversation.subtype) {
+            case 'oneToOne':
+                params.userId = activeConversation.userId;
+                break;
+            case 'chatGroup':
+                params.chatGroupId = activeConversation.chatGroupId;
+                break;
+            case 'bondLink':
+                params.bondLinkId = activeConversation.bondLinkId;
+                break;
+            case 'project':
+                params.projectId = activeConversation.projectId;
+                break;
+            default:
+                return null;
+        }
+
+        const hasId = params.userId || params.chatGroupId || params.bondLinkId || params.projectId;
+        return hasId ? params : null;
+
+    }, [activeConversation, page, limit]);
+
+    // Single Conversation
     const { data: messagesData, isLoading: isMessagesLoading, isError: isMessagesError } = useGetSingleConversationQuery(
+        singleConversationQueryParams,
         {
-            userId: activeConversation?.userId,
-            page,
-            limit
-        },
-        {
-            skip: !activeConversation?.userId,
+            skip: !singleConversationQueryParams,
         }
     );
+
+    const handleConversationClick = (conv) => {
+        setActiveConversation(conv);
+    };
+
+
+    const handleBack = () => {
+        setActiveConversation(null);
+    };
+
+    const fetchMoreMessages = () => {
+        if (!isMessagesLoading && messagesData?.data?.meta?.totalPage > page) {
+            setPage(prevPage => prevPage + 1);
+        }
+    };
+
+
+
+    const handleSendMessage = () => {
+        if (newMessage.trim() && activeConversation) {
+            const payload = {
+                text: newMessage,
+            };
+            const tempMessage = transformMessage({
+                _id: `temp-${Date.now()}`,
+                text: newMessage,
+                createdAt: new Date().toISOString(),
+                msgByUserId: me?._id ? { _id: me._id, name: me.name, profile_image: me.profile_image } : undefined,
+            });
+            setMessages(prev => [...prev, tempMessage]);
+
+            switch (activeConversation.subtype) {
+                case 'oneToOne':
+                    payload.receiver = activeConversation.userId;
+                    break;
+                case 'chatGroup':
+                    payload.groupId = activeConversation.chatGroupId;
+                    break;
+                case 'bondLink':
+                    payload.bondLinkId = activeConversation.bondLinkId;
+                    break;
+                case 'project':
+                    payload.projectId = activeConversation.projectId;
+                    break;
+                default:
+                    console.warn("Unknown conversation subtype for sending message:", activeConversation.subtype, activeConversation);
+                    return;
+            }
+            sendMessage(payload);
+            dispatch(baseApi.util.invalidateTags(['CONVERSATIONS'])); // Invalidate cache after sending message
+
+            setNewMessage('');
+        }
+    };
+
+    useEffect(() => {
+        if (messagesData?.data?.result) {
+            const { result, meta } = messagesData.data;
+            const transformedMessages = result.map(transformMessage) || [];
+            transformedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+            setMessages(prevMessages => {
+                let combinedMessages;
+                if (meta.page === 1) {
+                    combinedMessages = transformedMessages;
+                } else {
+                    combinedMessages = [...transformedMessages, ...prevMessages];
+                }
+
+                const messageMap = new Map();
+                combinedMessages.forEach(msg => {
+                    messageMap.set(msg.id, msg);
+                });
+
+                const uniqueMessages = Array.from(messageMap.values());
+                uniqueMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+                return uniqueMessages;
+            });
+        }
+    }, [messagesData, page, limit, transformMessage]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [activeConversation]);
 
     useEffect(() => {
         if (!socket || !activeConversation) return;
@@ -113,70 +166,91 @@ const MessagePage = () => {
         let eventName = '';
         if (activeConversation.type === 'one-two-one') {
             eventName = `message-${activeConversation.userId}`;
-        } else if (activeConversation.type === 'group' && activeConversation.bondLinkId) {
-            eventName = `message-${activeConversation.bondLinkId}`;
-        } else if (activeConversation.type === 'project' && activeConversation.projectId) {
-            eventName = `message-${activeConversation.projectId}`;
-        } else if (activeConversation.type === 'chatGroup' && activeConversation.chatGroupId) {
+        } else if (activeConversation.type === 'chat-group') {
             eventName = `message-${activeConversation.chatGroupId}`;
+        } else if (activeConversation.type === 'bond-link-group') {
+            eventName = `message-${activeConversation.bondLinkId}`;
+        } else if (activeConversation.type === 'project-group') {
+            eventName = `message-${activeConversation.projectId}`;
         }
 
         if (eventName) {
-            const handleNewMessage = (msg) => {
+            const messageHandler = (msg) => {
                 setMessages((prevMessages) => {
                     const transformedMsg = transformMessage(msg);
+                    // Check if this message is one that we sent and stored temporarily
+                    const tempMsgIndex = prevMessages.findIndex(
+                        m => m.msgByUserId?._id === me?._id && m.text === transformedMsg.text && m.id.toString().startsWith('temp-')
+                    );
 
-                    const optimisticIndex = prevMessages.findIndex(m => m._id && typeof m._id === 'string' && m._id.startsWith('optimistic-'));
-                    let newMessages;
-                    if (optimisticIndex > -1) {
-                        newMessages = [...prevMessages];
-                        newMessages[optimisticIndex] = {
-                            ...transformedMsg,
-                            text: prevMessages[optimisticIndex].text,
-                            isMyMessage: true,
-                            sender: 'me',
-                            avatar: prevMessages[optimisticIndex].avatar,
-                            type: 'text'
-                        };
-                    } else {
-                        const exists = prevMessages.some(m => m._id === transformedMsg.id);
-                        if (!exists) {
-                            newMessages = [...prevMessages, transformedMsg];
-                        } else {
-                            newMessages = [...prevMessages];
-                        }
+                    if (tempMsgIndex !== -1) {
+                        // Replace the temporary message with the real one from the server
+                        const newMessages = [...prevMessages];
+                        newMessages[tempMsgIndex] = transformedMsg;
+                        return newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
                     }
 
-                    newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                    return newMessages;
+                    const exists = prevMessages.some(m => m.id === transformedMsg.id);
+                    if (!exists) {
+                        return [...prevMessages, transformedMsg].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    }
+                    return prevMessages;
                 });
+                dispatch(baseApi.util.invalidateTags(['CONVERSATIONS'])); // Invalidate cache on message receipt
             };
 
-            socket.on(eventName, handleNewMessage);
+            socket.on(eventName, messageHandler);
 
             return () => {
-                socket.off(eventName, handleNewMessage);
+                socket.off(eventName, messageHandler);
             };
         }
-    }, [socket, activeConversation]);
+    }, [socket, activeConversation, transformMessage, me, dispatch]);
 
     useEffect(() => {
+        console.log("Attempting to set up generic message listener. Socket:", !!socket);
         if (!socket) return;
 
         const handleGenericMessage = (msg) => {
-            if (activeConversation && msg.conversationId === activeConversation.conversationId) {
-                return;
+            console.log("Received generic message:", msg);
+            // If the message is for the currently active conversation, it will be handled by the specific eventName listener
+            if (activeConversation && (
+                (activeConversation.type === 'one-two-one' && activeConversation.userId === msg.msgByUserId?._id) ||
+                (activeConversation.type === 'chat-group' && activeConversation.chatGroupId === msg.chatGroupId) ||
+                (activeConversation.type === 'bondLink' && activeConversation.bondLinkId === msg.bondLinkId) ||
+                (activeConversation.type === 'project' && activeConversation.projectId === msg.projectId)
+            )) {
+                // This case should ideally be handled by the specific eventName listener, but as a fallback/double check
+                setMessages((prevMessages) => {
+                    const transformedMsg = transformMessage(msg);
+                    const tempMsgIndex = prevMessages.findIndex(
+                        m => m.msgByUserId?._id === me?._id && m.text === transformedMsg.text && m.id.toString().startsWith('temp-')
+                    );
+
+                    if (tempMsgIndex !== -1) {
+                        const newMessages = [...prevMessages];
+                        newMessages[tempMsgIndex] = transformedMsg;
+                        return newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    }
+
+                    const exists = prevMessages.some(m => m.id === transformedMsg.id);
+                    if (!exists) {
+                        return [...prevMessages, transformedMsg].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    }
+                    return prevMessages;
+                });
             }
-            const targetConversation = conversations.find(conv => conv.conversationId === msg.conversationId);
-            if (targetConversation) {
-                dispatch(baseApi.util.invalidateQueries('getSingleConversation', { userId: targetConversation.userId }));
-            }
+
+            // Invalidate chat list to update last message and order
+            dispatch(baseApi.util.invalidateQueries(['getChatList']));
         };
+
         socket.on("message", handleGenericMessage);
+
         return () => {
             socket.off("message", handleGenericMessage);
         };
-    }, [socket, activeConversation, conversations, dispatch]);
+    }, [socket, activeConversation, dispatch, transformMessage, me]);
 
     useEffect(() => {
         if (!socket) return;
@@ -221,150 +295,19 @@ const MessagePage = () => {
         };
     }, [socket, dispatch]);
 
-    const transformMessage = (msg) => {
-        const userDetails = msg.userDetails || msg.msgByUserId;
 
-        return {
-            ...msg,
-            id: msg._id,
-            text: msg.text,
-            sender: msg.isMyMessage ? 'me' : (userDetails?.name || 'Unknown User'),
-            avatar: userDetails?.profile_image || fallbackAvatar,
-            time: timeAgo(msg.createdAt),
-            type: 'text'
-        };
+    const onOpenMediaSheet = () => {
+        setIsMediaSheetOpen(true);
     };
 
-    useEffect(() => {
-        if (messagesData?.data?.result) {
-            const { result, meta } = messagesData.data;
-            const transformedMessages = result.map(transformMessage) || [];
-            transformedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    if (isChatListLoading) {
+        return (
+            <div className="h-[calc(100vh-80px)] w-full flex items-center justify-center">
+                <Skeleton className="h-full w-full" />
+            </div>
+        );
+    }
 
-            setMessages(prevMessages => {
-                let combinedMessages;
-                if (meta.page === 1) {
-                    combinedMessages = transformedMessages;
-                } else {
-                    combinedMessages = [...transformedMessages, ...prevMessages];
-                }
-
-                const messageMap = new Map();
-                combinedMessages.forEach(msg => {
-                    messageMap.set(msg.id, msg);
-                });
-
-                const uniqueMessages = Array.from(messageMap.values());
-                uniqueMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-
-                return uniqueMessages;
-            });
-
-            if (transformedMessages.length > 0) {
-                const lastMessageId = transformedMessages[transformedMessages.length - 1].id;
-                markAsSeen(lastMessageId);
-            }
-        }
-    }, [messagesData, markAsSeen, page, limit]);
-
-    useEffect(() => {
-        setPage(1);
-    }, [activeConversation]);
-
-    const handleConversationClick = (conv) => {
-        setActiveConversation(conv);
-    };
-
-    const handleFileSelect = async (file) => {
-        if (!file) return;
-
-        setIsUploading(true);
-
-        // --- Placeholder for file upload logic ---
-        // TODO: Replace this with the actual file upload API call tomorrow.
-        const uploadFile = async (fileToUpload) => {
-            console.log("Uploading file:", fileToUpload.name);
-            // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            // Return a dummy URL. The real function will return the URL from the backend.
-            const dummyUrl = `https://dummy-url.com/uploads/${fileToUpload.name}`;
-            console.log("File uploaded, got URL:", dummyUrl);
-            return dummyUrl;
-        };
-        // --- End of placeholder ---
-
-        try {
-            const url = await uploadFile(file);
-            // Assuming for now that we only handle one file at a time,
-            // and it's an image. This can be expanded.
-            setMediaUrls(prev => [...prev, { type: 'image', url }]);
-        } catch (error) {
-            console.error("File upload failed:", error);
-            // Optionally, show an error to the user
-        } finally {
-            setIsUploading(false);
-        }
-    };
-
-    const handleSendMessage = () => {
-        if ((newMessage.trim() || mediaUrls.length > 0) && activeConversation) {
-            const payload = {
-                text: newMessage,
-                imageUrl: mediaUrls.filter(m => m.type === 'image').map(m => m.url),
-                videoUrl: mediaUrls.filter(m => m.type === 'video').map(m => m.url),
-            };
-
-            switch (activeConversation.subtype) {
-                case 'oneToOne':
-                    payload.receiver = activeConversation.userId;
-                    break;
-                case 'chatGroup':
-                    payload.groupId = activeConversation.chatGroupId;
-                    break;
-                case 'bondLink':
-                    payload.bondLinkId = activeConversation.bondLinkId;
-                    break;
-                case 'project':
-                    payload.projectId = activeConversation.projectId;
-                    break;
-                default:
-                    console.warn("Unknown conversation subtype for sending message:", activeConversation.subtype, activeConversation);
-                    return;
-            }
-            sendMessage(payload);
-
-            const tempId = `optimistic-${Date.now()}`;
-            const newMsg = {
-                _id: tempId,
-                id: tempId,
-                text: newMessage,
-                imageUrl: payload.imageUrl,
-                videoUrl: payload.videoUrl,
-                sender: 'me',
-                time: 'Just now',
-                createdAt: new Date().toISOString(),
-                isMyMessage: true,
-                avatar: fallbackAvatar
-            };
-            setMessages((prevMessages) => {
-                const updatedMessages = [...prevMessages, newMsg];
-                updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                return updatedMessages;
-            });
-            setNewMessage('');
-            setMediaUrls([]);
-        }
-    };
-
-    const handleBack = () => {
-        setActiveConversation(null);
-    };
-
-    const fetchMoreMessages = () => {
-        if (!isMessagesLoading && messagesData?.data?.meta?.totalPage > page) {
-            setPage(prevPage => prevPage + 1);
-        }
-    };
 
     if (isChatListLoading) {
         return (
@@ -406,16 +349,14 @@ const MessagePage = () => {
                                 conversation={activeConversation}
                                 messages={messages}
                                 onBack={handleBack}
-                                onOpenMedia={() => setIsMediaSheetOpen(true)}
+                                fetchMoreMessages={fetchMoreMessages}
+                                isMessagesLoading={isMessagesLoading}
+                                onOpenMedia={onOpenMediaSheet}
                                 newMessage={newMessage}
                                 setNewMessage={setNewMessage}
                                 onSendMessage={handleSendMessage}
-                                fetchMoreMessages={fetchMoreMessages}
-                                isMessagesLoading={isMessagesLoading}
-                                onFileSelect={handleFileSelect}
-                                isUploadingMedia={isUploading} />
-                        )
-                    )}
+                            />
+                        ))}
                 </div>
 
                 {/* Desktop View */}
@@ -441,14 +382,12 @@ const MessagePage = () => {
                                     conversation={activeConversation}
                                     messages={messages}
                                     onBack={handleBack}
-                                    onOpenMedia={() => setIsMediaSheetOpen(true)}
+                                    fetchMoreMessages={fetchMoreMessages}
+                                    isMessagesLoading={isMessagesLoading}
                                     newMessage={newMessage}
                                     setNewMessage={setNewMessage}
                                     onSendMessage={handleSendMessage}
-                                    fetchMoreMessages={fetchMoreMessages}
-                                    isMessagesLoading={isMessagesLoading}
-                                    onFileSelect={handleFileSelect}
-                                    isUploadingMedia={isUploading} />
+                                />
                             )
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-muted-foreground"><p>Select a conversation to start chatting.</p></div>
