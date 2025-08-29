@@ -1,7 +1,8 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from "next/navigation";
+import { useDispatch } from 'react-redux';
 import { useGetAllProjectQuery, useGetSingleProjectQuery, useGetProjectMemberQuery, useGetProjectDocumentQuery, useGetProjectImageQuery } from "@/lib/features/api/projectApi";
 import { useGetSingleConversationQuery } from "@/lib/features/api/chatApi";
 import InstitutionNavCardSkeleton from "@/components/skeleton/InstitutionNavCardSkeleton";
@@ -15,10 +16,22 @@ import CustomBreadcrumb from '@/components/common/CustomBreadcrumb';
 import ProjectWorkspaceSkeleton from "@/components/skeleton/ProjectWorkspaceSkeleton";
 import LoadFailed from '@/components/common/LoadFailed';
 import NoData from '@/components/common/NoData';
+import { useSocket } from '@/context/soket-context/SocketContext';
+import { useGetMe } from '@/hooks/useGetMe';
+import { useTransformMessage } from '@/hooks/useTransformMessage';
+import { baseApi } from '@/lib/features/api/baseApi';
 
 const ProjectWorkspacePage = () => {
   const params = useParams();
+  const dispatch = useDispatch();
   const projectId = params.id;
+  const { socket, sendMessage } = useSocket();
+  const { profile } = useGetMe();
+  const me = profile?.data;
+  const transformMessage = useTransformMessage(me || {});
+
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
 
   const { data: allProjectsData, isLoading: areAllProjectsLoading, isError: areAllProjectsError } = useGetAllProjectQuery();
   const { data: singleProjectData, isLoading: isSingleProjectLoading, isError: isSingleProjectError } = useGetSingleProjectQuery(projectId);
@@ -34,7 +47,70 @@ const ProjectWorkspacePage = () => {
   const consumers = consumersData?.data?.result;
   const documents = documentsData?.data?.result;
   const images = imagesData?.data?.result;
-  const messages = messagesData?.data?.result;
+
+  useEffect(() => {
+    if (messagesData?.data?.result) {
+      const transformed = messagesData.data.result.map(transformMessage);
+      transformed.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setMessages(transformed);
+    }
+  }, [messagesData, transformMessage]);
+
+  useEffect(() => {
+    if (!socket || !projectId) return;
+
+    const eventName = `message-${projectId}`;
+    const messageHandler = (msg) => {
+      const transformedMsg = transformMessage(msg);
+      setMessages((prevMessages) => {
+        const tempMsgIndex = prevMessages.findIndex(
+          m => m.msgByUserId?._id === me?._id && m.text === transformedMsg.text && m.id.toString().startsWith('temp-')
+        );
+
+        if (tempMsgIndex !== -1) {
+          const newMessages = [...prevMessages];
+          newMessages[tempMsgIndex] = transformedMsg;
+          return newMessages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+
+        const exists = prevMessages.some(m => m.id === transformedMsg.id);
+        if (!exists) {
+          return [transformedMsg, ...prevMessages].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+        return prevMessages;
+      });
+      dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
+    };
+
+    socket.on(eventName, messageHandler);
+
+    return () => {
+      socket.off(eventName, messageHandler);
+    };
+  }, [socket, projectId, transformMessage, me, dispatch]);
+
+
+  const handleSendMessage = () => {
+    if (newMessage.trim() && projectId) {
+      const payload = {
+        text: newMessage,
+        projectId
+      };
+
+      const tempMessage = transformMessage({
+        _id: `temp-${Date.now()}`,
+        text: newMessage,
+        createdAt: new Date().toISOString(),
+        msgByUserId: me?._id ? { _id: me._id, name: me.name, profile_image: me.profile_image } : undefined,
+      });
+      setMessages(prev => [tempMessage, ...prev]);
+
+      sendMessage(payload);
+      dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
+      setNewMessage('');
+    }
+  };
+
 
   const breadcrumbLinks = [
     { name: "Home", href: "/" },
@@ -100,7 +176,14 @@ const ProjectWorkspacePage = () => {
                   />
                 </div>
               </div>
-              <ProjectDiscussion messages={messages} isLoading={areMessagesLoading} isError={areMessagesError} />
+              <ProjectDiscussion
+                messages={messages}
+                isLoading={areMessagesLoading}
+                isError={areMessagesError}
+                newMessage={newMessage}
+                setNewMessage={setNewMessage}
+                onSendMessage={handleSendMessage}
+              />
             </>
           )}
         </div>

@@ -17,6 +17,7 @@ export const useTransformMessage = (me) => {
             imageUrl: msg.imageUrl || [],
             videoUrl: msg.videoUrl || [],
             isMyMessage: isMessageFromMe,
+            userDetails
         };
     }, [me]);
 

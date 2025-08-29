@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,19 @@ import LoadFailed from '@/components/common/LoadFailed';
 import NoData from '@/components/common/NoData';
 import { getInitials, timeAgo } from '@/lib/utils';
 
-const ProjectDiscussion = ({ messages, isLoading, isError }) => {
+const ProjectDiscussion = ({ messages, isLoading, isError, newMessage, setNewMessage, onSendMessage }) => {
+    const messagesContainerRef = useRef(null);
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            onSendMessage();
+        }
+    };
+
     return (
         <div className="border rounded-lg p-4 mt-8">
             <h2 className="text-lg font-semibold mb-4">Project Discussion</h2>
-            <div className="bg-muted/50 rounded-lg p-4 h-96 overflow-y-auto flex flex-col gap-4">
+            <div ref={messagesContainerRef} className="bg-muted/50 rounded-lg p-4 h-96 overflow-y-auto flex flex-col-reverse gap-4">
                 {isLoading ? (
                     <MessagePanelSkeleton />
                 ) : isError ? (
@@ -24,7 +32,7 @@ const ProjectDiscussion = ({ messages, isLoading, isError }) => {
                 ) : messages && messages.length > 0 ? (
                     <>
                         {/* <div className="text-center text-xs text-muted-foreground">Today</div> */}
-                        {messages.slice().reverse().map(message => (
+                        {messages.map(message => (
                             <div key={message._id} className={`flex items-start gap-3 ${message.isMyMessage ? 'flex-row-reverse' : ''}`}>
                                 {!message.isMyMessage && (
                                     <Avatar>
@@ -33,7 +41,7 @@ const ProjectDiscussion = ({ messages, isLoading, isError }) => {
                                     </Avatar>
                                 )}
                                 <div className="flex flex-col gap-1">
-                                    {!message.isMyMessage && <p className="font-semibold text-xs">{message.userDetails?.name}</p>}
+                                    {!message.isMyMessage && <p className="text-[10px]">{message.userDetails?.name}</p>}
                                     <div className={`px-2 pb-1 rounded-lg max-w-md ${message.isMyMessage ? 'bg-primary text-primary-foreground dark:text-white' : 'bg-background'}`}>
                                         <div className="flex items-center gap-2 mb-1">
                                         </div>
@@ -52,8 +60,14 @@ const ProjectDiscussion = ({ messages, isLoading, isError }) => {
             </div>
             <div className="mt-4 flex items-center gap-4">
                 <div className="relative flex-grow">
-                    <Input placeholder="Send Message" className="pr-12" />
-                    <Button variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2">
+                    <Input
+                        placeholder="Send Message"
+                        className="pr-12"
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <Button variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2" onClick={onSendMessage}>
                         <Send className="h-5 w-5" />
                     </Button>
                 </div>
