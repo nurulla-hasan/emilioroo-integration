@@ -21,7 +21,7 @@ const GlobalAudioPlayer = () => {
     const { toggleFavorite } = useFavoriteToggle();
     const handleFavoriteClick = (e) => {
         e.stopPropagation();
-        toggleFavorite(currentAudio._id);
+        toggleFavorite(currentAudio);
     };
 
     useEffect(() => {

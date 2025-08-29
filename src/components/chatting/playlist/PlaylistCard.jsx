@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Eye, ListMusic, Share2 } from "lucide-react"
+import { toast } from "sonner"
 
 const PlaylistCard = ({ playlist = {} }) => {
   const audioCount = playlist?.audios?.length || 0
@@ -54,15 +55,18 @@ const PlaylistCard = ({ playlist = {} }) => {
             </Button>
           </Link>
 
-          {/* Share button (UI only) */}
+          {/* Share button */}
           <Button
             size="sm"
             variant="outline"
-            className="flex-1 border-gray-300 bg-transparent"
+            className="flex-1"
             onClick={(e) => {
-              e.stopPropagation()
-              // Hook up your share logic here (e.g., navigator.share / copy link)
+              e.stopPropagation();
+              const shareUrl = `${window.location.origin}/playlist/${playlist?._id}`;
+              navigator.clipboard.writeText(shareUrl);
+              toast.success("Link copied to clipboard!");
             }}
+
           >
             <Share2 className="mr-1 h-4 w-4" />
             Share
