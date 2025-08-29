@@ -36,7 +36,7 @@ const FavoritePage = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {bookmarks.map(bookmark => (
                                 <AudioCard
-                                    key={bookmark._id}
+                                    key={bookmark.audio._id}
                                     audio={bookmark.audio}
                                     favouriteIds={favouriteIds}
                                 />

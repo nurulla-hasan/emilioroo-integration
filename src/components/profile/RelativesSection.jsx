@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Title2 from "@/components/ui/Title2";
-import { getInitials, fallbackAvatar } from "@/lib/utils";
+import { getInitials, fallbackAvatar2 } from "@/lib/utils";
 import { Link as LinkIcon, MessageSquare, MoreHorizontal } from "lucide-react";
 
 const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, handleDelete, openAddRelativeModal }) => {
@@ -30,7 +30,7 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, ha
                                 <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
                                     <div className="flex items-center gap-3">
                                         <Avatar className="w-12 h-12">
-                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar(relative.relative?.gender)} />
+                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar2} />
                                             <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
                                         </Avatar>
                                         <div>
@@ -71,7 +71,7 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, ha
                                 <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
                                     <div className="flex items-center gap-3">
                                         <Avatar className="w-12 h-12">
-                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar(relative.relative?.gender)} />
+                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar2} />
                                             <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
                                         </Avatar>
                                         <div>

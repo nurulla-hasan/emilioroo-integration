@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Title2 from "@/components/ui/Title2";
-import { fallbackAvatar, getInitials } from "@/lib/utils";
+import { fallbackAvatar2, getInitials } from "@/lib/utils";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 
@@ -30,7 +30,7 @@ const FriendsSection = ({ friends, isLoading, isError }) => {
                     friends.slice(0, 13).map((friend, index) => (
                         <div key={index} className="flex flex-col items-center flex-shrink-0">
                             <Avatar className="w-16 h-16">
-                                <AvatarImage src={friend.friendInfo?.profile_image || fallbackAvatar(friend.friendInfo?.gender)} />
+                                <AvatarImage src={friend.friendInfo?.profile_image || fallbackAvatar2} />
                                 <AvatarFallback>{getInitials(friend.friendInfo?.name)}</AvatarFallback>
                             </Avatar>
                             <span className="text-sm font-medium mt-2 whitespace-nowrap">{friend.friendInfo?.name}</span>

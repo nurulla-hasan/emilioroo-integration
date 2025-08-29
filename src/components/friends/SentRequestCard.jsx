@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { fallbackAvatar, getInitials } from "@/lib/utils";
+import { fallbackAvatar2, getInitials } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
 import CancelSentRequest from "./request-card-button/CancelSentRequest";
 
@@ -11,7 +11,7 @@ const SentRequestCard = ({ request }) => {
     return (
         <div className="bg-accent rounded-lg shadow-[0px_0px_2px_1px_rgba(0,_0,_0,_0.1)] hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center text-center">
             <Avatar className="w-24 h-24 mb-4">
-                <AvatarImage src={request.followingInfo?.profile_image || fallbackAvatar(request.followingInfo?.gender)} />
+                <AvatarImage src={request.followingInfo?.profile_image || fallbackAvatar2} />
                 <AvatarFallback>{getInitials(request.followingInfo?.name)}</AvatarFallback>
             </Avatar>
             <h3 className="text-xl font-semibold mb-1">{request.followingInfo?.name || "Unknown"}</h3>

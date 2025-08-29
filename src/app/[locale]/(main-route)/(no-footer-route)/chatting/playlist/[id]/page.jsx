@@ -102,7 +102,7 @@ const PlaylistDetailPage = () => {
             <div className="flex items-center gap-3 mb-6">
               <Avatar className="w-10 h-10">
                 <AvatarImage
-                  src={playlist.user?.profile_image || fallbackAvatar(playlist.user?.gender)}
+                  src={playlist.user?.profile_image || fallbackAvatar("MALE")}
                   alt={playlist.user?.name || "Creator"}
                 />
                 <AvatarFallback>

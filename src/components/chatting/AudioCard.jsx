@@ -31,7 +31,7 @@ const AudioCard = ({ audio, favouriteIds }) => {
 
     const handleFavoriteClick = (e) => {
         e.stopPropagation();
-        toggleFavorite(audio._id);
+        toggleFavorite(audio);
     };
 
     return (

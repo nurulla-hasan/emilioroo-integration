@@ -132,11 +132,27 @@ const chattingApi = baseApi.injectEndpoints({
 
         // TOGGLE FAVORITE AUDIO
         favoriteToggleAudio: builder.mutation({
-            query: (id) => ({
-                url: `/audio-bookmark/add-delete/${id}`,
+            query: (audio) => ({
+                url: `/audio-bookmark/add-delete/${audio._id}`,
                 method: "POST",
             }),
-            invalidatesTags: ["AUDIO"],
+            async onQueryStarted(audio, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    chattingApi.util.updateQueryData('getBookmarkAudio', undefined, (draft) => {
+                        const index = draft.data.findIndex(b => b.audio._id === audio._id);
+                        if (index !== -1) {
+                            draft.data.splice(index, 1);
+                        } else {
+                            draft.data.unshift({ audio });
+                        }
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            },
         }),
 
         // CREATE PLAYLIST

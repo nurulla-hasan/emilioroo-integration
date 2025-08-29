@@ -24,7 +24,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends }) => {
                     {mother && (
                         <div className="absolute -bottom-16 left-2 flex flex-col items-center">
                             <Avatar className="md:w-16 md:h-16 w-12 h-12 border-2 border-white">
-                                <AvatarImage src={mother.relative?.profile_image || fallbackAvatar(mother.relative?.gender)} />
+                                <AvatarImage src={mother.relative?.profile_image || fallbackAvatar("FEMALE")} />
                                 <AvatarFallback>{getInitials(mother.relative?.name)}</AvatarFallback>
                             </Avatar>
                             <span className="text-sm font-semibold mt-1">{mother.relative?.name}</span>
@@ -35,7 +35,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends }) => {
                     {father && (
                         <div className="absolute -bottom-16 right-2 flex flex-col items-center">
                             <Avatar className="md:w-16 md:h-16 w-12 h-12 border-2 border-white">
-                                <AvatarImage src={father.relative?.profile_image || fallbackAvatar(father.relative?.gender)} />
+                                <AvatarImage src={father.relative?.profile_image || fallbackAvatar("MALE")} />
                                 <AvatarFallback>{getInitials(father.relative?.name)}</AvatarFallback>
                             </Avatar>
                             <span className="text-sm font-semibold mt-1">{father.relative?.name}</span>
