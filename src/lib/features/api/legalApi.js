@@ -1,4 +1,5 @@
-const { baseApi } = require("./baseApi");
+import { baseApi } from "./baseApi"
+
 
 const legalApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
