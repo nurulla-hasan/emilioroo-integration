@@ -15,7 +15,7 @@ const AllInstitutionsCard = ({ institution }) => {
     const router = useRouter();
 
     const handleNavigate = () => {
-        if(!isJoined) {
+        if(!isJoined && !institution.isCreator) {
             // setIsJoinModalOpen(true);
             toast.error("Please join the institution first.");
             return;
@@ -86,10 +86,10 @@ const AllInstitutionsCard = ({ institution }) => {
                     <Button
                         size="sm"
                         onClick={() => setIsJoinModalOpen(true)}
-                        disabled={isJoined}
+                        disabled={isJoined || institution.isCreator}
                         className={`flex-1 ${isJoined ? "bg-green-700" : ""}`}
                     >
-                        {isJoined ? "Joined" : "Join"}
+                        {isJoined ? "Joined" :institution.isCreator ? "Owner" :  "Join"}
                     </Button>
                 </div>
             </CardContent>

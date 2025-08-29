@@ -14,9 +14,9 @@ const NotFoundPage = () => {
         <h1 className="text-6xl font-bold text-title mb-4">404</h1>
         <h2 className="text-2xl font-semibold text-subtitle mb-4">Page Not Found</h2>
         <p className="text-lg text-subtitle mb-8">Sorry, the page you are looking for does not exist.</p>
-        <Button asChild>
-          <Link href="/">Go to Homepage</Link>
-        </Button>
+          <Link href="/">
+            <Button variant="outline" className="w-full">Go to Homepage</Button>
+          </Link>
       </div>
     </PageLayout>
   );

@@ -15,7 +15,7 @@ const InstitutionNavCard = ({ institution, isActive }) => {
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
     const handleNavigate = () => {
-        if(!institution.isJoined) {
+        if(!institution.isJoined && !institution.isCreator) {
             // setIsJoinModalOpen(true);
             toast.error("Please join the institution first.");
             return;
@@ -62,9 +62,9 @@ const InstitutionNavCard = ({ institution, isActive }) => {
                         size="sm"
                         onClick={handleJoinClick}
                         className={`${institution.isJoined && "bg-green-700 text-white"} flex-shrink-0 w-full`}
-                        disabled={institution.isJoined}
+                        disabled={institution.isJoined || institution.isCreator}
                     >
-                        {institution.isJoined ? "Joined" : "Join"}
+                        {institution.isJoined ? "Joined" :institution.isCreator ? "Owner" : "Join"}
                     </Button>
                 </CardContent>
             </Card>

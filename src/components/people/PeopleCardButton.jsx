@@ -29,7 +29,11 @@ const PeopleCardButton = ({ user }) => {
                 );
             case "follower":
                 return (
-                    <Button className="flex-1" onClick={() => handleConnect(user)} disabled={isSendingRequest} loading={isSendingRequest}>
+                    <Button
+                        className="flex-1"
+                        onClick={() => handleConnect(user)}
+                        disabled={isSendingRequest}
+                        loading={isSendingRequest}>
                         Follow Back
                     </Button>
                 );
