@@ -33,12 +33,12 @@ export const useConversationsList = (searchTerm) => {
             const isGroup = conv.type !== 'one-two-one';
             let subtype = 'oneToOne';
             let name = conv.userData?.name;
-            let avatar = conv.userData?.profile_image || fallbackAvatar;
+            let avatar = conv.userData?.profile_image || fallbackAvatar("MALE");
 
             if (conv.type === 'chat-group') {
                 subtype = 'chatGroup';
                 name = conv.chatGroup.name;
-                avatar = conv.chatGroup.image || fallbackAvatar;
+                avatar = conv.chatGroup.image || fallbackAvatar();
             } else if (conv.type === 'bond-link-group') {
                 subtype = 'bondLink';
                 name = conv.bondLink.name;
@@ -46,7 +46,7 @@ export const useConversationsList = (searchTerm) => {
             } else if (conv.type === 'project-group') {
                 subtype = 'project';
                 name = conv.project.name;
-                avatar = conv.project.cover_image || fallbackAvatar;
+                avatar = conv.project.cover_image || fallbackAvatar();
             }
 
             return {

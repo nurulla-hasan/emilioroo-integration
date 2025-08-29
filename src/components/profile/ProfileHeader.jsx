@@ -24,7 +24,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends }) => {
                     {mother && (
                         <div className="absolute -bottom-16 left-2 flex flex-col items-center">
                             <Avatar className="md:w-16 md:h-16 w-12 h-12 border-2 border-white">
-                                <AvatarImage src={mother.relative?.profile_image || fallbackAvatar} />
+                                <AvatarImage src={mother.relative?.profile_image || fallbackAvatar(mother.relative?.gender)} />
                                 <AvatarFallback>{getInitials(mother.relative?.name)}</AvatarFallback>
                             </Avatar>
                             <span className="text-sm font-semibold mt-1">{mother.relative?.name}</span>
@@ -35,7 +35,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends }) => {
                     {father && (
                         <div className="absolute -bottom-16 right-2 flex flex-col items-center">
                             <Avatar className="md:w-16 md:h-16 w-12 h-12 border-2 border-white">
-                                <AvatarImage src={father.relative?.profile_image || fallbackAvatar} />
+                                <AvatarImage src={father.relative?.profile_image || fallbackAvatar(father.relative?.gender)} />
                                 <AvatarFallback>{getInitials(father.relative?.name)}</AvatarFallback>
                             </Avatar>
                             <span className="text-sm font-semibold mt-1">{father.relative?.name}</span>
@@ -47,7 +47,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends }) => {
             <div className="relative p-6 pt-0">
                 <div className="absolute md:-top-16 -top-12 left-1/2 -translate-x-1/2">
                     <Avatar className="md:w-32 md:h-32 w-20 h-20 border-4 border-white shadow-lg">
-                        <AvatarImage src={user.profile_image || fallbackAvatar} />
+                        <AvatarImage src={user.profile_image || fallbackAvatar(user.gender)} />
                         <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                     </Avatar>
                     {/* <Button variant="secondary" size="icon" className="absolute bottom-0 right-0 rounded-full">

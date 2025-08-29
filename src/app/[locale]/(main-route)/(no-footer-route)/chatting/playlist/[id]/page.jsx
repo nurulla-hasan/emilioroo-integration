@@ -79,7 +79,7 @@ const PlaylistDetailPage = () => {
           {/* Banner Image */}
           <div className="relative w-full h-48 rounded-lg overflow-hidden mb-6">
             <Image
-              src={playlist.cover_image || fallbackAvatar}
+              src={playlist.cover_image || fallbackAvatar()}
               alt={playlist.name || "Playlist Banner"}
               fill
               className="object-cover"
@@ -102,7 +102,7 @@ const PlaylistDetailPage = () => {
             <div className="flex items-center gap-3 mb-6">
               <Avatar className="w-10 h-10">
                 <AvatarImage
-                  src={playlist.user?.profile_image || fallbackAvatar}
+                  src={playlist.user?.profile_image || fallbackAvatar(playlist.user?.gender)}
                   alt={playlist.user?.name || "Creator"}
                 />
                 <AvatarFallback>

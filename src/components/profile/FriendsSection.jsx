@@ -30,7 +30,7 @@ const FriendsSection = ({ friends, isLoading, isError }) => {
                     friends.slice(0, 13).map((friend, index) => (
                         <div key={index} className="flex flex-col items-center flex-shrink-0">
                             <Avatar className="w-16 h-16">
-                                <AvatarImage src={friend.friendInfo?.profile_image || fallbackAvatar} />
+                                <AvatarImage src={friend.friendInfo?.profile_image || fallbackAvatar(friend.friendInfo?.gender)} />
                                 <AvatarFallback>{getInitials(friend.friendInfo?.name)}</AvatarFallback>
                             </Avatar>
                             <span className="text-sm font-medium mt-2 whitespace-nowrap">{friend.friendInfo?.name}</span>

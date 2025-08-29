@@ -11,7 +11,7 @@ const SentRequestCard = ({ request }) => {
     return (
         <div className="bg-accent rounded-lg shadow-[0px_0px_2px_1px_rgba(0,_0,_0,_0.1)] hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center text-center">
             <Avatar className="w-24 h-24 mb-4">
-                <AvatarImage src={request.followingInfo?.profile_image || fallbackAvatar} />
+                <AvatarImage src={request.followingInfo?.profile_image || fallbackAvatar(request.followingInfo?.gender)} />
                 <AvatarFallback>{getInitials(request.followingInfo?.name)}</AvatarFallback>
             </Avatar>
             <h3 className="text-xl font-semibold mb-1">{request.followingInfo?.name || "Unknown"}</h3>

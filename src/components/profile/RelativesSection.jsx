@@ -30,7 +30,7 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, ha
                                 <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
                                     <div className="flex items-center gap-3">
                                         <Avatar className="w-12 h-12">
-                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar} />
+                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar(relative.relative?.gender)} />
                                             <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
                                         </Avatar>
                                         <div>
@@ -71,7 +71,7 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, ha
                                 <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
                                     <div className="flex items-center gap-3">
                                         <Avatar className="w-12 h-12">
-                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar} />
+                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar(relative.relative?.gender)} />
                                             <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
                                         </Avatar>
                                         <div>

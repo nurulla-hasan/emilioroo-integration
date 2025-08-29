@@ -3,6 +3,7 @@
 import React from 'react';
 import { useParams } from "next/navigation";
 import { useGetAllProjectQuery, useGetSingleProjectQuery, useGetProjectMemberQuery, useGetProjectDocumentQuery, useGetProjectImageQuery } from "@/lib/features/api/projectApi";
+import { useGetSingleConversationQuery } from "@/lib/features/api/chatApi";
 import InstitutionNavCardSkeleton from "@/components/skeleton/InstitutionNavCardSkeleton";
 import ProjectNavCard from "@/components/objects/single-projects/ProjectNavCard";
 import ProjectWorkspaceHeader from "@/components/objects/workspace/ProjectWorkspaceHeader";
@@ -15,14 +16,6 @@ import ProjectWorkspaceSkeleton from "@/components/skeleton/ProjectWorkspaceSkel
 import LoadFailed from '@/components/common/LoadFailed';
 import NoData from '@/components/common/NoData';
 
-const staticMessages = [
-  { id: 1, author: { name: "Dindiniya", role: "General manager", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "9:30", isYou: false },
-  { id: 2, author: { name: "You", role: "", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "9:30", isYou: true },
-  { id: 3, author: { name: "Dindiniya", role: "General manager", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "9:30", isYou: false },
-  { id: 4, author: { name: "You", role: "", avatar: "" }, text: "Hlw jhon, how can i help you??", time: "9:30", isYou: true },
-];
-
-
 const ProjectWorkspacePage = () => {
   const params = useParams();
   const projectId = params.id;
@@ -33,7 +26,7 @@ const ProjectWorkspacePage = () => {
   const { data: consumersData, isLoading: areConsumersLoading, isError: areConsumersError } = useGetProjectMemberQuery({ id: projectId, type: "Consumer" });
   const { data: documentsData, isLoading: areDocumentsLoading, isError: areDocumentsError } = useGetProjectDocumentQuery(projectId);
   const { data: imagesData, isLoading: areImagesLoading, isError: areImagesError } = useGetProjectImageQuery(projectId);
-
+  const { data: messagesData, isLoading: areMessagesLoading, isError: areMessagesError } = useGetSingleConversationQuery({ projectId });
 
   const allProjects = allProjectsData?.data?.result;
   const project = singleProjectData?.data;
@@ -41,6 +34,7 @@ const ProjectWorkspacePage = () => {
   const consumers = consumersData?.data?.result;
   const documents = documentsData?.data?.result;
   const images = imagesData?.data?.result;
+  const messages = messagesData?.data?.result;
 
   const breadcrumbLinks = [
     { name: "Home", href: "/" },
@@ -106,7 +100,7 @@ const ProjectWorkspacePage = () => {
                   />
                 </div>
               </div>
-              <ProjectDiscussion messages={staticMessages} />
+              <ProjectDiscussion messages={messages} isLoading={areMessagesLoading} isError={areMessagesError} />
             </>
           )}
         </div>

@@ -12,11 +12,11 @@ export const useTransformMessage = (me) => {
             id: msg._id,
             text: msg.text,
             sender: isMessageFromMe ? 'Me' : (userDetails?.name || 'Unknown User'),
-            avatar: isMessageFromMe ? (me?.profile_image || fallbackAvatar) : (userDetails?.profile_image || fallbackAvatar),
+            avatar: isMessageFromMe ? (me?.profile_image || fallbackAvatar(me?.gender)) : (userDetails?.profile_image || fallbackAvatar("MALE")),
             time: timeAgo(msg.createdAt),
             imageUrl: msg.imageUrl || [],
             videoUrl: msg.videoUrl || [],
-            isMyMessage: isMessageFromMe, // Add this line
+            isMyMessage: isMessageFromMe,
         };
     }, [me]);
 

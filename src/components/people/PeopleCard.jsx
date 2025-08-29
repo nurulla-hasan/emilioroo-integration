@@ -7,7 +7,6 @@ import { fallbackAvatar, getInitials } from '@/lib/utils';
 import PeopleCardButton from './PeopleCardButton';
 
 const PeopleCard = ({ user, }) => {
-    console.log(user);
     return (
         <div>
             <Card key={user._id} className="flex flex-col items-center p-4">

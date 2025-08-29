@@ -9,7 +9,6 @@ export function cn(...inputs) {
 }
 
 // Fallback Image
-// export const fallbackAvatar = "https://avatar.iran.liara.run/public";
 export const fallbackAvatar = (gender) => {
   if (gender === 'MALE') {
     return 'https://avatar.iran.liara.run/public/boy';
@@ -19,6 +18,7 @@ export const fallbackAvatar = (gender) => {
     return '/images/placeholder-image.jpg';
   }
 };
+export const fallbackAvatar2 = "https://avatar.iran.liara.run/public";
 
 // Time Ago
 export const timeAgo = (createdAt) => {
@@ -73,7 +73,6 @@ export const formatFileName = (url, len) => {
 // Get Initials
 export const getInitials = (str) => {
   if (!str) return "";
-
   return str
     .split(/[\s-]+/)
     .map(word => word.charAt(0).toUpperCase())

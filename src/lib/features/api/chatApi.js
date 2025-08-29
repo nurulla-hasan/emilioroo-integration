@@ -35,8 +35,9 @@ const chatApi = baseApi.injectEndpoints({
                     });
                 }
                 return {
-                    url: `/message/get-messages?${params.toString()}`,
+                    url: `/message/get-messages`,
                     method: "GET",
+                    params
                 }
             },
             providesTags: ["CONVERSATIONS"],

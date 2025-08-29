@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import GlobalAudioPlayer from '@/components/common/GlobalAudioPlayer';
@@ -27,6 +27,7 @@ const ChattingLayout = ({ children }) => {
                             <SheetContent side="left" className="p-0 w-64">
                                 <SheetHeader>
                                     <SheetTitle className="sr-only">Menu</SheetTitle>
+                                    <SheetDescription className="sr-only">Menu</SheetDescription>
                                 </SheetHeader>
                                 <ChattingSidebar className="w-full" />
                             </SheetContent>
