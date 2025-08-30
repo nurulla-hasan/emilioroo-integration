@@ -77,16 +77,16 @@ const MessagePage = () => {
             setPage(prevPage => prevPage + 1);
         }
     };
-    const handleSendMessage = () => {
-        if (newMessage.trim() && activeConversation) {
+    const handleSendMessage = (text, imageUrls = [], pdfUrls = []) => {
+        if ((text.trim() || imageUrls.length > 0 || pdfUrls.length > 0) && activeConversation) {
             const payload = {
-                text: newMessage,
-                imageUrl:[],
-                pdfUrl:[],
+                text,
+                imageUrl: imageUrls,
+                pdfUrl: pdfUrls,
             };
             const tempMessage = transformMessage({
                 _id: `temp-${Date.now()}`,
-                text: newMessage,
+                text,
                 createdAt: new Date().toISOString(),
                 msgByUserId: me?._id ? { _id: me._id, name: me.name, profile_image: me.profile_image } : undefined,
             });
@@ -112,7 +112,9 @@ const MessagePage = () => {
             console.log('Original Message Payload:', payload); // Log the payload
             sendMessage(payload); // This is where the payload is sent
             dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
-            setNewMessage('');
+            if (text) {
+                setNewMessage('');
+            }
         }
     };
 

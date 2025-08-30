@@ -2,21 +2,24 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from 'next/image';
-import { timeAgo } from "@/lib/utils";
+import { formatFileName, timeAgo } from "@/lib/utils";
+import { FileText } from "lucide-react";
 
 const MediaContent = ({ msg }) => (
     <div className="mt-2 flex flex-col gap-2">
         {(msg.imageUrl && msg.imageUrl.length > 0) && (
             <div className={`grid gap-2 ${msg.imageUrl.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                 {msg.imageUrl.map((url, index) => (
-                    <Image 
-                        key={index}
-                        src={url} 
-                        alt={`sent image ${index + 1}`} 
-                        width={300}
-                        height={200}
-                        className="object-cover rounded-lg w-full h-auto"
-                    />
+                    <div key={index} className="relative w-40 h-32">
+                        <Image
+                            src={url}
+                            alt={`sent image ${index + 1}`}
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 200px"
+                            className="object-cover rounded-lg"
+                            proiority="true"
+                        />
+                    </div>
                 ))}
             </div>
         )}
@@ -27,11 +30,23 @@ const MediaContent = ({ msg }) => (
                 ))}
             </div>
         )}
+        {(msg.pdfUrl && msg.pdfUrl.length > 0) && (
+            <div className="flex flex-col gap-2">
+                {msg.pdfUrl.map((url, index) => (
+                    <a key={index} href={url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 border rounded-lg bg-background hover:bg-muted transition-colors">
+                        <FileText/>
+                        <span className="text-sm font-medium truncate">
+                            {formatFileName(url, 20)}
+                        </span>
+                    </a>
+                ))}
+            </div>
+        )}
     </div>
 );
 
 const MessageBubble = ({ msg, isMyMessage }) => {
-    const hasMedia = (msg.imageUrl && msg.imageUrl.length > 0) || (msg.videoUrl && msg.videoUrl.length > 0);
+    const hasMedia = (msg.imageUrl && msg.imageUrl.length > 0) || (msg.videoUrl && msg.videoUrl.length > 0) || (msg.pdfUrl && msg.pdfUrl.length > 0);
 
     return (
         <div className={`p-3 rounded-2xl max-w-md ${isMyMessage ? 'bg-primary text-primary-foreground dark:text-white rounded-br-none' : 'bg-muted rounded-bl-none'}`}>

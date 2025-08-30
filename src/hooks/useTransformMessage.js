@@ -16,6 +16,7 @@ export const useTransformMessage = (me) => {
             time: timeAgo(msg.createdAt),
             imageUrl: msg.imageUrl || [],
             videoUrl: msg.videoUrl || [],
+            pdfUrl: msg.pdfUrl || [], // Add pdfUrl
             isMyMessage: isMessageFromMe,
             userDetails
         };

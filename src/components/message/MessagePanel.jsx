@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { toast } from 'sonner'; 
+import { useUploadFileMutation } from '@/lib/features/api/chatApi';
 
 import { Message } from './Message';
-import { ArrowLeft, Info, PlusCircle, Send, X } from "lucide-react";
+import { ArrowLeft, FileText, Info, PlusCircle, Send, X } from "lucide-react";
 
 export const MessagePanel = ({
     conversation,
@@ -25,7 +27,12 @@ export const MessagePanel = ({
     const scrollViewportRef = useRef(null);
     const prevScrollHeightRef = useRef(null);
     const fileInputRef = useRef(null);
-    const [stagedFiles, setStagedFiles] = useState([]);
+    const [stagedFiles, setStagedFiles] = useState([]); 
+    const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
+    const [uploadedPdfUrls, setUploadedPdfUrls] = useState([]);
+    const [isUploadingFiles, setIsUploadingFiles] = useState(false); 
+
+    const [uploadFile] = useUploadFileMutation(); 
 
     const lastMessage = messages[messages.length - 1];
     useEffect(() => {
@@ -57,25 +64,77 @@ export const MessagePanel = ({
         fileInputRef.current?.click();
     };
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-        setStagedFiles([file]); // For now, only one file
-        if(fileInputRef.current) {
-            fileInputRef.current.value = '';
+    const handleFileChange = async (event) => {
+        const files = Array.from(event.target.files);
+        if (files.length === 0) return;
+
+        const newStagedFiles = files.map(file => ({
+            file,
+            status: 'pending',
+            url: null,
+        }));
+        setStagedFiles(prev => [...prev, ...newStagedFiles]); 
+
+        setIsUploadingFiles(true);
+
+        const formData = new FormData();
+        files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                formData.append('conversation_image', file);
+            } else if (file.type === 'application/pdf') {
+                formData.append('conversation_pdf', file);
+            }
+        });
+
+        try {
+            setStagedFiles(prev => prev.map(stagedFile =>
+                newStagedFiles.some(nf => nf.file === stagedFile.file) ? { ...stagedFile, status: 'uploading' } : stagedFile
+            ));
+
+            const response = await uploadFile(formData).unwrap();
+
+            if (response.data) {
+                const uploadedImages = response.data.images || [];
+                const uploadedPdfs = response.data.pdfs || [];
+
+                setUploadedImageUrls(prev => [...prev, ...uploadedImages]);
+                setUploadedPdfUrls(prev => [...prev, ...uploadedPdfs]);
+
+                setStagedFiles(prev => prev.map(stagedFile => {
+                    const imageUrl = uploadedImages.find(url => url.includes(stagedFile.file.name));
+                    const pdfUrl = uploadedPdfs.find(url => url.includes(stagedFile.file.name));
+
+                    if (imageUrl || pdfUrl) {
+                        return { ...stagedFile, status: 'uploaded', url: imageUrl || pdfUrl };
+                    }
+                    return stagedFile;
+                }));
+            }
+        } catch (error) {
+            toast.error(error?.data?.message || 'Failed to upload files.');
+            setStagedFiles(prev => prev.map(stagedFile =>
+                newStagedFiles.some(nf => nf.file === stagedFile.file) ? { ...stagedFile, status: 'error' } : stagedFile
+            ));
+        } finally {
+            setIsUploadingFiles(false); 
+            if(fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
         }
     };
 
     const removeStagedFile = (fileToRemove) => {
-        setStagedFiles(stagedFiles.filter(file => file !== fileToRemove));
+        setStagedFiles(stagedFiles.filter(stagedFile => stagedFile !== fileToRemove));
     };
 
     const handleSendClick = () => {
-        if (newMessage.trim() === '' && stagedFiles.length === 0) {
-            return; // Nothing to send
+        if (isUploadingFiles || (newMessage.trim() === '' && uploadedImageUrls.length === 0 && uploadedPdfUrls.length === 0)) {
+            return;
         }
-        onSendMessage(newMessage, stagedFiles);
+        onSendMessage(newMessage, uploadedImageUrls, uploadedPdfUrls);
         setNewMessage('');
+        setUploadedImageUrls([]);
+        setUploadedPdfUrls([]);
         setStagedFiles([]);
     };
 
@@ -108,11 +167,28 @@ export const MessagePanel = ({
             </ScrollArea>
             <div className="p-4 border-t bg-card">
                 {stagedFiles.length > 0 && (
-                    <div className="p-2">
-                        {stagedFiles.map((file, index) => (
-                            <div key={index} className="relative w-16 h-16 inline-block">
-                                <Image src={URL.createObjectURL(file)} layout="fill" className="object-cover rounded-lg" alt={`Staged file ${index + 1}`} />
-                                <button onClick={() => removeStagedFile(file)} className="absolute top-1 right-1 bg-gray-800/70 text-white rounded-full p-1 cursor-pointer">
+                    <div className="p-2 flex flex-wrap gap-2"> 
+                        {stagedFiles.map((stagedFile, index) => (
+                            <div key={index} className="relative w-20 h-20 border rounded-lg overflow-hidden flex items-center justify-center">
+                                {stagedFile.file && stagedFile.file.type.startsWith('image/') ? (
+                                    <Image src={URL.createObjectURL(stagedFile.file)} layout="fill" className="object-cover" alt={`Staged file ${index + 1}`} />
+                                ) : stagedFile.file && stagedFile.file.type === 'application/pdf' ? (
+                                    <div className="flex flex-col items-center text-center p-1">
+                                        <FileText/>
+                                        <span className="text-xs truncate w-full mt-1">PDF</span>
+                                    </div>
+                                ) : null}
+                                {(stagedFile.status === 'pending' || stagedFile.status === 'uploading') && (
+                                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                        <span className="text-white text-xs">Uploading...</span>
+                                    </div>
+                                )}
+                                {stagedFile.status === 'error' && (
+                                    <div className="absolute inset-0 bg-red-500/50 flex items-center justify-center">
+                                        <span className="text-white text-xs">Error</span>
+                                    </div>
+                                )}
+                                <button onClick={() => removeStagedFile(stagedFile)} className="absolute top-1 right-1 bg-gray-800/70 text-white rounded-full p-1 cursor-pointer">
                                     <X className="w-3 h-3" />
                                 </button>
                             </div>
@@ -125,7 +201,8 @@ export const MessagePanel = ({
                         ref={fileInputRef}
                         onChange={handleFileChange}
                         className="hidden"
-                        accept="image/*,video/*"
+                        accept="image/*,application/pdf"
+                        multiple
                     />
                     <Button variant="ghost" size="icon" onClick={handleUploadClick}>
                         <PlusCircle />

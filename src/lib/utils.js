@@ -65,7 +65,7 @@ export const formatDate = (dateString) => {
 export const formatFileName = (url, len) => {
   const fileName = url.split('/').pop();
   if (fileName.length > len) {
-    return `${fileName.slice(0, 5)}...${fileName.slice(-10)}`;
+    return `${fileName.slice(0, 10)}...${fileName.slice(-10)}`;
   }
   return fileName;
 };

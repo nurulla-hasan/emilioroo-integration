@@ -60,7 +60,32 @@ export const useConversationsList = (searchTerm) => {
                 chatGroupId: conv.chatGroup?._id,
                 name: name || (isGroup ? 'Group' : 'Unknown User'),
                 avatar,
-                lastMessage: conv.lastMessage?.text || 'No messages yet',
+                lastMessage: (() => {
+                    const lastMsg = conv.lastMessage;
+                    if (!lastMsg) return 'No messages yet';
+
+                    const text = lastMsg.text?.trim();
+                    const hasImage = lastMsg.imageUrl && lastMsg.imageUrl.length > 0;
+                    const hasVideo = lastMsg.videoUrl && lastMsg.videoUrl.length > 0;
+                    const hasPdf = lastMsg.pdfUrl && lastMsg.pdfUrl.length > 0;
+
+                    if (text && (hasImage || hasVideo || hasPdf)) {
+                        let mediaIndicators = [];
+                        if (hasImage) mediaIndicators.push('Image');
+                        if (hasVideo) mediaIndicators.push('Video');
+                        if (hasPdf) mediaIndicators.push('PDF');
+                        return `${text} (${mediaIndicators.join(', ')})`;
+                    } else if (text) {
+                        return text;
+                    } else if (hasImage) {
+                        return 'Image';
+                    } else if (hasVideo) {
+                        return 'Video';
+                    } else if (hasPdf) {
+                        return 'PDF';
+                    }
+                    return 'No messages yet';
+                })(),
                 time: timeAgo(conv.lastMessage?.createdAt || conv.updated_at),
                 online: false,
             };
