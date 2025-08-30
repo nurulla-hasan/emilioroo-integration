@@ -2,10 +2,17 @@
 
 import { useCallback, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useCreateRequestBondMutation } from '@/lib/features/api/bondsApi';
+import { useCreateRequestBondMutation, useGetFilterItemsQuery } from '@/lib/features/api/bondsApi';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -48,6 +55,10 @@ const Bonds = () => {
   const t = useTranslations('AddNewBondModal');
   const bondsT = useTranslations('Bonds');
   const [createRequestBond, { isLoading }] = useCreateRequestBondMutation();
+  const { data: filterItems, isLoading: isFilterItemsLoading, isError: isFilterItemsError } = useGetFilterItemsQuery();
+
+  const wantItems = filterItems?.data?.wantItems || [];
+  const offerItems = filterItems?.data?.offerItems || [];
 
   // State for MatchingBondsModal
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
@@ -89,7 +100,6 @@ const Bonds = () => {
       toast.success('Bond created successfully!');
       reset();
 
-      // Open MatchingBondsModal with the new bond's ID
       if (response?.data?._id) {
         setNewlyCreatedBondId(response.data._id);
         setIsMatchModalOpen(true);
@@ -123,102 +133,140 @@ const Bonds = () => {
         <Card className="w-full max-w-4xl p-3 md:p-6">
           <Title>{t('createANewBond')}</Title>
           <CardContent className="p-0 pt-6">
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-                <div className="grid grid-cols-2 gap-4">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="offer"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('offer')}</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isFilterItemsLoading || isFilterItemsError}>
+                            <FormControl>
+                              <SelectTrigger
+                                aria-invalid={errors.offer ? 'true' : 'false'}
+                                className={errors.offer ? 'border-red-500 w-full' : 'w-full'}
+                              >
+                                <SelectValue placeholder={t('exampleLaptop')} />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {isFilterItemsLoading ? (
+                                <SelectItem value="loading" disabled>
+                                  Loading items...
+                                </SelectItem>
+                              ) : isFilterItemsError ? (
+                                <SelectItem value="error" disabled>
+                                  Error loading items.
+                                </SelectItem>
+                              ) : (
+                                offerItems.map((item) => (
+                                  <SelectItem key={item} value={item}>
+                                    {item}
+                                  </SelectItem>
+                                ))
+                              )}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="want"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('want')}</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isFilterItemsLoading || isFilterItemsError}>
+                            <FormControl>
+                              <SelectTrigger
+                                aria-invalid={errors.want ? 'true' : 'false'}
+                                className={errors.want ? 'border-red-500 w-full' : 'w-full'}
+                              >
+                                <SelectValue placeholder={t('exampleCamera')} />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {isFilterItemsLoading ? (
+                                <SelectItem value="loading" disabled>
+                                  Loading items...
+                                </SelectItem>
+                              ) : isFilterItemsError ? (
+                                <SelectItem value="error" disabled>
+                                  Error loading items.
+                                </SelectItem>
+                              ) : (
+                                wantItems.map((item) => (
+                                  <SelectItem key={item} value={item}>
+                                    {item}
+                                  </SelectItem>
+                                ))
+                              )}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   <FormField
                     control={form.control}
-                    name="offer"
+                    name="tag"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('offer')}</FormLabel>
+                        <FormLabel>{t('tag')} <span className="text-muted-foreground">({t('forBetterMatching')})</span></FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={t('exampleLaptop')}
+                            placeholder={t('exampleElectronics')}
                             {...field}
-                            aria-invalid={errors.offer ? 'true' : 'false'}
-                            className={errors.offer ? 'border-red-500' : ''}
+                            aria-invalid={errors.tag ? 'true' : 'false'}
+                            className={errors.tag ? 'border-red-500' : ''}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
+                  <FormItem>
+                    <FormLabel>Select Location</FormLabel>
+                    <FormControl>
+                      <div className="rounded-md overflow-hidden border h-64">
+                        <MapPicker
+                          onLocationChange={onLocationChange}
+                          center={location}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage>{errors.location?.message}</FormMessage>
+                  </FormItem>
                   <FormField
                     control={form.control}
-                    name="want"
+                    name="radius"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('want')}</FormLabel>
+                        <FormLabel>Radius (km)</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={t('exampleCamera')}
+                            type="number"
                             {...field}
-                            aria-invalid={errors.want ? 'true' : 'false'}
-                            className={errors.want ? 'border-red-500' : ''}
+                            aria-invalid={errors.radius ? 'true' : 'false'}
+                            className={errors.radius ? 'border-red-500' : ''}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                </div>
-                <FormField
-                  control={form.control}
-                  name="tag"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('tag')} <span className="text-muted-foreground">({t('forBetterMatching')})</span></FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder={t('exampleElectronics')}
-                          {...field}
-                          aria-invalid={errors.tag ? 'true' : 'false'}
-                          className={errors.tag ? 'border-red-500' : ''}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormItem>
-                  <FormLabel>Select Location</FormLabel>
-                  <FormControl>
-                    <div className="rounded-md overflow-hidden border h-64">
-                      <MapPicker
-                        onLocationChange={onLocationChange}
-                        center={location}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage>{errors.location?.message}</FormMessage>
-                </FormItem>
-                <FormField
-                  control={form.control}
-                  name="radius"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Radius (km)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          aria-invalid={errors.radius ? 'true' : 'false'}
-                          className={errors.radius ? 'border-red-500' : ''}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex items-center gap-4 justify-end">
-                  <p className='text-sm text-muted-foreground'>Create a bond request and see matching bonds.</p>
-                  <Button loading={isLoading} type="submit" disabled={isLoading}>
-                    {t('createBond')}
-                  </Button>
-                </div>
-              </form>
-            </Form>
+                  <div className="flex items-center gap-4 justify-end">
+                    <p className='text-sm text-muted-foreground'>Create a bond request and see matching bonds.</p>
+                    <Button loading={isLoading} type="submit" disabled={isLoading}>
+                      {t('createBond')}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
           </CardContent>
         </Card>
       </div>

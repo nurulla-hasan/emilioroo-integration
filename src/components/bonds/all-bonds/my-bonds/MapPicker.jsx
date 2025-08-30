@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, memo } from 'react';
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -13,7 +13,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
-function LocationMarker({ center }) {
+function LocationMarker({ center, onLocationChange }) {
   const [position, setPosition] = useState(center);
 
   const map = useMap();
@@ -25,14 +25,14 @@ function LocationMarker({ center }) {
     }
   }, [center, map]);
 
-  // const mapEvents = useMapEvents({
-  //   click(e) {
-  //     setPosition(e.latlng);
-  //     if (onLocationChange) {
-  //       onLocationChange(e.latlng);
-  //     }
-  //   },
-  // });
+  const mapEvents = useMapEvents({
+    click(e) {
+      setPosition(e.latlng);
+      if (onLocationChange) {
+        onLocationChange(e.latlng);
+      }
+    },
+  });
 
   return position === null ? null : <Marker position={position}></Marker>;
 }

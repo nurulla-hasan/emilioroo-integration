@@ -52,7 +52,7 @@ const bondsApi = baseApi.injectEndpoints({
             providesTags: ["BONDS"],
         }),
 
-        // GETYY ONGOING BONDS
+        // GET ONGOING BONDS
         getOngoingBonds: builder.query({
             query: (args) => {
                 const params = new URLSearchParams();
@@ -69,6 +69,15 @@ const bondsApi = baseApi.injectEndpoints({
                     params
                 }
             },
+            providesTags: ["BONDS"],
+        }),
+
+        // GET BOND FILTER ITEMS
+        getFilterItems: builder.query({
+            query: () => ({
+                url: "/bond/get-filter-items",
+                method: "GET",
+            }),
             providesTags: ["BONDS"],
         }),
 
@@ -146,4 +155,4 @@ const bondsApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation } = bondsApi;
+export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useGetFilterItemsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation } = bondsApi;
