@@ -38,7 +38,7 @@ export const useConversationsList = (searchTerm) => {
             if (conv.type === 'chat-group') {
                 subtype = 'chatGroup';
                 name = conv.chatGroup.name;
-                avatar = conv.chatGroup.image || fallbackAvatar();
+                avatar = conv.chatGroup.image || "/images/groupFallback.jpg";
             } else if (conv.type === 'bond-link-group') {
                 subtype = 'bondLink';
                 name = conv.bondLink.name;

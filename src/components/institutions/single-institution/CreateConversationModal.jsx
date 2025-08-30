@@ -20,6 +20,8 @@ const CreateConversationModal = ({ isOpen, onOpenChange, onCreateConversation, i
         value: user._id,
         label: user.name,
         user: user.user,
+        avatar: user.profile_image,
+        gender: user.gender
     })) || [];
 
     const handleSubmit = () => {
