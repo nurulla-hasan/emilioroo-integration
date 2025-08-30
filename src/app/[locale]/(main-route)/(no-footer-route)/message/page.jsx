@@ -6,7 +6,6 @@ import { ConversationList } from "@/components/message/ConversationList";
 import { MessagePanel } from "@/components/message/MessagePanel";
 import { MediaPanel } from "@/components/message/MediaPanel";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { fakeMediaByConversation } from "@/components/message/data";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadFailed from "@/components/common/LoadFailed";
@@ -17,6 +16,7 @@ import { baseApi } from "@/lib/features/api/baseApi";
 import { useGetMe } from '@/hooks/useGetMe';
 import { useTransformMessage } from '@/hooks/useTransformMessage';
 import { useConversationsList } from '@/hooks/useConversationsList';
+import { MessageSquareDashed } from 'lucide-react';
 
 const MessagePage = () => {
     const { socket, sendMessage } = useSocket();
@@ -323,7 +323,7 @@ const MessagePage = () => {
                             onBack={handleBack}
                             fetchMoreMessages={fetchMoreMessages}
                             isMessagesLoading={isMessagesLoading}
-                            isMessagesError={isMessagesError} 
+                            isMessagesError={isMessagesError}
                             onOpenMedia={onOpenMediaSheet}
                             newMessage={newMessage}
                             setNewMessage={setNewMessage}
@@ -350,17 +350,22 @@ const MessagePage = () => {
                                 onBack={handleBack}
                                 fetchMoreMessages={fetchMoreMessages}
                                 isMessagesLoading={isMessagesLoading}
-                                isMessagesError={isMessagesError} 
+                                isMessagesError={isMessagesError}
                                 newMessage={newMessage}
                                 setNewMessage={setNewMessage}
                                 onSendMessage={handleSendMessage}
                             />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center text-muted-foreground"><p>Select a conversation to start chatting.</p></div>
+                            <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground">
+                                <MessageSquareDashed className="h-6 w-6" />
+                                <p className="text-sm">Select a conversation to start chatting.</p>
+                            </div>
                         )}
                     </div>
                     <div className="hidden xl:flex w-1/4 border-l">
-                        <MediaPanel activeConversation={activeConversation} media={activeConversation ? fakeMediaByConversation[activeConversation.id] : []} />
+                        {activeConversation && (
+                            <MediaPanel activeConversation={activeConversation} />
+                        )}
                     </div>
                 </div>
 
@@ -370,7 +375,9 @@ const MessagePage = () => {
                             <SheetTitle>Media and files</SheetTitle>
                             <SheetDescription>Media and files shared in this conversation.</SheetDescription>
                         </SheetHeader>
-                        <MediaPanel activeConversation={activeConversation} media={activeConversation ? fakeMediaByConversation[activeConversation.id] : []} />
+                        {activeConversation && (
+                            <MediaPanel activeConversation={activeConversation} />
+                        )}
                     </SheetContent>
                 </Sheet>
             </div>

@@ -45,7 +45,7 @@ const chatApi = baseApi.injectEndpoints({
 
         // GET MEDIA
         getMedia: builder.query({
-            query: (args, id) => {
+            query: ({id, args}) => {
                 const params = new URLSearchParams();
                 if (args) {
                     Object.entries(args).forEach(([key, value]) => {
@@ -55,7 +55,7 @@ const chatApi = baseApi.injectEndpoints({
                     });
                 }
                 return {
-                    url: `/media/get-media/${id}`,
+                    url: `/conversation/get-media-files/${id}`,
                     method: "GET",
                     params
                 }
