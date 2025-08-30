@@ -14,7 +14,6 @@ import { useSocket } from '@/context/soket-context/SocketContext';
 import { useGetSingleConversationQuery } from "@/lib/features/api/chatApi";
 import { baseApi } from "@/lib/features/api/baseApi";
 
-import MessagePanelSkeleton from "@/components/skeleton/MessagePanelSkeleton";
 import { useGetMe } from '@/hooks/useGetMe';
 import { useTransformMessage } from '@/hooks/useTransformMessage';
 import { useConversationsList } from '@/hooks/useConversationsList';
@@ -109,8 +108,7 @@ const MessagePage = () => {
                     console.warn("Unknown conversation subtype for sending message:", activeConversation.subtype, activeConversation);
                     return;
             }
-            console.log('Original Message Payload:', payload); // Log the payload
-            sendMessage(payload); // This is where the payload is sent
+            sendMessage(payload);
             dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
             if (text) {
                 setNewMessage('');
@@ -167,13 +165,11 @@ const MessagePage = () => {
             const messageHandler = (msg) => {
                 setMessages((prevMessages) => {
                     const transformedMsg = transformMessage(msg);
-                    // Check if this message is one that we sent and stored temporarily
                     const tempMsgIndex = prevMessages.findIndex(
                         m => m.msgByUserId?._id === me?._id && m.text === transformedMsg.text && m.id.toString().startsWith('temp-')
                     );
 
                     if (tempMsgIndex !== -1) {
-                        // Replace the temporary message with the real one from the server
                         const newMessages = [...prevMessages];
                         newMessages[tempMsgIndex] = transformedMsg;
                         return newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
@@ -185,7 +181,7 @@ const MessagePage = () => {
                     }
                     return prevMessages;
                 });
-                dispatch(baseApi.util.invalidateTags(['CONVERSATIONS'])); // Invalidate cache on message receipt
+                dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
             };
 
             socket.on(eventName, messageHandler);
@@ -225,8 +221,6 @@ const MessagePage = () => {
                     return prevMessages;
                 });
             }
-
-            // Invalidate chat list to update last message and order
             dispatch(baseApi.util.invalidateQueries(['getChatList']));
         };
 
@@ -323,25 +317,19 @@ const MessagePage = () => {
                             searchTerm={searchTerm}
                             setSearchTerm={setSearchTerm} />
                     ) : (
-                        isMessagesLoading ? (
-                            <MessagePanelSkeleton />
-                        ) : isMessagesError ? (
-                            <div className="h-full w-full flex items-center justify-center">
-                                <LoadFailed msg="Failed to load messages." />
-                            </div>
-                        ) : (
-                            <MessagePanel
-                                conversation={activeConversation}
-                                messages={messages}
-                                onBack={handleBack}
-                                fetchMoreMessages={fetchMoreMessages}
-                                isMessagesLoading={isMessagesLoading}
-                                onOpenMedia={onOpenMediaSheet}
-                                newMessage={newMessage}
-                                setNewMessage={setNewMessage}
-                                onSendMessage={handleSendMessage}
-                            />
-                        ))}
+                        <MessagePanel
+                            conversation={activeConversation}
+                            messages={messages}
+                            onBack={handleBack}
+                            fetchMoreMessages={fetchMoreMessages}
+                            isMessagesLoading={isMessagesLoading}
+                            isMessagesError={isMessagesError} 
+                            onOpenMedia={onOpenMediaSheet}
+                            newMessage={newMessage}
+                            setNewMessage={setNewMessage}
+                            onSendMessage={handleSendMessage}
+                        />
+                    )}
                 </div>
 
                 {/* Desktop View */}
@@ -356,30 +344,23 @@ const MessagePage = () => {
                     </div>
                     <div className="w-2/3 xl:w-1/2">
                         {activeConversation ? (
-                            isMessagesLoading ? (
-                                <MessagePanelSkeleton />
-                            ) : isMessagesError ? (
-                                <div className="h-full w-full flex items-center justify-center">
-                                    <LoadFailed msg="Failed to load messages." />
-                                </div>
-                            ) : (
-                                <MessagePanel
-                                    conversation={activeConversation}
-                                    messages={messages}
-                                    onBack={handleBack}
-                                    fetchMoreMessages={fetchMoreMessages}
-                                    isMessagesLoading={isMessagesLoading}
-                                    newMessage={newMessage}
-                                    setNewMessage={setNewMessage}
-                                    onSendMessage={handleSendMessage}
-                                />
-                            )
+                            <MessagePanel
+                                conversation={activeConversation}
+                                messages={messages}
+                                onBack={handleBack}
+                                fetchMoreMessages={fetchMoreMessages}
+                                isMessagesLoading={isMessagesLoading}
+                                isMessagesError={isMessagesError} 
+                                newMessage={newMessage}
+                                setNewMessage={setNewMessage}
+                                onSendMessage={handleSendMessage}
+                            />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-muted-foreground"><p>Select a conversation to start chatting.</p></div>
                         )}
                     </div>
                     <div className="hidden xl:flex w-1/4 border-l">
-                        <MediaPanel media={activeConversation ? fakeMediaByConversation[activeConversation.id] : []} />
+                        <MediaPanel activeConversation={activeConversation} media={activeConversation ? fakeMediaByConversation[activeConversation.id] : []} />
                     </div>
                 </div>
 
@@ -389,7 +370,7 @@ const MessagePage = () => {
                             <SheetTitle>Media and files</SheetTitle>
                             <SheetDescription>Media and files shared in this conversation.</SheetDescription>
                         </SheetHeader>
-                        <MediaPanel media={activeConversation ? fakeMediaByConversation[activeConversation.id] : []} />
+                        <MediaPanel activeConversation={activeConversation} media={activeConversation ? fakeMediaByConversation[activeConversation.id] : []} />
                     </SheetContent>
                 </Sheet>
             </div>

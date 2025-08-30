@@ -10,7 +10,9 @@ import { toast } from 'sonner';
 import { useDeleteUploadedFileMutation, useUploadFileMutation } from '@/lib/features/api/chatApi';
 
 import { Message } from './Message';
-import { ArrowLeft, FileText, Info, PlusCircle, Send, X } from "lucide-react";
+import { ArrowLeft, FileText, Info, MessageSquareDashed, PlusCircle, Send, X } from "lucide-react";
+import MessagePanelSkeleton from "@/components/skeleton/MessagePanelSkeleton";
+import LoadFailed from "@/components/common/LoadFailed";
 
 export const MessagePanel = ({
     conversation,
@@ -21,6 +23,7 @@ export const MessagePanel = ({
     onSendMessage,
     fetchMoreMessages,
     isMessagesLoading,
+    isMessagesError, // New prop
     onBack
 }) => {
     const messagesEndRef = useRef(null);
@@ -174,8 +177,23 @@ export const MessagePanel = ({
                 </div>
             </div>
             <ScrollArea className="flex-1 p-4 h-96 bg-background/50" onScroll={handleScroll}>
-                {messages.map(msg => <Message key={msg._id} msg={msg} />)}
-                <div ref={messagesEndRef} />
+                {isMessagesLoading ? (
+                    <MessagePanelSkeleton />
+                ) : isMessagesError ? (
+                    <div className="h-full w-full flex items-center justify-center">
+                        <LoadFailed msg="Failed to load messages." />
+                    </div>
+                ) : messages && messages.length > 0 ? (
+                    <>
+                        {messages.map(msg => <Message key={msg._id} msg={msg} />)}
+                        <div ref={messagesEndRef} />
+                    </>
+                ) : (
+                    <div className="h-[70vh] w-full flex flex-col items-center justify-center text-muted-foreground gap-2">
+                        <MessageSquareDashed className="h-6 w-6" />
+                        <p>No messages yet. Be the first to say hi!</p>
+                    </div>
+                )}
             </ScrollArea>
             <div className="p-4 border-t bg-card">
                 {stagedFiles.length > 0 && (

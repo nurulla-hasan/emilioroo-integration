@@ -43,6 +43,26 @@ const chatApi = baseApi.injectEndpoints({
             providesTags: ["CONVERSATIONS"],
         }),
 
+        // GET MEDIA
+        getMedia: builder.query({
+            query: (args, id) => {
+                const params = new URLSearchParams();
+                if (args) {
+                    Object.entries(args).forEach(([key, value]) => {
+                        if (value) {
+                            params.append(key, value);
+                        }
+                    });
+                }
+                return {
+                    url: `/media/get-media/${id}`,
+                    method: "GET",
+                    params
+                }
+            },
+            providesTags: ["CONVERSATIONS"],
+        }),
+
         // CREATE GROUP CHAT
         createGroup: builder.mutation({
             query: (data) => ({
@@ -74,4 +94,4 @@ const chatApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetChatListQuery, useGetSingleConversationQuery, useCreateGroupMutation, useUploadFileMutation , useDeleteUploadedFileMutation} = chatApi;
+export const { useGetChatListQuery, useGetSingleConversationQuery, useGetMediaQuery, useCreateGroupMutation, useUploadFileMutation, useDeleteUploadedFileMutation } = chatApi;
