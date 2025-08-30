@@ -20,7 +20,8 @@ const chatApi = baseApi.injectEndpoints({
                     params
                 }
             },
-            providesTags: ["CONVERSATIONS"],
+            providesTags: (result, error, arg) => result ? [{ type: 'CONVERSATIONS', id: arg.id }]
+                : [],
         }),
 
         // GET SINGLE CONVERSATION
@@ -40,12 +41,13 @@ const chatApi = baseApi.injectEndpoints({
                     params
                 }
             },
-            providesTags: ["CONVERSATIONS"],
+            providesTags: (result, error, arg) => result ? [{ type: 'CONVERSATIONS', id: arg.id }]
+                : [],
         }),
 
         // GET MEDIA
         getMedia: builder.query({
-            query: ({id, args}) => {
+            query: ({ id, args }) => {
                 const params = new URLSearchParams();
                 if (args) {
                     Object.entries(args).forEach(([key, value]) => {
@@ -60,7 +62,7 @@ const chatApi = baseApi.injectEndpoints({
                     params
                 }
             },
-            providesTags: ["CONVERSATIONS"],
+            providesTags: (result, error, arg) => result ? [{ type: 'MEDIA', id: arg.id }]: [],
         }),
 
         // CREATE GROUP CHAT
@@ -80,6 +82,7 @@ const chatApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
+            invalidatesTags: (result, error, arg) => [{ type: 'MEDIA', id: arg.conversationId }],
         }),
 
         // DELETE UPLOADED FILE
