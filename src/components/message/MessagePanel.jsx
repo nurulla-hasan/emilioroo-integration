@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { toast } from 'sonner'; 
+import { toast } from 'sonner';
 import { useDeleteUploadedFileMutation, useUploadFileMutation } from '@/lib/features/api/chatApi';
 
 import { Message } from './Message';
@@ -27,12 +27,12 @@ export const MessagePanel = ({
     const scrollViewportRef = useRef(null);
     const prevScrollHeightRef = useRef(null);
     const fileInputRef = useRef(null);
-    const [stagedFiles, setStagedFiles] = useState([]); 
+    const [stagedFiles, setStagedFiles] = useState([]);
     const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
     const [uploadedPdfUrls, setUploadedPdfUrls] = useState([]);
-    const [isUploadingFiles, setIsUploadingFiles] = useState(false); 
+    const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 
-    const [uploadFile] = useUploadFileMutation(); 
+    const [uploadFile] = useUploadFileMutation();
     const [deleteUploadedFile] = useDeleteUploadedFileMutation();
 
     const lastMessage = messages[messages.length - 1];
@@ -74,7 +74,7 @@ export const MessagePanel = ({
             status: 'pending',
             url: null,
         }));
-        setStagedFiles(prev => [...prev, ...newStagedFiles]); 
+        setStagedFiles(prev => [...prev, ...newStagedFiles]);
 
         setIsUploadingFiles(true);
 
@@ -117,8 +117,8 @@ export const MessagePanel = ({
                 newStagedFiles.some(nf => nf.file === stagedFile.file) ? { ...stagedFile, status: 'error' } : stagedFile
             ));
         } finally {
-            setIsUploadingFiles(false); 
-            if(fileInputRef.current) {
+            setIsUploadingFiles(false);
+            if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
         }
@@ -179,14 +179,14 @@ export const MessagePanel = ({
             </ScrollArea>
             <div className="p-4 border-t bg-card">
                 {stagedFiles.length > 0 && (
-                    <div className="p-2 flex flex-wrap gap-2"> 
+                    <div className="p-2 flex flex-wrap gap-2">
                         {stagedFiles.map((stagedFile, index) => (
                             <div key={index} className="relative w-20 h-20 border rounded-lg overflow-hidden flex items-center justify-center">
                                 {stagedFile.file && stagedFile.file.type.startsWith('image/') ? (
                                     <Image src={URL.createObjectURL(stagedFile.file)} layout="fill" className="object-cover" alt={`Staged file ${index + 1}`} />
                                 ) : stagedFile.file && stagedFile.file.type === 'application/pdf' ? (
                                     <div className="flex flex-col items-center text-center p-1">
-                                        <FileText/>
+                                        <FileText />
                                         <span className="text-xs truncate w-full mt-1">PDF</span>
                                     </div>
                                 ) : null}

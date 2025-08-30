@@ -21,20 +21,27 @@ const MessageBubbleSkeleton = ({ isMyMessage = false }) => {
 
 const MessagePanelSkeleton = () => {
   return (
-    <div className="bg-muted/50 rounded-lg p-4 overflow-y-auto flex flex-col gap-4">
+    <div className="bg-muted/50 overflow-y-auto flex flex-col">
       {/* Header */}
-      <div className="h-12 mb-4 flex items-center gap-4">
+      <div className="h-12 mb-4 flex items-center gap-4 border-b px-4 py-10.5">
         <Skeleton className="h-12 w-12 rounded-full" />
         <Skeleton className="h-5 w-40 rounded-lg" />
       </div>
 
-      {/* Chat bubbles */}
-      <MessageBubbleSkeleton />
-      <MessageBubbleSkeleton />
-      <MessageBubbleSkeleton isMyMessage />
-      <MessageBubbleSkeleton />
-      <MessageBubbleSkeleton isMyMessage />
-      <MessageBubbleSkeleton />
+      <div className="flex flex-col gap-4 p-4">
+        {/* Chat bubbles */}
+        <MessageBubbleSkeleton />
+        <MessageBubbleSkeleton />
+        <MessageBubbleSkeleton isMyMessage />
+        <MessageBubbleSkeleton />
+        <MessageBubbleSkeleton isMyMessage />
+        <MessageBubbleSkeleton />
+        <div className=" flex-col gap-4 hidden md:flex">
+        <MessageBubbleSkeleton isMyMessage />
+          <MessageBubbleSkeleton />
+          <MessageBubbleSkeleton isMyMessage />
+        </div>
+      </div>
     </div>
   );
 };
