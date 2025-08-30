@@ -363,9 +363,7 @@ const MessagePage = () => {
                         )}
                     </div>
                     <div className="hidden xl:flex w-1/4 border-l">
-                        {activeConversation && (
-                            <MediaPanel activeConversation={activeConversation} />
-                        )}
+                        <MediaPanel activeConversation={activeConversation} />
                     </div>
                 </div>
 
@@ -375,9 +373,7 @@ const MessagePage = () => {
                             <SheetTitle>Media and files</SheetTitle>
                             <SheetDescription>Media and files shared in this conversation.</SheetDescription>
                         </SheetHeader>
-                        {activeConversation && (
                             <MediaPanel activeConversation={activeConversation} />
-                        )}
                     </SheetContent>
                 </Sheet>
             </div>

@@ -1,34 +1,29 @@
-
 'use client';
 
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Image from 'next/image';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useGetMediaQuery } from '@/lib/features/api/chatApi';
-import { FileText } from 'lucide-react';
+import { FileText, ImageIcon } from 'lucide-react';
+import NoData from "../common/NoData";
+import LoadFailed from "../common/LoadFailed";
+import { Skeleton } from "../ui/skeleton";
 
 export const MediaPanel = ({ activeConversation }) => {
     const id = activeConversation?.conversationId;
     const [page, setPage] = useState(1);
-    const [limit] = useState(20); 
-    const [allMediaUrls, setAllMediaUrls] = useState([]);
+    const [limit] = useState(20);
     const scrollRef = useRef(null);
 
     const { data: mediaData, isLoading, isFetching, isError } = useGetMediaQuery(
         { id, args: { page, limit } },
-        { skip: !id, refetchOnMountOrArgChange: true });
+        { skip: !id, refetchOnMountOrArgChange: true }
+    );
 
-
-    useEffect(() => {
-        if (mediaData?.data?.urls) {
-            setAllMediaUrls(prevUrls => [...prevUrls, ...mediaData.data.urls]);
-        }
-    }, [mediaData]);
-
-    useEffect(() => {
-        setPage(1);
-        setAllMediaUrls([]);
-    }, [activeConversation?.conversationId]);
+    const urls = mediaData?.data?.urls || [];
+    const imageUrls = urls.filter(url => url.match(/\.(jpeg|jpg|gif|png|webp)$/i));
+    const pdfUrls = urls.filter(url => url.match(/\.pdf$/i));
 
     const handleScroll = () => {
         if (scrollRef.current) {
@@ -38,51 +33,87 @@ export const MediaPanel = ({ activeConversation }) => {
             }
         }
     };
+
     return (
         <div className="w-full bg-card flex-col h-full flex">
-            <ScrollArea className="flex-1 h-96" onScroll={handleScroll} ref={scrollRef}>
-                <div className="p-4">
-                    {isLoading || isFetching ? (
-                        <div className="text-center text-muted-foreground pt-8">
-                            <p>Loading media...</p>
-                        </div>
-                    ) : isError ? (
-                        <div className="text-center text-red-500 pt-8">
-                            <p>Failed to load media.</p>
-                        </div>
-                    ) : allMediaUrls.length > 0 ? (
-                        <>
-                            <h3 className="text-lg font-semibold mb-2">Images</h3>
-                            <div className="grid grid-cols-3 gap-2 mb-4">
-                                {allMediaUrls.filter(url => url.match(/\.(jpeg|jpg|gif|png|webp)$/i)).map((url, index) => (
-                                    <div key={index} className="relative aspect-square">
-                                        <Image 
-                                        src={url} 
-                                        alt="media" 
-                                        fill 
-                                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 200px"
-                                        className="object-cover rounded-lg" />
-                                    </div>
-                                ))}
+            <div className="flex justify-between items-center p-5.5 border-b">
+                <h3 className="text-lg font-semibold">Media</h3>
+            </div>
+
+            <Tabs defaultValue="images" className="flex-1 h-96 flex flex-col">
+                <TabsList className="w-full">
+                    <TabsTrigger value="images" >
+                        <ImageIcon className="w-4 h-4" />
+                        Images
+                    </TabsTrigger>
+                    <TabsTrigger value="pdfs" className="flex items-center gap-2">
+                        <FileText className="w-4 h-4" />
+                        PDFs
+                    </TabsTrigger>
+                </TabsList>
+
+                <ScrollArea className="flex-1" onScroll={handleScroll} ref={scrollRef}>
+                    <div className="p-4">
+                        {isLoading || isFetching ? (
+                            <div>
+                                <div className="flex flex-wrap gap-2">
+                                    {Array.from({ length: 9 }).map((_, i) => (
+                                        <Skeleton key={i} className="h-26 w-26 rounded-lg" />
+                                    ))}
+                                </div>
                             </div>
 
-                            <h3 className="text-lg font-semibold mb-2">PDFs</h3>
-                            <div className="flex flex-col gap-2">
-                                {allMediaUrls.filter(url => url.match(/\.pdf$/i)).map((url, index) => (
-                                    <a key={index} href={url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 border rounded-lg bg-background hover:bg-muted transition-colors">
-                                        <FileText className="w-6 h-6 text-red-500" />
-                                        <span className="text-sm font-medium truncate">{url.substring(url.lastIndexOf('/') + 1)}</span>
-                                    </a>
-                                ))}
+                        ) : isError ? (
+                            <LoadFailed msg="Failed to load media" />
+                        ) : urls.length === 0 ? (
+                            <div className="text-center text-muted-foreground">
+                                <NoData msg="No media shared in this conversation" />
                             </div>
-                        </>
-                    ) : (
-                        <div className="text-center text-muted-foreground pt-8">
-                            <p>No media shared in this conversation yet.</p>
-                        </div>
-                    )}
-                </div>
-            </ScrollArea>
+                        ) : (
+                            <>
+                                <TabsContent value="images">
+                                    {imageUrls.length > 0 && (
+                                        <div className="flex flex-wrap gap-2">
+                                            {imageUrls.map((url, index) => (
+                                                <div key={index} className="relative h-26 w-26">
+                                                    <Image
+                                                        src={url}
+                                                        alt="media"
+                                                        fill
+                                                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 200px"
+                                                        className="object-cover border rounded-lg"
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </TabsContent>
+
+                                <TabsContent value="pdfs">
+                                    {pdfUrls.length > 0 && (
+                                        <div className="flex flex-col gap-2">
+                                            {pdfUrls.map((url, index) => (
+                                                <a
+                                                    key={index}
+                                                    href={url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-2 p-2 border rounded-lg bg-background hover:bg-muted transition-colors"
+                                                >
+                                                    <FileText className="w-6 h-6 text-red-500" />
+                                                    <span className="text-sm font-medium truncate">
+                                                        {url.substring(url.lastIndexOf("/") + 1)}
+                                                    </span>
+                                                </a>
+                                            ))}
+                                        </div>
+                                    )}
+                                </TabsContent>
+                            </>
+                        )}
+                    </div>
+                </ScrollArea>
+            </Tabs>
         </div>
     );
-}
+};

@@ -10,7 +10,7 @@ const MediaContent = ({ msg }) => (
         {(msg.imageUrl && msg.imageUrl.length > 0) && (
             <div className={`grid gap-2 ${msg.imageUrl.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                 {msg.imageUrl.map((url, index) => (
-                    <div key={index} className="relative w-40 h-32 group"> {/* Added group for hover effect */}
+                    <div key={index} className="relative w-40 h-32 group">
                         <Image
                             src={url}
                             alt={`sent image ${index + 1}`}
@@ -43,7 +43,7 @@ const MediaContent = ({ msg }) => (
         {(msg.pdfUrl && msg.pdfUrl.length > 0) && (
             <div className="flex flex-col gap-2">
                 {msg.pdfUrl.map((url, index) => (
-                    <a key={index} href={url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 border rounded-lg bg-background hover:bg-muted transition-colors">
+                    <a key={index} href={url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 border border-gray-500 rounded-lg  hover:bg-black/20 transition-colors">
                         <FileText/>
                         <span className="text-sm font-medium truncate">
                             {formatFileName(url, 20)}
