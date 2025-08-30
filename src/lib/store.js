@@ -3,6 +3,7 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage';
 import authReducer from './features/slices/auth/authSlice';
 import audioReducer from './features/slices/audio/audioSlice';
+import mediaReducer from './features/slices/media/mediaSlice';
 import { baseApi } from './features/api/baseApi';
 
 
@@ -10,6 +11,7 @@ import { baseApi } from './features/api/baseApi';
 const rootReducer = combineReducers({
     auth: authReducer,
     audio: audioReducer,
+    media: mediaReducer,
     [baseApi.reducerPath]: baseApi.reducer,
 });
 
