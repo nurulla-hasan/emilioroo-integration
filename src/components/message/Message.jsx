@@ -3,14 +3,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from 'next/image';
 import { formatFileName, timeAgo } from "@/lib/utils";
-import { FileText } from "lucide-react";
+import { FileText, Download } from "lucide-react";
 
 const MediaContent = ({ msg }) => (
     <div className="mt-2 flex flex-col gap-2">
         {(msg.imageUrl && msg.imageUrl.length > 0) && (
             <div className={`grid gap-2 ${msg.imageUrl.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                 {msg.imageUrl.map((url, index) => (
-                    <div key={index} className="relative w-40 h-32">
+                    <div key={index} className="relative w-40 h-32 group"> {/* Added group for hover effect */}
                         <Image
                             src={url}
                             alt={`sent image ${index + 1}`}
@@ -19,6 +19,16 @@ const MediaContent = ({ msg }) => (
                             className="object-cover rounded-lg"
                             proiority="true"
                         />
+                        <a
+                            href={url}
+                            download
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                            title="Download Image"
+                        >
+                            <Download className="w-8 h-8 text-white" />
+                        </a>
                     </div>
                 ))}
             </div>

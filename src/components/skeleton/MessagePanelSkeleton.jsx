@@ -37,10 +37,6 @@ const MessagePanelSkeleton = () => {
       <MessageBubbleSkeleton />
       <MessageBubbleSkeleton isMyMessage />
       <MessageBubbleSkeleton isMyMessage />
-      <MessageBubbleSkeleton />
-      <MessageBubbleSkeleton isMyMessage />
-      <MessageBubbleSkeleton />
-      <MessageBubbleSkeleton isMyMessage />
     </div>
   );
 };
