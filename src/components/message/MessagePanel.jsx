@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'sonner'; 
-import { useUploadFileMutation } from '@/lib/features/api/chatApi';
+import { useDeleteUploadedFileMutation, useUploadFileMutation } from '@/lib/features/api/chatApi';
 
 import { Message } from './Message';
 import { ArrowLeft, FileText, Info, PlusCircle, Send, X } from "lucide-react";
@@ -33,6 +33,7 @@ export const MessagePanel = ({
     const [isUploadingFiles, setIsUploadingFiles] = useState(false); 
 
     const [uploadFile] = useUploadFileMutation(); 
+    const [deleteUploadedFile] = useDeleteUploadedFileMutation();
 
     const lastMessage = messages[messages.length - 1];
     useEffect(() => {
@@ -123,8 +124,19 @@ export const MessagePanel = ({
         }
     };
 
-    const removeStagedFile = (fileToRemove) => {
-        setStagedFiles(stagedFiles.filter(stagedFile => stagedFile !== fileToRemove));
+    const removeStagedFile = async (fileToRemove) => {
+        setStagedFiles(prev => prev.filter(stagedFile => stagedFile !== fileToRemove));
+        setUploadedImageUrls(prev => prev.filter(url => url !== fileToRemove.url));
+        setUploadedPdfUrls(prev => prev.filter(url => url !== fileToRemove.url));
+
+        if (fileToRemove.status === 'uploaded' && fileToRemove.url) {
+            try {
+                await deleteUploadedFile({ files: [fileToRemove.url] }).unwrap();
+                // toast.success('File deleted from server.');
+            } catch (error) {
+                toast.error(error?.data?.message || 'Failed to delete file from server.');
+            }
+        }
     };
 
     const handleSendClick = () => {

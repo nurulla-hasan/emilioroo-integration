@@ -62,7 +62,16 @@ const chatApi = baseApi.injectEndpoints({
             }),
         }),
 
+        // DELETE UPLOADED FILE
+        deleteUploadedFile: builder.mutation({
+            query: (data) => ({
+                url: `/file-upload/delete-files/`,
+                method: "POST",
+                body: data
+            }),
+        }),
+
     }),
 });
 
-export const { useGetChatListQuery, useGetSingleConversationQuery, useCreateGroupMutation, useUploadFileMutation } = chatApi;
+export const { useGetChatListQuery, useGetSingleConversationQuery, useCreateGroupMutation, useUploadFileMutation , useDeleteUploadedFileMutation} = chatApi;
