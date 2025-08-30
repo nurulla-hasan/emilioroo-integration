@@ -53,7 +53,16 @@ const chatApi = baseApi.injectEndpoints({
             invalidatesTags: ["CONVERSATIONS"],
         }),
 
+        // UPLOAD FILE
+        uploadFile: builder.mutation({
+            query: (data) => ({
+                url: "file-upload/upload-conversation-files",
+                method: "POST",
+                body: data,
+            }),
+        }),
+
     }),
 });
 
-export const { useGetChatListQuery, useGetSingleConversationQuery, useCreateGroupMutation } = chatApi;
+export const { useGetChatListQuery, useGetSingleConversationQuery, useCreateGroupMutation, useUploadFileMutation } = chatApi;

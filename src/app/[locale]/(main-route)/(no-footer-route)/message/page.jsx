@@ -81,6 +81,8 @@ const MessagePage = () => {
         if (newMessage.trim() && activeConversation) {
             const payload = {
                 text: newMessage,
+                imageUrl:[],
+                pdfUrl:[],
             };
             const tempMessage = transformMessage({
                 _id: `temp-${Date.now()}`,
@@ -107,9 +109,9 @@ const MessagePage = () => {
                     console.warn("Unknown conversation subtype for sending message:", activeConversation.subtype, activeConversation);
                     return;
             }
-            sendMessage(payload);
+            console.log('Original Message Payload:', payload); // Log the payload
+            sendMessage(payload); // This is where the payload is sent
             dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
-
             setNewMessage('');
         }
     };
