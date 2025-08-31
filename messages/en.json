@@ -64,6 +64,8 @@
     "want": "Want",
     "wantIsRequired": "Want is required",
     "exampleCamera": "e.g., Camera",
+    "description": "Description",
+    "tellUsMore": "Tell us more about your bond",
     "tag": "Tag",
     "forBetterMatching": "For better matching",
     "tagIsRequired": "Tag is required",

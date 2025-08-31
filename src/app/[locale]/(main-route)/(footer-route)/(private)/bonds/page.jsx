@@ -32,6 +32,7 @@ import Link from 'next/link';
 import { ArrowBigRight } from 'lucide-react';
 import MatchingBondsModal from '@/components/bonds/MatchingBondsModal';
 import CustomBreadcrumb from '@/components/common/CustomBreadcrumb';
+import { Textarea } from '@/components/ui/textarea';
 
 const MapPicker = dynamic(() => import('@/components/bonds/all-bonds/my-bonds/MapPicker'), { ssr: false });
 
@@ -40,6 +41,7 @@ const defaultLocation = { lat: -34.6037, lng: -58.3816 };
 const formSchema = z.object({
   offer: z.string().min(1, { message: 'Offer is required.' }),
   want: z.string().min(1, { message: 'Want is required.' }),
+  description: z.string().min(1, { message: 'Description is required.' }),
   tag: z.string().min(1, { message: 'Tag is required.' }),
   radius: z.coerce.number().min(1, { message: 'Radius must be a positive number.' }),
   location: z
@@ -70,6 +72,7 @@ const Bonds = () => {
     defaultValues: {
       offer: '',
       want: '',
+      description: '',
       tag: '',
       radius: 5,
       location: defaultLocation,
@@ -87,6 +90,7 @@ const Bonds = () => {
     const newBond = {
       offer: values.offer,
       want: values.want,
+      description: values.description,
       tag: values.tag,
       location: {
         type: 'Point',
@@ -211,6 +215,24 @@ const Bonds = () => {
                       )}
                     />
                   </div>
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('description')}</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder={t('tellUsMore')}
+                            {...field}
+                            aria-invalid={errors.description ? 'true' : 'false'}
+                            className={errors.description ? 'border-red-500' : ''}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="tag"

@@ -8,38 +8,56 @@ import { Badge } from "../ui/badge";
 import { useCreateBondLinkMutation } from "@/lib/features/api/bondsApi";
 import { toast } from "sonner";
 import ProposeLinkModal from './ProposeLinkModal';
+import { useRouter } from '@/i18n/navigation';
 
 const UserRow = ({ user, isLast }) => (
     <div className="flex flex-col items-center">
-        <div className="w-full p-3 rounded-lg bg-muted/50">
+        <div className="w-full p-4 rounded-xl bg-muted/40 shadow-sm border transition hover:shadow-md">
             {/* User Info */}
-            <div className="flex items-center gap-3 mb-2">
-                <Avatar>
+            <div className="flex items-center gap-4 mb-3">
+                <Avatar className="h-10 w-10">
                     <AvatarImage src={user.user.profile_image} alt={user.user.name} />
                     <AvatarFallback>{user.user.name.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <p className="font-bold text-primary dark:text-white">{user.user.name}</p>
+                <p className="text-base font-semibold text-primary dark:text-white leading-tight">
+                    {user.user.name}
+                </p>
             </div>
 
             {/* Offer and Want */}
-            <div className="pl-11 space-y-1 text-sm">
+            <div className="pl-14 space-y-2 text-sm">
                 <div className="flex items-center gap-2">
-                    <Gift className="h-4 w-4 text-purple-500 shrink-0" />
-                    <span><span className="font-semibold">Offers:</span> {user.offer}</span>
+                    <div className="p-1 bg-purple-100 dark:bg-purple-900 rounded">
+                        <Gift className="h-4 w-4 text-purple-500" />
+                    </div>
+                    <span>
+                        <span className="font-semibold">Offers:</span> {user.offer}
+                    </span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Handshake className="h-4 w-4 text-green-500 shrink-0" />
-                    <span><span className="font-semibold">Wants:</span> {user.want}</span>
+                    <div className="p-1 bg-green-100 dark:bg-green-900 rounded">
+                        <Handshake className="h-4 w-4 text-green-500" />
+                    </div>
+                    <span>
+                        <span className="font-semibold">Wants:</span> {user.want}
+                    </span>
                 </div>
             </div>
+            <p className="mt-2 text-muted-foreground max-w-xs break-words">
+                Description: {user.description}
+            </p>
         </div>
+
+        {/* Separator */}
         {!isLast && (
-            <ArrowUpDown className="text-muted-foreground" />
+            <ArrowUpDown className="text-muted-foreground my-2 animate-pulse" />
         )}
     </div>
+
 );
 
 const MatchGroup = ({ matchRequest, status, showProposeButton = true }) => {
+    const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [createBondLink, { isLoading }] = useCreateBondLinkMutation();
 
@@ -54,6 +72,7 @@ const MatchGroup = ({ matchRequest, status, showProposeButton = true }) => {
             await createBondLink(payload).unwrap();
             toast.success("Bond link proposed successfully!");
             setIsModalOpen(false);
+            router.push('/message');
         } catch (error) {
             toast.error(error?.data?.message || "Failed to propose bond link.");
         }

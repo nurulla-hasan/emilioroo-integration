@@ -64,6 +64,8 @@
     "want": "Quiero",
     "wantIsRequired": "Debes ingresar algo que quieres",
     "exampleCamera": "ej., Cámara",
+    "description": "Descripción",
+    "tellUsMore": "Cuéntanos más sobre tu bono",
     "tag": "Etiqueta",
     "forBetterMatching": "Para una mejor coincidencia",
     "tagIsRequired": "La etiqueta es obligatoria",

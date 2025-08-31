@@ -44,7 +44,7 @@ const Navbar = () => {
         { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
         { name: t('Institutions'), href: "/institutions", icon: User },
         { name: t('Message'), href: "/message", icon: Mail },
-        { name: t('WeAreChatting'), href: "/chatting", icon: Mail },
+        { name: t('WeAreChatting'), href: "/chatting", icon: Mail, bgColor: 'bg-gradient-to-r from-blue-400 to-pink-500 rounded-md px-2 py-1' },
     ];
 
     const handleLogOut = () => {
@@ -197,7 +197,7 @@ const Navbar = () => {
                                             scroll={false}
                                             key={link.name}
                                             href={link.href}
-                                            className={`hover:opacity-70 transition-colors font-medium duration-200 text-sm ${currentPathname === link.href ? "border-b-2 border-white text-white font-bold" : "text-white"}`}
+                                            className={`hover:opacity-70 transition-colors font-medium duration-200 text-sm ${currentPathname === link.href ? "border-b-2 border-white text-white font-bold" : "text-white"} ${link.bgColor || ''}`}
                                         >
                                             {link.name}
                                         </NextIntlLink>
