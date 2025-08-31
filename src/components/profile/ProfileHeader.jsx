@@ -8,7 +8,7 @@ import { Edit } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { fallbackAvatar, getInitials } from "@/lib/utils";
 
-const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable = false }) => {
+const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable = false, children }) => {
 
     return (
         <div className="relative w-full">
@@ -16,9 +16,6 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                 <div className="relative h-full w-full">
                     <Image src={user.cover_image || "/images/placeholder-image.jpg"} alt="Cover Image" fill className="object-cover" priority />
                 </div>
-                {/* <Button variant="secondary" size="icon" className="absolute top-4 right-4 rounded-full">
-                    <Camera className="h-5 w-5" />
-                </Button> */}
                 {/* Mother Avatar */}
                 <div className="max-w-[1400px] mx-auto relative">
                     {mother && (
@@ -50,9 +47,6 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                         <AvatarImage src={user.profile_image || fallbackAvatar(user.gender)} />
                         <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                     </Avatar>
-                    {/* <Button variant="secondary" size="icon" className="absolute bottom-0 right-0 rounded-full">
-                        <Camera className="h-5 w-5" />
-                    </Button> */}
                 </div>
 
                 <div className="text-center pt-20">
@@ -74,6 +68,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                         ))}
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">{friends.length} Friends</p>
+                    {children}
                 </div>
             </div>
         </div>

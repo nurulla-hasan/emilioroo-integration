@@ -10,21 +10,20 @@ const ProfilePageSkeleton = () => {
                     <div className="relative w-full h-64">
                         <Skeleton className="h-full w-full" />
                         <Skeleton variant="secondary" size="icon" className="absolute top-4 right-4 rounded-full h-10 w-10" />
-                        {/* Mother Avatar Skeleton */}
-                        <div className="absolute -bottom-10 left-4 flex flex-col items-center">
-                            <Skeleton className="w-16 h-16 rounded-full border-2 border-white" />
-                            <Skeleton className="h-4 w-12 mt-1" />
-                        </div>
-                        {/* Father Avatar Skeleton */}
-                        <div className="absolute -bottom-10 right-4 flex flex-col items-center">
-                            <Skeleton className="w-16 h-16 rounded-full border-2 border-white" />
-                            <Skeleton className="h-4 w-12 mt-1" />
-                        </div>
+                            {/* Mother Avatar Skeleton */}
+                            <div className="absolute -bottom-10 left-4 flex flex-col items-center ml-60">
+                                <Skeleton className="w-16 h-16 rounded-full border-2 border-white" />
+                                <Skeleton className="h-4 w-12 mt-1" />
+                            </div>
+                            {/* Father Avatar Skeleton */}
+                            <div className="absolute -bottom-10 right-4 flex flex-col items-center mr-60">
+                                <Skeleton className="w-16 h-16 rounded-full border-2 border-white" />
+                                <Skeleton className="h-4 w-12 mt-1" />
+                            </div>
                     </div>
                     <div className="relative p-6 pt-0">
                         <div className="absolute -top-16 left-1/2 -translate-x-1/2">
                             <Skeleton className="w-32 h-32 rounded-full border-4 border-white shadow-lg" />
-                            <Skeleton variant="secondary" size="icon" className="absolute bottom-0 right-0 rounded-full h-10 w-10" />
                         </div>
 
                         <div className="text-center pt-20">
