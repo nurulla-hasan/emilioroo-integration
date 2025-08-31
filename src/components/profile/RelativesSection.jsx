@@ -7,15 +7,17 @@ import Title2 from "@/components/ui/Title2";
 import { getInitials, fallbackAvatar2 } from "@/lib/utils";
 import { Link as LinkIcon, MessageSquare, MoreHorizontal } from "lucide-react";
 
-const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, handleDelete, openAddRelativeModal }) => {
+const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, handleDelete, openAddRelativeModal, isEditable = false }) => {
 
     return (
         <div className="mt-8">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <Title2>Relatives & Relationships</Title2>
-                <Button size="sm" onClick={openAddRelativeModal}>
-                    <LinkIcon /> Add New relatives
-                </Button>
+                {isEditable && (
+                    <Button size="sm" onClick={openAddRelativeModal}>
+                        <LinkIcon /> Add New relatives
+                    </Button>
+                )}
             </div>
 
             {maternalRelatives.length === 0 && paternalRelatives.length === 0 ? (
@@ -42,21 +44,23 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, ha
                                         <Button variant="outline" size="sm">
                                             <MessageSquare /> <span className="hidden md:inline">Chat Now</span>
                                         </Button>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleEdit(relative)}>
-                                                    Edit
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleDelete(relative)} className="text-red-600">
-                                                    Delete
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                        {isEditable && (
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem onClick={() => handleEdit(relative)}>
+                                                        Edit
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleDelete(relative)} className="text-red-600">
+                                                        Delete
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        )}
                                     </div>
                                 </div>
                             ))}
@@ -83,21 +87,23 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, ha
                                         <Button variant="outline" size="sm">
                                             <MessageSquare /> <span className="hidden md:inline">Chat Now</span>
                                         </Button>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleEdit(relative)}>
-                                                    Edit
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleDelete(relative)} className="text-red-600">
-                                                    Delete
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                        {isEditable && (
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem onClick={() => handleEdit(relative)}>
+                                                        Edit
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleDelete(relative)} className="text-red-600">
+                                                        Delete
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        )}
                                     </div>
                                 </div>
                             ))}

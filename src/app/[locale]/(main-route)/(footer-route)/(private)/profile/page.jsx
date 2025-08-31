@@ -68,7 +68,7 @@ const ProfilePage = () => {
     };
 
     if (isProfileLoading || isSkillsLoading || isRelativesLoading || isFriendsLoading) {
-        return <PageLayout><div className="min-h-minus-header"><ProfilePageSkeleton /></div></PageLayout>;
+        return <div className="min-h-minus-header"><ProfilePageSkeleton /></div>;
     }
 
     if (isProfileError || isSkillsError || isRelativesError || isFriendsError) {
@@ -83,7 +83,7 @@ const ProfilePage = () => {
         <div className="bg-gradient-to-r from-green-200 to-indigo-300  dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 pb-5">
             <div>
                 <Card className="rounded-none overflow-hidden shadow-none bg-transparent border-none"> 
-                    <ProfileHeader user={user} userSkills={userSkills} mother={mother} father={father} friends={friends} />
+                    <ProfileHeader user={user} userSkills={userSkills} mother={mother} father={father} friends={friends} isEditable={true} />
                     <CardContent className="p-4 xl:p-2 xl:w-[1400px] md:mx-auto">
                         <ProfileBio user={user} />
                         <SocialLinks user={user} />
@@ -96,6 +96,7 @@ const ProfilePage = () => {
                             handleEdit={handleEdit}
                             handleDelete={handleDelete}
                             openAddRelativeModal={() => setIsModalOpen(true)}
+                            isEditable={true}
                         />
                     </CardContent>
                 </Card>

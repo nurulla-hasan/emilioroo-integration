@@ -7,15 +7,17 @@ import { fallbackAvatar2, getInitials } from "@/lib/utils";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 
-const FriendsSection = ({ friends, isLoading, isError }) => {
+const FriendsSection = ({ friends, isLoading, isError, showViewMore = true }) => {
 
     return (
         <div className="mt-8">
             <div className="flex justify-between items-center">
                 <Title2>Friends</Title2>
-                <Link href="/friends">
-                    <Button variant="link" size="sm">view more</Button>
-                </Link>
+                {showViewMore && (
+                    <Link href="/friends">
+                        <Button variant="link" size="sm">view more</Button>
+                    </Link>
+                )}
             </div>
             <div className="mt-4 flex space-x-6 overflow-x-auto pb-2">
                 {isLoading &&

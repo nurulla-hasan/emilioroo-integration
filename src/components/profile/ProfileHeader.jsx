@@ -8,7 +8,7 @@ import { Edit } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { fallbackAvatar, getInitials } from "@/lib/utils";
 
-const ProfileHeader = ({ user, userSkills, mother, father, friends }) => {
+const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable = false }) => {
 
     return (
         <div className="relative w-full">
@@ -58,11 +58,13 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends }) => {
                 <div className="text-center pt-20">
                     <h2 className="text-2xl font-bold flex items-center justify-center gap-2">
                         {user.name}
-                        <Link href="/settings">
-                            <Button variant="ghost" size="icon" className="h-6 w-6">
-                                <Edit />
-                            </Button>
-                        </Link>
+                        {isEditable && (
+                            <Link href="/settings">
+                                <Button variant="ghost" size="icon" className="h-6 w-6">
+                                    <Edit />
+                                </Button>
+                            </Link>
+                        )}
                     </h2>
                     <div className="flex gap-2 mt-2 justify-center">
                         {userSkills.map((skill, index) => (
