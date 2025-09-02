@@ -3,7 +3,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetMediaQuery } from '@/lib/features/api/chatApi';
 import { addUrls, incrementPage, setMediaConversation } from '@/lib/features/slices/media/mediaSlice';
@@ -11,12 +11,16 @@ import { FileText, ImageIcon } from 'lucide-react';
 import NoData from "../common/NoData";
 import LoadFailed from "../common/LoadFailed";
 import { Skeleton } from "../ui/skeleton";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { formatDate } from "@/lib/utils";
 
 export const MediaPanel = ({ activeConversation }) => {
     const dispatch = useDispatch();
     const id = activeConversation?.conversationId;
 
     const { page, allUrls } = useSelector(state => state.media);
+    const [previewImage, setPreviewImage] = useState(null);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     const { data: mediaData, isFetching, isError } = useGetMediaQuery(
         { id, args: { page, limit: 20 } },
@@ -33,8 +37,15 @@ export const MediaPanel = ({ activeConversation }) => {
         }
     }, [mediaData, dispatch]);
 
-    const imageUrls = allUrls.filter(url => url.match(/\.(jpeg|jpg|gif|png|webp)$/i));
-    const pdfUrls = allUrls.filter(url => url.match(/\.pdf$/i));
+    // Normalize entries to { url, createdAt? }
+    const toEntry = (item) => (typeof item === 'string' ? { url: item } : item);
+    const imageEntries = allUrls.map(toEntry).filter(item => item?.url?.match(/\.(jpeg|jpg|gif|png|webp)$/i));
+    const pdfEntries = allUrls.map(toEntry).filter(item => item?.url?.match(/\.pdf$/i));
+
+    const openPreview = (url) => {
+        setPreviewImage(url);
+        setIsPreviewOpen(true);
+    };
 
     const handleScroll = (e) => {
         const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
@@ -79,18 +90,18 @@ export const MediaPanel = ({ activeConversation }) => {
         return (
             <>
                 <TabsContent value="images">
-                    {imageUrls.length > 0 ? (
+                    {imageEntries.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
-                            {imageUrls.map((url, index) => (
-                                <div key={index} className="relative h-26 w-26">
+                            {imageEntries.map((entry, index) => (
+                                <button key={index} type="button" className="relative h-26 w-26 focus:outline-none" onClick={() => openPreview(entry.url)}>
                                     <Image
-                                        src={url}
+                                        src={entry.url}
                                         alt="media"
                                         fill
                                         sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 200px"
                                         className="object-cover border rounded-lg"
                                     />
-                                </div>
+                                </button>
                             ))}
                         </div>
                     ) : (
@@ -101,20 +112,27 @@ export const MediaPanel = ({ activeConversation }) => {
                 </TabsContent>
 
                 <TabsContent value="pdfs">
-                    {pdfUrls.length > 0 ? (
+                    {pdfEntries.length > 0 ? (
                         <div className="flex flex-col gap-2">
-                            {pdfUrls.map((url, index) => (
+                            {pdfEntries.map((entry, index) => (
                                 <a
                                     key={index}
-                                    href={url}
+                                    href={entry.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2 p-2 border rounded-lg bg-background hover:bg-muted transition-colors"
+                                    className="flex items-center justify-between gap-2 p-2 border rounded-lg bg-background hover:bg-muted transition-colors"
                                 >
-                                    <FileText className="w-6 h-6 text-red-500" />
-                                    <span className="text-sm font-medium truncate">
-                                        {url.substring(url.lastIndexOf("/") + 1)}
-                                    </span>
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <FileText className="w-6 h-6 text-red-500" />
+                                        <span className="text-sm font-medium truncate">
+                                            {entry.url.substring(entry.url.lastIndexOf("/") + 1)}
+                                        </span>
+                                    </div>
+                                    {entry.createdAt && (
+                                        <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                                            {formatDate(entry.createdAt)}
+                                        </span>
+                                    )}
                                 </a>
                             ))}
                         </div>
@@ -156,6 +174,19 @@ export const MediaPanel = ({ activeConversation }) => {
                     </div>
                 </ScrollArea>
             </Tabs>
+            {/* Image Preview Dialog */}
+            <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+                <DialogContent className="max-w-3xl w-full">
+                    <DialogHeader>
+                        <DialogTitle>Image Preview</DialogTitle>
+                    </DialogHeader>
+                    <div className="relative w-full h-[60vh]">
+                        {previewImage && (
+                            <Image src={previewImage} alt="preview" fill className="object-contain rounded-lg" />
+                        )}
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };
