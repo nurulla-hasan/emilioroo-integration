@@ -63,9 +63,16 @@ const ProjectWorkspacePage = () => {
     const messageHandler = (msg) => {
       const transformedMsg = transformMessage(msg);
       setMessages((prevMessages) => {
-        const tempMsgIndex = prevMessages.findIndex(
-          m => m.msgByUserId?._id === me?._id && m.text === transformedMsg.text && m.id.toString().startsWith('temp-')
-        );
+        const arraysEqual = (a = [], b = []) => a.length === b.length && a.every((v, i) => v === b[i]);
+        const tempMsgIndex = prevMessages.findIndex((m) => {
+          if (!(m.id && m.id.toString().startsWith('temp-'))) return false;
+          const sameSender = m.msgByUserId?._id === me?._id;
+          const sameText = m.text === transformedMsg.text && m.text?.trim() !== '';
+          const sameImages = arraysEqual(m.imageUrl || [], transformedMsg.imageUrl || []);
+          const samePdfs = arraysEqual(m.pdfUrl || [], transformedMsg.pdfUrl || []);
+          const sameMedia = (m.text?.trim() === '' && transformedMsg.text?.trim() === '') ? (sameImages && samePdfs) : false;
+          return sameSender && (sameText || sameMedia);
+        });
 
         if (tempMsgIndex !== -1) {
           const newMessages = [...prevMessages];
@@ -90,25 +97,32 @@ const ProjectWorkspacePage = () => {
   }, [socket, projectId, transformMessage, me, dispatch]);
 
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() && projectId) {
-      const payload = {
-        text: newMessage,
-        projectId
-      };
+  const handleSendMessage = (text, imageUrls = [], pdfUrls = []) => {
+    const hasText = text?.trim();
+    const hasImages = imageUrls && imageUrls.length > 0;
+    const hasPdfs = pdfUrls && pdfUrls.length > 0;
+    if (!(projectId && (hasText || hasImages || hasPdfs))) return;
 
-      const tempMessage = transformMessage({
-        _id: `temp-${Date.now()}`,
-        text: newMessage,
-        createdAt: new Date().toISOString(),
-        msgByUserId: me?._id ? { _id: me._id, name: me.name, profile_image: me.profile_image } : undefined,
-      });
-      setMessages(prev => [tempMessage, ...prev]);
+    const payload = {
+      text: text || '',
+      imageUrl: imageUrls,
+      pdfUrl: pdfUrls,
+      projectId,
+    };
 
-      sendMessage(payload);
-      dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
-      setNewMessage('');
-    }
+    const tempMessage = transformMessage({
+      _id: `temp-${Date.now()}`,
+      text: text || '',
+      imageUrl: imageUrls,
+      pdfUrl: pdfUrls,
+      createdAt: new Date().toISOString(),
+      msgByUserId: me?._id ? { _id: me._id, name: me.name, profile_image: me.profile_image } : undefined,
+    });
+    setMessages(prev => [tempMessage, ...prev]);
+
+    sendMessage(payload);
+    dispatch(baseApi.util.invalidateTags(['CONVERSATIONS']));
+    if (hasText) setNewMessage('');
   };
 
 

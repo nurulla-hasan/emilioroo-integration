@@ -22,7 +22,7 @@ const MessagePage = () => {
     const { socket, sendMessage } = useSocket();
     const dispatch = useDispatch();
     const { profile } = useGetMe();
-    const me = profile.data;
+    const me = profile?.data;
     const transformMessage = useTransformMessage(me || {});
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);

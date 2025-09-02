@@ -6,16 +6,16 @@ import { useRouter } from '@/i18n/navigation';
 import { useEffect } from 'react';
 
 const PrivateRoute = ({ children }) => {
-  const { profile, profileLoading, token } = useGetMe();
+  const { token } = useGetMe();
   const router = useRouter();
 
   useEffect(() => {
-    if (!profileLoading && !token) {
+    if (!token) {
       router.push('/auth/login');
     }
-  }, [profileLoading, token, router]);
+  }, [token, router]);
 
-  if (profile && token) {
+  if (token) {
     return <>{children}</>;
   }
 
