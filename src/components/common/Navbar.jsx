@@ -44,7 +44,7 @@ const Navbar = () => {
         { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
         { name: t('Institutions'), href: "/institutions", icon: User },
         { name: t('Message'), href: "/message", icon: Mail },
-        { name: t('WeAreChatting'), href: "/chatting", icon: Mail, bgColor: 'bg-gradient-to-r from-blue-400 to-pink-500 rounded-md px-2 py-1' },
+        { name: t('WeAreChatting'), href: "/chatting", icon: Mail, bgColor: 'bg-gradient-to-r from-blue-400 to-pinknpm run dev-500 rounded-md px-2 py-1' },
     ];
 
     const handleLogOut = () => {
