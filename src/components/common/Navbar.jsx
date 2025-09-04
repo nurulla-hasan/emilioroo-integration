@@ -1,9 +1,9 @@
 "use client";
 import { usePathname, Link as NextIntlLink, useRouter as useNextRouter } from "@/i18n/navigation";
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User, Menu, LogOut, UserPlus, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Users } from "lucide-react";
+import { User, Menu, LogOut, UserPlus, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Users, Languages } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,19 +14,13 @@ import { Input } from "../ui/input";
 import { useLogoutMutation } from "@/lib/features/api/authApi";
 import { toast } from "sonner";
 import { useGetMe } from "@/hooks/useGetMe";
-import Image from "next/image";
 
 const Navbar = () => {
     const t = useTranslations('Navbar');
     const nextRouter = useNextRouter();
-    const locale = useLocale();
 
     const currentPathname = usePathname();
 
-    const localeToFlagMap = {
-        'en': '/images/flags/en.png',
-        'es': '/images/flags/es.png',
-    };
     const { theme, setTheme } = useTheme()
     const { profile, profileLoading, token } = useGetMe();
     const [logout] = useLogoutMutation();
@@ -44,7 +38,7 @@ const Navbar = () => {
         { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
         { name: t('Institutions'), href: "/institutions", icon: User },
         { name: t('Message'), href: "/message", icon: Mail },
-        { name: t('WeAreChatting'), href: "/chatting", icon: Mail, bgColor: 'bg-gradient-to-r from-blue-400 to-pinknpm run dev-500 rounded-md px-2 py-1' },
+        { name: t('WeAreChatting'), href: "/chatting", icon: Mail, bgColor: 'bg-gradient-to-r from-blue-400 to-pink-500 rounded-md px-2 py-1' },
     ];
 
     const handleLogOut = () => {
@@ -336,17 +330,17 @@ const Navbar = () => {
 
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="hover:bg-brand">
-                                            <Image src={localeToFlagMap[locale]} width={20} height={20} alt={locale} priority className="w-6 h-6 border-2 border-gray-400 rounded-full object-cover" />
+                                        <Button variant="outline" size="icon" className="bg-white/10 rounded-full hover:bg-white/20">
+                                            <Languages className="h-6 w-6 text-white" />
                                             <span className="sr-only">Language</span>
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
                                         <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
-                                            <Image src="/images/flags/en.png" width={20} height={20} alt="English" className="w-5 h-5 rounded-full object-cover mr-2" /> EN
+                                            EN
                                         </DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => handleLanguageChange('es')}>
-                                            <Image src="/images/flags/es.png" width={20} height={20} alt="Spanish" className="w-5 h-5 rounded-full object-cover mr-2" /> ES
+                                            ES
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
