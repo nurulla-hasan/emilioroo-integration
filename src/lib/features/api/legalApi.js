@@ -4,12 +4,23 @@ import { baseApi } from "./baseApi"
 const legalApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
 
+
+        // GET ABOUT
+        getAbout: builder.query({
+            query: () => ({
+                url: "/legal/get-about",
+                method: "GET",
+            }),
+            providesTags: ["LEGAL"],
+        }),
+
         // GET TERMS
         getTerms: builder.query({
             query: () => ({
                 url: "/manage/get-terms-conditions",
                 method: "GET",
             }),
+            providesTags: ["LEGAL"],
         }),
 
         // GET PRIVACY POLICY
@@ -18,9 +29,10 @@ const legalApi = baseApi.injectEndpoints({
                 url: "/manage/get-privacy-policy",
                 method: "GET",
             }),
+            providesTags: ["LEGAL"],
         }),
 
     }),
 })
 
-export const { useGetTermsQuery, useGetPrivacyPolicyQuery } = legalApi
+export const { useGetAboutQuery, useGetTermsQuery, useGetPrivacyPolicyQuery } = legalApi

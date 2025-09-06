@@ -1,9 +1,15 @@
+"use client";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb";
+import LoadFailed from "@/components/common/LoadFailed";
 import PageLayout from "@/components/layout/PageLayout";
-import Title from "@/components/ui/Title";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useGetTermsQuery } from "@/lib/features/api/legalApi";
 
 
 const Terms = () => {
+
+    const { data: termsData, isLoading, isError } = useGetTermsQuery();
+    const terms = termsData?.data?.description;
 
     const breadcrumbLinks = [
         { name: 'Home', href: '/' },
@@ -13,11 +19,20 @@ const Terms = () => {
         <div className="min-h-minus-header">
             <PageLayout>
                  <CustomBreadcrumb links={breadcrumbLinks} />
-                <Title>Terms of Service</Title>
-                <p className="text-lg text-muted-foreground leading-relaxed mt-8">
-                    These Terms of Service Terms govern your access to and use of our website and services. By accessing or using our services, you agree to be bound by these Terms. Please read them carefully.
-                    We reserve the right to modify these Terms at any time. Your continued use of the services after any such changes constitutes your acceptance of the new Terms.
-                </p>
+                {
+                    isLoading ? (
+                        <div className="text-lg text-muted-foreground leading-relaxed mt-8">
+                            <Skeleton className="h-8 w-1/5 rounded-lg" />
+                            <Skeleton className="h-4 w-1/2 rounded-lg mt-2" />
+                            <Skeleton className="h-4 w-1/3 rounded-lg mt-2" />
+                            <Skeleton className="h-4 w-1/4 rounded-lg mt-2" />
+                        </div>
+                    ): isError ? (
+                        <LoadFailed msg="Error loading privacy" />
+                    ): (
+                        <div dangerouslySetInnerHTML={{ __html: terms }} />
+                    )
+                }
             </PageLayout>
         </div>
     );

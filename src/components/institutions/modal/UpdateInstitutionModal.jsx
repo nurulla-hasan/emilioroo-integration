@@ -68,7 +68,7 @@ export default function UpdateInstitutionModal({ isOpen, onOpenChange, instituti
         description: institution.description,
         facebookLink: institution.facebookLink,
         instagramLink: institution.instagramLink,
-        institution_cover: undefined, // Clear file input on open
+        institution_cover: undefined,
       });
     }
   }, [isOpen, institution, form.reset, form]);
