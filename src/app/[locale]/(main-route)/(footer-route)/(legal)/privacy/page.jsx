@@ -4,6 +4,7 @@ import LoadFailed from "@/components/common/LoadFailed";
 import PageLayout from "@/components/layout/PageLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetPrivacyPolicyQuery } from "@/lib/features/api/legalApi";
+import { replaceWhiteBackground } from "@/lib/utils";
 
 const Privacy = () => {
     
@@ -29,7 +30,7 @@ const Privacy = () => {
                     ) : isError ? (
                         <LoadFailed msg="Error loading privacy" />
                     ) : (
-                        <div dangerouslySetInnerHTML={{ __html: privacy }} />
+                        <div dangerouslySetInnerHTML={{ __html: replaceWhiteBackground(privacy) }} />
                     )
                 }
             </PageLayout>

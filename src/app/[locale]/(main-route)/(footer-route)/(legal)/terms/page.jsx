@@ -4,12 +4,14 @@ import LoadFailed from "@/components/common/LoadFailed";
 import PageLayout from "@/components/layout/PageLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetTermsQuery } from "@/lib/features/api/legalApi";
+import { replaceWhiteBackground } from "@/lib/utils";
 
 
 const Terms = () => {
 
     const { data: termsData, isLoading, isError } = useGetTermsQuery();
     const terms = termsData?.data?.description;
+    console.log(terms);
 
     const breadcrumbLinks = [
         { name: 'Home', href: '/' },
@@ -30,7 +32,7 @@ const Terms = () => {
                     ): isError ? (
                         <LoadFailed msg="Error loading privacy" />
                     ): (
-                        <div dangerouslySetInnerHTML={{ __html: terms }} />
+                        <div dangerouslySetInnerHTML={{ __html: replaceWhiteBackground(terms) }} />
                     )
                 }
             </PageLayout>

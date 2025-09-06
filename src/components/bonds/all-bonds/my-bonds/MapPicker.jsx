@@ -25,7 +25,7 @@ function LocationMarker({ center, onLocationChange }) {
     }
   }, [center, map]);
 
-  const mapEvents = useMapEvents({
+   useMapEvents({
     click(e) {
       setPosition(e.latlng);
       if (onLocationChange) {
