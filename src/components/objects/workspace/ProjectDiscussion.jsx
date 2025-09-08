@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send, PlusCircle, X, FileText } from 'lucide-react';
@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { useUploadFileMutation, useDeleteUploadedFileMutation } from '@/lib/features/api/chatApi';
 import { Message } from '@/components/message/Message';
 
-const ProjectDiscussion = ({ messages, isLoading, isError, newMessage, setNewMessage, onSendMessage }) => {
+const ProjectDiscussion = ({ messages, isLoading, isError, newMessage, setNewMessage, onSendMessage, fetchMoreMessages }) => {
     const messagesContainerRef = useRef(null);
     const fileInputRef = useRef(null);
     const [stagedFiles, setStagedFiles] = useState([]);
@@ -20,8 +20,34 @@ const ProjectDiscussion = ({ messages, isLoading, isError, newMessage, setNewMes
     const [uploadedPdfUrls, setUploadedPdfUrls] = useState([]);
     const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 
+    useEffect(() => {
+        const container = messagesContainerRef.current;
+        if (!container) return;
+
+        const handleScroll = () => {
+            // Check if scrolled to the top (or near top)
+            if (container.scrollTop === 0) {
+                fetchMoreMessages();
+            }
+        };
+
+        container.addEventListener('scroll', handleScroll);
+
+        return () => {
+            container.removeEventListener('scroll', handleScroll);
+        };
+    }, [fetchMoreMessages]);
+
     const [uploadFile] = useUploadFileMutation();
     const [deleteUploadedFile] = useDeleteUploadedFileMutation();
+
+    // Effect to scroll to bottom when messages change
+    useEffect(() => {
+        const container = messagesContainerRef.current;
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }, [messages]);
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
@@ -105,14 +131,17 @@ const ProjectDiscussion = ({ messages, isLoading, isError, newMessage, setNewMes
         <div className="border rounded-lg p-4 mt-8">
             <h2 className="text-lg font-semibold mb-4">Project Discussion</h2>
             <div ref={messagesContainerRef} className="bg-muted/50 rounded-lg p-4 h-96 overflow-y-auto flex flex-col-reverse gap-4">
-                {isLoading ? (
+                {isLoading && messages.length === 0 ? (
                     <MessagePanelSkeleton />
-                ) : isError ? (
+                ) : isError && messages.length === 0 ? (
                     <div className="h-full flex items-center justify-center">
                         <LoadFailed msg="Failed to load messages" />
                     </div>
                 ) : messages && messages.length > 0 ? (
                     <>
+                        {isLoading && messages.length > 0 && (
+                            <div className="text-center text-muted-foreground py-2">Loading more...</div>
+                        )}
                         {messages.map(message => (
                             <Message key={message._id} msg={message} />
                         ))}

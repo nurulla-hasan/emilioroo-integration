@@ -32,6 +32,8 @@ const ProjectWorkspacePage = () => {
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [page, setPage] = useState(1);
+  const [limit] = useState(20);
 
   const { data: allProjectsData, isLoading: areAllProjectsLoading, isError: areAllProjectsError } = useGetAllProjectQuery();
   const { data: singleProjectData, isLoading: isSingleProjectLoading, isError: isSingleProjectError } = useGetSingleProjectQuery(projectId);
@@ -39,7 +41,7 @@ const ProjectWorkspacePage = () => {
   const { data: consumersData, isLoading: areConsumersLoading, isError: areConsumersError } = useGetProjectMemberQuery({ id: projectId, type: "Consumer" });
   const { data: documentsData, isLoading: areDocumentsLoading, isError: areDocumentsError } = useGetProjectDocumentQuery(projectId);
   const { data: imagesData, isLoading: areImagesLoading, isError: areImagesError } = useGetProjectImageQuery(projectId);
-  const { data: messagesData, isLoading: areMessagesLoading, isError: areMessagesError } = useGetSingleConversationQuery({ projectId });
+  const { data: messagesData, isLoading: areMessagesLoading, isError: areMessagesError } = useGetSingleConversationQuery({ projectId, page, limit });
 
   const allProjects = allProjectsData?.data?.result;
   const project = singleProjectData?.data;
@@ -48,12 +50,37 @@ const ProjectWorkspacePage = () => {
   const documents = documentsData?.data?.result;
   const images = imagesData?.data?.result;
 
+  const fetchMoreMessages = () => {
+    if (!areMessagesLoading && messagesData?.data?.meta?.totalPage > page) {
+      setPage(prevPage => prevPage + 1);
+    }
+  };
+
   useEffect(() => {
     if (messagesData?.data?.result) {
-      const transformed = messagesData.data.result.map(transformMessage);
-      transformed.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setMessages(transformed);
-    }
+      const { result, meta } = messagesData.data;
+      const transformedMessages = result.map(transformMessage) || [];
+      transformedMessages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      setMessages(prevMessages => {
+        let combinedMessages;
+        if (meta.page === 1) {
+          combinedMessages = transformedMessages;
+        } else {
+          combinedMessages = [...transformedMessages, ...prevMessages];
+        }
+
+        const messageMap = new Map();
+        combinedMessages.forEach(msg => {
+          messageMap.set(msg.id, msg);
+        });
+
+        const uniqueMessages = Array.from(messageMap.values());
+        uniqueMessages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        return uniqueMessages;
+      });
+    } 
   }, [messagesData, transformMessage]);
 
   useEffect(() => {
@@ -197,6 +224,7 @@ const ProjectWorkspacePage = () => {
                 newMessage={newMessage}
                 setNewMessage={setNewMessage}
                 onSendMessage={handleSendMessage}
+                fetchMoreMessages={fetchMoreMessages}
               />
             </>
           )}
