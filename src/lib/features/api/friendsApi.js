@@ -107,7 +107,17 @@ const friendsApi = baseApi.injectEndpoints({
             invalidatesTags: ["FRIENDS"],
         }),
 
+        // REPORT USER
+        reportUser: builder.mutation({
+            query: (data) => ({
+                url: `/report/create-report`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["FRIENDS"],
+        }),
+
     }),
 });
 
-export const { useGetMyFriendsQuery, useGetFollowersQuery, useGetFollowingQuery, useSentRequestMutation, useCancelRequestMutation, useAcceptAndEjectRequestMutation, useUnfriendMutation } = friendsApi;
+export const { useGetMyFriendsQuery, useGetFollowersQuery, useGetFollowingQuery, useSentRequestMutation, useCancelRequestMutation, useAcceptAndEjectRequestMutation, useUnfriendMutation, useReportUserMutation } = friendsApi;
