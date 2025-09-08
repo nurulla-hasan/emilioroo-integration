@@ -10,13 +10,14 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadFailed from "@/components/common/LoadFailed";
 import { useSocket } from '@/context/soket-context/SocketContext';
-import { useGetSingleConversationQuery } from "@/lib/features/api/chatApi";
 import { baseApi } from "@/lib/features/api/baseApi";
 
 import { useGetMe } from '@/hooks/useGetMe';
 import { useTransformMessage } from '@/hooks/useTransformMessage';
 import { useConversationsList } from '@/hooks/useConversationsList';
 import { MessageSquareDashed } from 'lucide-react';
+import { useGetSingleConversationQuery } from '@/lib/features/api/chatApi';
+import { useGetSingleBondLinkQuery } from '@/lib/features/api/bondsApi';
 
 const MessagePage = () => {
     const { socket, sendMessage } = useSocket();
@@ -65,6 +66,16 @@ const MessagePage = () => {
             skip: !singleConversationQueryParams,
         }
     );
+
+    const bondLinkId = activeConversation?.subtype === 'bondLink' ? activeConversation.bondLinkId : null;
+
+    const { data: bondLinkData, isLoading: isBondLinkLoading } = useGetSingleBondLinkQuery(
+        bondLinkId,
+        {
+            skip: !bondLinkId,
+        }
+    );
+
     const handleConversationClick = (conv) => {
         setActiveConversation(conv);
     };
@@ -328,6 +339,9 @@ const MessagePage = () => {
                             newMessage={newMessage}
                             setNewMessage={setNewMessage}
                             onSendMessage={handleSendMessage}
+                            isBondLink={activeConversation?.subtype === 'bondLink'}
+                            isCompletedByYou={bondLinkData?.data?.isMarkAsCompletedByYou}
+                            isBondLinkLoading={isBondLinkLoading}
                         />
                     )}
                 </div>
@@ -354,6 +368,9 @@ const MessagePage = () => {
                                 newMessage={newMessage}
                                 setNewMessage={setNewMessage}
                                 onSendMessage={handleSendMessage}
+                                isBondLink={activeConversation?.subtype === 'bondLink'}
+                                isCompletedByYou={bondLinkData?.data?.isMarkAsCompletedByYou}
+                                isBondLinkLoading={isBondLinkLoading}
                             />
                         ) : (
                             <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground">

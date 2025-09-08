@@ -21,6 +21,15 @@ const bondsApi = baseApi.injectEndpoints({
             providesTags: ["BONDS"],
         }),
 
+        // MARK AS COMPLETED
+        markAsCompleted: builder.mutation({
+            query: (id) => ({
+                url: `/bond-link/mark-as-complete/${id}`,
+                method: "POST",
+            }),
+            invalidatesTags: ["BONDS"],
+        }),
+
         // GET MY BONDS REQUEST
         getMyBondsRequest: builder.query({
             query: (args) => {
@@ -164,4 +173,4 @@ const bondsApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useGetFilterItemsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation, useGetSingleBondLinkQuery } = bondsApi;
+export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useGetFilterItemsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation, useGetSingleBondLinkQuery, useMarkAsCompletedMutation } = bondsApi;

@@ -7,13 +7,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { useDeleteUploadedFileMutation, useUploadFileMutation } from '@/lib/features/api/chatApi';
-
 import { Message } from './Message';
 import { ArrowLeft, CheckCheck, FileText, Info, MessageSquareDashed, PlusCircle, Send, X } from "lucide-react";
 import MessagePanelSkeleton from "@/components/skeleton/MessagePanelSkeleton";
 import LoadFailed from "@/components/common/LoadFailed";
+import { Skeleton } from "../ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { useDispatch } from "react-redux";
+import { baseApi } from "@/lib/features/api/baseApi";
+import { useDeleteUploadedFileMutation, useUploadFileMutation } from "@/lib/features/api/chatApi";
+import { useMarkAsCompletedMutation } from "@/lib/features/api/bondsApi";
 
 export const MessagePanel = ({
     conversation,
@@ -25,7 +28,10 @@ export const MessagePanel = ({
     fetchMoreMessages,
     isMessagesLoading,
     isMessagesError,
-    onBack
+    onBack,
+    isBondLink,
+    isCompletedByYou,
+    isBondLinkLoading
 }) => {
     const messagesEndRef = useRef(null);
     const scrollViewportRef = useRef(null);
@@ -36,8 +42,24 @@ export const MessagePanel = ({
     const [uploadedPdfUrls, setUploadedPdfUrls] = useState([]);
     const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 
+    const dispatch = useDispatch();
+
     const [uploadFile] = useUploadFileMutation();
     const [deleteUploadedFile] = useDeleteUploadedFileMutation();
+    const [markAsCompleted, { isLoading: isMarkingAsCompleted }] = useMarkAsCompletedMutation();
+
+    const handleMarkAsCompleted = async () => {
+        if (!conversation?.bondLinkId) return;
+
+        try {
+            await markAsCompleted(conversation.bondLinkId).unwrap();
+            toast.success("Bond link marked as completed!");
+            dispatch(baseApi.util.invalidateTags(['BONDS']));
+        } catch (error) {
+            toast.error(error?.data?.message || "Failed to mark as completed.");
+        }
+    };
+
 
     const lastMessage = messages[messages.length - 1];
     useEffect(() => {
@@ -157,28 +179,37 @@ export const MessagePanel = ({
     return (
         <div className="w-full bg-card flex flex-col h-full">
             <div className="p-3 border-b flex items-center justify-between shadow-sm">
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-0 lg:w-full">
-                    {/* Left Section */}
-                    <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-0 lg:w-full">
-                        {/* Left Section */}
-                        <div className="flex items-center justify-between lg:w-auto">
-                            <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}>
-                                <ArrowLeft />
-                            </Button>
-                            <Avatar className="h-12 w-12 mr-4 border-2">
-                                <AvatarImage src={conversation.avatar} />
-                                <AvatarFallback>{conversation.name[0]}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <h2 className="font-semibold">{conversation.name}</h2>
-                            </div>
-                        </div>
-
-                        {/* Right Section (Button) */}
-                        <Button>Mark as completed</Button>
+                <div className="flex items-center">
+                    <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}>
+                        <ArrowLeft />
+                    </Button>
+                    <Avatar className="h-12 w-12 mr-4 border-2">
+                        <AvatarImage src={conversation.avatar} />
+                        <AvatarFallback>
+                            {conversation.name[0]}
+                        </AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <h2 className="font-semibold">{conversation.name}</h2>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
+                    <div className="hidden lg:block">
+                        {isBondLink && (
+                            isBondLinkLoading ? (
+                                <Skeleton className="h-10 w-40" />
+                            ) : isCompletedByYou ? (
+                                <Button className="bg-green-800 text-white cursor-default">
+                                    <CheckCheck/>
+                                    Completed by you
+                                </Button>
+                            ) : (
+                                <Button onClick={handleMarkAsCompleted} disabled={isMarkingAsCompleted}>
+                                    {isMarkingAsCompleted ? 'Marking...' : 'Mark as completed'}
+                                </Button>
+                            )
+                        )}
+                    </div>
                     <Button variant="ghost" size="icon" className="xl:hidden" onClick={onOpenMedia}>
                         <Info />
                     </Button>
@@ -234,14 +265,31 @@ export const MessagePanel = ({
                     </div>
                 )}
                 <div className="relative flex items-center gap-2">
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button className="lg:hidden" variant="ghost"><CheckCheck /></Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Mark as completed</p>
-                        </TooltipContent>
-                    </Tooltip>
+                    {isBondLink && (
+                        isBondLinkLoading ? (
+                            <Skeleton className="h-10 w-10 rounded-full lg:hidden" />
+                        ) : isCompletedByYou ? (
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button className="lg:hidden bg-green-800 text-white" size="icon" disabled>
+                                        <CheckCheck />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Completed by you</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        ) : (
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button className="lg:hidden" variant="ghost" onClick={handleMarkAsCompleted} disabled={isMarkingAsCompleted}><CheckCheck /></Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Mark as completed</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        )
+                    )}
                     <input
                         type="file"
                         ref={fileInputRef}
@@ -266,7 +314,6 @@ export const MessagePanel = ({
                         size="icon" variant="ghost">
                         <Send />
                     </Button>
-                    <Button className="lg:hidden" variant="outline"><CheckCheck /></Button>
                 </div>
             </div>
         </div>
