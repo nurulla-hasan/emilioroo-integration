@@ -10,9 +10,10 @@ import { toast } from 'sonner';
 import { useDeleteUploadedFileMutation, useUploadFileMutation } from '@/lib/features/api/chatApi';
 
 import { Message } from './Message';
-import { ArrowLeft, FileText, Info, MessageSquareDashed, PlusCircle, Send, X } from "lucide-react";
+import { ArrowLeft, CheckCheck, FileText, Info, MessageSquareDashed, PlusCircle, Send, X } from "lucide-react";
 import MessagePanelSkeleton from "@/components/skeleton/MessagePanelSkeleton";
 import LoadFailed from "@/components/common/LoadFailed";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export const MessagePanel = ({
     conversation,
@@ -23,7 +24,7 @@ export const MessagePanel = ({
     onSendMessage,
     fetchMoreMessages,
     isMessagesLoading,
-    isMessagesError, // New prop
+    isMessagesError,
     onBack
 }) => {
     const messagesEndRef = useRef(null);
@@ -156,18 +157,25 @@ export const MessagePanel = ({
     return (
         <div className="w-full bg-card flex flex-col h-full">
             <div className="p-3 border-b flex items-center justify-between shadow-sm">
-                <div className="flex items-center">
-                    <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}>
-                        <ArrowLeft />
-                    </Button>
-                    <Avatar className="h-12 w-12 mr-4 border-2">
-                        <AvatarImage src={conversation.avatar} />
-                        <AvatarFallback>
-                            {conversation.name[0]}
-                        </AvatarFallback>
-                    </Avatar>
-                    <div>
-                        <h2 className="font-semibold">{conversation.name}</h2>
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-0 lg:w-full">
+                    {/* Left Section */}
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-0 lg:w-full">
+                        {/* Left Section */}
+                        <div className="flex items-center justify-between lg:w-auto">
+                            <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}>
+                                <ArrowLeft />
+                            </Button>
+                            <Avatar className="h-12 w-12 mr-4 border-2">
+                                <AvatarImage src={conversation.avatar} />
+                                <AvatarFallback>{conversation.name[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <h2 className="font-semibold">{conversation.name}</h2>
+                            </div>
+                        </div>
+
+                        {/* Right Section (Button) */}
+                        <Button>Mark as completed</Button>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -226,6 +234,14 @@ export const MessagePanel = ({
                     </div>
                 )}
                 <div className="relative flex items-center gap-2">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button className="lg:hidden" variant="ghost"><CheckCheck /></Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Mark as completed</p>
+                        </TooltipContent>
+                    </Tooltip>
                     <input
                         type="file"
                         ref={fileInputRef}
@@ -250,6 +266,7 @@ export const MessagePanel = ({
                         size="icon" variant="ghost">
                         <Send />
                     </Button>
+                    <Button className="lg:hidden" variant="outline"><CheckCheck /></Button>
                 </div>
             </div>
         </div>

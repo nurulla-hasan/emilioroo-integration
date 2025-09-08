@@ -12,6 +12,15 @@ const bondsApi = baseApi.injectEndpoints({
             providesTags: ["BONDS"],
         }),
 
+        // GET SINGLE BOND LINK
+        getSingleBondLink: builder.query({
+            query: (id) => ({
+                url: `/bond-link/get-single-bond-link/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["BONDS"],
+        }),
+
         // GET MY BONDS REQUEST
         getMyBondsRequest: builder.query({
             query: (args) => {
@@ -155,4 +164,4 @@ const bondsApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useGetFilterItemsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation } = bondsApi;
+export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useGetFilterItemsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation, useGetSingleBondLinkQuery } = bondsApi;
