@@ -164,6 +164,19 @@ const projectApi = baseApi.injectEndpoints({
             invalidatesTags: ["PROJECTS", "CONVERSATIONS"],
         }),
 
+        // ====================================================
+
+        // CHECK IMAGE
+        checkImage: builder.mutation({
+            query: (data) => ({
+                url: "http://103.186.20.115:16000/image_analyze",
+                method: "POST",
+                body: data
+            }),
+        }),
+
+        // ====================================================
+
         // CREATE PROJECT IMAGE
         createProjectImage: builder.mutation({
             query: ({ id, data }) => ({
@@ -236,5 +249,6 @@ export const {
     useCreateProjectImageMutation,
     useDeleteProjectImageMutation,
     useGetAllUsersQuery,
-    useGetSingleUserQuery
+    useGetSingleUserQuery,
+    useCheckImageMutation,
 } = projectApi

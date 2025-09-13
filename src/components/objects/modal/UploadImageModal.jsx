@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -23,7 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Image as IconImage, UploadCloud } from "lucide-react";
-import { useCreateProjectImageMutation } from "@/lib/features/api/projectApi";
+import { useCreateProjectImageMutation, useCheckImageMutation } from "@/lib/features/api/projectApi";
 import { useParams } from "next/navigation";
 import React, { useRef } from "react";
 import { formatFileName } from "@/lib/utils";
@@ -49,6 +50,44 @@ export default function UploadImageModal({ isOpen, onOpenChange }) {
   });
 
   const [createProjectImage, { isLoading }] = useCreateProjectImageMutation();
+  const [checkImage, { isLoading: isCheckingImage }] = useCheckImageMutation();
+
+  const handleFileAnalysis = async (event) => {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const imageFormData = new FormData();
+    imageFormData.append('image_file', file);
+
+    try {
+      toast.info("Analyzing image, please wait...");
+      const result = await checkImage(imageFormData).unwrap();
+
+      if (result.output !== 0) {
+        toast.error("This image cannot be uploaded.", {
+          description: result.message || "The image content does not meet the requirements.",
+        });
+        form.setValue('project_image', null, { shouldValidate: true });
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
+      }
+
+      toast.success("Image analysis passed!");
+      form.setValue('project_image', file, { shouldValidate: true });
+
+    } catch (error) {
+      // console.log(error)
+      toast.error("Failed to analyze image", {
+        description: error?.data?.message || "An error occurred during analysis.",
+      });
+      form.setValue('project_image', null, { shouldValidate: true });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
 
   const onSubmit = async (values) => {
     const formData = new FormData();
@@ -69,13 +108,14 @@ export default function UploadImageModal({ isOpen, onOpenChange }) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Upload Image</DialogTitle>
+          <DialogDescription className="sr-only">Upload an image for your object.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
             <FormField
               control={form.control}
               name="project_image"
-              render={({ field: { value, onChange, ...fieldProps } }) => (
+              render={({ field: { value, ...fieldProps } }) => (
                 <FormItem>
                   <FormLabel>Image File</FormLabel>
                   <FormControl>
@@ -84,13 +124,14 @@ export default function UploadImageModal({ isOpen, onOpenChange }) {
                         {...fieldProps}
                         type="file"
                         accept="image/jpeg,image/jpg,image/png,image/webp"
-                        onChange={(event) => onChange(event.target.files && event.target.files[0])}
+                        onChange={handleFileAnalysis}
+                        disabled={isCheckingImage}
                         className="hidden"
                         ref={fileInputRef}
                       />
                       <div
                         className="flex flex-col items-center justify-center w-full p-6 h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/30 transition-colors"
-                        onClick={() => fileInputRef.current?.click()}
+                        onClick={() => !isCheckingImage && fileInputRef.current?.click()}
                       >
                         <UploadCloud className="h-8 w-8 text-muted-foreground mb-2" />
                         {!value && <p className="text-sm text-muted-foreground">Drag & drop or click to upload</p>}
@@ -114,8 +155,8 @@ export default function UploadImageModal({ isOpen, onOpenChange }) {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button loading={isLoading} type="submit" disabled={!form.formState.isValid || isLoading}>
-                Upload Image
+              <Button loading={isLoading || isCheckingImage} type="submit" disabled={!form.formState.isValid || isLoading || isCheckingImage}>
+                {isCheckingImage ? "Analyzing..." : "Upload Image"}
               </Button>
             </DialogFooter>
           </form>

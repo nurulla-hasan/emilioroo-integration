@@ -91,6 +91,16 @@ const chattingApi = baseApi.injectEndpoints({
 
         // ----------------------------------------------------------------------------------------------------------------------
 
+        // CHECK AUDIO
+        checkAudio: builder.mutation({
+            query: (data) => ({
+                url: "http://103.186.20.115:16000/audio_analyze",
+                method: "POST",
+                body: data,
+            }),
+        }),
+
+        // --------------------------------------------------------------------------------------------------------------------
         // CREATE AUDIO
         createAudio: builder.mutation({
             query: (data) => ({
@@ -205,4 +215,5 @@ export const {
     useCreatePlaylistMutation,
     useUpdatePlaylistMutation,
     useDeletePlaylistMutation,
+    useCheckAudioMutation,
 } = chattingApi

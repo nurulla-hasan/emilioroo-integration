@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { useGetAllTopicsQuery, useCreateAudioMutation } from "@/lib/features/api/chattingApi";
+import { useGetAllTopicsQuery, useCreateAudioMutation, useCheckAudioMutation } from "@/lib/features/api/chattingApi";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -64,6 +64,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
     const [open, setOpen] = useState(false);
     const { data: topicsData, isLoading: isTopicsLoading } = useGetAllTopicsQuery();
     const [createAudio, { isLoading: isUploading }] = useCreateAudioMutation();
+    const [checkAudio, { isLoading: isCheckingAudio }] = useCheckAudioMutation();
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -75,13 +76,42 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
         }
     });
 
-    const handleAudioFileChange = (e) => {
+    const handleAudioFileChange = async (e) => {
         const file = e.target.files[0];
-        if (file) {
+        if (!file) return;
+
+        // Perform AI check first
+        const audioFormData = new FormData();
+        audioFormData.append('audio_file', file);
+
+        try {
+            toast.info("Analyzing audio file, please wait...");
+            const result = await checkAudio(audioFormData).unwrap();
+
+            if (result.output !== 0) {
+                toast.error("This audio cannot be uploaded.", {
+                    description: result.message || "The audio content does not meet the requirements.",
+                });
+                form.setValue('audio', null, { shouldValidate: true });
+                e.target.value = null; // Clear the file input visually
+                return;
+            }
+
+            toast.success("Audio analysis passed!");
+
+            // If check passes, proceed with duration calculation
             const audio = new Audio(URL.createObjectURL(file));
             audio.onloadedmetadata = () => {
                 setDuration(audio.duration);
             };
+
+        } catch (error) {
+            console.log(error)
+            toast.error("Failed to analyze audio", {
+                description: error?.data?.message || "An error occurred during analysis.",
+            });
+            form.setValue('audio', null, { shouldValidate: true });
+            e.target.value = null; // Clear the file input visually
         }
     };
 
@@ -130,7 +160,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                 <FormItem>
                                     <FormLabel>{t('title')}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder={t('exampleTitle')} {...field} />
+                                        <Input placeholder={t('exampleTitle')} {...field} disabled={isCheckingAudio} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -143,7 +173,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                 <FormItem>
                                     <FormLabel>{t('description')}</FormLabel>
                                     <FormControl>
-                                        <Textarea placeholder={t('describeAudio')} {...field} />
+                                        <Textarea placeholder={t('describeAudio')} {...field} disabled={isCheckingAudio} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -161,6 +191,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                                 <Button
                                                     variant="outline"
                                                     role="combobox"
+                                                    disabled={isCheckingAudio}
                                                     className={cn(
                                                         "w-full justify-between",
                                                         !field.value && "text-muted-foreground"
@@ -218,7 +249,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                 <FormItem>
                                     <FormLabel>{t('tags')}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder={t('exampleTags')} {...field} />
+                                        <Input placeholder={t('exampleTags')} {...field} disabled={isCheckingAudio} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -231,9 +262,11 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                 <FormItem>
                                     <FormLabel>{t('audioFile')}</FormLabel>
                                     <FormControl>
-                                        <Input type="file" accept="audio/*" onChange={(e) => {
-                                            field.onChange(e.target.files);
+                                        <Input type="file" accept="audio/*" disabled={isCheckingAudio} onChange={(e) => {
+                                            // We pass the original event `e` to the handler
                                             handleAudioFileChange(e);
+                                            // We still need to let react-hook-form know about the change
+                                            field.onChange(e.target.files);
                                         }} />
                                     </FormControl>
                                     <FormMessage />
@@ -247,7 +280,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                 <FormItem>
                                     <FormLabel>{t('coverImage')}</FormLabel>
                                     <FormControl>
-                                        <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                                        <Input type="file" accept="image/*" disabled={isCheckingAudio} onChange={(e) => field.onChange(e.target.files)} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -255,8 +288,8 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                         />
                         <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t('cancel')}</Button>
-                            <Button loading={isUploading} type="submit" disabled={!form.formState.isValid || isUploading}>
-                                {t('uploadAudio')}
+                            <Button loading={isUploading || isCheckingAudio} type="submit" disabled={!form.formState.isValid || isUploading || isCheckingAudio}>
+                                {isCheckingAudio ? "Analyzing..." : t('uploadAudio')}
                             </Button>
                         </DialogFooter>
                     </form>
