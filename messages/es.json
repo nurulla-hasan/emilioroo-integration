@@ -72,7 +72,9 @@
     "exampleElectronics": "ej., electrónica",
     "cancel": "Cancelar",
     "creating": "Creando",
-    "createBond": "Crear Vínculo"
+    "createBond": "Crear Vínculo",
+    "empty": "Vacío",
+    "surprise": "Sorpresa"
   },
   "Objects": {
     "cocreateProducts": "Cocrea productos",

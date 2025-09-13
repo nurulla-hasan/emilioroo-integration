@@ -11,18 +11,20 @@ import { z } from "zod";
 import { useTranslations } from "next-intl";
 
 const bondSchema = z.object({
-    offer: z.string().min(1, "Offer is required"),
-    want: z.string().min(1, "Want is required"),
-    tag: z.string().min(1, "Tag is required"),
+    offer: z.string(),
+    want: z.string(),
+    tag: z.string(),
 });
 
 const AddNewBondModal = ({ isOpen, onOpenChange, onCreateBond, isLoading }) => {
     const t = useTranslations('AddNewBondModal');
-    const { register, handleSubmit, formState: { errors, isValid }, reset } = useForm({
+    const { register, handleSubmit, formState: { errors, isValid }, reset, setValue } = useForm({
         resolver: zodResolver(bondSchema),
+        mode: 'onChange',
     });
 
     const onSubmit = (data) => {
+        // console.log(data)
         onCreateBond(data);
         reset();
     };
@@ -37,27 +39,43 @@ const AddNewBondModal = ({ isOpen, onOpenChange, onCreateBond, isLoading }) => {
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="offer" className="text-left">
-                            {t('offer')}
-                        </Label>
-                        <Input
-                            id="offer"
-                            {...register("offer")}
-                            placeholder={t('exampleLaptop')}
-                        />
-                        {errors.offer && <p className="text-red-500 text-xs mt-1">{t('offerIsRequired')}</p>}
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="want" className="text-left">
-                            {t('want')}
-                        </Label>
-                        <Input
-                            id="want"
-                            {...register("want")}
-                            placeholder={t('exampleCamera')}
-                        />
-                        {errors.want && <p className="text-red-500 text-xs mt-1">{t('wantIsRequired')}</p>}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="offer" className="text-left">
+                                {t('offer')}
+                            </Label>
+                            <Input
+                                id="offer"
+                                {...register("offer")}
+                                placeholder={t('exampleLaptop')}
+                            />
+                            <div className="flex gap-2">
+                                <Button size="sm" variant="outline" type="button" onClick={() => setValue('offer', 'Empty', { shouldValidate: true })}>
+                                    {t('empty', { defaultMessage: 'Empty' })}
+                                </Button>
+                                <Button size="sm" variant="outline" type="button" onClick={() => setValue('offer', 'Surprise', { shouldValidate: true })}>
+                                    {t('surprise', { defaultMessage: 'Surprise' })}
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="want" className="text-left">
+                                {t('want')}
+                            </Label>
+                            <Input
+                                id="want"
+                                {...register("want")}
+                                placeholder={t('exampleCamera')}
+                            />
+                             <div className="flex gap-2 justify-end">   
+                                <Button size="sm" variant="outline" type="button" onClick={() => setValue('want', 'Empty', { shouldValidate: true })}>
+                                    {t('empty', { defaultMessage: 'Empty' })}
+                                </Button>
+                                <Button size="sm" variant="outline" type="button" onClick={() => setValue('want', 'Surprise', { shouldValidate: true })}>
+                                    {t('surprise', { defaultMessage: 'Surprise' })}
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="tag" className="text-left">

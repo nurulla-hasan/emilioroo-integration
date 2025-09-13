@@ -72,7 +72,9 @@
     "exampleElectronics": "e.g., electronics",
     "cancel": "Cancel",
     "creating": "Creating",
-    "createBond": "Create Bond"
+    "createBond": "Create Bond",
+    "empty": "Empty",
+    "surprise": "Surprise"
   },
   "Objects": {
     "cocreateProducts": "Cocreate your products",
