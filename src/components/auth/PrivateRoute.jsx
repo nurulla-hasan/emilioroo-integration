@@ -1,12 +1,12 @@
 "use client";
-import { useGetMe } from '@/hooks/useGetMe';
 import Lottie from 'lottie-react';
 import loadingAnimation from '../../../public/animation/Loading.json';
 import { useRouter } from '@/i18n/navigation';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const PrivateRoute = ({ children }) => {
-  const { token } = useGetMe();
+  const token = useSelector((state) => state.auth.accessToken);
   const router = useRouter();
 
   useEffect(() => {

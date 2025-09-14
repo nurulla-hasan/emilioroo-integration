@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { baseApi } from "@/lib/features/api/baseApi";
 import { useDeleteUploadedFileMutation, useUploadFileMutation } from "@/lib/features/api/chatApi";
 import { useMarkAsCompletedMutation } from "@/lib/features/api/bondsApi";
+import ConfirmationModal from "@/components/common/ConfirmationModal";
 
 export const MessagePanel = ({
     conversation,
@@ -41,6 +42,8 @@ export const MessagePanel = ({
     const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
     const [uploadedPdfUrls, setUploadedPdfUrls] = useState([]);
     const [isUploadingFiles, setIsUploadingFiles] = useState(false);
+    const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+
 
     const dispatch = useDispatch();
 
@@ -48,7 +51,7 @@ export const MessagePanel = ({
     const [deleteUploadedFile] = useDeleteUploadedFileMutation();
     const [markAsCompleted, { isLoading: isMarkingAsCompleted }] = useMarkAsCompletedMutation();
 
-    const handleMarkAsCompleted = async () => {
+    const onConfirmMarkAsCompleted = async () => {
         if (!conversation?.bondLinkId) return;
 
         try {
@@ -57,7 +60,13 @@ export const MessagePanel = ({
             dispatch(baseApi.util.invalidateTags(['BONDS']));
         } catch (error) {
             toast.error(error?.data?.message || "Failed to mark as completed.");
+        } finally {
+            setIsConfirmationModalOpen(false);
         }
+    };
+
+    const handleMarkAsCompleted = () => {
+        setIsConfirmationModalOpen(true);
     };
 
 
@@ -177,145 +186,156 @@ export const MessagePanel = ({
     };
 
     return (
-        <div className="w-full bg-card flex flex-col h-full">
-            <div className="p-3 border-b flex items-center justify-between shadow-sm">
-                <div className="flex items-center">
-                    <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}>
-                        <ArrowLeft />
-                    </Button>
-                    <Avatar className="h-12 w-12 mr-4 border-2">
-                        <AvatarImage src={conversation.avatar} />
-                        <AvatarFallback>
-                            {conversation.name[0]}
-                        </AvatarFallback>
-                    </Avatar>
-                    <div>
-                        <h2 className="font-semibold">{conversation.name}</h2>
+        <>
+            <ConfirmationModal
+                isOpen={isConfirmationModalOpen}
+                onOpenChange={setIsConfirmationModalOpen}
+                title="Mark as Completed"
+                description="Are you sure you want to mark this bond as completed? This action cannot be undone."
+                onConfirm={onConfirmMarkAsCompleted}
+                loading={isMarkingAsCompleted}
+                confirmText="Confirm"
+            />
+            <div className="w-full bg-card flex flex-col h-full">
+                <div className="p-3 border-b flex items-center justify-between shadow-sm">
+                    <div className="flex items-center">
+                        <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}>
+                            <ArrowLeft />
+                        </Button>
+                        <Avatar className="h-12 w-12 mr-4 border-2">
+                            <AvatarImage src={conversation.avatar} />
+                            <AvatarFallback>
+                                {conversation.name[0]}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <h2 className="font-semibold">{conversation.name}</h2>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="hidden lg:block">
+                            {isBondLink && (
+                                isBondLinkLoading ? (
+                                    <Skeleton className="h-10 w-40" />
+                                ) : isCompletedByYou ? (
+                                    <Button className="bg-green-800 text-white cursor-default">
+                                        <CheckCheck />
+                                        Completed by you
+                                    </Button>
+                                ) : (
+                                    <Button onClick={handleMarkAsCompleted} disabled={isMarkingAsCompleted}>
+                                        {isMarkingAsCompleted ? 'Marking...' : 'Mark as completed'}
+                                    </Button>
+                                )
+                            )}
+                        </div>
+                        <Button variant="ghost" size="icon" className="xl:hidden" onClick={onOpenMedia}>
+                            <Info />
+                        </Button>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <div className="hidden lg:block">
+                <ScrollArea className="flex-1 p-4 h-96 bg-background/50" onScroll={handleScroll}>
+                    {isMessagesLoading ? (
+                        <MessagePanelSkeleton />
+                    ) : isMessagesError ? (
+                        <div className="h-full w-full flex items-center justify-center">
+                            <LoadFailed msg="Failed to load messages." />
+                        </div>
+                    ) : messages && messages.length > 0 ? (
+                        <>
+                            {messages.map(msg => <Message key={msg._id} msg={msg} />)}
+                            <div ref={messagesEndRef} />
+                        </>
+                    ) : (
+                        <div className="h-[70vh] w-full flex flex-col items-center justify-center text-muted-foreground gap-2">
+                            <MessageSquareDashed className="h-6 w-6" />
+                            <p>No messages yet. Be the first to say hi!</p>
+                        </div>
+                    )}
+                </ScrollArea>
+                <div className="p-4 border-t bg-card">
+                    {stagedFiles.length > 0 && (
+                        <div className="p-2 flex flex-wrap gap-2">
+                            {stagedFiles.map((stagedFile, index) => (
+                                <div key={index} className="relative w-20 h-20 border rounded-lg overflow-hidden flex items-center justify-center">
+                                    {stagedFile.file && stagedFile.file.type.startsWith('image/') ? (
+                                        <Image src={URL.createObjectURL(stagedFile.file)} layout="fill" className="object-cover" alt={`Staged file ${index + 1}`} />
+                                    ) : stagedFile.file && stagedFile.file.type === 'application/pdf' ? (
+                                        <div className="flex flex-col items-center text-center p-1">
+                                            <FileText />
+                                            <span className="text-xs truncate w-full mt-1">PDF</span>
+                                        </div>
+                                    ) : null}
+                                    {(stagedFile.status === 'pending' || stagedFile.status === 'uploading') && (
+                                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                            <span className="text-white text-xs">Uploading...</span>
+                                        </div>
+                                    )}
+                                    {stagedFile.status === 'error' && (
+                                        <div className="absolute inset-0 bg-red-500/50 flex items-center justify-center">
+                                            <span className="text-white text-xs">Error</span>
+                                        </div>
+                                    )}
+                                    <button onClick={() => removeStagedFile(stagedFile)} className="absolute top-1 right-1 bg-gray-800/70 text-white rounded-full p-1 cursor-pointer">
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <div className="relative flex items-center gap-2">
                         {isBondLink && (
                             isBondLinkLoading ? (
-                                <Skeleton className="h-10 w-40" />
+                                <Skeleton className="h-10 w-10 rounded-full lg:hidden" />
                             ) : isCompletedByYou ? (
-                                <Button className="bg-green-800 text-white cursor-default">
-                                    <CheckCheck/>
-                                    Completed by you
-                                </Button>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button className="lg:hidden bg-green-800 text-white" size="icon" disabled>
+                                            <CheckCheck />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Completed by you</p>
+                                    </TooltipContent>
+                                </Tooltip>
                             ) : (
-                                <Button onClick={handleMarkAsCompleted} disabled={isMarkingAsCompleted}>
-                                    {isMarkingAsCompleted ? 'Marking...' : 'Mark as completed'}
-                                </Button>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button className="lg:hidden" variant="ghost" onClick={handleMarkAsCompleted} disabled={isMarkingAsCompleted}><CheckCheck /></Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Mark as completed</p>
+                                    </TooltipContent>
+                                </Tooltip>
                             )
                         )}
-                    </div>
-                    <Button variant="ghost" size="icon" className="xl:hidden" onClick={onOpenMedia}>
-                        <Info />
-                    </Button>
-                </div>
-            </div>
-            <ScrollArea className="flex-1 p-4 h-96 bg-background/50" onScroll={handleScroll}>
-                {isMessagesLoading ? (
-                    <MessagePanelSkeleton />
-                ) : isMessagesError ? (
-                    <div className="h-full w-full flex items-center justify-center">
-                        <LoadFailed msg="Failed to load messages." />
-                    </div>
-                ) : messages && messages.length > 0 ? (
-                    <>
-                        {messages.map(msg => <Message key={msg._id} msg={msg} />)}
-                        <div ref={messagesEndRef} />
-                    </>
-                ) : (
-                    <div className="h-[70vh] w-full flex flex-col items-center justify-center text-muted-foreground gap-2">
-                        <MessageSquareDashed className="h-6 w-6" />
-                        <p>No messages yet. Be the first to say hi!</p>
-                    </div>
-                )}
-            </ScrollArea>
-            <div className="p-4 border-t bg-card">
-                {stagedFiles.length > 0 && (
-                    <div className="p-2 flex flex-wrap gap-2">
-                        {stagedFiles.map((stagedFile, index) => (
-                            <div key={index} className="relative w-20 h-20 border rounded-lg overflow-hidden flex items-center justify-center">
-                                {stagedFile.file && stagedFile.file.type.startsWith('image/') ? (
-                                    <Image src={URL.createObjectURL(stagedFile.file)} layout="fill" className="object-cover" alt={`Staged file ${index + 1}`} />
-                                ) : stagedFile.file && stagedFile.file.type === 'application/pdf' ? (
-                                    <div className="flex flex-col items-center text-center p-1">
-                                        <FileText />
-                                        <span className="text-xs truncate w-full mt-1">PDF</span>
-                                    </div>
-                                ) : null}
-                                {(stagedFile.status === 'pending' || stagedFile.status === 'uploading') && (
-                                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                        <span className="text-white text-xs">Uploading...</span>
-                                    </div>
-                                )}
-                                {stagedFile.status === 'error' && (
-                                    <div className="absolute inset-0 bg-red-500/50 flex items-center justify-center">
-                                        <span className="text-white text-xs">Error</span>
-                                    </div>
-                                )}
-                                <button onClick={() => removeStagedFile(stagedFile)} className="absolute top-1 right-1 bg-gray-800/70 text-white rounded-full p-1 cursor-pointer">
-                                    <X className="w-3 h-3" />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                )}
-                <div className="relative flex items-center gap-2">
-                    {isBondLink && (
-                        isBondLinkLoading ? (
-                            <Skeleton className="h-10 w-10 rounded-full lg:hidden" />
-                        ) : isCompletedByYou ? (
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button className="lg:hidden bg-green-800 text-white" size="icon" disabled>
-                                        <CheckCheck />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Completed by you</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button className="lg:hidden" variant="ghost" onClick={handleMarkAsCompleted} disabled={isMarkingAsCompleted}><CheckCheck /></Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Mark as completed</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        )
-                    )}
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        className="hidden"
-                        accept="image/*,application/pdf"
-                        multiple
-                    />
-                    <Button variant="ghost" size="icon" onClick={handleUploadClick}>
-                        <PlusCircle />
-                    </Button>
-                    <div className="flex-1 relative">
-                        <Input
-                            placeholder="Aa" value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleSendClick()}
-                            className="rounded-full bg-muted"
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            className="hidden"
+                            accept="image/*,application/pdf"
+                            multiple
                         />
+                        <Button variant="ghost" size="icon" onClick={handleUploadClick}>
+                            <PlusCircle />
+                        </Button>
+                        <div className="flex-1 relative">
+                            <Input
+                                placeholder="Aa" value={newMessage}
+                                onChange={(e) => setNewMessage(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSendClick()}
+                                className="rounded-full bg-muted"
+                            />
+                        </div>
+                        <Button
+                            onClick={handleSendClick}
+                            size="icon" variant="ghost">
+                            <Send />
+                        </Button>
                     </div>
-                    <Button
-                        onClick={handleSendClick}
-                        size="icon" variant="ghost">
-                        <Send />
-                    </Button>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
