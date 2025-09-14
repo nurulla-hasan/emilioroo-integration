@@ -14,7 +14,8 @@ const UserRow = ({ user, isLast }) => (
     <div className="flex flex-col items-center">
         <div className="w-full p-4 rounded-xl bg-muted/40 shadow-sm border transition hover:shadow-md">
             {/* User Info */}
-            <div className="flex items-center gap-4 mb-3">
+            <div className="flex items-center justify-between gap-4 mb-3">
+                <div className="flex items-center gap-2">
                 <Avatar className="h-10 w-10">
                     <AvatarImage src={user.user.profile_image} alt={user.user.name} />
                     <AvatarFallback>{user.user.name.charAt(0)}</AvatarFallback>
@@ -22,6 +23,8 @@ const UserRow = ({ user, isLast }) => (
                 <p className="text-base font-semibold text-primary dark:text-white leading-tight">
                     {user.user.name}
                 </p>
+                </div>
+                <Badge variant="outline">Rating:  {user?.avgRating}</Badge>
             </div>
 
             {/* Offer and Want */}

@@ -18,6 +18,7 @@ import { baseApi } from "@/lib/features/api/baseApi";
 import { useDeleteUploadedFileMutation, useUploadFileMutation } from "@/lib/features/api/chatApi";
 import { useMarkAsCompletedMutation } from "@/lib/features/api/bondsApi";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
+import RatingModal from '../bonds/RatingModal';
 
 export const MessagePanel = ({
     conversation,
@@ -43,6 +44,7 @@ export const MessagePanel = ({
     const [uploadedPdfUrls, setUploadedPdfUrls] = useState([]);
     const [isUploadingFiles, setIsUploadingFiles] = useState(false);
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+    const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
 
 
     const dispatch = useDispatch();
@@ -58,6 +60,7 @@ export const MessagePanel = ({
             await markAsCompleted(conversation.bondLinkId).unwrap();
             toast.success("Bond link marked as completed!");
             dispatch(baseApi.util.invalidateTags(['BONDS']));
+            setIsRatingModalOpen(true);
         } catch (error) {
             toast.error(error?.data?.message || "Failed to mark as completed.");
         } finally {
@@ -195,6 +198,11 @@ export const MessagePanel = ({
                 onConfirm={onConfirmMarkAsCompleted}
                 loading={isMarkingAsCompleted}
                 confirmText="Confirm"
+            />
+            <RatingModal
+                isOpen={isRatingModalOpen}
+                onOpenChange={setIsRatingModalOpen}
+                bondLinkId={conversation.bondLinkId}
             />
             <div className="w-full bg-card flex flex-col h-full">
                 <div className="p-3 border-b flex items-center justify-between shadow-sm">

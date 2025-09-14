@@ -169,8 +169,17 @@ const bondsApi = baseApi.injectEndpoints({
             invalidatesTags: ["BONDS", "CONVERSATIONS"],
         }),
 
+        // GIVE RATING
+        giveRating: builder.mutation({
+            query: (data) => ({
+                url: "/bond-rating/add-rating",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["BONDS"],
+        }),
 
     }),
 });
 
-export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useGetFilterItemsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation, useGetSingleBondLinkQuery, useMarkAsCompletedMutation } = bondsApi;
+export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useGetFilterItemsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation, useGetSingleBondLinkQuery, useMarkAsCompletedMutation, useGiveRatingMutation } = bondsApi;
