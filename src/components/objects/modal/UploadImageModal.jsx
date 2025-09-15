@@ -78,7 +78,7 @@ export default function UploadImageModal({ isOpen, onOpenChange }) {
       form.setValue('project_image', file, { shouldValidate: true });
 
     } catch (error) {
-      // console.log(error)
+      console.log(error)
       toast.error("Failed to analyze image", {
         description: error?.data?.message || "An error occurred during analysis.",
       });
