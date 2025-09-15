@@ -11,8 +11,8 @@ import { z } from "zod";
 import { useTranslations } from "next-intl";
 
 const bondSchema = z.object({
-    offer: z.string(),
-    want: z.string(),
+    offer: z.string().min(1, "Offer is required"),
+    want: z.string().min(1, "Want is required"),
     tag: z.string(),
 });
 

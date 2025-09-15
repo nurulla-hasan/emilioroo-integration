@@ -17,7 +17,7 @@ export function SocketProvider({ children }) {
 
     useEffect(() => {
 
-        const newSocket = io("http://10.10.20.9:4000", {
+        const newSocket = io("https://rnj64vmh-4000.inc1.devtunnels.ms", {
             query: { token },
         });
 
