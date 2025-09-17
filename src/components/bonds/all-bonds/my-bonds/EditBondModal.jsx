@@ -12,7 +12,7 @@ import { z } from "zod";
 const bondSchema = z.object({
     offer: z.string().min(1, "Offer is required"),
     want: z.string().min(1, "Want is required"),
-    tag: z.string().min(1, "Tag is required"),
+    tag: z.string(),
 });
 
 const EditBondModal = ({ isOpen, onOpenChange, onUpdateBond, isLoading, bond }) => {
@@ -42,28 +42,30 @@ const EditBondModal = ({ isOpen, onOpenChange, onUpdateBond, isLoading, bond }) 
                         Update the details of your bond.
                     </DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="offer" className="text-left">
-                            Offer
-                        </Label>
-                        <Input
-                            id="offer"
-                            {...register("offer")}
-                            placeholder="e.g., Laptop"
-                        />
-                        {errors.offer && <p className="text-red-500 text-xs mt-1">{errors.offer.message}</p>}
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="want" className="text-left">
-                            Want
-                        </Label>
-                        <Input
-                            id="want"
-                            {...register("want")}
-                            placeholder="e.g., Camera"
-                        />
-                        {errors.want && <p className="text-red-500 text-xs mt-1">{errors.want.message}</p>}
+                <form onSubmit={handleSubmit(onSubmit)} className="grid py-4 gap-4">
+                    <div className='grid grid-cols-2 gap-4'>
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="offer" className="text-left">
+                                Offer
+                            </Label>
+                            <Input
+                                id="offer"
+                                {...register("offer")}
+                                placeholder="e.g., Laptop"
+                            />
+                            {errors.offer && <p className="text-red-500 text-xs mt-1">{errors.offer.message}</p>}
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="want" className="text-left">
+                                Want
+                            </Label>
+                            <Input
+                                id="want"
+                                {...register("want")}
+                                placeholder="e.g., Camera"
+                            />
+                            {errors.want && <p className="text-red-500 text-xs mt-1">{errors.want.message}</p>}
+                        </div>
                     </div>
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="tag" className="text-left">

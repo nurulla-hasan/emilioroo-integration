@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Plus } from 'lucide-react';
+import { Mic, Plus } from 'lucide-react';
 import UploadAudioModal from './UploadAudioModal';
 import MostPlayedContent from './all-content/MostPlayedContent';
 import TrendingTopicsContent from './all-content/TrendingTopicsContent';
@@ -21,10 +21,13 @@ const AllContent = () => {
                     {t('realConversation')}
                 </Title>
 
-                <div className="flex justify-center sm:justify-end">
+                <div className="flex gap-2 justify-center sm:justify-end">
                     <Button onClick={() => setIsModalOpen(true)} >
                         <Plus />
                         {t('uploadNewAudio')}
+                    </Button>
+                    <Button size="icon" variant="outline" onClick={() => setIsModalOpen(true)}>
+                        <Mic />
                     </Button>
                 </div>
             </div>

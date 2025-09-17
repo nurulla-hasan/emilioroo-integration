@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -26,13 +26,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useGetAllTopicsQuery, useCreateAudioMutation, useCheckAudioMutation } from "@/lib/features/api/chattingApi";
-import { Check, ChevronsUpDown, Upload } from "lucide-react";
+import { Check, ChevronsUpDown, Upload, Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-const ALLOWED_AUDIO_TYPES = ['audio/mpeg', 'audio/wav', 'audio/ogg'];
+const ALLOWED_AUDIO_TYPES = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/webm'];
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
 
 
@@ -68,6 +68,10 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
     const [createAudio, { isLoading: isUploading }] = useCreateAudioMutation();
     const [checkAudio, { isLoading: isCheckingAudio }] = useCheckAudioMutation();
 
+    const [isRecording, setIsRecording] = useState(false);
+    const mediaRecorder = useRef(null);
+    const audioChunks = useRef([]);
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         mode: 'onChange',
@@ -99,7 +103,9 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                     description: result.message || "The audio content does not meet the requirements.",
                 });
                 form.setValue('audio', null, { shouldValidate: true });
-                e.target.value = null; // Clear the file input visually
+                if (e.target) {
+                    e.target.value = null; // Clear the file input visually
+                }
                 setAudioFileName('');
                 return;
             }
@@ -118,8 +124,53 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                 description: error?.data?.message || "An error occurred during analysis.",
             });
             form.setValue('audio', null, { shouldValidate: true });
-            e.target.value = null; // Clear the file input visually
+            if (e.target) {
+                e.target.value = null; // Clear the file input visually
+            }
             setAudioFileName('');
+        }
+    };
+
+    const handleMicClick = async () => {
+        if (isRecording) {
+            mediaRecorder.current.stop();
+            setIsRecording(false);
+        } else {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder.current = new MediaRecorder(stream);
+                mediaRecorder.current.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.current.push(event.data);
+                    }
+                };
+                mediaRecorder.current.onstop = () => {
+                    const audioBlob = new Blob(audioChunks.current, { type: 'audio/webm' });
+                    const audioFile = new File([audioBlob], "recorded_audio.webm", { type: "audio/webm" });
+
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(audioFile);
+                    
+                    const syntheticEvent = {
+                        target: {
+                            files: dataTransfer.files
+                        }
+                    };
+
+                    handleAudioFileChange(syntheticEvent);
+                    form.setValue('audio', dataTransfer.files, { shouldValidate: true });
+
+                    audioChunks.current = [];
+                    stream.getTracks().forEach(track => track.stop());
+                    toast.success("Recording finished.");
+                };
+                mediaRecorder.current.start();
+                toast.info("Recording started. Click mic to stop.");
+                setIsRecording(true);
+            } catch (error) {
+                console.error("Error accessing microphone:", error);
+                toast.error("Microphone access denied.");
+            }
         }
     };
 
@@ -170,7 +221,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                 <FormItem>
                                     <FormLabel>{t('title')}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder={t('exampleTitle')} {...field} disabled={isCheckingAudio} />
+                                        <Input placeholder={t('exampleTitle')} {...field} disabled={isCheckingAudio || isRecording} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -183,7 +234,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                 <FormItem>
                                     <FormLabel>{t('description')}</FormLabel>
                                     <FormControl>
-                                        <Textarea placeholder={t('describeAudio')} {...field} disabled={isCheckingAudio} />
+                                        <Textarea placeholder={t('describeAudio')} {...field} disabled={isCheckingAudio || isRecording} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -201,7 +252,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                                 <Button
                                                     variant="outline"
                                                     role="combobox"
-                                                    disabled={isCheckingAudio}
+                                                    disabled={isCheckingAudio || isRecording}
                                                     className={cn(
                                                         "w-full justify-between",
                                                         !field.value && "text-muted-foreground"
@@ -259,7 +310,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                 <FormItem>
                                     <FormLabel>{t('tags')}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder={t('exampleTags')} {...field} disabled={isCheckingAudio} />
+                                        <Input placeholder={t('exampleTags')} {...field} disabled={isCheckingAudio || isRecording} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -272,24 +323,29 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                 <FormItem className="w-full">
                                     <FormLabel>{t('audioFile')}</FormLabel>
                                     <FormControl>
-                                        <div className="relative">
-                                            <Input
-                                                type="file"
-                                                accept="audio/*"
-                                                disabled={isCheckingAudio}
-                                                onChange={(e) => {
-                                                    handleAudioFileChange(e);
-                                                    field.onChange(e.target.files);
-                                                }}
-                                                className="absolute inset-0 opacity-0 cursor-pointer"
-                                            />
-                                            <div
-                                                className="flex items-center justify-center p-2 border border-dashed rounded-md transition-colors duration-200">
-                                                <Upload className="h-5 w-5 mr-2" />
-                                                <span className="text-xs">
-                                                    {audioFileName || t('selectAudio')}
-                                                </span>
+                                        <div className="flex items-center gap-2">
+                                            <div className="relative w-full">
+                                                <Input
+                                                    type="file"
+                                                    accept="audio/*"
+                                                    disabled={isCheckingAudio || isRecording}
+                                                    onChange={(e) => {
+                                                        handleAudioFileChange(e);
+                                                        field.onChange(e.target.files);
+                                                    }}
+                                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                                />
+                                                <div
+                                                    className="flex items-center justify-center p-2 border border-dashed rounded-md transition-colors duration-200">
+                                                    <Upload className="h-5 w-5 mr-2" />
+                                                    <span className="text-xs">
+                                                        {audioFileName || t('selectAudio')}
+                                                    </span>
+                                                </div>
                                             </div>
+                                            <Button type="button" size="icon" variant={isRecording ? "destructive" : "outline"} onClick={handleMicClick} disabled={isCheckingAudio}>
+                                                <Mic />
+                                            </Button>
                                         </div>
                                     </FormControl>
                                     <FormMessage />
@@ -309,7 +365,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                             <Input
                                                 type="file"
                                                 accept="image/*"
-                                                disabled={isCheckingAudio}
+                                                disabled={isCheckingAudio || isRecording}
                                                 onChange={(e) => {
                                                     const file = e.target.files[0];
                                                     if (file) {
@@ -337,8 +393,8 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
 
                         <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t('cancel')}</Button>
-                            <Button loading={isUploading || isCheckingAudio} type="submit" disabled={!form.formState.isValid}>
-                                {isCheckingAudio ? "Analyzing..." : t('uploadAudio')}
+                            <Button loading={isUploading || isCheckingAudio} type="submit" disabled={isRecording}>
+                                {isCheckingAudio ? "Analyzing..." : isRecording ? "Recording..." : t('uploadAudio')}
                             </Button>
                         </DialogFooter>
                     </form>
