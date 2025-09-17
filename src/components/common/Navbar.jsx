@@ -33,12 +33,12 @@ const Navbar = () => {
     const navLinks = [
         { name: t('Home'), href: "/", icon: Home },
         { name: t('DonateUs'), href: "/donate-us", icon: UserPlus },
-        { name: t('Bonds'), href: "/bonds", icon: ShoppingCart, bgColor: 'bg-gradient-to-r from-violet-400 to-purple-500 rounded-md px-2 py-1'},
+        { name: t('Bonds'), href: "/bonds", icon: ShoppingCart, bgColor: 'bg-gradient-to-r from-violet-400 to-purple-500 rounded-full px-2 py-1'},
         { name: t('People'), href: "/people", icon: User },
         // { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
         // { name: t('Institutions'), href: "/institutions", icon: User },
         { name: t('Message'), href: "/message", icon: Mail },
-        { name: t('WeAreChatting'), href: "/chatting", icon: Mail, bgColor: 'bg-gradient-to-r from-blue-400 to-pink-500 rounded-md px-2 py-1' },
+        { name: t('WeAreChatting'), href: "/chatting", icon: Mail, bgColor: 'bg-gradient-to-r from-blue-400 to-pink-500 rounded-full px-2 py-1' },
     ];
 
     const handleLogOut = () => {

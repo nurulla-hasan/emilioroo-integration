@@ -171,6 +171,8 @@
     "exampleTags": "ej., relajante, naturaleza, océano (separado por comas)",
     "audioFile": "Archivo de Audio",
     "coverImage": "Imagen de Portada",
+    "selectAudio": "Seleccionar archivo de audio",
+    "selectCover": "Seleccionar imagen de portada",
     "cancel": "Cancelar",
     "uploadingAudio": "Subiendo Audio",
     "uploadAudio": "Subir Audio"

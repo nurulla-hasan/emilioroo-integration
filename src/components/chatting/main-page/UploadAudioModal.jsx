@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useGetAllTopicsQuery, useCreateAudioMutation, useCheckAudioMutation } from "@/lib/features/api/chattingApi";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -62,6 +62,8 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
     });
     const [duration, setDuration] = useState(0);
     const [open, setOpen] = useState(false);
+    const [audioFileName, setAudioFileName] = useState('');
+    const [coverFileName, setCoverFileName] = useState('');
     const { data: topicsData, isLoading: isTopicsLoading } = useGetAllTopicsQuery();
     const [createAudio, { isLoading: isUploading }] = useCreateAudioMutation();
     const [checkAudio, { isLoading: isCheckingAudio }] = useCheckAudioMutation();
@@ -78,7 +80,11 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
 
     const handleAudioFileChange = async (e) => {
         const file = e.target.files[0];
-        if (!file) return;
+        if (!file) {
+            setAudioFileName('');
+            return;
+        }
+        setAudioFileName(file.name);
 
         // Perform AI check first
         const audioFormData = new FormData();
@@ -94,6 +100,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                 });
                 form.setValue('audio', null, { shouldValidate: true });
                 e.target.value = null; // Clear the file input visually
+                setAudioFileName('');
                 return;
             }
 
@@ -112,6 +119,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
             });
             form.setValue('audio', null, { shouldValidate: true });
             e.target.value = null; // Clear the file input visually
+            setAudioFileName('');
         }
     };
 
@@ -134,6 +142,8 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
             await createAudio(formData).unwrap();
             toast.success(t('audioUploadedSuccessfully'));
             form.reset();
+            setAudioFileName('');
+            setCoverFileName('');
             onOpenChange(false);
         } catch (error) {
             toast.error(t('failedToUploadAudio'), {
@@ -259,36 +269,75 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                             control={form.control}
                             name="audio"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="w-full">
                                     <FormLabel>{t('audioFile')}</FormLabel>
                                     <FormControl>
-                                        <Input type="file" accept="audio/*" disabled={isCheckingAudio} onChange={(e) => {
-                                            // We pass the original event `e` to the handler
-                                            handleAudioFileChange(e);
-                                            // We still need to let react-hook-form know about the change
-                                            field.onChange(e.target.files);
-                                        }} />
+                                        <div className="relative">
+                                            <Input
+                                                type="file"
+                                                accept="audio/*"
+                                                disabled={isCheckingAudio}
+                                                onChange={(e) => {
+                                                    handleAudioFileChange(e);
+                                                    field.onChange(e.target.files);
+                                                }}
+                                                className="absolute inset-0 opacity-0 cursor-pointer"
+                                            />
+                                            <div
+                                                className="flex items-center justify-center p-2 border border-dashed rounded-md transition-colors duration-200">
+                                                <Upload className="h-5 w-5 mr-2" />
+                                                <span className="text-xs">
+                                                    {audioFileName || t('selectAudio')}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+
+                        {/* Cover Image Upload */}
                         <FormField
                             control={form.control}
                             name="audio_cover"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="w-full">
                                     <FormLabel>{t('coverImage')}</FormLabel>
                                     <FormControl>
-                                        <Input type="file" accept="image/*" disabled={isCheckingAudio} onChange={(e) => field.onChange(e.target.files)} />
+                                        <div className="relative">
+                                            <Input
+                                                type="file"
+                                                accept="image/*"
+                                                disabled={isCheckingAudio}
+                                                onChange={(e) => {
+                                                    const file = e.target.files[0];
+                                                    if (file) {
+                                                        setCoverFileName(file.name);
+                                                    } else {
+                                                        setCoverFileName('');
+                                                    }
+                                                    field.onChange(e.target.files);
+                                                }}
+                                                className="absolute inset-0 opacity-0 cursor-pointer"
+                                            />
+                                            <div
+                                                className="flex items-center justify-center p-2 border border-dashed rounded-md transition-colors duration-200">
+                                                <Upload className="h-5 w-5 mr-2" />
+                                                <span className="text-xs">
+                                                    {coverFileName || t('selectCover')}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+
                         <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t('cancel')}</Button>
-                            <Button loading={isUploading || isCheckingAudio} type="submit" disabled={!form.formState.isValid || isUploading || isCheckingAudio}>
+                            <Button loading={isUploading || isCheckingAudio} type="submit" disabled={!form.formState.isValid}>
                                 {isCheckingAudio ? "Analyzing..." : t('uploadAudio')}
                             </Button>
                         </DialogFooter>

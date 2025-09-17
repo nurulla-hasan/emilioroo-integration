@@ -1,150 +1,150 @@
-"use client";
+// "use client";
 
-import React, { useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { MessageSquare, Heart, MoreHorizontal } from 'lucide-react';
-import CommentRepliesModal from './CommentRepliesModal';
-import { DialogTrigger, Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { useLikeUnlikeCommentMutation, useDeleteCommentMutation } from '@/lib/features/api/InstitutionApi';
-import { toast } from 'sonner';
-import EditCommentModal from './EditCommentModal';
-import ConfirmationModal from '@/components/common/ConfirmationModal';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { timeAgo } from '@/lib/utils';
-import Image from 'next/image';
+// import React, { useState } from 'react';
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Button } from "@/components/ui/button";
+// import { MessageSquare, Heart, MoreHorizontal } from 'lucide-react';
+// import CommentRepliesModal from './CommentRepliesModal';
+// import { DialogTrigger, Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+// import { useLikeUnlikeCommentMutation, useDeleteCommentMutation } from '@/lib/features/api/InstitutionApi';
+// import { toast } from 'sonner';
+// import EditCommentModal from './EditCommentModal';
+// import ConfirmationModal from '@/components/common/ConfirmationModal';
+// import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+// import { timeAgo } from '@/lib/utils';
+// import Image from 'next/image';
 
-const PostCard = ({ post }) => {
-    const { _id, commentorName, commentorProfileImage, createdAt, text, totalLike, totalReplies, isMyComment, isMyLike } = post;
-    const [likeUnlikeComment, { isLoading: isLiking }] = useLikeUnlikeCommentMutation();
-    const [deleteComment, { isLoading: isDeleting }] = useDeleteCommentMutation();
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+// const PostCard = ({ post }) => {
+//     const { _id, commentorName, commentorProfileImage, createdAt, text, totalLike, totalReplies, isMyComment, isMyLike } = post;
+//     const [likeUnlikeComment, { isLoading: isLiking }] = useLikeUnlikeCommentMutation();
+//     const [deleteComment, { isLoading: isDeleting }] = useDeleteCommentMutation();
+//     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+//     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+//     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
-    const [optimisticIsLiked, setOptimisticIsLiked] = useState(isMyLike);
-    const [optimisticTotalLikes, setOptimisticTotalLikes] = useState(totalLike);
-
-
-    const handleLikeUnlike = async () => {
-        const previousIsLiked = optimisticIsLiked;
-        const previousTotalLikes = optimisticTotalLikes;
-
-        setOptimisticIsLiked(!previousIsLiked);
-        setOptimisticTotalLikes(!previousIsLiked ? previousTotalLikes + 1 : previousTotalLikes - 1);
-
-        try {
-            await likeUnlikeComment(_id).unwrap();
-        } catch (error) {
-            setOptimisticIsLiked(previousIsLiked);
-            setOptimisticTotalLikes(previousTotalLikes);
-            console.error("Failed to like/unlike comment:", error);
-            toast.error(error?.data?.message || "Failed to like/unlike comment.");
-        }
-    };
+//     const [optimisticIsLiked, setOptimisticIsLiked] = useState(isMyLike);
+//     const [optimisticTotalLikes, setOptimisticTotalLikes] = useState(totalLike);
 
 
-    const handleDeleteComment = async () => {
-        try {
-            await deleteComment(_id).unwrap();
-            toast.success("Comment deleted successfully!");
-            setIsDeleteConfirmOpen(false);
-        } catch (error) {
-            console.error("Failed to delete comment:", error);
-            toast.error(error?.data?.message || "Failed to delete comment.");
-        }
-    };
+//     const handleLikeUnlike = async () => {
+//         const previousIsLiked = optimisticIsLiked;
+//         const previousTotalLikes = optimisticTotalLikes;
 
-    return (
-        <>
-            <div className="bg-card p-4 rounded-lg border">
-                <div className="flex items-start space-x-4">
-                    <Avatar>
-                        <AvatarImage src={commentorProfileImage} />
-                        <AvatarFallback>{commentorName.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="w-full">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <p className="font-semibold">{commentorName}</p>
-                            </div>
-                            <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                                <p>{timeAgo(createdAt)}</p>
-                                {isMyComment && (
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="sm" className="h-auto p-1">
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
-                                                Edit
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => setIsDeleteConfirmOpen(true)} className="text-red-500">
-                                                Delete
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                )}
-                            </div>
-                        </div>
-                        <p className="mt-2">{text}</p>
-                        {post.image && (
-                            <div className="mt-2 relative h-20 w-20 cursor-pointer" onClick={() => setIsImageModalOpen(true)}>
-                                                                <Image src={post.image} alt="Comment Image" fill className="object-cover rounded-lg" />
-                            </div>
-                        )}
-                        <div className="flex justify-between items-center mt-4 text-sm text-muted-foreground">
-                            <div className="flex items-center space-x-4">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="flex items-center space-x-1"
-                                    onClick={handleLikeUnlike}
-                                    disabled={isLiking}
-                                >
-                                    <Heart className="h-4 w-4" fill={optimisticIsLiked ? "red" : "none"} stroke={optimisticIsLiked ? "red" : "currentColor"} />
-                                    <span>Like ({optimisticTotalLikes})</span>
-                                </Button>
-                                <CommentRepliesModal commentId={_id}>
-                                    <DialogTrigger asChild>
-                                        <Button variant="ghost" size="sm" className="flex items-center space-x-1">
-                                            <MessageSquare className="h-4 w-4" />
-                                            <span>Comment ({totalReplies})</span>
-                                        </Button>
-                                    </DialogTrigger>
-                                </CommentRepliesModal>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <EditCommentModal
-                isOpen={isEditModalOpen}
-                onOpenChange={setIsEditModalOpen}
-                comment={post}
-            />
-            <ConfirmationModal
-                isOpen={isDeleteConfirmOpen}
-                onOpenChange={setIsDeleteConfirmOpen}
-                title="Confirm Deletion"
-                description="Are you sure you want to delete this comment? This action cannot be undone."
-                onConfirm={handleDeleteComment}
-                confirmText="Delete"
-                loading={isDeleting}
-            />
+//         setOptimisticIsLiked(!previousIsLiked);
+//         setOptimisticTotalLikes(!previousIsLiked ? previousTotalLikes + 1 : previousTotalLikes - 1);
 
-            <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
-                <DialogContent className="sm:max-w-[800px] p-0">
-                    <DialogTitle className="sr-only">Full size image</DialogTitle>
-                    <div className="relative w-full h-[500px]">
-                        <Image src={post.image} alt="Full size image" fill className="object-contain" />
-                    </div>
-                </DialogContent>
-            </Dialog>
-        </>
-    );
-};
+//         try {
+//             await likeUnlikeComment(_id).unwrap();
+//         } catch (error) {
+//             setOptimisticIsLiked(previousIsLiked);
+//             setOptimisticTotalLikes(previousTotalLikes);
+//             console.error("Failed to like/unlike comment:", error);
+//             toast.error(error?.data?.message || "Failed to like/unlike comment.");
+//         }
+//     };
 
-export default PostCard;
+
+//     const handleDeleteComment = async () => {
+//         try {
+//             await deleteComment(_id).unwrap();
+//             toast.success("Comment deleted successfully!");
+//             setIsDeleteConfirmOpen(false);
+//         } catch (error) {
+//             console.error("Failed to delete comment:", error);
+//             toast.error(error?.data?.message || "Failed to delete comment.");
+//         }
+//     };
+
+//     return (
+//         <>
+//             <div className="bg-card p-4 rounded-lg border">
+//                 <div className="flex items-start space-x-4">
+//                     <Avatar>
+//                         <AvatarImage src={commentorProfileImage} />
+//                         <AvatarFallback>{commentorName.charAt(0)}</AvatarFallback>
+//                     </Avatar>
+//                     <div className="w-full">
+//                         <div className="flex justify-between items-start">
+//                             <div>
+//                                 <p className="font-semibold">{commentorName}</p>
+//                             </div>
+//                             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+//                                 <p>{timeAgo(createdAt)}</p>
+//                                 {isMyComment && (
+//                                     <DropdownMenu>
+//                                         <DropdownMenuTrigger asChild>
+//                                             <Button variant="ghost" size="sm" className="h-auto p-1">
+//                                                 <MoreHorizontal className="h-4 w-4" />
+//                                             </Button>
+//                                         </DropdownMenuTrigger>
+//                                         <DropdownMenuContent align="end">
+//                                             <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>
+//                                                 Edit
+//                                             </DropdownMenuItem>
+//                                             <DropdownMenuItem onClick={() => setIsDeleteConfirmOpen(true)} className="text-red-500">
+//                                                 Delete
+//                                             </DropdownMenuItem>
+//                                         </DropdownMenuContent>
+//                                     </DropdownMenu>
+//                                 )}
+//                             </div>
+//                         </div>
+//                         <p className="mt-2">{text}</p>
+//                         {post.image && (
+//                             <div className="mt-2 relative h-20 w-20 cursor-pointer" onClick={() => setIsImageModalOpen(true)}>
+//                                                                 <Image src={post.image} alt="Comment Image" fill className="object-cover rounded-lg" />
+//                             </div>
+//                         )}
+//                         <div className="flex justify-between items-center mt-4 text-sm text-muted-foreground">
+//                             <div className="flex items-center space-x-4">
+//                                 <Button
+//                                     variant="ghost"
+//                                     size="sm"
+//                                     className="flex items-center space-x-1"
+//                                     onClick={handleLikeUnlike}
+//                                     disabled={isLiking}
+//                                 >
+//                                     <Heart className="h-4 w-4" fill={optimisticIsLiked ? "red" : "none"} stroke={optimisticIsLiked ? "red" : "currentColor"} />
+//                                     <span>Like ({optimisticTotalLikes})</span>
+//                                 </Button>
+//                                 <CommentRepliesModal commentId={_id}>
+//                                     <DialogTrigger asChild>
+//                                         <Button variant="ghost" size="sm" className="flex items-center space-x-1">
+//                                             <MessageSquare className="h-4 w-4" />
+//                                             <span>Comment ({totalReplies})</span>
+//                                         </Button>
+//                                     </DialogTrigger>
+//                                 </CommentRepliesModal>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//             <EditCommentModal
+//                 isOpen={isEditModalOpen}
+//                 onOpenChange={setIsEditModalOpen}
+//                 comment={post}
+//             />
+//             <ConfirmationModal
+//                 isOpen={isDeleteConfirmOpen}
+//                 onOpenChange={setIsDeleteConfirmOpen}
+//                 title="Confirm Deletion"
+//                 description="Are you sure you want to delete this comment? This action cannot be undone."
+//                 onConfirm={handleDeleteComment}
+//                 confirmText="Delete"
+//                 loading={isDeleting}
+//             />
+
+//             <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
+//                 <DialogContent className="sm:max-w-[800px] p-0">
+//                     <DialogTitle className="sr-only">Full size image</DialogTitle>
+//                     <div className="relative w-full h-[500px]">
+//                         <Image src={post.image} alt="Full size image" fill className="object-contain" />
+//                     </div>
+//                 </DialogContent>
+//             </Dialog>
+//         </>
+//     );
+// };
+
+// export default PostCard;

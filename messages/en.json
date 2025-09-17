@@ -171,6 +171,8 @@
     "exampleTags": "e.g., relaxing, nature, ocean (comma separated)",
     "audioFile": "Audio File",
     "coverImage": "Cover Image",
+    "selectAudio": "Select audio file",
+    "selectCover": "Select cover image",
     "cancel": "Cancel",
     "uploadingAudio": "Uploading Audio",
     "uploadAudio": "Upload Audio"
