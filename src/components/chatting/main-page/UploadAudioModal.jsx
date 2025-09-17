@@ -336,7 +336,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                                     className="absolute inset-0 opacity-0 cursor-pointer"
                                                 />
                                                 <div
-                                                    className="flex items-center justify-center p-2 border border-dashed rounded-md transition-colors duration-200">
+                                                    className="flex items-center justify-center p-[5px] border border-dashed rounded-md transition-colors duration-200 bg-accent">
                                                     <Upload className="h-5 w-5 mr-2" />
                                                     <span className="text-xs">
                                                         {audioFileName || t('selectAudio')}
@@ -378,7 +378,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                                 className="absolute inset-0 opacity-0 cursor-pointer"
                                             />
                                             <div
-                                                className="flex items-center justify-center p-2 border border-dashed rounded-md transition-colors duration-200">
+                                                className="flex items-center justify-center p-[5px] bg-accent border border-dashed rounded-md transition-colors duration-200">
                                                 <Upload className="h-5 w-5 mr-2" />
                                                 <span className="text-xs">
                                                     {coverFileName || t('selectCover')}

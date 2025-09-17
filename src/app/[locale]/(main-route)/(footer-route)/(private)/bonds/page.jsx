@@ -6,13 +6,7 @@ import { useCreateRequestBondMutation, useGetFilterItemsQuery } from '@/lib/feat
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -42,7 +36,7 @@ const formSchema = z.object({
   offer: z.string().min(1, { message: 'Offer is required.' }),
   want: z.string().min(1, { message: 'Want is required.' }),
   description: z.string().min(1, { message: 'Description is required.' }),
-  tag: z.string().min(1, { message: 'Tag is required.' }),
+  tag: z.string(),
   radius: z.coerce.number().min(1, { message: 'Radius must be a positive number.' }),
   location: z
     .object({
@@ -146,34 +140,34 @@ const Bonds = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('offer')}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isFilterItemsLoading || isFilterItemsError}>
-                            <FormControl>
-                              <SelectTrigger
-                                aria-invalid={errors.offer ? 'true' : 'false'}
-                                className={errors.offer ? 'border-red-500 w-full' : 'w-full'}
-                              >
-                                <SelectValue placeholder={t('exampleLaptop')} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {isFilterItemsLoading ? (
-                                <SelectItem value="loading" disabled>
-                                  Loading items...
-                                </SelectItem>
-                              ) : isFilterItemsError ? (
-                                <SelectItem value="error" disabled>
-                                  Error loading items.
-                                </SelectItem>
-                              ) : (
-                                offerItems.map((item) => (
-                                  <SelectItem key={item} value={item}>
-                                    {item}
-                                  </SelectItem>
-                                ))
-                              )}
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Combobox
+                              options={offerItems.map((item) => ({ label: item, value: item }))}
+                              value={field.value}
+                              onChange={field.onChange}
+                              placeholder={t('exampleLaptop')}
+                              disabled={isFilterItemsLoading || isFilterItemsError}
+                              aria-invalid={errors.offer ? 'true' : 'false'}
+                              className={errors.offer ? 'border-red-500' : ''}
+                            />
+                          </FormControl>
                           <FormMessage />
+                          <div className="flex gap-2 mt-2">
+                            <Button
+                              variant="outline"
+                              type="button"
+                              onClick={() => form.setValue('offer', 'Empty', { shouldValidate: true })}
+                            >
+                              Empty
+                            </Button>
+                            <Button
+                              variant="outline"
+                              type="button"
+                              onClick={() => form.setValue('offer', 'Surprise', { shouldValidate: true })}
+                            >
+                              Surprise
+                            </Button>
+                          </div>
                         </FormItem>
                       )}
                     />
@@ -183,34 +177,34 @@ const Bonds = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('want')}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isFilterItemsLoading || isFilterItemsError}>
-                            <FormControl>
-                              <SelectTrigger
-                                aria-invalid={errors.want ? 'true' : 'false'}
-                                className={errors.want ? 'border-red-500 w-full' : 'w-full'}
-                              >
-                                <SelectValue placeholder={t('exampleCamera')} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {isFilterItemsLoading ? (
-                                <SelectItem value="loading" disabled>
-                                  Loading items...
-                                </SelectItem>
-                              ) : isFilterItemsError ? (
-                                <SelectItem value="error" disabled>
-                                  Error loading items.
-                                </SelectItem>
-                              ) : (
-                                wantItems.map((item) => (
-                                  <SelectItem key={item} value={item}>
-                                    {item}
-                                  </SelectItem>
-                                ))
-                              )}
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Combobox
+                              options={wantItems.map((item) => ({ label: item, value: item }))}
+                              value={field.value}
+                              onChange={field.onChange}
+                              placeholder={t('exampleCamera')}
+                              disabled={isFilterItemsLoading || isFilterItemsError}
+                              aria-invalid={errors.want ? 'true' : 'false'}
+                              className={errors.want ? 'border-red-500' : ''}
+                            />
+                          </FormControl>
                           <FormMessage />
+                          <div className="flex justify-end gap-2 mt-2">
+                            <Button
+                              variant="outline"
+                              type="button"
+                              onClick={() => form.setValue('want', 'Empty', { shouldValidate: true })}
+                            >
+                              Empty
+                            </Button>
+                            <Button
+                              variant="outline"
+                              type="button"
+                              onClick={() => form.setValue('want', 'Surprise', { shouldValidate: true })}
+                            >
+                              Surprise
+                            </Button>
+                          </div>
                         </FormItem>
                       )}
                     />
