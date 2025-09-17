@@ -3,7 +3,7 @@ import { usePathname, Link as NextIntlLink, useRouter as useNextRouter } from "@
 import { useTranslations } from 'next-intl';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User, Menu, LogOut, UserPlus, ShoppingBasket, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Users, Languages } from "lucide-react";
+import { User, Menu, LogOut, UserPlus, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Users, Languages } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,10 +33,10 @@ const Navbar = () => {
     const navLinks = [
         { name: t('Home'), href: "/", icon: Home },
         { name: t('DonateUs'), href: "/donate-us", icon: UserPlus },
-        { name: t('Bonds'), href: "/bonds", icon: ShoppingCart, },
+        { name: t('Bonds'), href: "/bonds", icon: ShoppingCart, bgColor: 'bg-gradient-to-r from-violet-400 to-purple-500 rounded-md px-2 py-1'},
         { name: t('People'), href: "/people", icon: User },
-        { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
-        { name: t('Institutions'), href: "/institutions", icon: User },
+        // { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
+        // { name: t('Institutions'), href: "/institutions", icon: User },
         { name: t('Message'), href: "/message", icon: Mail },
         { name: t('WeAreChatting'), href: "/chatting", icon: Mail, bgColor: 'bg-gradient-to-r from-blue-400 to-pink-500 rounded-md px-2 py-1' },
     ];
@@ -185,7 +185,7 @@ const Navbar = () => {
 
                             <div className="flex items-center gap-8">
                                 {/* Desktop Navigation Links */}
-                                <div className="hidden xl:flex items-center gap-8">
+                                <div className="hidden xl:flex items-center gap-8 justify-evenly">
                                     {navLinks.map((link) => (
                                         <NextIntlLink
                                             scroll={false}
