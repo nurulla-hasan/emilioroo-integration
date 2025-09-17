@@ -134,7 +134,7 @@ export default function EditBondRequestModal({ isOpen, onOpenChange, request }) 
             <FormItem>
               <FormLabel>Select Location</FormLabel>
               <FormControl>
-                <div className="rounded-md overflow-hidden border">
+                <div className="rounded-md overflow-hidden border h-64">
                   {isOpen && (
                     <MapPicker
                       onLocationChange={(loc) => setValue('location', loc, { shouldValidate: true })}
