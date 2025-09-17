@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Title from '@/components/ui/Title';
 import { useTranslations } from 'next-intl';
-import { useGetMyBondsRequestQuery, useDeleteRequestBondMutation } from '@/lib/features/api/bondsApi';
+import { useGetMyBondsRequestQuery, useDeleteRequestBondMutation, useUpdateRequestBondMutation } from '@/lib/features/api/bondsApi';
 import BondRequestCard from './BondRequestCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import NoData from '@/components/common/NoData';
@@ -35,6 +35,7 @@ export default function BondRequestTabs() {
     searchTerm
   });
   const [deleteRequestBond, { isLoading: isDeleting }] = useDeleteRequestBondMutation();
+  const [updateRequestBond,] = useUpdateRequestBondMutation();
 
   const totalPages = bondRequests?.data?.meta?.totalPage;
 
@@ -54,8 +55,13 @@ export default function BondRequestTabs() {
     setIsDeleteModalOpen(true);
   };
 
-  const handlePause = () => {
-    toast.info("Pause functionality is not implemented yet.");
+  const handlePause = async (request) => {
+    try {
+      await updateRequestBond({ id: request._id, data: { isPause: !request.isPause } }).unwrap();
+      toast.success(`Bond request ${request.isPause ? 'unpaused' : 'paused'} successfully!`);
+    } catch (error) {
+      toast.error(error?.data?.message || 'Failed to update bond request status.');
+    }
   };
 
   const confirmDelete = async () => {
