@@ -3,17 +3,17 @@ import { usePathname, Link as NextIntlLink, useRouter as useNextRouter } from "@
 import { useTranslations } from 'next-intl';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User, Menu, LogOut, UserPlus, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, SearchIcon, Play, Heart, User2, Users, Languages } from "lucide-react";
+import { User, Menu, LogOut, UserPlus, ShoppingCart, MoonIcon, SunIcon, ChevronRight, Home, Mail, Play, Heart, User2, Users, Languages } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toggle } from "../ui/toggle";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "../ui/input";
 import { useLogoutMutation } from "@/lib/features/api/authApi";
 import { toast } from "sonner";
 import { useGetMe } from "@/hooks/useGetMe";
+import GlobalSearch from "./GlobalSearch";
 
 const Navbar = () => {
     const t = useTranslations('Navbar');
@@ -35,15 +35,13 @@ const Navbar = () => {
         { name: t('DonateUs'), href: "/donate-us", icon: UserPlus },
         { name: t('Bonds'), href: "/bonds", icon: ShoppingCart, bgColor: 'bg-gradient-to-r from-violet-400 to-purple-500 rounded-full px-2 py-1' },
         { name: t('People'), href: "/people", icon: User },
-        // { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
-        // { name: t('Institutions'), href: "/institutions", icon: User },
         { name: t('Message'), href: "/message", icon: Mail },
         { name: t('WeAreChatting'), href: "/chatting", icon: Mail, bgColor: 'bg-gradient-to-r from-blue-400 to-pink-500 rounded-full px-2 py-1' },
     ];
 
     const handleLogOut = () => {
         logout()
-        toast.success("Logout successful!");
+        toast.success(t("logoutSuccess"));
         window.location.href = "/";
     }
     const handleNavClick = () => {
@@ -66,7 +64,7 @@ const Navbar = () => {
                                 <SheetTrigger asChild>
                                     <Button variant="ghost" size="icon" className="hover:bg-brand">
                                         <Menu className="h-6 w-6 text-white" />
-                                        <span className="sr-only">Toggle navigation menu</span>
+                                        <span className="sr-only">{t('toggleNavigation')}</span>
                                     </Button>
                                 </SheetTrigger>
                                 <SheetContent side="left" className="w-[300px] p-0 border-0">
@@ -74,8 +72,8 @@ const Navbar = () => {
                                         {/* Header Section */}
                                         <div className="relative bg-gradient-to-br from-brand via-brand/90 to-brand/80 p-6 text-white">
                                             <SheetHeader className="text-left">
-                                                <SheetTitle className="sr-only">Main Menu</SheetTitle>
-                                                <SheetDescription className="sr-only">Navigation links for the website.</SheetDescription>
+                                                <SheetTitle className="sr-only">{t('mainMenu')}</SheetTitle>
+                                                <SheetDescription className="sr-only">{t('navDescription')}</SheetDescription>
                                             </SheetHeader>
 
                                             {/* User Profile Section */}
@@ -92,16 +90,16 @@ const Navbar = () => {
                                                     </Avatar>
                                                     <div>
                                                         <p className="font-semibold text-white">{userName}</p>
-                                                        <p className="text-xs text-white/80">Welcome back!</p>
+                                                        <p className="text-xs text-white/80">{t('welcomeBack')}</p>
                                                     </div>
                                                 </div>
                                             ) : (
                                                 <div className="mt-4 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
-                                                    <p className="text-white/90 text-sm mb-3">Join our community</p>
+                                                    <p className="text-white/90 text-sm mb-3">{t('joinCommunity')}</p>
                                                     <div className="flex gap-2">
                                                         <NextIntlLink href="/auth/login" onClick={handleNavClick}>
                                                             <Button size="sm" variant="secondary" className="text-xs">
-                                                                Login
+                                                                {t('login')}
                                                             </Button>
                                                         </NextIntlLink>
                                                         <NextIntlLink href="/auth/sign-up" onClick={handleNavClick}>
@@ -110,7 +108,7 @@ const Navbar = () => {
                                                                 variant="outline"
                                                                 className="text-xs border-white/30 text-white hover:bg-white/10 bg-transparent"
                                                             >
-                                                                Sign Up
+                                                                {t('signUp')}
                                                             </Button>
                                                         </NextIntlLink>
                                                     </div>
@@ -126,14 +124,7 @@ const Navbar = () => {
                                         {/* Navigation Links */}
                                         <div className="flex-1 p-6">
                                             <div className="relative mb-6">
-                                                <Input
-                                                    className="peer ps-9 placeholder:text-white placeholder:text-xs text-white border-none bg-white/5 rounded-full"
-                                                    placeholder="Search..."
-                                                    type="search"
-                                                />
-                                                <div className="text-white pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                                                    <SearchIcon size={16} />
-                                                </div>
+                                                <GlobalSearch isMobile={true} />
                                             </div>
                                             <nav className="space-y-2">
                                                 {navLinks.map((link) => {
@@ -200,14 +191,7 @@ const Navbar = () => {
 
                                 {/* Search Input */}
                                 <div className="hidden xl:block relative">
-                                    <Input
-                                        className="w-50 ps-9 placeholder:text-white placeholder:text-xs text-white border-none bg-white/5 rounded-full"
-                                        placeholder="Search..."
-                                        type="search"
-                                    />
-                                    <div className="text-white pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                                        <SearchIcon size={16} />
-                                    </div>
+                                    <GlobalSearch />
                                 </div>
                             </div>
 
@@ -238,7 +222,7 @@ const Navbar = () => {
                                                                 <User className="h-5 w-5 text-white" />
                                                             </span>
                                                         )}
-                                                        <span className="sr-only">Profile</span>
+                                                        <span className="sr-only">{t('profile')}</span>
                                                     </Button>
 
                                                     {/* Username */}
@@ -258,34 +242,34 @@ const Navbar = () => {
                                                 <NextIntlLink href="/profile">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <User2 className="mr-2 h-4 w-4" />
-                                                        <span>Profile</span>
+                                                        <span>{t('profile')}</span>
                                                     </DropdownMenuItem>
                                                 </NextIntlLink>
                                                 <DropdownMenuSeparator />
                                                 <NextIntlLink href="/friends">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <Users className="mr-2 h-4 w-4" />
-                                                        <span>Friends</span>
+                                                        <span>{t('friends')}</span>
                                                     </DropdownMenuItem>
                                                 </NextIntlLink>
                                                 <DropdownMenuSeparator />
                                                 <NextIntlLink href="/chatting/favorite">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <Heart className="mr-2 h-4 w-4" />
-                                                        <span>Favorite</span>
+                                                        <span>{t('favorite')}</span>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                 </NextIntlLink>
                                                 <NextIntlLink href="/chatting/playlist">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <Play className="mr-2 h-4 w-4" />
-                                                        <span>Playlist</span>
+                                                        <span>{t('playlist')}</span>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                 </NextIntlLink>
                                                 <DropdownMenuItem onClick={handleLogOut} className={"cursor-pointer"}>
                                                     <LogOut className="mr-2 h-4 w-4 text-red-500" />
-                                                    <span className="text-red-500">Logout</span>
+                                                    <span className="text-red-500">{t('logout')}</span>
                                                 </DropdownMenuItem>
                                             </div>
                                         ) : (
@@ -293,14 +277,14 @@ const Navbar = () => {
                                                 <NextIntlLink href="/auth/sign-up">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <UserPlus className="mr-2 h-4 w-4" />
-                                                        <span>Sign Up</span>
+                                                        <span>{t('signUp')}</span>
                                                     </DropdownMenuItem>
                                                 </NextIntlLink>
                                                 <DropdownMenuSeparator />
                                                 <NextIntlLink href="/auth/login">
                                                     <DropdownMenuItem className={"cursor-pointer"}>
                                                         <User className="mr-2 h-4 w-4" />
-                                                        <span>Login</span>
+                                                        <span>{t('login')}</span>
                                                     </DropdownMenuItem>
                                                 </NextIntlLink>
                                             </>
@@ -316,7 +300,7 @@ const Navbar = () => {
                                     onPressedChange={() =>
                                         setTheme((prev) => (prev === "dark" ? "light" : "dark"))
                                     }
-                                    aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                                    aria-label={t(theme === 'dark' ? 'switchToLight' : 'switchToDark')}
                                 >
                                     <MoonIcon
                                         size={12}
@@ -334,15 +318,15 @@ const Navbar = () => {
                                     <DropdownMenuTrigger asChild>
                                         <Button variant="outline" size="icon" className="bg-white/10 rounded-full hover:bg-white/20">
                                             <Languages className="h-6 w-6 text-white" />
-                                            <span className="sr-only">Language</span>
+                                            <span className="sr-only">{t('language')}</span>
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
                                         <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
-                                            EN
+                                            {t('en')}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => handleLanguageChange('es')}>
-                                            ES
+                                            {t('es')}
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
