@@ -22,11 +22,11 @@ import PageLayout from '@/components/layout/PageLayout';
 import Title from '@/components/ui/Title';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
-import Link from 'next/link';
 import { ArrowBigRight } from 'lucide-react';
 import MatchingBondsModal from '@/components/bonds/MatchingBondsModal';
 import CustomBreadcrumb from '@/components/common/CustomBreadcrumb';
 import { Textarea } from '@/components/ui/textarea';
+import { Link } from '@/i18n/navigation';
 
 const MapPicker = dynamic(() => import('@/components/bonds/all-bonds/my-bonds/MapPicker'), { ssr: false });
 
