@@ -4,9 +4,11 @@ import Link from "next/link"
 import { ArrowRight, Music, Music2, Music3, Music4, Headphones, Radio, Volume2, Disc3 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 
 const Hero = () => {
   const [mounted, setMounted] = useState(false)
+  const token = useSelector((state) => state.auth.accessToken);
 
   useEffect(() => {
     setMounted(true)
@@ -217,18 +219,35 @@ const Hero = () => {
 
           {/* Enhanced CTA Button */}
           <div className="flex justify-center animate-fade-in-up" style={{ animationDelay: "0.8s" }}>
-            <Link href="/chatting" passHref>
-              <Button className="group relative rounded-full md:w-50 md:h-12 md:text-lg bg-transparent border-2 border-white text-white hover:text-primary hover:bg-white dark:hover:text-primary hover:border-white transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden">
-                {/* Button background animation */}
-                <div className="absolute inset-0 bg-white/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+            {
+              token ? (
+                <Link href="/chatting" passHref>
+                  <Button className="group relative rounded-full md:w-50 md:h-12 md:text-lg bg-transparent border-2 border-white text-white hover:text-primary hover:bg-white dark:hover:text-primary hover:border-white transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden">
+                    {/* Button background animation */}
+                    <div className="absolute inset-0 bg-white/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
 
-                <span className="relative flex items-center">
-                  <Headphones className="mr-2 h-5 w-5 animate-pulse" />
-                  Explore Now
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </span>
-              </Button>
-            </Link>
+                    <span className="relative flex items-center">
+                      <Headphones className="mr-2 h-5 w-5 animate-pulse" />
+                      Explore Now
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    </span>
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/auth/login" passHref>
+                  <Button className="group relative rounded-full md:w-50 md:h-12 md:text-lg bg-transparent border-2 border-white text-white hover:text-primary hover:bg-white dark:hover:text-primary hover:border-white transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden">
+                    {/* Button background animation */}
+                    <div className="absolute inset-0 bg-white/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+
+                    <span className="relative flex items-center">
+                      <Headphones className="mr-2 h-5 w-5 animate-pulse" />
+                      Sign In
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    </span>
+                  </Button>
+                </Link>
+              )}
+
           </div>
         </div>
       </div>
