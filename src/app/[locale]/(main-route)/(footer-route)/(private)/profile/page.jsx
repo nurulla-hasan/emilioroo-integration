@@ -21,6 +21,7 @@ import Title2 from "@/components/ui/Title2";
 import { getInitials, fallbackAvatar2 } from "@/lib/utils";
 import { Link as LinkIcon, MessageSquare, MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
+import EditBioModal from "@/components/profile/modal/EditBioModal";
 
 const RelativeColumn = ({ relatives, title, handleEdit, handleDelete, isEditable }) => {
     const t = useTranslations('ProfilePage');
@@ -76,6 +77,7 @@ const ProfilePage = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedRelative, setSelectedRelative] = useState(null);
+    const [isEditBioModalOpen, setIsEditBioModalOpen] = useState(false);
 
     const { data: profileData, isLoading: isProfileLoading, isError: isProfileError } = useGetMyProfileQuery();
     const { data: skillsData, isLoading: isSkillsLoading, isError: isSkillsError } = useGetSkillsQuery();
@@ -137,8 +139,8 @@ const ProfilePage = () => {
         <div className="bg-gradient-to-r from-green-200 to-indigo-300  dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 pb-5">
             <div>
                 <Card className="rounded-none overflow-hidden shadow-none bg-transparent border-none"> 
-                    <ProfileHeader user={user} userSkills={userSkills} mother={mother} father={father} friends={friends} isEditable={true} />
-                    <CardContent className="p-4 xl:p-2 xl:w-[1800px] md:mx-auto">
+                    <ProfileHeader user={user} userSkills={userSkills} mother={mother} father={father} friends={friends} isEditable={true} onEditBio={() => setIsEditBioModalOpen(true)} />
+                    <CardContent className="p-4 xl:p-2 xl:w-[1400px] md:mx-auto">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
                             <div className="md:col-span-1">
                                 <Title2>{t('relativesAndRelationships')}</Title2>
@@ -164,6 +166,7 @@ const ProfilePage = () => {
                 </Card>
                 <AddRelativeModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
                 <EditRelativeModal isOpen={isEditModalOpen} onOpenChange={setIsEditModalOpen} relative={selectedRelative} />
+                <EditBioModal isOpen={isEditBioModalOpen} onOpenChange={setIsEditBioModalOpen} bio={user.bio} />
                 <ConfirmationModal
                     isOpen={isDeleteModalOpen}
                     onOpenChange={setIsDeleteModalOpen}

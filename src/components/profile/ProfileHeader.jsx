@@ -10,8 +10,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Link } from "@/i18n/navigation";
 import { fallbackAvatar, getInitials } from "@/lib/utils";
 import { ReportUserModal } from "./ReportUserModal";
+import { useTranslations } from "next-intl";
 
-const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable = false }) => {
+const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable = false, onEditBio }) => {
+    const t = useTranslations('ProfilePage');
     const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
     return (
@@ -30,7 +32,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                                     <AvatarFallback>{getInitials(mother.relative?.name)}</AvatarFallback>
                                 </Avatar>
                                 <span className="text-sm font-semibold mt-1">{mother.relative?.name}</span>
-                                <span className="text-xs text-muted-foreground mt-1">Mother</span>
+                                <span className="text-xs text-muted-foreground mt-1">{t('mother')}</span>
                             </div>
                         )}
                         {/* Father Avatar */}
@@ -41,7 +43,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                                     <AvatarFallback>{getInitials(father.relative?.name)}</AvatarFallback>
                                 </Avatar>
                                 <span className="text-sm font-semibold mt-1">{father.relative?.name}</span>
-                                <span className="text-xs text-muted-foreground mt-1">Father</span>
+                                <span className="text-xs text-muted-foreground mt-1">{t('father')}</span>
                             </div>
                         )}
                     </div>
@@ -71,7 +73,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        <p>Report User</p>
+                                        <p>{t('reportUser')}</p>
                                     </TooltipContent>
                                 </Tooltip>
                             )}
@@ -83,9 +85,14 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                                 </Badge>
                             ))}
                         </div>
-                        <p className="text-sm text-muted-foreground mt-2">{friends.length} Friends</p>
+                        <p className="text-sm text-muted-foreground mt-2">{friends.length} {t('friends')}</p>
                         <div className="relative group max-w-4xl mx-auto mt-4">
                             <p className="text-sm text-muted-foreground text-center">{user.bio}</p>
+                            {isEditable && (
+                                <Button variant="ghost" size="icon" className="absolute -bottom-8" onClick={onEditBio}>
+                                    <Edit className="h-4 w-4" />
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </div>

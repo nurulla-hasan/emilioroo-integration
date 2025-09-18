@@ -462,7 +462,19 @@
     "mothersSide": "Mother's Side",
     "areYouSure": "Are you sure?",
     "deleteRelativeConfirmation": "This action cannot be undone. This will permanently delete the relative.",
-    "confirmDelete": "Delete"
+    "confirmDelete": "Delete",
+    "bioUpdatedSuccess": "Bio updated successfully",
+    "failedToUpdateBio": "Failed to update bio",
+    "editBio": "Edit Bio",
+    "editBioDescription": "Make changes to your bio here. Click save when you're done.",
+    "bio": "Bio",
+    "tellUsAboutYourself": "Tell us about yourself",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "mother": "Mother",
+    "father": "Father",
+    "reportUser": "Report User",
+    "friends": "Friends"
   }
   
 }

@@ -462,6 +462,18 @@
     "mothersSide": "Lado Materno",
     "areYouSure": "¿Estás seguro?",
     "deleteRelativeConfirmation": "Esta acción no se puede deshacer. Esto eliminará permanentemente al pariente.",
-    "confirmDelete": "Eliminar"
+    "confirmDelete": "Eliminar",
+    "bioUpdatedSuccess": "Biografía actualizada con éxito",
+    "failedToUpdateBio": "Error al actualizar la biografía",
+    "editBio": "Editar Biografía",
+    "editBioDescription": "Realiza cambios en tu biografía aquí. Haz clic en guardar cuando hayas terminado.",
+    "bio": "Biografía",
+    "tellUsAboutYourself": "Cuéntanos sobre ti",
+    "cancel": "Cancelar",
+    "saveChanges": "Guardar Cambios",
+    "mother": "Madre",
+    "father": "Padre",
+    "reportUser": "Reportar usuario",
+    "friends": "Amigos"
   }
 }
