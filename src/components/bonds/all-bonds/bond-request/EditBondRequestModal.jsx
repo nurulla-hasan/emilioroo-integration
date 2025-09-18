@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useTranslations } from 'next-intl';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,24 +30,26 @@ import {
 
 const MapPicker = dynamic(() => import('../my-bonds/MapPicker'), { ssr: false });
 
-const formSchema = z.object({
-  offer: z.string().min(1, { message: 'Offer is required.' }),
-  want: z.string().min(1, { message: 'Want is required.' }),
-  radius: z.coerce.number().min(1, { message: 'Radius must be a positive number.' }),
-  location: z
-    .object({
-      lat: z.number(),
-      lng: z.number(),
-    })
-    .nullable()
-    .refine((val) => val !== null, { message: 'Please select a location from the map.' }),
-});
+const formSchema = (t) =>
+  z.object({
+    offer: z.string().min(1, { message: t('offerRequired') }),
+    want: z.string().min(1, { message: t('wantRequired') }),
+    radius: z.coerce.number().min(1, { message: t('radiusPositive') }),
+    location: z
+      .object({
+        lat: z.number(),
+        lng: z.number(),
+      })
+      .nullable()
+      .refine((val) => val !== null, { message: t('locationRequired') }),
+  });
 
 export default function EditBondRequestModal({ isOpen, onOpenChange, request }) {
+  const t = useTranslations('EditBondRequestModal');
   const [updateRequestBond, { isLoading }] = useUpdateRequestBondMutation();
 
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema(t)),
     mode: 'onChange',
   });
 
@@ -80,10 +83,10 @@ export default function EditBondRequestModal({ isOpen, onOpenChange, request }) 
 
     try {
       await updateRequestBond({ id: request._id, data: updatedBondRequest }).unwrap();
-      toast.success('Bond request updated successfully!');
+      toast.success(t('updateSuccess'));
       onOpenChange(false);
     } catch (error) {
-      toast.error(error?.data?.message || 'Failed to update bond request.');
+      toast.error(error?.data?.message || t('updateError'));
     }
   };
 
@@ -91,7 +94,7 @@ export default function EditBondRequestModal({ isOpen, onOpenChange, request }) 
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit Bond Request</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
@@ -101,7 +104,7 @@ export default function EditBondRequestModal({ isOpen, onOpenChange, request }) 
                 name="offer"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Offer</FormLabel>
+                    <FormLabel>{t('offerLabel')}</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -118,7 +121,7 @@ export default function EditBondRequestModal({ isOpen, onOpenChange, request }) 
                 name="want"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Want</FormLabel>
+                    <FormLabel>{t('wantLabel')}</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -132,7 +135,7 @@ export default function EditBondRequestModal({ isOpen, onOpenChange, request }) 
               />
             </div>
             <FormItem>
-              <FormLabel>Select Location</FormLabel>
+              <FormLabel>{t('locationLabel')}</FormLabel>
               <FormControl>
                 <div className="rounded-md overflow-hidden border h-64">
                   {isOpen && (
@@ -150,7 +153,7 @@ export default function EditBondRequestModal({ isOpen, onOpenChange, request }) 
               name="radius"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Radius (km)</FormLabel>
+                  <FormLabel>{t('radiusLabel')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -166,11 +169,11 @@ export default function EditBondRequestModal({ isOpen, onOpenChange, request }) 
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="secondary">
-                  Cancel
+                  {t('cancel')}
                 </Button>
               </DialogClose>
               <Button loading={isLoading} type="submit" disabled={isLoading}>
-                Save Changes
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

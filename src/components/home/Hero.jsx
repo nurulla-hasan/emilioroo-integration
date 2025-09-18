@@ -5,8 +5,10 @@ import { ArrowRight, Music, Music2, Music3, Music4, Headphones, Radio, Volume2, 
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
+import { useTranslations } from "use-intl"
 
 const Hero = () => {
+  const t = useTranslations('Hero')
   const [mounted, setMounted] = useState(false)
   const token = useSelector((state) => state.auth.accessToken);
 
@@ -214,7 +216,7 @@ const Hero = () => {
             className="text-sm sm:text-base md:text-lg text-white mb-8 opacity-90 drop-shadow-lg animate-fade-in-up"
             style={{ animationDelay: "0.5s" }}
           >
-            We are what we do together
+            {t('title')}
           </p>
 
           {/* Enhanced CTA Button */}
@@ -228,7 +230,7 @@ const Hero = () => {
 
                     <span className="relative flex items-center">
                       <Headphones className="mr-2 h-5 w-5 animate-pulse" />
-                      Explore Now
+                      {t('explore')}
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                     </span>
                   </Button>
@@ -241,7 +243,7 @@ const Hero = () => {
 
                     <span className="relative flex items-center">
                       <Headphones className="mr-2 h-5 w-5 animate-pulse" />
-                      Sign In
+                      {t('signIn')}
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                     </span>
                   </Button>

@@ -34,7 +34,8 @@
   },
   "Hero": {
     "title": "We are what we do together",
-    "explore": "Explore Now"
+    "explore": "Explore Now",
+    "signIn": "Sign In"
   },
   "DonateUs": {
     "supportCommunity": "Support the Community",
@@ -496,6 +497,20 @@
     "father": "Father",
     "reportUser": "Report User",
     "friends": "Friends"
+  },
+  "EditBondRequestModal": {
+    "offerRequired": "Offer is required.",
+    "wantRequired": "Want is required.",
+    "radiusPositive": "Radius must be a positive number.",
+    "locationRequired": "Please select a location from the map.",
+    "updateSuccess": "Bond request updated successfully!",
+    "updateError": "Failed to update bond request.",
+    "title": "Edit Bond Request",
+    "offerLabel": "Offer",
+    "wantLabel": "Want",
+    "locationLabel": "Select Location",
+    "radiusLabel": "Radius (km)",
+    "cancel": "Cancel",
+    "save": "Save Changes"
   }
-  
 }

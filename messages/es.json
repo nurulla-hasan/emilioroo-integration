@@ -34,7 +34,8 @@
   },
   "Hero": {
     "title": "Somos lo que hacemos juntos",
-    "explore": "Explorar"
+    "explore": "Explorar",
+    "signIn": "Iniciar sesión"
   },
   "DonateUs": {
     "supportCommunity": "Apoya a la Comunidad",
@@ -496,5 +497,20 @@
     "father": "Padre",
     "reportUser": "Reportar usuario",
     "friends": "Amigos"
+  },
+  "EditBondRequestModal": {
+    "offerRequired": "La oferta es obligatoria.",
+    "wantRequired": "El deseo es obligatorio.",
+    "radiusPositive": "El radio debe ser un número positivo.",
+    "locationRequired": "Por favor, seleccione una ubicación en el mapa.",
+    "updateSuccess": "¡Solicitud de bono actualizada con éxito!",
+    "updateError": "Error al actualizar la solicitud de bono.",
+    "title": "Editar Solicitud de Bono",
+    "offerLabel": "Oferta",
+    "wantLabel": "Deseo",
+    "locationLabel": "Seleccionar Ubicación",
+    "radiusLabel": "Radio (km)",
+    "cancel": "Cancelar",
+    "save": "Guardar Cambios"
   }
 }
