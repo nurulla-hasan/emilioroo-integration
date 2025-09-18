@@ -9,11 +9,12 @@ import { Slider } from "@/components/ui/slider"
 import Image from "next/image"
 import useFavoriteToggle from "@/hooks/useFavoriteToggle"
 import useGetFavoriteIds from "@/hooks/useGetFavoriteIds"
+import { getAudio } from "@/lib/audioPlayer"
 
 const GlobalAudioPlayer = () => {
     const dispatch = useDispatch()
     const { currentAudio, isPlaying, progress } = useSelector((state) => state.audio)
-    const audioRef = useRef(null)
+    const audioRef = useRef(getAudio())
     const [volume, setVolume] = useState(1)
     const [isMuted, setIsMuted] = useState(false)
 
@@ -25,40 +26,59 @@ const GlobalAudioPlayer = () => {
     };
 
     useEffect(() => {
-        dispatch(pauseAudio())
-    }, [dispatch])
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        const handleTimeUpdate = () => {
+            if (audio.duration) {
+                const newProgress = (audio.currentTime / audio.duration) * 100
+                dispatch(updateProgress(newProgress))
+            }
+        };
+
+        const handleAudioEnded = () => {
+            dispatch(pauseAudio())
+        };
+
+        const handlePlay = () => dispatch(playAudio(currentAudio));
+        const handlePause = () => dispatch(pauseAudio());
+
+        audio.addEventListener("timeupdate", handleTimeUpdate);
+        audio.addEventListener("ended", handleAudioEnded);
+        audio.addEventListener("play", handlePlay);
+        audio.addEventListener("pause", handlePause);
+
+        return () => {
+            audio.removeEventListener("timeupdate", handleTimeUpdate);
+            audio.removeEventListener("ended", handleAudioEnded);
+            audio.removeEventListener("play", handlePlay);
+            audio.removeEventListener("pause", handlePause);
+        };
+    }, [dispatch, currentAudio]);
+
 
     useEffect(() => {
-        if (audioRef.current) {
-            if (currentAudio) {
-                if (audioRef.current.src !== currentAudio.audio_url) {
-                    audioRef.current.src = currentAudio.audio_url
-                    audioRef.current.load()
-                }
-                audioRef.current.volume = isMuted ? 0 : volume
+        const audio = audioRef.current;
+        if (!audio) return;
 
-                if (isPlaying) {
-                    audioRef.current.play().catch((e) => console.log("Error playing audio:", e))
-                } else {
-                    audioRef.current.pause()
-                }
-            } else {
-                audioRef.current.pause()
-                audioRef.current.src = ""
+        if (currentAudio) {
+            if (audio.src !== currentAudio.audio_url) {
+                audio.src = currentAudio.audio_url
+                audio.load()
             }
+            audio.volume = isMuted ? 0 : volume
+
+            if (isPlaying) {
+                audio.play().catch((e) => console.log("Error playing audio:", e))
+            } else {
+                audio.pause()
+            }
+        } else {
+            audio.pause()
+            audio.src = ""
         }
     }, [currentAudio, isPlaying, volume, isMuted])
 
-    const handleTimeUpdate = useCallback(() => {
-        if (audioRef.current && audioRef.current.duration) {
-            const newProgress = (audioRef.current.currentTime / audioRef.current.duration) * 100
-            dispatch(updateProgress(newProgress))
-        }
-    }, [dispatch])
-
-    const handleAudioEnded = useCallback(() => {
-        dispatch(pauseAudio())
-    }, [dispatch])
 
     const handlePlayPauseClick = () => {
         if (isPlaying) {
@@ -71,8 +91,9 @@ const GlobalAudioPlayer = () => {
     }
 
     const handleProgressChange = (value) => {
-        if (audioRef.current && audioRef.current.duration) {
-            audioRef.current.currentTime = (value[0] / 100) * audioRef.current.duration
+        const audio = audioRef.current;
+        if (audio && audio.duration) {
+            audio.currentTime = (value[0] / 100) * audio.duration
             dispatch(updateProgress(value[0]))
         }
     }
@@ -100,15 +121,6 @@ const GlobalAudioPlayer = () => {
                 className="w-full h-1 rounded-none [&>span:first-child]:rounded-none [&>span:first-child]:h-1 [&>span:first-child]:bg-primary"
             />
 
-            <audio
-                ref={audioRef}
-                onTimeUpdate={handleTimeUpdate}
-                onEnded={handleAudioEnded}
-                onLoadedMetadata={handleTimeUpdate}
-                onPlay={() => dispatch(playAudio(currentAudio))}
-                onPause={() => dispatch(pauseAudio())}
-            />
-
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-20">
                     {/* Left: Audio Info */}
@@ -131,12 +143,6 @@ const GlobalAudioPlayer = () => {
 
                     {/* Center: Controls */}
                     <div className="flex items-center gap-2 md:gap-4">
-                        {/* <Button variant="ghost" size="icon" className="hidden md:inline-flex">
-                            <Shuffle className="h-5 w-5" />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                            <SkipBack className="h-5 w-5" />
-                        </Button> */}
                         <Button
                             variant="default"
                             size="icon"
@@ -145,12 +151,6 @@ const GlobalAudioPlayer = () => {
                         >
                             {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-1" />}
                         </Button>
-                        {/* <Button variant="ghost" size="icon">
-                            <SkipForward className="h-5 w-5" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="hidden md:inline-flex">
-                            <Repeat className="h-5 w-5" />
-                        </Button> */}
                     </div>
 
                     {/* Right: Volume & Actions */}
