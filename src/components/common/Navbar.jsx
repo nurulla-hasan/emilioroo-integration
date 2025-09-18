@@ -33,7 +33,7 @@ const Navbar = () => {
     const navLinks = [
         { name: t('Home'), href: "/", icon: Home },
         { name: t('DonateUs'), href: "/donate-us", icon: UserPlus },
-        { name: t('Bonds'), href: "/bonds", icon: ShoppingCart, bgColor: 'bg-gradient-to-r from-violet-400 to-purple-500 rounded-full px-2 py-1'},
+        { name: t('Bonds'), href: "/bonds", icon: ShoppingCart, bgColor: 'bg-gradient-to-r from-violet-400 to-purple-500 rounded-full px-2 py-1' },
         { name: t('People'), href: "/people", icon: User },
         // { name: t('Objects'), href: "/objects", icon: ShoppingBasket },
         // { name: t('Institutions'), href: "/institutions", icon: User },
@@ -185,7 +185,7 @@ const Navbar = () => {
 
                             <div className="flex items-center gap-8">
                                 {/* Desktop Navigation Links */}
-                                <div className="hidden xl:flex items-center gap-8 justify-evenly">
+                                <div className="hidden xl:flex items-center gap-12">
                                     {navLinks.map((link) => (
                                         <NextIntlLink
                                             scroll={false}
@@ -217,37 +217,39 @@ const Navbar = () => {
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <div className="flex gap-3 items-center cursor-pointer">
-                                            <Button variant="ghost" size="icon" className="hover:bg-brand">
-                                                {isLoggedIn ? (
-                                                    <Avatar className="h-10 w-10 border-2 border-white/30">
-                                                        <AvatarImage src={profile?.data?.profile_image} alt={userName} />
-                                                        <AvatarFallback className="bg-white/20 text-white font-semibold text-xs">
-                                                            {userName
-                                                                ?.split(" ")
-                                                                .map((n) => n[0])
-                                                                .join("")}
-                                                        </AvatarFallback>
-                                                    </Avatar>
-                                                ) : !profileLoading && (
-                                                    <span className="flex p-2 items-center justify-center rounded-full bg-white/10">
-                                                        <User className="h-5 w-5 text-white" />
-                                                    </span>
-                                                )}
-                                                <span className="sr-only">Profile</span>
-                                            </Button>
+                                            {/* Loading state */}
                                             {profileLoading ? (
-                                                <div className="flex items-center gap-1">
-                                                    <Skeleton className="h-4 w-23" />
-                                                    <Skeleton className="h-4 w-4" />
+                                                <div className="flex items-center gap-2">
+                                                    <Skeleton className="h-10 w-10 rounded-full dark:bg-gray-700" />
+                                                    <Skeleton className="h-4 w-20 dark:bg-gray-700" />
                                                 </div>
-                                            ) : isLoggedIn && (
-                                                <div className="flex items-center gap-1">
-                                                    <span className="hidden md:block text-white text-sm font-medium">{userName}</span>
-                                                    {/* <ChevronDown className="hidden md:block h-4 w-4 text-white" /> */}
-                                                </div>
+                                            ) : (
+                                                <>
+                                                    <Button variant="ghost" size="icon" className="hover:bg-brand">
+                                                        {isLoggedIn ? (
+                                                            <Avatar className="h-10 w-10 border-2 border-white/30">
+                                                                <AvatarImage src={profile?.data?.profile_image} alt={userName} />
+                                                                <AvatarFallback className="bg-white/20 text-white font-semibold text-xs">
+                                                                    {userName?.split(" ").map((n) => n[0]).join("")}
+                                                                </AvatarFallback>
+                                                            </Avatar>
+                                                        ) : (
+                                                            <span className="flex p-2 items-center justify-center rounded-full bg-white/10">
+                                                                <User className="h-5 w-5 text-white" />
+                                                            </span>
+                                                        )}
+                                                        <span className="sr-only">Profile</span>
+                                                    </Button>
+
+                                                    {/* Username */}
+                                                    {isLoggedIn && (
+                                                        <span className="hidden md:block text-white text-sm font-medium">{userName}</span>
+                                                    )}
+                                                </>
                                             )}
                                         </div>
                                     </DropdownMenuTrigger>
+
                                     <DropdownMenuContent className="md:w-48">
                                         {isLoggedIn ? (
                                             <div>
