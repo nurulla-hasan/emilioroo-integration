@@ -13,8 +13,10 @@ import LoadFailed from "../common/LoadFailed";
 import { Skeleton } from "../ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatDate } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export const MediaPanel = ({ activeConversation }) => {
+    const t = useTranslations('Message');
     const dispatch = useDispatch();
     const id = activeConversation?.conversationId;
 
@@ -60,7 +62,7 @@ export const MediaPanel = ({ activeConversation }) => {
         if (!id) {
             return (
                 <div className="text-center text-muted-foreground h-[50vh] flex items-center justify-center">
-                    <p>Please select a conversation to see media</p>
+                    <p>{t('selectConversationForMedia')}</p>
                 </div>
             );
         }
@@ -76,13 +78,13 @@ export const MediaPanel = ({ activeConversation }) => {
         }
 
         if (isError && allUrls.length === 0) {
-            return <LoadFailed msg="Failed to load media" />;
+            return <LoadFailed msg={t('failedToLoadMedia')} />;
         }
 
         if (allUrls.length === 0 && !isFetching) {
             return (
                 <div className="text-center text-muted-foreground">
-                    <NoData msg="No media shared in this conversation" />
+                    <NoData msg={t('noMediaShared')} />
                 </div>
             );
         }
@@ -106,7 +108,7 @@ export const MediaPanel = ({ activeConversation }) => {
                         </div>
                     ) : (
                         <div className="text-center text-muted-foreground pt-10">
-                            <NoData msg="No images found" />
+                            <NoData msg={t('noImagesFound')} />
                         </div>
                     )}
                 </TabsContent>
@@ -138,13 +140,13 @@ export const MediaPanel = ({ activeConversation }) => {
                         </div>
                     ) : (
                         <div className="text-center text-muted-foreground pt-10">
-                            <NoData msg="No PDFs found" />
+                            <NoData msg={t('noPdfsFound')} />
                         </div>
                     )}
                 </TabsContent>
 
                 {isFetching && page > 1 && (
-                    <div className="text-center p-4 col-span-full">Loading more...</div>
+                    <div className="text-center p-4 col-span-full">{t('loadingMore')}</div>
                 )}
             </>
         );
@@ -153,18 +155,18 @@ export const MediaPanel = ({ activeConversation }) => {
     return (
         <div className="w-full bg-card flex-col h-full flex">
             <div className="flex justify-between items-center p-5.5 border-b">
-                <h3 className="text-lg font-semibold">Media</h3>
+                <h3 className="text-lg font-semibold">{t('media')}</h3>
             </div>
 
             <Tabs defaultValue="images" className="flex-1 h-96 flex flex-col">
                 <TabsList className="w-full">
                     <TabsTrigger value="images" >
                         <ImageIcon className="w-4 h-4" />
-                        Images
+                        {t('images')}
                     </TabsTrigger>
                     <TabsTrigger value="pdfs" className="flex items-center gap-2">
                         <FileText className="w-4 h-4" />
-                        PDFs
+                        {t('pdfs')}
                     </TabsTrigger>
                 </TabsList>
 
@@ -178,7 +180,7 @@ export const MediaPanel = ({ activeConversation }) => {
             <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
                 <DialogContent className="max-w-3xl w-full">
                     <DialogHeader>
-                        <DialogTitle>Image Preview</DialogTitle>
+                        <DialogTitle>{t('imagePreview')}</DialogTitle>
                     </DialogHeader>
                     <div className="relative w-full h-[60vh]">
                         {previewImage && (

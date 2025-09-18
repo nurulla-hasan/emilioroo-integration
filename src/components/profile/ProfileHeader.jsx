@@ -11,7 +11,7 @@ import { Link } from "@/i18n/navigation";
 import { fallbackAvatar, getInitials } from "@/lib/utils";
 import { ReportUserModal } from "./ReportUserModal";
 
-const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable = false, children }) => {
+const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable = false }) => {
     const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
     return (
@@ -24,7 +24,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                     {/* Mother Avatar */}
                     <div className="max-w-[1400px] mx-auto relative">
                         {mother && (
-                            <div className="absolute -bottom-16 left-2 flex flex-col items-center">
+                            <div className="absolute top-4 left-2 flex flex-col items-center">
                                 <Avatar className="md:w-16 md:h-16 w-12 h-12 border-2 border-white">
                                     <AvatarImage src={mother.relative?.profile_image || fallbackAvatar("FEMALE")} />
                                     <AvatarFallback>{getInitials(mother.relative?.name)}</AvatarFallback>
@@ -35,7 +35,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                         )}
                         {/* Father Avatar */}
                         {father && (
-                            <div className="absolute -bottom-16 right-2 flex flex-col items-center">
+                            <div className="absolute top-4 right-2 flex flex-col items-center">
                                 <Avatar className="md:w-16 md:h-16 w-12 h-12 border-2 border-white">
                                     <AvatarImage src={father.relative?.profile_image || fallbackAvatar("MALE")} />
                                     <AvatarFallback>{getInitials(father.relative?.name)}</AvatarFallback>
@@ -84,7 +84,9 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                             ))}
                         </div>
                         <p className="text-sm text-muted-foreground mt-2">{friends.length} Friends</p>
-                        {children}
+                        <div className="relative group max-w-4xl mx-auto mt-4">
+                            <p className="text-sm text-muted-foreground text-center">{user.bio}</p>
+                        </div>
                     </div>
                 </div>
             </div>

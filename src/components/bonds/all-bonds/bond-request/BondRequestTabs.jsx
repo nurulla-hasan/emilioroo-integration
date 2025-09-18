@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 
 export default function BondRequestTabs() {
   const t = useTranslations('Bonds');
+  const tabsT = useTranslations('BondRequestTabs');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -58,9 +59,9 @@ export default function BondRequestTabs() {
   const handlePause = async (request) => {
     try {
       await updateRequestBond({ id: request._id, data: { isPause: !request.isPause } }).unwrap();
-      toast.success(`Bond request ${request.isPause ? 'unpaused' : 'paused'} successfully!`);
+      toast.success(request.isPause ? tabsT('requestUnpaused') : tabsT('requestPaused'));
     } catch (error) {
-      toast.error(error?.data?.message || 'Failed to update bond request status.');
+      toast.error(error?.data?.message || tabsT('failedToUpdateStatus'));
     }
   };
 
@@ -68,11 +69,11 @@ export default function BondRequestTabs() {
     if (!selectedRequest) return;
     try {
       await deleteRequestBond(selectedRequest._id).unwrap();
-      toast.success("Bond request deleted successfully!");
+      toast.success(tabsT("requestDeleted"));
       setIsDeleteModalOpen(false);
       setSelectedRequest(null);
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to delete bond request.");
+      toast.error(error?.data?.message || tabsT("failedToDelete"));
     }
   };
 
@@ -82,7 +83,7 @@ export default function BondRequestTabs() {
         <Title>{t('bondRequests')}</Title>
         <div className="flex items-center gap-2">
           <Input
-            placeholder="Search..."
+            placeholder={tabsT('search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="md:w-64"
@@ -98,7 +99,7 @@ export default function BondRequestTabs() {
             ))}
           </div>
         ) : isError ? (
-          <LoadFailed msg="Failed to fetch bond requests." />
+          <LoadFailed msg={tabsT('failedToFetch')} />
         ) : bondRequests?.data?.result?.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {bondRequests.data.result.map((request) => (
@@ -113,7 +114,7 @@ export default function BondRequestTabs() {
             ))}
           </div>
         ) : (
-          <NoData msg="No bond requests found." />
+          <NoData msg={tabsT('noRequestsFound')} />
         )}
       </div>
 
@@ -142,14 +143,13 @@ export default function BondRequestTabs() {
           <ConfirmationModal
             isOpen={isDeleteModalOpen}
             onOpenChange={setIsDeleteModalOpen}
-            title="Are you sure?"
-            description="This will permanently delete this bond request. This action cannot be undone."
+            title={tabsT('areYouSure')}
+            description={tabsT('deleteDescription')}
             onConfirm={confirmDelete}
             loading={isDeleting}
-            confirmText="Delete"
+            confirmText={tabsT('delete')}
           />
-        </>
-      )}
+        </>      )}
     </>
   );
 }

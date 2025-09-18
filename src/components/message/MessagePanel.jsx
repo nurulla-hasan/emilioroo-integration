@@ -19,6 +19,7 @@ import { useDeleteUploadedFileMutation, useUploadFileMutation } from "@/lib/feat
 import { useMarkAsCompletedMutation } from "@/lib/features/api/bondsApi";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
 import RatingModal from '../bonds/RatingModal';
+import { useTranslations } from "next-intl";
 
 export const MessagePanel = ({
     conversation,
@@ -35,6 +36,7 @@ export const MessagePanel = ({
     isCompletedByYou,
     isBondLinkLoading
 }) => {
+    const t = useTranslations('Message');
     const messagesEndRef = useRef(null);
     const scrollViewportRef = useRef(null);
     const prevScrollHeightRef = useRef(null);
@@ -58,11 +60,11 @@ export const MessagePanel = ({
 
         try {
             await markAsCompleted(conversation.bondLinkId).unwrap();
-            toast.success("Bond link marked as completed!");
+            toast.success(t("bondCompletedSuccess"));
             dispatch(baseApi.util.invalidateTags(['BONDS']));
             setIsRatingModalOpen(true);
         } catch (error) {
-            toast.error(error?.data?.message || "Failed to mark as completed.");
+            toast.error(error?.data?.message || t("failedToMarkCompleted"));
         } finally {
             setIsConfirmationModalOpen(false);
         }
@@ -150,7 +152,7 @@ export const MessagePanel = ({
                 }));
             }
         } catch (error) {
-            toast.error(error?.data?.message || 'Failed to upload files.');
+            toast.error(error?.data?.message || t('failedToUploadFiles'));
             setStagedFiles(prev => prev.map(stagedFile =>
                 newStagedFiles.some(nf => nf.file === stagedFile.file) ? { ...stagedFile, status: 'error' } : stagedFile
             ));
@@ -172,7 +174,7 @@ export const MessagePanel = ({
                 await deleteUploadedFile({ files: [fileToRemove.url] }).unwrap();
                 // toast.success('File deleted from server.');
             } catch (error) {
-                toast.error(error?.data?.message || 'Failed to delete file from server.');
+                toast.error(error?.data?.message || t('failedToDeleteFile'));
             }
         }
     };
@@ -193,11 +195,11 @@ export const MessagePanel = ({
             <ConfirmationModal
                 isOpen={isConfirmationModalOpen}
                 onOpenChange={setIsConfirmationModalOpen}
-                title="Mark as Completed"
-                description="Are you sure you want to mark this bond as completed? This action cannot be undone."
+                title={t("markAsCompleted")}
+                description={t("markAsCompletedDescription")}
                 onConfirm={onConfirmMarkAsCompleted}
                 loading={isMarkingAsCompleted}
-                confirmText="Confirm"
+                confirmText={t("confirm")}
             />
             <RatingModal
                 isOpen={isRatingModalOpen}
@@ -228,11 +230,11 @@ export const MessagePanel = ({
                                 ) : isCompletedByYou ? (
                                     <Button className="bg-green-800 text-white cursor-default">
                                         <CheckCheck />
-                                        Completed by you
+                                        {t('completedByYou')}
                                     </Button>
                                 ) : (
                                     <Button onClick={handleMarkAsCompleted} disabled={isMarkingAsCompleted}>
-                                        {isMarkingAsCompleted ? 'Marking...' : 'Mark as completed'}
+                                        {isMarkingAsCompleted ? t('marking') : t('markAsCompleted')}
                                     </Button>
                                 )
                             )}
@@ -247,7 +249,7 @@ export const MessagePanel = ({
                         <MessagePanelSkeleton />
                     ) : isMessagesError ? (
                         <div className="h-full w-full flex items-center justify-center">
-                            <LoadFailed msg="Failed to load messages." />
+                            <LoadFailed msg={t("failedToLoadMessages")} />
                         </div>
                     ) : messages && messages.length > 0 ? (
                         <>
@@ -257,7 +259,7 @@ export const MessagePanel = ({
                     ) : (
                         <div className="h-[70vh] w-full flex flex-col items-center justify-center text-muted-foreground gap-2">
                             <MessageSquareDashed className="h-6 w-6" />
-                            <p>No messages yet. Be the first to say hi!</p>
+                            <p>{t('noMessagesYet')}</p>
                         </div>
                     )}
                 </ScrollArea>
@@ -271,17 +273,17 @@ export const MessagePanel = ({
                                     ) : stagedFile.file && stagedFile.file.type === 'application/pdf' ? (
                                         <div className="flex flex-col items-center text-center p-1">
                                             <FileText />
-                                            <span className="text-xs truncate w-full mt-1">PDF</span>
+                                            <span className="text-xs truncate w-full mt-1">{t('pdf')}</span>
                                         </div>
                                     ) : null}
                                     {(stagedFile.status === 'pending' || stagedFile.status === 'uploading') && (
                                         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                            <span className="text-white text-xs">Uploading...</span>
+                                            <span className="text-white text-xs">{t('uploading')}</span>
                                         </div>
                                     )}
                                     {stagedFile.status === 'error' && (
                                         <div className="absolute inset-0 bg-red-500/50 flex items-center justify-center">
-                                            <span className="text-white text-xs">Error</span>
+                                            <span className="text-white text-xs">{t('error')}</span>
                                         </div>
                                     )}
                                     <button onClick={() => removeStagedFile(stagedFile)} className="absolute top-1 right-1 bg-gray-800/70 text-white rounded-full p-1 cursor-pointer">
@@ -303,7 +305,7 @@ export const MessagePanel = ({
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        <p>Completed by you</p>
+                                        <p>{t('completedByYou')}</p>
                                     </TooltipContent>
                                 </Tooltip>
                             ) : (
@@ -312,7 +314,7 @@ export const MessagePanel = ({
                                         <Button className="lg:hidden" variant="ghost" onClick={handleMarkAsCompleted} disabled={isMarkingAsCompleted}><CheckCheck /></Button>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        <p>Mark as completed</p>
+                                        <p>{t('markAsCompleted')}</p>
                                     </TooltipContent>
                                 </Tooltip>
                             )
@@ -330,7 +332,8 @@ export const MessagePanel = ({
                         </Button>
                         <div className="flex-1 relative">
                             <Input
-                                placeholder="Aa" value={newMessage}
+                                placeholder={t('messagePlaceholder')}
+                                value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleSendClick()}
                                 className="rounded-full bg-muted"

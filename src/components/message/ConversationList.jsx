@@ -7,23 +7,25 @@ import ConversationListItem from "./ConversationListItem";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { CreateGroupModal } from "./CreateGroupModal";
+import { useTranslations } from "next-intl";
 
 
 
 export const ConversationList = ({ conversations, activeConversation, onConversationClick, searchTerm, setSearchTerm }) => {
+    const t = useTranslations('Message');
     const [isModalOpen, setIsModalOpen] = useState(false);
     return (
         <div className="bg-card border-r flex-col h-full flex w-full">
             <div className="p-4 border-b">
                 <div className="flex items-start justify-between">
-                    <h1 className="text-2xl font-bold">Chats</h1>
+                    <h1 className="text-2xl font-bold">{t('chats')}</h1>
                     <Button variant="outline" className="" onClick={() => setIsModalOpen(true)}>
-                        <Plus />Create Group
+                        <Plus />{t('createGroup')}
                     </Button>
                 </div>
                 <div className="relative mt-4">
                     <Input
-                        placeholder="Search Messenger"
+                        placeholder={t('searchMessenger')}
                         className="pl-10 rounded-full bg-muted"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}

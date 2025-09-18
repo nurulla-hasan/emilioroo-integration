@@ -11,8 +11,10 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useCreateGroupMutation } from '@/lib/features/api/chatApi';
 import { toast } from 'sonner';
 import { ImageUp } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export const CreateGroupModal = ({ isOpen, onClose }) => {
+    const t = useTranslations('Message');
     const [groupName, setGroupName] = useState('');
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [groupImageFile, setGroupImageFile] = useState(null);
@@ -33,7 +35,7 @@ export const CreateGroupModal = ({ isOpen, onClose }) => {
 
     const handleCreateGroup = async () => {
         if (!groupName.trim() || selectedUsers.length === 0) {
-            toast.error("Group name and selected members are required.");
+            toast.error(t("groupNameAndMembersRequired"));
             return;
         }
 
@@ -51,11 +53,11 @@ export const CreateGroupModal = ({ isOpen, onClose }) => {
 
         try {
             await createGroup(formData).unwrap();
-            toast.success('Group created successfully! 🎉');
+            toast.success(t('groupCreatedSuccess'));
             onClose();
         } catch (err) {
             console.error('Failed to create group:', err);
-            toast.error('Failed to create group. Please try again.');
+            toast.error(t('failedToCreateGroup'));
         }
     };
 
@@ -78,9 +80,9 @@ export const CreateGroupModal = ({ isOpen, onClose }) => {
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Create a New Group</DialogTitle>
+                    <DialogTitle>{t('createNewGroup')}</DialogTitle>
                     <DialogDescription>
-                        Enter group details and select members to create a new chat group.
+                        {t('groupDetailsDescription')}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
@@ -106,27 +108,27 @@ export const CreateGroupModal = ({ isOpen, onClose }) => {
                     </div>
                     {/* Existing Group Name field */}
                     <div>
-                        <Label className="mb-2" htmlFor="groupName">Group Name</Label>
+                        <Label className="mb-2" htmlFor="groupName">{t('groupName')}</Label>
                         <Input
                             id="groupName"
                             value={groupName}
                             onChange={(e) => setGroupName(e.target.value)}
-                            placeholder="Enter group name"
+                            placeholder={t('enterGroupName')}
                         />
                     </div>
                     <div>
-                        <Label className="mb-2">Select Members</Label>
+                        <Label className="mb-2">{t('selectMembers')}</Label>
                         <MultipleSelector
                             options={userOptions}
                             value={selectedUsers}
                             onChange={setSelectedUsers}
-                            placeholder="Select users..."
+                            placeholder={t('selectUsers')}
                         />
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={onClose}>Cancel</Button>
-                    <Button loading={isLoading} onClick={handleCreateGroup} disabled={isLoading}>Create</Button>
+                    <Button variant="outline" onClick={onClose}>{t('cancel')}</Button>
+                    <Button loading={isLoading} onClick={handleCreateGroup} disabled={isLoading}>{t('create')}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

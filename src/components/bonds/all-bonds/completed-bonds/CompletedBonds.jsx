@@ -1,4 +1,3 @@
-
 "use client";
 
 import LoadFailed from "@/components/common/LoadFailed";
@@ -8,8 +7,10 @@ import { useState } from "react";
 import MatchGroup from "../../MatchGroup";
 import CustomPagination from "@/components/common/CustomPagination";
 import NoData from "@/components/common/NoData";
+import { useTranslations } from "next-intl";
 
 const CompletedBonds = () => {
+  const t = useTranslations('BondRequestTabs');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(6);
 
@@ -59,7 +60,7 @@ const CompletedBonds = () => {
           )}
         </>
       ) : (
-        <NoData msg={"No completed bonds found."}/>
+        <NoData msg={t('noCompletedBonds')}/>
       )}
     </div>
   );

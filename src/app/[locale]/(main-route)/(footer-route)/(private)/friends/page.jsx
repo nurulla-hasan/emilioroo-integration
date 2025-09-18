@@ -13,9 +13,11 @@ import PeopleCardSkeleton from "@/components/skeleton/PeopleCardSkeleton";
 import LoadFailed from "@/components/common/LoadFailed";
 import CustomPagination from "@/components/common/CustomPagination";
 import NoData from "@/components/common/NoData";
+import { useTranslations } from "next-intl";
 
 
 const Friends = () => {
+    const t = useTranslations('FriendsPage');
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(12);
@@ -52,15 +54,15 @@ const Friends = () => {
                 <Tabs defaultValue="my-friends" className="w-full">
                     <div className="flex justify-between items-center mb-6">
                         <TabsList>
-                            <TabsTrigger value="my-friends">My Friends</TabsTrigger>
-                            <TabsTrigger value="friend-request">Friend Request</TabsTrigger>
-                            <TabsTrigger value="sent-requests">Sent Requests</TabsTrigger>
+                            <TabsTrigger value="my-friends">{t('myFriends')}</TabsTrigger>
+                            <TabsTrigger value="friend-request">{t('friendRequest')}</TabsTrigger>
+                            <TabsTrigger value="sent-requests">{t('sentRequests')}</TabsTrigger>
                         </TabsList>
                         <div className="relative w-64">
                             <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                             <Input
                                 type="text"
-                                placeholder="Search Friend"
+                                placeholder={t('searchFriend')}
                                 className="pl-8"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -75,11 +77,11 @@ const Friends = () => {
                                     <PeopleCardSkeleton count={12} />
                                 ) : isMyFriendError ? (
                                     <div className="col-span-full flex justify-center md:h-[60vh]">
-                                        <LoadFailed msg={"Failed to load friends."}/>
+                                        <LoadFailed msg={t("failedToLoadFriends")}/>
                                     </div>
                                 ) : myFriends.length === 0 ? (
                                     <div className="col-span-full flex justify-center md:h-[60vh]">
-                                        <NoData msg="No friends for now." />
+                                        <NoData msg={t("noFriends")} />
                                     </div>
                                 ) : (
                                     myFriends?.map((friend) => (
@@ -106,11 +108,11 @@ const Friends = () => {
                                     <PeopleCardSkeleton count={12} />
                                 ) : isMyFollowerError ? (
                                     <div className="col-span-full flex justify-center md:h-[60vh]">
-                                        <LoadFailed msg={"Failed to load followers."}/>
+                                        <LoadFailed msg={t("failedToLoadFollowers")}/>
                                     </div>
                                 ) : myFollower.length === 0 ? (
                                     <div className="col-span-full flex justify-center md:h-[60vh]">
-                                        <NoData msg="No follower for now." />
+                                        <NoData msg={t("noFollowers")} />
                                     </div>
                                 ) : (
                                     myFollower?.map((follower) => (
@@ -137,11 +139,11 @@ const Friends = () => {
                                     <PeopleCardSkeleton count={12} />
                                 ) : isSentRequestError ? (
                                     <div className="col-span-full flex justify-center md:h-[60vh]">
-                                        <LoadFailed msg={"Failed to load sent requests."}/>
+                                        <LoadFailed msg={t("failedToLoadSentRequests")}/>
                                     </div>
                                 ) : sentRequests.length === 0 ? (
                                     <div className="col-span-full flex justify-center md:h-[60vh]">
-                                        <NoData msg="No sent requests for now." />
+                                        <NoData msg={t("noSentRequests")} />
                                     </div>
                                 ) : (
                                     sentRequests?.map((request) => (

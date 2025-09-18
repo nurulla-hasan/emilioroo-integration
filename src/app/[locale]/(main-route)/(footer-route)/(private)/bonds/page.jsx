@@ -32,24 +32,26 @@ const MapPicker = dynamic(() => import('@/components/bonds/all-bonds/my-bonds/Ma
 
 const defaultLocation = { lat: -34.6037, lng: -58.3816 };
 
-const formSchema = z.object({
-  offer: z.string().min(1, { message: 'Offer is required.' }),
-  want: z.string().min(1, { message: 'Want is required.' }),
-  description: z.string().min(1, { message: 'Description is required.' }),
-  tag: z.string(),
-  radius: z.coerce.number().min(1, { message: 'Radius must be a positive number.' }),
-  location: z
-    .object({
-      lat: z.number(),
-      lng: z.number(),
-    })
-    .nullable()
-    .refine((val) => val !== null, { message: 'Please select a location from the map.' }),
-});
-
 const Bonds = () => {
   const t = useTranslations('AddNewBondModal');
   const bondsT = useTranslations('Bonds');
+  const pageT = useTranslations('BondPage');
+
+  const formSchema = z.object({
+    offer: z.string().min(1, { message: t('offerIsRequired') }),
+    want: z.string().min(1, { message: t('wantIsRequired') }),
+    description: z.string().min(1, { message: pageT('descriptionIsRequired') }),
+    tag: z.string(),
+    radius: z.coerce.number().min(1, { message: pageT('radiusPositive') }),
+    location: z
+      .object({
+        lat: z.number(),
+        lng: z.number(),
+      })
+      .nullable()
+      .refine((val) => val !== null, { message: pageT('locationRequired') }),
+  });
+
   const [createRequestBond, { isLoading }] = useCreateRequestBondMutation();
   const { data: filterItems, isLoading: isFilterItemsLoading, isError: isFilterItemsError } = useGetFilterItemsQuery();
 
@@ -95,7 +97,7 @@ const Bonds = () => {
 
     try {
       const response = await createRequestBond(newBond).unwrap();
-      toast.success('Bond created successfully!');
+      toast.success(pageT('bondCreatedSuccess'));
       reset();
 
       if (response?.data?._id) {
@@ -106,13 +108,13 @@ const Bonds = () => {
       }
 
     } catch (error) {
-      toast.error(error?.data?.message || 'Failed to create bond.');
+      toast.error(error?.data?.message || pageT('bondCreatedError'));
     }
   };
 
   const breadcrumbLinks = [
-    { name: "Home", href: "/" },
-    { name: "Bonds", isCurrent: true }
+    { name: pageT('home'), href: "/" },
+    { name: pageT('bonds'), isCurrent: true }
   ];
 
   return (
@@ -156,16 +158,16 @@ const Bonds = () => {
                             <Button
                               variant="outline"
                               type="button"
-                              onClick={() => form.setValue('offer', 'Empty', { shouldValidate: true })}
+                              onClick={() => form.setValue('offer', t('empty'), { shouldValidate: true })}
                             >
-                              Empty
+                              {t('empty')}
                             </Button>
                             <Button
                               variant="outline"
                               type="button"
-                              onClick={() => form.setValue('offer', 'Surprise', { shouldValidate: true })}
+                              onClick={() => form.setValue('offer', t('surprise'), { shouldValidate: true })}
                             >
-                              Surprise
+                              {t('surprise')}
                             </Button>
                           </div>
                         </FormItem>
@@ -193,16 +195,16 @@ const Bonds = () => {
                             <Button
                               variant="outline"
                               type="button"
-                              onClick={() => form.setValue('want', 'Empty', { shouldValidate: true })}
+                              onClick={() => form.setValue('want', t('empty'), { shouldValidate: true })}
                             >
-                              Empty
+                              {t('empty')}
                             </Button>
                             <Button
                               variant="outline"
                               type="button"
-                              onClick={() => form.setValue('want', 'Surprise', { shouldValidate: true })}
+                              onClick={() => form.setValue('want', t('surprise'), { shouldValidate: true })}
                             >
-                              Surprise
+                              {t('surprise')}
                             </Button>
                           </div>
                         </FormItem>
@@ -246,7 +248,7 @@ const Bonds = () => {
                     )}
                   />
                   <FormItem>
-                    <FormLabel>Select Location</FormLabel>
+                    <FormLabel>{pageT('selectLocation')}</FormLabel>
                     <FormControl>
                       <div className="rounded-md overflow-hidden border h-64">
                         <MapPicker
@@ -262,7 +264,7 @@ const Bonds = () => {
                     name="radius"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Radius (km)</FormLabel>
+                        <FormLabel>{bondsT('radiusKm')}</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
@@ -276,7 +278,7 @@ const Bonds = () => {
                     )}
                   />
                   <div className="flex items-center gap-4 justify-end">
-                    <p className='text-sm text-muted-foreground'>Create a bond request and see matching bonds.</p>
+                    <p className='text-sm text-muted-foreground'>{pageT('createBondRequestHint')}</p>
                     <Button loading={isLoading} type="submit" disabled={isLoading}>
                       {t('createBond')}
                     </Button>

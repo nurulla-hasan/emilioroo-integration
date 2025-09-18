@@ -32,7 +32,31 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-const ALLOWED_AUDIO_TYPES = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/webm'];
+const ALLOWED_AUDIO_TYPES = [
+  'audio/mpeg',            // mp3
+  'audio/mp3',
+  'audio/x-mpeg',
+  'audio/wav',             // wav
+  'audio/x-wav',
+  'audio/vnd.wave',
+  'audio/webm',            // webm
+  'audio/ogg',             // ogg/vorbis
+  'audio/opus',            // opus
+  'audio/flac',            // FLAC
+  'audio/aac',             // AAC
+  'audio/mp4',             // m4a
+  'audio/x-m4a',
+  'audio/vorbis',
+  'audio/basic',           // μ-law
+  'audio/L24',             // PCM 24-bit
+  'audio/aiff',            // AIFF
+  'audio/x-aiff',
+  'audio/x-matroska',      // Matroska (.mka)
+  'audio/x-ms-wma',        // WMA
+  'audio/x-ms-wax',        // WAX
+  'audio/vnd.rn-realaudio' // RealAudio
+];
+
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
 
 
@@ -98,7 +122,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
             toast.info("Analyzing audio file, please wait...");
             const result = await checkAudio(audioFormData).unwrap();
 
-            if (result.output !== 0) {
+            if (result.output !== 1) {
                 toast.error("This audio cannot be uploaded.", {
                     description: result.message || "The audio content does not meet the requirements.",
                 });

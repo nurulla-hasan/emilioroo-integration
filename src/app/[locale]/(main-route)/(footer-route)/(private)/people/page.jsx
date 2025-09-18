@@ -12,8 +12,10 @@ import LoadFailed from "@/components/common/LoadFailed";
 import { useGetUsersWithoutMe } from "@/hooks/useGetUsersWithoutMe";
 import NoData from "@/components/common/NoData";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb";
+import { useTranslations } from "next-intl";
 
 const PeoplePage = () => {
+    const t = useTranslations('PeoplePage');
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(12);
@@ -26,8 +28,8 @@ const PeoplePage = () => {
     };
 
     const breadcrumbLinks = [
-        { name: 'Home', href: '/' },
-        { name: 'People', href: '/people', isCurrent: true },
+        { name: t('home'), href: '/' },
+        { name: t('people'), href: '/people', isCurrent: true },
     ]
 
     return (
@@ -35,12 +37,12 @@ const PeoplePage = () => {
             <PageLayout>
                 <CustomBreadcrumb links={breadcrumbLinks} />
                 <div className="flex justify-between items-center mb-6 mt-4">
-                    <Title>Find People</Title>
+                    <Title>{t('findPeople')}</Title>
                     <div className="relative flex items-center space-x-4">
                         <Search className="h-4 w-4 text-muted-foreground absolute left-2" />
                         <Input
                             type="text"
-                            placeholder="Search..."
+                            placeholder={t('search')}
                             value={searchTerm}
                             onChange={handleSearchChange}
                             className="ps-10 w-40 md:w-50"
@@ -52,9 +54,9 @@ const PeoplePage = () => {
                     {isLoading ? (
                         <PeopleCardSkeleton count={12} />
                     ) : isError ? (
-                            <LoadFailed msg={"Failed to load users."} />
+                            <LoadFailed msg={t("failedToLoad")} />
                     ) : users.length === 0 ? (
-                            <NoData msg={"No users found."} />
+                            <NoData msg={t("noUsersFound")} />
                     ) : (
                         users.map((user) => (
                             <PeopleCard

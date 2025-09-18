@@ -18,8 +18,10 @@ import { useConversationsList } from '@/hooks/useConversationsList';
 import { MessageSquareDashed } from 'lucide-react';
 import { useGetSingleConversationQuery } from '@/lib/features/api/chatApi';
 import { useGetSingleBondLinkQuery } from '@/lib/features/api/bondsApi';
+import { useTranslations } from 'next-intl';
 
 const MessagePage = () => {
+    const t = useTranslations('MessagePage');
     const { socket, sendMessage } = useSocket();
     const dispatch = useDispatch();
     const { profile } = useGetMe();
@@ -310,7 +312,7 @@ const MessagePage = () => {
     if (isChatListError) {
         return (
             <div className="h-[calc(100vh-80px)] w-full flex items-center justify-center">
-                <LoadFailed msg="Failed to load conversations." />
+                <LoadFailed msg={t("failedToLoad")} />
             </div>
         );
     }
@@ -375,7 +377,7 @@ const MessagePage = () => {
                         ) : (
                             <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground">
                                 <MessageSquareDashed className="h-6 w-6" />
-                                <p className="text-sm">Select a conversation to start chatting.</p>
+                                <p className="text-sm">{t('selectConversation')}</p>
                             </div>
                         )}
                     </div>
@@ -387,8 +389,8 @@ const MessagePage = () => {
                 <Sheet open={isMediaSheetOpen} onOpenChange={setIsMediaSheetOpen}>
                     <SheetContent side="right" className="p-0 w-full sm:w-96">
                         <SheetHeader className="p-4 border-b">
-                            <SheetTitle>Media and files</SheetTitle>
-                            <SheetDescription>Media and files shared in this conversation.</SheetDescription>
+                            <SheetTitle>{t('mediaAndFiles')}</SheetTitle>
+                            <SheetDescription>{t('mediaAndFilesDescription')}</SheetDescription>
                         </SheetHeader>
                             <MediaPanel activeConversation={activeConversation} />
                     </SheetContent>

@@ -14,8 +14,10 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import OngoingBonds from '@/components/bonds/all-bonds/ongoing-bonds/OngoingBonds';
 import CompletedBonds from '@/components/bonds/all-bonds/completed-bonds/CompletedBonds';
 import CustomBreadcrumb from '@/components/common/CustomBreadcrumb';
+import { useTranslations } from 'next-intl';
 
 const AllBonds = () => {
+    const t = useTranslations('AllBondsPage');
     const [createMyBond, { isLoading: isCreatingBond }] = useCreateMyBondMutation();
     const { data: myBonds, isLoading: isMyBondsLoading, refetch: refetchMyBonds } = useGetMyBondsQuery();
     const [updateBond, { isLoading: isUpdatingBond }] = useUpdateMyBondMutation();
@@ -30,12 +32,12 @@ const AllBonds = () => {
     const handleCreateBond = async (data) => {
         try {
             await createMyBond(data).unwrap();
-            toast.success("Bond created successfully!");
+            toast.success(t("bondCreatedSuccess"));
             refetchMyBonds();
             setIsAddBondModalOpen(false);
         } catch (error) {
             console.error("Failed to create bond:", error);
-            toast.error(error?.data?.message || "Failed to create bond.");
+            toast.error(error?.data?.message || t("bondCreatedError"));
         }
     };
 
@@ -52,12 +54,12 @@ const AllBonds = () => {
     const handleUpdateBond = async (data) => {
         try {
             await updateBond({ id: data.id, data: { offer: data.offer, want: data.want, tag: data.tag } }).unwrap();
-            toast.success("Bond updated successfully!");
+            toast.success(t("bondUpdatedSuccess"));
             refetchMyBonds();
             setIsEditBondModalOpen(false);
         } catch (error) {
             console.error("Failed to update bond:", error);
-            toast.error(error?.data?.message || "Failed to update bond.");
+            toast.error(error?.data?.message || t("bondUpdatedError"));
         }
     };
 
@@ -65,12 +67,12 @@ const AllBonds = () => {
         if (bondToDelete) {
             try {
                 await deleteBond(bondToDelete._id).unwrap();
-                toast.success("Bond deleted successfully!");
+                toast.success(t("bondDeletedSuccess"));
                 refetchMyBonds();
                 setIsDeleteBondModalOpen(false);
             } catch (error) {
                 console.error("Failed to delete bond:", error);
-                toast.error(error?.data?.message || "Failed to delete bond.");
+                toast.error(error?.data?.message || t("bondDeletedError"));
             }
         }
     };
@@ -80,9 +82,9 @@ const AllBonds = () => {
     };
 
     const breadcrumbLinks = [
-        { name: 'Home', href: '/' },
-        { name: 'Bonds', href: '/bonds' },
-        { name: 'All Bonds', href: '/bonds/all-bonds', isCurrent: true },
+        { name: t('home'), href: '/' },
+        { name: t('bonds'), href: '/bonds' },
+        { name: t('allBonds'), href: '/bonds/all-bonds', isCurrent: true },
     ];
 
     return (
@@ -92,10 +94,10 @@ const AllBonds = () => {
                 <Tabs defaultValue="my-bonds" className="w-full">
                     <ScrollArea className="w-full">
                         <TabsList className="flex justify-center md:grid md:grid-cols-4">
-                            <TabsTrigger value="my-bonds">My Bonds</TabsTrigger>
-                            <TabsTrigger value="bond-request">Bond Request</TabsTrigger>
-                            <TabsTrigger value="ongoing-bonds">Ongoing Bonds</TabsTrigger>
-                            <TabsTrigger value="completed-bonds">Completed Bonds</TabsTrigger>
+                            <TabsTrigger value="my-bonds">{t('myBonds')}</TabsTrigger>
+                            <TabsTrigger value="bond-request">{t('bondRequest')}</TabsTrigger>
+                            <TabsTrigger value="ongoing-bonds">{t('ongoingBonds')}</TabsTrigger>
+                            <TabsTrigger value="completed-bonds">{t('completedBonds')}</TabsTrigger>
                         </TabsList>
                         <ScrollBar orientation='horizontal' />
                     </ScrollArea>
@@ -145,10 +147,10 @@ const AllBonds = () => {
             <ConfirmationModal
                 isOpen={isDeleteBondModalOpen}
                 onOpenChange={setIsDeleteBondModalOpen}
-                title="Confirm Deletion"
-                description="Are you sure you want to delete this bond? This action cannot be undone."
+                title={t('confirmDeletion')}
+                description={t('confirmDeletionDescription')}
                 onConfirm={handleConfirmDeleteBond}
-                confirmText="Delete"
+                confirmText={t('delete')}
                 loading={isDeletingBond}
             />
         </div>

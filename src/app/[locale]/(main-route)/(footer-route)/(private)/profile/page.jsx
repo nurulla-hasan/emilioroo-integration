@@ -10,14 +10,68 @@ import AddRelativeModal from "@/components/profile/modal/AddRelativeModal";
 import EditRelativeModal from "@/components/profile/modal/EditRelativeModal";
 import ConfirmationModal from "@/components/common/ConfirmationModal";
 import ProfileHeader from "@/components/profile/ProfileHeader";
-import ProfileBio from "@/components/profile/ProfileBio";
 import SocialLinks from "@/components/profile/SocialLinks";
 import FriendsSection from "@/components/profile/FriendsSection";
-import RelativesSection from "@/components/profile/RelativesSection";
 import { Card, CardContent } from "@/components/ui/card";
 import ProfilePageSkeleton from "@/components/skeleton/ProfilePageSkeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Title2 from "@/components/ui/Title2";
+import { getInitials, fallbackAvatar2 } from "@/lib/utils";
+import { Link as LinkIcon, MessageSquare, MoreHorizontal } from "lucide-react";
+import { useTranslations } from "next-intl";
+
+const RelativeColumn = ({ relatives, title, handleEdit, handleDelete, isEditable }) => {
+    const t = useTranslations('ProfilePage');
+    return (
+        <div>
+            <h4 className="text-md font-semibold mb-4">{title}</h4>
+            <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2">
+                {relatives.map((relative, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                        <div className="flex items-center gap-3">
+                            <Avatar className="w-12 h-12">
+                                <AvatarImage src={relative.relative?.profile_image || fallbackAvatar2} />
+                                <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <p className="font-medium text-sm">{relative.relative?.name || relative.relation}</p>
+                                <p className="text-xs text-muted-foreground">{relative.relation}</p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col md:flex-row items-center gap-2">
+                            <Button variant="outline" size="sm">
+                                <MessageSquare /> <span className="hidden md:inline">{t('chatNow')}</span>
+                            </Button>
+                            {isEditable && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                                            <MoreHorizontal className="h-4 w-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem onClick={() => handleEdit(relative)}>
+                                            {t('edit')}
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleDelete(relative)} className="text-red-600">
+                                            {t('delete')}
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
 
 const ProfilePage = () => {
+    const t = useTranslations('ProfilePage');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -59,11 +113,11 @@ const ProfilePage = () => {
         if (!selectedRelative) return;
         try {
             await deleteRelative(selectedRelative._id).unwrap();
-            toast.success("Relative deleted successfully");
+            toast.success(t("relativeDeletedSuccess"));
             setIsDeleteModalOpen(false);
             setSelectedRelative(null);
         } catch (error) {
-            toast.error(error.data?.message || "Failed to delete relative");
+            toast.error(error.data?.message || t("failedToDeleteRelative"));
         }
     };
 
@@ -72,11 +126,11 @@ const ProfilePage = () => {
     }
 
     if (isProfileError || isSkillsError || isRelativesError || isFriendsError) {
-        return <PageLayout><div className="min-h-minus-header not-[]:text-red-500">Error loading profile.</div></PageLayout>;
+        return <PageLayout><div className="min-h-minus-header not-[]:text-red-500">{t('errorLoadingProfile')}</div></PageLayout>;
     }
 
     if (!user) {
-        return <PageLayout><div className="min-h-minus-header">No profile data found.</div></PageLayout>;
+        return <PageLayout><div className="min-h-minus-header">{t('noProfileData')}</div></PageLayout>;
     }
 
     return (
@@ -84,20 +138,28 @@ const ProfilePage = () => {
             <div>
                 <Card className="rounded-none overflow-hidden shadow-none bg-transparent border-none"> 
                     <ProfileHeader user={user} userSkills={userSkills} mother={mother} father={father} friends={friends} isEditable={true} />
-                    <CardContent className="p-4 xl:p-2 xl:w-[1400px] md:mx-auto">
-                        <ProfileBio user={user} />
+                    <CardContent className="p-4 xl:p-2 xl:w-[1800px] md:mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+                            <div className="md:col-span-1">
+                                <Title2>{t('relativesAndRelationships')}</Title2>
+                                <div className="mt-4">
+                                    <RelativeColumn relatives={paternalRelatives} title={t("fathersSide")} handleEdit={handleEdit} handleDelete={handleDelete} isEditable={true} />
+                                </div>
+                            </div>
+                            <div className="md:col-span-1">
+                                {/* This column is empty as the bio is in the header */}
+                            </div>
+                            <div className="md:col-span-1">
+                                <div className="flex justify-end mb-4">
+                                    <Button size="sm" onClick={() => setIsModalOpen(true)}>
+                                        <LinkIcon className="mr-2" /> {t('addNewRelative')}
+                                    </Button>
+                                </div>
+                                <RelativeColumn relatives={maternalRelatives} title={t("mothersSide")} handleEdit={handleEdit} handleDelete={handleDelete} isEditable={true} />
+                            </div>
+                        </div>
                         <SocialLinks user={user} />
                         <FriendsSection friends={friends} />
-                        <RelativesSection
-                            maternalRelatives={maternalRelatives}
-                            paternalRelatives={paternalRelatives}
-                            isLoading={isRelativesLoading}
-                            isError={isRelativesError}
-                            handleEdit={handleEdit}
-                            handleDelete={handleDelete}
-                            openAddRelativeModal={() => setIsModalOpen(true)}
-                            isEditable={true}
-                        />
                     </CardContent>
                 </Card>
                 <AddRelativeModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
@@ -105,11 +167,11 @@ const ProfilePage = () => {
                 <ConfirmationModal
                     isOpen={isDeleteModalOpen}
                     onOpenChange={setIsDeleteModalOpen}
-                    title="Are you sure?"
-                    description="This action cannot be undone. This will permanently delete the relative."
+                    title={t("areYouSure")}
+                    description={t("deleteRelativeConfirmation")}
                     onConfirm={confirmDelete}
                     loading={isDeleting}
-                    confirmText="Delete"
+                    confirmText={t("confirmDelete")}
                 />
             </div>
         </div>
