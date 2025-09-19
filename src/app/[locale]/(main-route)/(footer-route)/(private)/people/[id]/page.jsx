@@ -6,7 +6,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import { useGetSingleUserQuery } from "@/lib/features/api/projectApi";
 import { useGetSkillsQuery } from "@/lib/features/api/authApi";
 import ProfileHeader from "@/components/profile/ProfileHeader";
-import ProfileBio from "@/components/profile/ProfileBio";
+
 import SocialLinks from "@/components/profile/SocialLinks";
 import FriendsSection from "@/components/profile/FriendsSection";
 import RelativesSection from "@/components/profile/RelativesSection";
@@ -99,7 +99,6 @@ const UserProfilePage = () => {
                             </div>
                         </ProfileHeader>
                         <CardContent className="p-4 xl:p-2 xl:w-[1400px] md:mx-auto">
-                            <ProfileBio user={user} />
                             <SocialLinks user={user} />
                             
                             <FriendsSection friends={[]} isLoading={false} isError={false} showViewMore={false} />
