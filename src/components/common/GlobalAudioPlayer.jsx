@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect, useCallback, useState } from "react"
+import { useRef, useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { pauseAudio, playAudio, updateProgress } from "@/lib/features/slices/audio/audioSlice"
 import { Play, Pause, Heart, Volume2, VolumeX } from "lucide-react"

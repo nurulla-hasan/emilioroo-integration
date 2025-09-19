@@ -74,7 +74,7 @@ const RatingModal = ({ isOpen, onOpenChange, bondLinkId }) => {
                 await giveRating({
                     bondLink: bondLinkId,
                     userId: participantIds[currentUserIndex],
-                    rating: rating,
+                    rating
                 }).unwrap();
             } catch (error) {
                 toast.error(error?.data?.message || "Failed to submit rating.");
