@@ -7,9 +7,9 @@ const MatchingBondsModal =({ isOpen, onOpenChange, bondRequestId })=> {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] min-h-96 overflow-hidden">
-        <DialogHeader>
-          <DialogTitle>We Found Some Matches for You!</DialogTitle>
-          <DialogDescription>
+        <DialogHeader className="sr-only">
+          <DialogTitle>We Finding Some Matches for You!</DialogTitle>
+          <DialogDescription className="sr-only">
             Here are the top bond matches based on your request. You can propose a link to connect with a group.
           </DialogDescription>
         </DialogHeader>
