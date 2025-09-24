@@ -1,6 +1,7 @@
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import GlobalAudioPlayer from '@/components/common/GlobalAudioPlayer';
 
 
 export default async function LngLayout({ children, params }) {
@@ -13,6 +14,7 @@ export default async function LngLayout({ children, params }) {
             <NextIntlClientProvider>
                 {children}
             </NextIntlClientProvider>
+            <GlobalAudioPlayer />
         </div>
     );
 }

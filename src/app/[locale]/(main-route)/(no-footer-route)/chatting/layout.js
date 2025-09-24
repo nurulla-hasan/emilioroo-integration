@@ -4,7 +4,6 @@ import React from 'react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import GlobalAudioPlayer from '@/components/common/GlobalAudioPlayer';
 import ChattingSidebar from '@/components/chatting/main-page/ChattingSidebar';
 
 const ChattingLayout = ({ children }) => {
@@ -38,7 +37,6 @@ const ChattingLayout = ({ children }) => {
                     </div>
                 </main>
             </div>
-            <GlobalAudioPlayer />
         </div>
     );
 };

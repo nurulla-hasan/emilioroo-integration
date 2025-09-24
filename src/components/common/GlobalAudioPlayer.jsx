@@ -1,5 +1,6 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import { useRef, useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { pauseAudio, playAudio, updateProgress } from "@/lib/features/slices/audio/audioSlice"
@@ -14,6 +15,7 @@ import { getAudio } from "@/lib/audioPlayer"
 const GlobalAudioPlayer = () => {
     const dispatch = useDispatch()
     const { currentAudio, isPlaying, progress } = useSelector((state) => state.audio)
+    const pathname = usePathname()
     const audioRef = useRef(getAudio())
     const [volume, setVolume] = useState(1)
     const [isMuted, setIsMuted] = useState(false)
@@ -79,6 +81,13 @@ const GlobalAudioPlayer = () => {
         }
     }, [currentAudio, isPlaying, volume, isMuted])
 
+    useEffect(() => {
+        const isOnChattingPage = pathname.includes("/chatting");
+        if (!isOnChattingPage && isPlaying) {
+            dispatch(pauseAudio());
+        }
+    }, [pathname, isPlaying, dispatch]);
+
 
     const handlePlayPauseClick = () => {
         if (isPlaying) {
@@ -107,7 +116,9 @@ const GlobalAudioPlayer = () => {
         setIsMuted(!isMuted)
     }
 
-    if (!currentAudio) {
+    const isOnChattingPage = pathname.includes("/chatting");
+
+    if (!currentAudio || !isOnChattingPage) {
         return null
     }
 
