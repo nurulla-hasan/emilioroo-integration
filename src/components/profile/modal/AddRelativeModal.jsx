@@ -1,16 +1,14 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
+    DialogClose,
     DialogContent,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogFooter,
-    DialogClose,
 } from "@/components/ui/dialog";
 import {
     Form,
@@ -21,7 +19,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
     Select,
     SelectContent,
@@ -29,11 +26,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useCreateRelativeMutation } from "@/lib/features/api/relativesApi";
 import { useGetUsersWithoutMe } from "@/hooks/useGetUsersWithoutMe";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useCreateRelativeMutation } from "@/lib/features/api/relativesApi";
 import { fallbackAvatar, getInitials } from "@/lib/utils";
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
+// why this is
 const formSchema = z.object({
     relative: z.string().min(1, { message: "Please select a user." }),
     relation: z.string().min(1, { message: "Relation is required." }),
