@@ -1,18 +1,17 @@
 "use client";
 
-import React from 'react';
-import Image from 'next/image';
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Play, Pause, Heart, Eye, Star, Clock } from 'lucide-react';
-import { useSelector, useDispatch } from 'react-redux';
-import { playAudio, pauseAudio } from '@/lib/features/slices/audio/audioSlice';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import useFavoriteToggle from "@/hooks/useFavoriteToggle";
+import { pauseAudio, playAudio } from '@/lib/features/slices/audio/audioSlice';
 import { cn, formatDuration } from '@/lib/utils';
+import { Clock, Eye, Heart, Pause, Play, Star } from 'lucide-react';
+import Image from 'next/image';
+import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
-
+// audio cart
 const AudioCard = ({ audio, favouriteIds }) => {
     const dispatch = useDispatch();
     const { currentAudio, isPlaying } = useSelector((state) => state.audio);
