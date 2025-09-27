@@ -17,7 +17,7 @@ export function SocketProvider({ children }) {
 
     useEffect(() => {
 
-        const newSocket = io("https://rnj64vmh-4000.inc1.devtunnels.ms", {
+        const newSocket = io("https://api.bankybondy.com", {
             query: { token },
         });
 
