@@ -94,7 +94,7 @@ const chattingApi = baseApi.injectEndpoints({
         // CHECK AUDIO
         checkAudio: builder.mutation({
             query: (data) => ({
-                url: "https://audio.dsrt321.online/audio_analyze",
+                url: "https://audio.dsrt321.online",
                 method: "POST",
                 body: data,
             }),
