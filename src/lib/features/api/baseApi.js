@@ -2,8 +2,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const baseQuery = fetchBaseQuery({
     // baseUrl: 'http://10.10.20.70:4000',
-    // baseUrl: 'http://10.10.20.9:4000',
-    baseUrl: 'https://rnj64vmh-4000.inc1.devtunnels.ms',
+    baseUrl: 'http://18.231.80.188:5000',
+    // baseUrl: 'https://rnj64vmh-4000.inc1.devtunnels.ms',
     prepareHeaders: (headers, { getState }) => {
         const token = getState().auth.accessToken;
 
