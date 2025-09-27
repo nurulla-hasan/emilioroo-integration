@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useGetMe } from '@/hooks/useGetMe';
 import { useGetSingleBondLinkQuery, useGiveRatingMutation } from "@/lib/features/api/bondsApi";
 import { useGetSingleUserQuery } from '@/lib/features/api/projectApi';
-import { useGetMe } from '@/hooks/useGetMe';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import StarRating from '../ui/StarRating';
 import { Skeleton } from '../ui/skeleton';
@@ -74,7 +74,7 @@ const RatingModal = ({ isOpen, onOpenChange, bondLinkId }) => {
                 await giveRating({
                     bondLink: bondLinkId,
                     userId: participantIds[currentUserIndex],
-                    rating: rating,
+                    rating,
                 }).unwrap();
             } catch (error) {
                 toast.error(error?.data?.message || "Failed to submit rating.");

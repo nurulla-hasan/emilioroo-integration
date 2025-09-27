@@ -1,15 +1,15 @@
 "use client"
 
-import { useRef, useEffect, useCallback, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
-import { pauseAudio, playAudio, updateProgress } from "@/lib/features/slices/audio/audioSlice"
-import { Play, Pause, Heart, Volume2, VolumeX } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
-import Image from "next/image"
 import useFavoriteToggle from "@/hooks/useFavoriteToggle"
 import useGetFavoriteIds from "@/hooks/useGetFavoriteIds"
 import { getAudio } from "@/lib/audioPlayer"
+import { pauseAudio, playAudio, updateProgress } from "@/lib/features/slices/audio/audioSlice"
+import { Heart, Pause, Play, Volume2, VolumeX } from "lucide-react"
+import Image from "next/image"
+import { useEffect, useRef, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 
 const GlobalAudioPlayer = () => {
     const dispatch = useDispatch()
