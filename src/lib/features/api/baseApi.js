@@ -1,23 +1,36 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const baseQuery = fetchBaseQuery({
-    // baseUrl: 'http://10.10.20.70:4000',
-    baseUrl: 'http://18.231.80.188:5000',
-    // baseUrl: 'https://rnj64vmh-4000.inc1.devtunnels.ms',
-    prepareHeaders: (headers, { getState }) => {
-        const token = getState().auth.accessToken;
+const baseQueryWithAuth = async (args, api, extraOptions) => {
+    let result = await fetchBaseQuery({
+        baseUrl: 'https://api.bankybondy.com',
+        prepareHeaders: (headers, { getState }) => {
+            const token = getState().auth.accessToken;
 
-        if (token) {
-            headers.set('Authorization', `${token}`)
+            if (token) {
+                headers.set('Authorization', `${token}`)
+            }
+
+            return headers
         }
+    })(args, api, extraOptions);
 
-        return headers
+    // Handle 401 Unauthorized or 403 Forbidden
+    if (result?.error?.status === 401 || result?.error?.status === 403) {
+        // Clear user data from store (you might need to adjust this based on your auth slice)
+        api.dispatch({ type: 'auth/logout' });
+        
+        // Redirect to login page
+        if (typeof window !== 'undefined') {
+            window.location.href = 'auth/login';
+        }
     }
-})
+
+    return result;
+};
 
 export const baseApi = createApi({
     reducerPath: 'baseApi',
-    baseQuery,
+    baseQuery: baseQueryWithAuth,
 
     tagTypes: ['PROFILE', 'BONDS', 'PROJECTS', 'USERS', 'INSTITUTIONS', 'DONATION', 'AUDIO', 'COMMENTS', 'REPLY', 'LIKES', 'RELATIVES', 'FRIENDS', 'CONVERSATIONS', 'MEDIA', 'LEGAL'],
     endpoints: () => ({})
