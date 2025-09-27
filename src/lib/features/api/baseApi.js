@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 const baseQueryWithAuth = async (args, api, extraOptions) => {
     let result = await fetchBaseQuery({
         baseUrl: 'https://api.bankybondy.com',
+        // hello
         prepareHeaders: (headers, { getState }) => {
             const token = getState().auth.accessToken;
 
