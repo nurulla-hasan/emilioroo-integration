@@ -19,7 +19,7 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "Emilioroo | Home",
+  title: "BankyBondy | Home",
   description: "Please Sign up or Sign in to continue.",
 };
 
