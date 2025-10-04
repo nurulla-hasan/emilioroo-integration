@@ -1,5 +1,5 @@
+import { setTotalAudio } from "../slices/audio/audioSlice";
 import { baseApi } from "./baseApi";
-
 
 
 const chattingApi = baseApi.injectEndpoints({
@@ -25,6 +25,10 @@ const chattingApi = baseApi.injectEndpoints({
                     url: `/audio/all-audios?${params.toString()}`,
                     method: "GET",
                 };
+            },
+            onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+                const { data } = await queryFulfilled;
+                dispatch(setTotalAudio(data.data.result.length));
             },
             providesTags: ["AUDIO"],
         }),

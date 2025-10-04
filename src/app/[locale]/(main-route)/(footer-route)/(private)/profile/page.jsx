@@ -27,45 +27,53 @@ const RelativeColumn = ({ relatives, title, handleEdit, handleDelete, isEditable
     const t = useTranslations('ProfilePage');
     return (
         <div>
-            <h4 className="text-md font-semibold mb-4">{title}</h4>
-            <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2">
-                {relatives.map((relative, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                        <div className="flex items-center gap-3">
-                            <Avatar className="w-12 h-12">
-                                <AvatarImage src={relative.relative?.profile_image || fallbackAvatar2} />
-                                <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <p className="font-medium text-sm">{relative.relative?.name || relative.relation}</p>
-                                <p className="text-xs text-muted-foreground">{relative.relation}</p>
-                            </div>
-                        </div>
-                        <div className="flex flex-col md:flex-row items-center gap-2">
-                            <Button variant="outline" size="sm">
-                                <MessageSquare /> <span className="hidden md:inline">{t('chatNow')}</span>
-                            </Button>
-                            {isEditable && (
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                                            <MoreHorizontal className="h-4 w-4" />
+            {
+                relatives.length > 0 ? (
+                    <>
+                        <h4 className="text-md font-semibold mb-4">{title}</h4>
+                        <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2">
+                            {relatives.map((relative, index) => (
+                                <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                    <div className="flex items-center gap-3">
+                                        <Avatar className="w-12 h-12">
+                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar2} />
+                                            <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <p className="font-medium text-sm">{relative.relative?.name || relative.relation}</p>
+                                            <p className="text-xs text-muted-foreground">{relative.relation}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col md:flex-row items-center gap-2">
+                                        <Button variant="outline" size="sm">
+                                            <MessageSquare /> <span className="hidden md:inline">{t('chatNow')}</span>
                                         </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem onClick={() => handleEdit(relative)}>
-                                            {t('edit')}
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => handleDelete(relative)} className="text-red-600">
-                                            {t('delete')}
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            )}
+                                        {isEditable && (
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem onClick={() => handleEdit(relative)}>
+                                                        {t('edit')}
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleDelete(relative)} className="text-red-600">
+                                                        {t('delete')}
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    </div>
-                ))}
-            </div>
+                        </>
+                ) : (
+                    <p className="text-center mt-8">No relatives found.</p>
+                )
+            }
         </div>
     );
 };
@@ -138,7 +146,7 @@ const ProfilePage = () => {
     return (
         <div className="bg-gradient-to-r from-green-200 to-indigo-300  dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 pb-5">
             <div>
-                <Card className="rounded-none overflow-hidden shadow-none bg-transparent border-none"> 
+                <Card className="rounded-none overflow-hidden shadow-none bg-transparent border-none">
                     <ProfileHeader user={user} userSkills={userSkills} mother={mother} father={father} friends={friends} isEditable={true} onEditBio={() => setIsEditBioModalOpen(true)} />
                     <CardContent className="p-4 xl:p-2 xl:w-[1400px] md:mx-auto">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">

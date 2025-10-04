@@ -13,6 +13,7 @@ import useGetFavoriteIds from "@/hooks/useGetFavoriteIds"
 import { getAudio } from "@/lib/audioPlayer"
 
 const GlobalAudioPlayer = () => {
+    const {totalAudio} = useSelector((state) => state.audio)
     const dispatch = useDispatch()
     const { currentAudio, isPlaying, progress } = useSelector((state) => state.audio)
     const pathname = usePathname()
@@ -118,7 +119,7 @@ const GlobalAudioPlayer = () => {
 
     const isOnChattingPage = pathname.includes("/chatting");
 
-    if (!currentAudio || !isOnChattingPage) {
+    if (!currentAudio || !isOnChattingPage || totalAudio === 0) {
         return null
     }
 

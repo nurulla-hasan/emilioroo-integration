@@ -89,7 +89,7 @@ const ProfileHeader = ({ user, userSkills, mother, father, friends, isEditable =
                         <div className="relative group max-w-4xl mx-auto mt-4">
                             <p className="text-sm text-muted-foreground text-center">{user.bio}</p>
                             {isEditable && (
-                                <Button variant="ghost" size="icon" className="absolute -bottom-8" onClick={onEditBio}>
+                                <Button variant="ghost" size="icon" className="absolute -bottom-8 transform -translate-x-1/2 left-1/2 opacity-0 group-hover:opacity-100 transition-opacity" onClick={onEditBio}>
                                     <Edit className="h-4 w-4" />
                                 </Button>
                             )}

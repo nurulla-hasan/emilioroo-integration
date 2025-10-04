@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+    totalAudio: null,
     currentAudio: null,
     isPlaying: false,
     progress: 0,
@@ -29,8 +30,11 @@ const audioSlice = createSlice({
             state.isPlaying = false;
             state.progress = 0;
         },
+        setTotalAudio: (state, action) => {
+            state.totalAudio = action.payload;
+        },
     },
 });
 
-export const { playAudio, pauseAudio, updateProgress, setVolume, clearAudio } = audioSlice.actions;
+export const { playAudio, pauseAudio, updateProgress, setVolume, clearAudio, setTotalAudio } = audioSlice.actions;
 export default audioSlice.reducer;

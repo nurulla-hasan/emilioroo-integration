@@ -2,11 +2,11 @@
 
 import { useCallback, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useCreateRequestBondMutation, useGetFilterItemsQuery } from '@/lib/features/api/bondsApi';
+import { useCreateRequestBondMutation } from '@/lib/features/api/bondsApi';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Combobox } from '@/components/ui/combobox';
+
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -53,10 +53,6 @@ const Bonds = () => {
   });
 
   const [createRequestBond, { isLoading }] = useCreateRequestBondMutation();
-  const { data: filterItems, isLoading: isFilterItemsLoading, isError: isFilterItemsError } = useGetFilterItemsQuery();
-
-  const wantItems = filterItems?.data?.wantItems || [];
-  const offerItems = filterItems?.data?.offerItems || [];
 
   // State for MatchingBondsModal
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
@@ -143,33 +139,14 @@ const Bonds = () => {
                         <FormItem>
                           <FormLabel>{t('offer')}</FormLabel>
                           <FormControl>
-                            <Combobox
-                              options={offerItems.map((item) => ({ label: item, value: item }))}
-                              value={field.value}
-                              onChange={field.onChange}
+                            <Input
                               placeholder={t('exampleLaptop')}
-                              disabled={isFilterItemsLoading || isFilterItemsError}
+                              {...field}
                               aria-invalid={errors.offer ? 'true' : 'false'}
                               className={errors.offer ? 'border-red-500' : ''}
                             />
                           </FormControl>
                           <FormMessage />
-                          <div className="flex gap-2 mt-2">
-                            <Button
-                              variant="outline"
-                              type="button"
-                              onClick={() => form.setValue('offer', t('empty'), { shouldValidate: true })}
-                            >
-                              {t('empty')}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              type="button"
-                              onClick={() => form.setValue('offer', t('surprise'), { shouldValidate: true })}
-                            >
-                              {t('surprise')}
-                            </Button>
-                          </div>
                         </FormItem>
                       )}
                     />
@@ -180,33 +157,14 @@ const Bonds = () => {
                         <FormItem>
                           <FormLabel>{t('want')}</FormLabel>
                           <FormControl>
-                            <Combobox
-                              options={wantItems.map((item) => ({ label: item, value: item }))}
-                              value={field.value}
-                              onChange={field.onChange}
+                            <Input
                               placeholder={t('exampleCamera')}
-                              disabled={isFilterItemsLoading || isFilterItemsError}
+                              {...field}
                               aria-invalid={errors.want ? 'true' : 'false'}
                               className={errors.want ? 'border-red-500' : ''}
                             />
                           </FormControl>
                           <FormMessage />
-                          <div className="flex justify-end gap-2 mt-2">
-                            <Button
-                              variant="outline"
-                              type="button"
-                              onClick={() => form.setValue('want', t('empty'), { shouldValidate: true })}
-                            >
-                              {t('empty')}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              type="button"
-                              onClick={() => form.setValue('want', t('surprise'), { shouldValidate: true })}
-                            >
-                              {t('surprise')}
-                            </Button>
-                          </div>
                         </FormItem>
                       )}
                     />

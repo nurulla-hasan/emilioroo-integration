@@ -28,42 +28,45 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, ha
                     <div>
                         <h4 className="text-md font-semibold mb-4 text-center">Mothers Side</h4>
                         <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2">
-                            {maternalRelatives.map((relative, index) => (
-                                <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                                    <div className="flex items-center gap-3">
-                                        <Avatar className="w-12 h-12">
-                                            <AvatarImage src={relative.relative?.profile_image || fallbackAvatar2} />
-                                            <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
-                                        </Avatar>
-                                        <div>
-                                            <p className="font-medium text-sm">{relative.relative?.name || relative.relation}</p>
-                                            <p className="text-xs text-muted-foreground">{relative.relation}</p>
+                            {
+                                maternalRelatives.length > 0 ? maternalRelatives.map((relative, index) => (
+                                    <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                        <div className="flex items-center gap-3">
+                                            <Avatar className="w-12 h-12">
+                                                <AvatarImage src={relative.relative?.profile_image || fallbackAvatar2} />
+                                                <AvatarFallback>{getInitials(relative.relative?.name || relative.relation)}</AvatarFallback>
+                                            </Avatar>
+                                            <div>
+                                                <p className="font-medium text-sm">{relative.relative?.name || relative.relation}</p>
+                                                <p className="text-xs text-muted-foreground">{relative.relation}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col md:flex-row items-center gap-2">
+                                            <Button variant="outline" size="sm">
+                                                <MessageSquare /> <span className="hidden md:inline">Chat Now</span>
+                                            </Button>
+                                            {isEditable && (
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                            <MoreHorizontal className="h-4 w-4" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem onClick={() => handleEdit(relative)}>
+                                                            Edit
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleDelete(relative)} className="text-red-600">
+                                                            Delete
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="flex flex-col md:flex-row items-center gap-2">
-                                        <Button variant="outline" size="sm">
-                                            <MessageSquare /> <span className="hidden md:inline">Chat Now</span>
-                                        </Button>
-                                        {isEditable && (
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                        <MoreHorizontal className="h-4 w-4" />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => handleEdit(relative)}>
-                                                        Edit
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => handleDelete(relative)} className="text-red-600">
-                                                        Delete
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
+                                )) : (
+                                    <div className="text-center mt-8">No maternal relatives found.</div>
+                                )}
                         </div>
                     </div>
 
@@ -71,7 +74,7 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, ha
                     <div>
                         <h4 className="text-md font-semibold mb-4 text-center">Fathers Side</h4>
                         <div className="space-y-4 overflow-y-auto max-h-[500px] pr-2">
-                            {paternalRelatives.map((relative, index) => (
+                            {paternalRelatives.length > 0 ? (paternalRelatives.map((relative, index) => (
                                 <div key={index} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
                                     <div className="flex items-center gap-3">
                                         <Avatar className="w-12 h-12">
@@ -106,7 +109,10 @@ const RelativesSection = ({ maternalRelatives, paternalRelatives, handleEdit, ha
                                         )}
                                     </div>
                                 </div>
-                            ))}
+                            )
+                            )): (
+                                <div className="text-center mt-8">No paternal relatives found.</div>
+                            )}
                         </div>
                     </div>
                 </div>
