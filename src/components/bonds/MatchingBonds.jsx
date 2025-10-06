@@ -27,7 +27,7 @@ export default function MatchingBonds({ bondRequestId }) {
   }
 
   return (
-    <div className="space-y-4 p-1 max-h-[70vh] overflow-y-auto">
+    <div className="space-y-4 p-1 max-h-[85vh] overflow-y-auto">
       {matchingData?.data?.length > 0 ? (
         matchingData.data.map((match, index) => (
           <MatchGroup key={index} matchRequest={match.matchRequest} />

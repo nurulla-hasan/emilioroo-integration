@@ -22,14 +22,13 @@ const OngoingBonds = () => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
         {[...Array(6)].map((_, i) => (
           <Skeleton key={i} className="h-60 w-full" />
         ))}
       </div>
     );
   }
-
   if (isError) {
     return <LoadFailed />;
   }
@@ -37,20 +36,19 @@ const OngoingBonds = () => {
   const bonds = data?.data?.result || [];
   const totalPages = data?.data?.meta?.totalPage || 1;
 
-
-
   return (
     <div>
       {bonds.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
             {bonds.map((bond) => (
-              <MatchGroup
-                key={bond._id}
-                matchRequest={bond.requestedBonds}
-                status={bond.status}
-                showProposeButton={false}
-              />
+              <div key={bond._id} className="mb-4">
+                <MatchGroup
+                  matchRequest={bond.requestedBonds}
+                  status={bond.status}
+                  showProposeButton={false}
+                />
+              </div>
             ))}
           </div>
           {bonds.length > 0 && totalPages > 1 && (

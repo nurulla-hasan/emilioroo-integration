@@ -6,7 +6,7 @@ import MatchingBonds from "./MatchingBonds";
 const MatchingBondsModal =({ isOpen, onOpenChange, bondRequestId })=> {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] min-h-96 overflow-hidden">
+      <DialogContent className="sm:max-w-5xl max-h-[90vh] min-h-96 overflow-hidden">
         <DialogHeader className="sr-only">
           <DialogTitle>We Finding Some Matches for You!</DialogTitle>
           <DialogDescription className="sr-only">

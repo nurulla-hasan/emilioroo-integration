@@ -91,7 +91,7 @@ const AllBonds = () => {
         <div className='min-h-minus-header'>
             <PageLayout>
                 <CustomBreadcrumb links={breadcrumbLinks} />
-                <Tabs defaultValue="my-bonds" className="w-full">
+                <Tabs defaultValue="bond-request" className="w-full">
                     <ScrollArea className="w-full">
                         <TabsList className="flex justify-center md:grid md:grid-cols-3">
                             {/* <TabsTrigger value="my-bonds">{t('myBonds')}</TabsTrigger> */}

@@ -59,7 +59,7 @@ const UserRow = ({ user, isLast }) => (
 
 );
 
-const MatchGroup = ({ matchRequest, status, showProposeButton = true }) => {
+const MatchGroup = ({ matchRequest, status, showProposeButton = true, className = '' }) => {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [createBondLink, { isLoading }] = useCreateBondLinkMutation();
@@ -83,7 +83,7 @@ const MatchGroup = ({ matchRequest, status, showProposeButton = true }) => {
 
     return (
         <>
-            <div className="p-4 border rounded-lg bg-card shadow-sm hover:shadow-lg transition-all duration-300">
+            <div className={`p-4 border rounded-lg bg-card shadow-sm hover:shadow-lg transition-all duration-300 inline-block w-full break-inside-avoid ${className}`}>
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <Users className="h-5 w-5" />
