@@ -40,15 +40,14 @@ const OngoingBonds = () => {
     <div>
       {bonds.length > 0 ? (
         <>
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
+          <div className="space-y-4">
             {bonds.map((bond) => (
-              <div key={bond._id} className="mb-4">
-                <MatchGroup
-                  matchRequest={bond.requestedBonds}
-                  status={bond.status}
-                  showProposeButton={false}
-                />
-              </div>
+              <MatchGroup
+                key={bond._id}
+                matchRequest={bond.requestedBonds}
+                status={bond.status}
+                showProposeButton={false}
+              />
             ))}
           </div>
           {bonds.length > 0 && totalPages > 1 && (

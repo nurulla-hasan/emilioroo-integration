@@ -1,62 +1,36 @@
 'use client';
 
 import { useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Users, Gift, Handshake, ArrowUpDown } from "lucide-react";
+import { Users } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { useCreateBondLinkMutation } from "@/lib/features/api/bondsApi";
 import { toast } from "sonner";
 import ProposeLinkModal from './ProposeLinkModal';
 import { useRouter } from '@/i18n/navigation';
 
-const UserRow = ({ user, isLast }) => (
-    <div className="flex flex-col items-center">
-        <div className="w-full p-4 rounded-xl bg-muted/40 shadow-sm border transition hover:shadow-md">
-            {/* User Info */}
-            <div className="flex items-center justify-between gap-4 mb-3">
-                <div className="flex items-center gap-2">
-                <Avatar className="h-10 w-10">
-                    <AvatarImage src={user.user.profile_image} alt={user.user.name} />
-                    <AvatarFallback>{user.user.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <p className="text-base font-semibold text-primary dark:text-white leading-tight">
-                    {user.user.name}
+const UserCard = ({ user }) => (
+    <div className="flex-1 min-w-0 px-1">
+        <p className="text-center font-semibold text-sm mb-1 truncate" title={user.user.name}>{user.user.name}</p>
+        <div className="border rounded-md p-2 bg-gray-50 dark:bg-gray-800 space-y-1 h-full flex flex-col">
+            <div className='flex justify-end'>
+                <Badge variant="outline" className="text-xs">Rating: {user?.avgRating ?? 0}</Badge>
+            </div>
+            <div className="border-b pb-1 flex-grow flex items-center justify-center text-center">
+                <p className="text-xs font-medium" title={user.offer}>
+                    <span className="font-semibold">Offers:</span> {user.offer}
                 </p>
-                </div>
-                <Badge variant="outline">Rating:  {user?.avgRating}</Badge>
             </div>
-
-            {/* Offer and Want */}
-            <div className="pl-14 space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                    <div className="p-1 bg-purple-100 dark:bg-purple-900 rounded">
-                        <Gift className="h-4 w-4 text-purple-500" />
-                    </div>
-                    <span>
-                        <span className="font-semibold">Offers:</span> {user.offer}
-                    </span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <div className="p-1 bg-green-100 dark:bg-green-900 rounded">
-                        <Handshake className="h-4 w-4 text-green-500" />
-                    </div>
-                    <span>
-                        <span className="font-semibold">Wants:</span> {user.want}
-                    </span>
-                </div>
+            <div className="flex-grow flex items-center justify-center text-center">
+                <p className="text-xs font-medium" title={user.want}>
+                    <span className="font-semibold">Wants:</span> {user.want}
+                </p>
             </div>
-            <p className="mt-2 text-muted-foreground max-w-xs break-words">
-                Description: {user.description}
+             <p className="pt-1 text-xs text-muted-foreground text-center break-words border-t">
+                <span className='font-semibold'>Description:</span> {user.description}
             </p>
         </div>
-
-        {/* Separator */}
-        {!isLast && (
-            <ArrowUpDown className="text-muted-foreground my-2 animate-pulse" />
-        )}
     </div>
-
 );
 
 const MatchGroup = ({ matchRequest, status, showProposeButton = true, className = '' }) => {
@@ -83,7 +57,7 @@ const MatchGroup = ({ matchRequest, status, showProposeButton = true, className 
 
     return (
         <>
-            <div className={`p-4 border rounded-lg bg-card shadow-sm hover:shadow-lg transition-all duration-300 inline-block w-full break-inside-avoid ${className}`}>
+            <div className={`p-4 border rounded-lg bg-card shadow-sm hover:shadow-lg transition-all duration-300 w-full ${className}`}>
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <Users className="h-5 w-5" />
@@ -93,11 +67,13 @@ const MatchGroup = ({ matchRequest, status, showProposeButton = true, className 
                         <Badge variant="secondary">{status}</Badge>
                     )}
                 </div>
-                <div className="space-y-0">
-                    {matchRequest.map((request, index) => (
-                        <UserRow key={request._id} user={request} isLast={index === matchRequest.length - 1} />
+
+                <div className="flex items-stretch justify-center p-4 bg-muted/40 rounded-lg">
+                    {matchRequest.map((request) => (
+                        <UserCard key={request._id} user={request} />
                     ))}
                 </div>
+
                 {showProposeButton && (
                     <div className="flex justify-end mt-4">
                         <Button onClick={() => setIsModalOpen(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground">
@@ -116,4 +92,4 @@ const MatchGroup = ({ matchRequest, status, showProposeButton = true, className 
     );
 }
 
-export default MatchGroup
+export default MatchGroup;

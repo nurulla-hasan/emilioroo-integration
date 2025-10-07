@@ -1,14 +1,12 @@
 "use client";
-
-import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageLayout from "@/components/layout/PageLayout";
 // import MyBonds from '@/components/bonds/all-bonds/my-bonds/MyBonds';
 import BondRequestTabs from '@/components/bonds/all-bonds/bond-request/BondRequestTabs';
-import { useCreateMyBondMutation } from '@/lib/features/api/bondsApi';
-import { toast } from 'sonner';
+// import { useCreateMyBondMutation } from '@/lib/features/api/bondsApi';
+// import { toast } from 'sonner';
 // import EditBondModal from '@/components/bonds/all-bonds/my-bonds/EditBondModal';
-import AddNewBondModal from '@/components/bonds/all-bonds/my-bonds/AddNewBondModal';
+// import AddNewBondModal from '@/components/bonds/all-bonds/my-bonds/AddNewBondModal';
 // import ConfirmationModal from '@/components/common/ConfirmationModal';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import OngoingBonds from '@/components/bonds/all-bonds/ongoing-bonds/OngoingBonds';
@@ -18,28 +16,28 @@ import { useTranslations } from 'next-intl';
 
 const AllBonds = () => {
     const t = useTranslations('AllBondsPage');
-    const [createMyBond, { isLoading: isCreatingBond }] = useCreateMyBondMutation();
+    // const [createMyBond, { isLoading: isCreatingBond }] = useCreateMyBondMutation();
     // const { data: myBonds, isLoading: isMyBondsLoading, refetch: refetchMyBonds } = useGetMyBondsQuery();
     // const [updateBond, { isLoading: isUpdatingBond }] = useUpdateMyBondMutation();
     // const [deleteBond, { isLoading: isDeletingBond }] = useDeleteMyBondMutation();
 
     // const [isEditBondModalOpen, setIsEditBondModalOpen] = useState(false);
     // const [selectedBond, setSelectedBond] = useState(null);
-    const [isAddBondModalOpen, setIsAddBondModalOpen] = useState(false);
+    // const [isAddBondModalOpen, setIsAddBondModalOpen] = useState(false);
     // const [isDeleteBondModalOpen, setIsDeleteBondModalOpen] = useState(false);
     // const [bondToDelete, setBondToDelete] = useState(null);
 
-    const handleCreateBond = async (data) => {
-        try {
-            await createMyBond(data).unwrap();
-            toast.success(t("bondCreatedSuccess"));
-            // refetchMyBonds();
-            setIsAddBondModalOpen(false);
-        } catch (error) {
-            console.error("Failed to create bond:", error);
-            toast.error(error?.data?.message || t("bondCreatedError"));
-        }
-    };
+    // const handleCreateBond = async (data) => {
+    //     try {
+    //         await createMyBond(data).unwrap();
+    //         toast.success(t("bondCreatedSuccess"));
+    //         // refetchMyBonds();
+    //         setIsAddBondModalOpen(false);
+    //     } catch (error) {
+    //         console.error("Failed to create bond:", error);
+    //         toast.error(error?.data?.message || t("bondCreatedError"));
+    //     }
+    // };
 
     // const handleEditBondClick = (bond) => {
     //     setSelectedBond(bond);
@@ -131,12 +129,12 @@ const AllBonds = () => {
 
 
             {/* Modals */}
-            <AddNewBondModal
+            {/* <AddNewBondModal
                 isOpen={isAddBondModalOpen}
                 onOpenChange={setIsAddBondModalOpen}
                 onCreateBond={handleCreateBond}
                 isLoading={isCreatingBond}
-            />
+            /> */}
             {/* <EditBondModal
                 isOpen={isEditBondModalOpen}
                 onOpenChange={setIsEditBondModalOpen}
