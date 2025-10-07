@@ -80,8 +80,8 @@ export default function MatchingBondCard({
               <Label className="text-[13px] font-semibold">Offers:</Label>
               <p className="text-sm  mt-1">{bond.offers}</p>
             </div>
-            <div className="md:text-right">
-              <Label className="text-[13px] font-semibold flex justify-end">Wants:</Label>
+            <div>
+              <Label className="text-[13px] font-semibold">Wants:</Label>
               <p className="text-sm mt-1">{bond.wants}</p>
             </div>
           </div>

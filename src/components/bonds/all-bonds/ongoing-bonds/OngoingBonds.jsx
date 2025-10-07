@@ -47,6 +47,7 @@ const OngoingBonds = () => {
                 matchRequest={bond.requestedBonds}
                 status={bond.status}
                 showProposeButton={false}
+                showRating={false}
               />
             ))}
           </div>

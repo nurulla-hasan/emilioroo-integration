@@ -9,31 +9,35 @@ import { toast } from "sonner";
 import ProposeLinkModal from './ProposeLinkModal';
 import { useRouter } from '@/i18n/navigation';
 
-const UserCard = ({ user }) => (
+const UserCard = ({ user, showRating }) => (
     <div className="flex-1 min-w-0 px-1">
         <p className="text-center font-semibold text-sm mb-1 truncate" title={user.user.name}>{user.user.name}</p>
         <div className="border rounded-md p-2 bg-gray-50 dark:bg-gray-800 space-y-1 h-full flex flex-col">
-            <div className='flex justify-end'>
-                <Badge variant="outline" className="text-xs">Rating: {user?.avgRating ?? 0}</Badge>
+            {showRating && (
+                <div className='flex justify-end'>
+                    <Badge variant="outline" className="text-xs">Rating: {user?.avgRating ?? 0}</Badge>
+                </div>
+            )}
+            <div className="flex gap-4">
+                <div className="flex-grow">
+                    <p className="text-xs font-medium" title={user.offer}>
+                        <span className="font-semibold">Offers:</span> {user.offer}
+                    </p>
+                </div>
+                <div className="flex-grow">
+                    <p className="text-xs font-medium" title={user.want}>
+                        <span className="font-semibold">Wants:</span> {user.want}
+                    </p>
+                </div>
             </div>
-            <div className="border-b pb-1 flex-grow flex items-center justify-center text-center">
-                <p className="text-xs font-medium" title={user.offer}>
-                    <span className="font-semibold">Offers:</span> {user.offer}
-                </p>
-            </div>
-            <div className="flex-grow flex items-center justify-center text-center">
-                <p className="text-xs font-medium" title={user.want}>
-                    <span className="font-semibold">Wants:</span> {user.want}
-                </p>
-            </div>
-             <p className="pt-1 text-xs text-muted-foreground text-center break-words border-t">
+             <p className="pt-1 text-xs text-muted-foreground break-words border-t mt-2">
                 <span className='font-semibold'>Description:</span> {user.description}
             </p>
         </div>
     </div>
 );
 
-const MatchGroup = ({ matchRequest, status, showProposeButton = true, className = '' }) => {
+const MatchGroup = ({ matchRequest, status, showProposeButton = true, className = '', showRating = true }) => {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [createBondLink, { isLoading }] = useCreateBondLinkMutation();
@@ -70,7 +74,7 @@ const MatchGroup = ({ matchRequest, status, showProposeButton = true, className 
 
                 <div className="flex items-stretch justify-center p-4 bg-muted/40 rounded-lg">
                     {matchRequest.map((request) => (
-                        <UserCard key={request._id} user={request} />
+                        <UserCard key={request._id} user={request} showRating={showRating} />
                     ))}
                 </div>
 
