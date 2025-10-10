@@ -367,7 +367,9 @@
     "selectLocation": "Seleccionar Ubicación",
     "createBondRequestHint": "Crea una solicitud de vínculo y mira los vínculos que coinciden.",
     "home": "Inicio",
-    "bonds": "Vínculos"
+    "bonds": "Vínculos",
+    "empty": "Vacío",
+    "surprise": "Sorpresa"
   },
   "AllBondsPage": {
     "bondCreatedSuccess": "¡Vínculo creado con éxito!",

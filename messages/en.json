@@ -367,7 +367,9 @@
     "selectLocation": "Select Location",
     "createBondRequestHint": "Create a bond request and see matching bonds.",
     "home": "Home",
-    "bonds": "Bonds"
+    "bonds": "Bonds",
+    "empty": "Empty",
+    "surprise": "Surprise"
   },
   "AllBondsPage": {
     "bondCreatedSuccess": "Bond created successfully!",

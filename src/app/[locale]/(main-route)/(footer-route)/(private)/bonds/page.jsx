@@ -146,6 +146,10 @@ const Bonds = () => {
                               className={errors.offer ? 'border-red-500' : ''}
                             />
                           </FormControl>
+                          <div className="flex gap-2 mt-2">
+                            <Button type="button" variant="outline" size="sm" onClick={() => setValue('offer', 'empty')}>{pageT('empty')}</Button>
+                            <Button type="button" variant="outline" size="sm" onClick={() => setValue('offer', 'surprise')}>{pageT('surprise')}</Button>
+                          </div>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -164,6 +168,10 @@ const Bonds = () => {
                               className={errors.want ? 'border-red-500' : ''}
                             />
                           </FormControl>
+                          <div className="flex gap-2 mt-2">
+                            <Button type="button" variant="outline" size="sm" onClick={() => setValue('want', 'empty')}>{pageT('empty')}</Button>
+                            <Button type="button" variant="outline" size="sm" onClick={() => setValue('want', 'surprise')}>{pageT('surprise')}</Button>
+                          </div>
                           <FormMessage />
                         </FormItem>
                       )}
