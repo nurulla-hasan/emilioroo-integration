@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const baseQueryWithAuth = fetchBaseQuery({
     baseUrl: 'https://api.bankybondy.com',
-    // baseUrl: 'https://rnj64vmh-4000.inc1.devtunnels.ms',
     prepareHeaders: (headers, { getState }) => {
         const token = getState().auth.accessToken;
 
