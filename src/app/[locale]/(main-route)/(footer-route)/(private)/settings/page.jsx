@@ -13,9 +13,9 @@ const SettingsPage = () => {
                 <CardHeader className="flex flex-row justify-between items-center p-0 mb-6">
                     <CardTitle className="text-xl font-bold text-primary dark:text-white">Settings</CardTitle>
                 </CardHeader>
-                <div className="max-w-3xl mx-auto">
+                <div className="max-w-7xl mx-auto">
                     <Tabs defaultValue="edit-profile">
-                        <TabsList className="grid w-full grid-cols-2">
+                        <TabsList className="grid grid-cols-2">
                             <TabsTrigger value="edit-profile">Edit Profile</TabsTrigger>
                             <TabsTrigger value="change-password">Change Password</TabsTrigger>
                         </TabsList>
