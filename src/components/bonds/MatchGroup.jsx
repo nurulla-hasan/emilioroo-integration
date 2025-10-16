@@ -9,34 +9,38 @@ import { toast } from "sonner";
 import ProposeLinkModal from './ProposeLinkModal';
 import { useRouter } from '@/i18n/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 
 const UserCard = ({ user, showRating }) => (
-    <div className="flex-1 min-w-0 px-1">
-        <div className="flex items-center justify-center gap-2 mb-2">
-            <Avatar>
-                <AvatarImage src={user.user.profile_image} alt={user.user.name} />
-                <AvatarFallback className="bg-gray-200 text-gray-600 font-semibold">
-                    {user.user.name.split(' ').map(n => n[0]).join('')}
-                </AvatarFallback>
-            </Avatar>
-            <p className="text-center font-bold text-xs sm:text-sm truncate bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent" title={user.user.name}>{user.user.name}</p>
-        </div>
-        <div className="border rounded-lg sm:rounded-xl p-2 sm:p-4 bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-gray-800 dark:via-gray-700 dark:to-purple-900 shadow-lg transition-all duration-500 h-full flex flex-col relative overflow-hidden">
+    <div className="min-w-lg px-1">
+        <div className="border rounded-lg sm:rounded-xl p-2 sm:p-4 bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-gray-800 dark:via-gray-700 dark:to-purple-900 transition-all duration-500 h-full flex flex-col relative overflow-hidden">
+
             <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-500"></div>
-            {showRating && (
-                <div className='flex justify-end mb-1 sm:mb-2'>
-                    <Badge variant="outline" className="text-xs bg-yellow-100 text-yellow-800 border-yellow-300">⭐ {user?.avgRating ?? 0}</Badge>
+            <div className='flex justify-between items-center'>
+                <div className="flex items-center justify-center gap-2 mb-2">
+                    <Avatar>
+                        <AvatarImage src={user.user.profile_image} alt={user.user.name} />
+                        <AvatarFallback className="bg-gray-200 text-gray-600 font-semibold">
+                            {user.user.name.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                    </Avatar>
+                    <p className="text-center font-bold text-xs sm:text-sm truncate bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent" title={user.user.name}>{user.user.name}</p>
                 </div>
-            )}
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-2 sm:mb-4">
+                {showRating && (
+                    <div className='flex justify-end mb-1 sm:mb-2'>
+                        <Badge variant="outline" className="text-xs bg-yellow-100 text-yellow-800 border-yellow-300">⭐ {user?.avgRating ?? 0}</Badge>
+                    </div>
+                )}
+            </div>
+            <div className="flex flex-col lg:flex-row gap-2 sm:gap-4 mb-2 sm:mb-4">
                 <div className="flex-grow p-2 sm:p-3 bg-green-100 dark:bg-green-900 rounded-lg shadow-sm">
                     <p className="text-xs font-semibold text-green-800 dark:text-green-200 flex items-center">
-                        <span className="mr-1">🎁</span> <span className="font-bold">Offers:</span> {user.offer}
+                        <span className="mr-1">🎁</span> <span className="font-bold"></span> {user.offer}
                     </p>
                 </div>
                 <div className="flex-grow p-2 sm:p-3 bg-red-100 dark:bg-red-900 rounded-lg shadow-sm">
                     <p className="text-xs font-semibold text-red-800 dark:text-red-200 flex items-center">
-                        <span className="mr-1">🔍</span> <span className="font-bold">Wants:</span> {user.want}
+                        <span className="mr-1">🔍</span> <span className="font-bold"></span> {user.want}
                     </p>
                 </div>
             </div>
@@ -45,10 +49,11 @@ const UserCard = ({ user, showRating }) => (
                 <span className="leading-relaxed">{user.description}</span>
             </p>
         </div>
+
     </div>
 );
 
-const MatchGroup = ({ matchRequest, status, showProposeButton = true, className = '', showRating = true }) => {
+const MatchGroup = ({ matchRequest, status, showProposeButton = true, showRating = true }) => {
     console.log(matchRequest);
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,39 +77,40 @@ const MatchGroup = ({ matchRequest, status, showProposeButton = true, className 
     };
 
     return (
-        <>
-            <div className={`p-2 sm:p-4 border rounded-lg bg-card shadow-sm w-full max-w-7xl mx-auto ${className}`}>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 gap-2">
-                    <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 sm:h-5 sm:w-5" />
-                        <h3 className="font-semibold text-base sm:text-lg">Match Chain ({matchRequest.length} People)</h3>
+        <div className='md:p-4 max-h-[80vh] overflow-scroll'>
+            <ScrollArea className='max-w-[1600px] border rounded-lg p-4'>
+                <div className='flex flex-col gap-3 xl:flex-row items-start md:items-center mb-3 sm:mb-4'>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 border rounded p-1">
+                            <Users className="h-4 w-4 sm:h-5 sm:w-5" />
+                            <h3 className="font-semibold text-base sm:text-lg">Match Chain ({matchRequest.length} People)</h3>
+                        </div>
+                        {status && (
+                            <Badge variant="secondary" className="text-xs">{status}</Badge>
+                        )}
                     </div>
-                    {status && (
-                        <Badge variant="secondary" className="text-xs">{status}</Badge>
+                    {showProposeButton && (
+                        <div className="flex justify-center sm:justify-end">
+                            <Button onClick={() => setIsModalOpen(true)} className="bg-pink-600 hover:bg-violet-700 text-white rounded">
+                                Propose
+                            </Button>
+                        </div>
                     )}
                 </div>
-
-                <div className="flex flex-col xl:flex-row xl:flex-wrap xl:items-stretch xl:justify-center p-2 sm:p-4 bg-muted/40 rounded-lg gap-2 sm:gap-4 overflow-x-auto sm:overflow-visible">
+                <div className="flex flex-col gap-3 xl:flex-row">
                     {matchRequest.map((request) => (
                         <UserCard key={request._id} user={request} showRating={showRating} />
                     ))}
                 </div>
-
-                {showProposeButton && (
-                    <div className="flex justify-center sm:justify-end mt-4 sm:mt-10">
-                        <Button onClick={() => setIsModalOpen(true)} className="bg-pink-600 hover:bg-violet-700 text-white">
-                            Propose Link to Group
-                        </Button>
-                    </div>
-                )}
-            </div>
+                <ScrollBar orientation='horizontal' />
+            </ScrollArea>
             <ProposeLinkModal
                 isOpen={isModalOpen}
                 onOpenChange={setIsModalOpen}
                 onPropose={handlePropose}
                 isLoading={isLoading}
             />
-        </>
+        </div>
     );
 }
 
