@@ -12,7 +12,7 @@ export default function MatchingBonds({ bondRequestId }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data: matchingData, isLoading, isError } = useGetMatchingBondsQuery(
-    { bondRequest: bondRequestId, page: currentPage, limit: 10 },
+    { bondRequest: bondRequestId, page: currentPage, limit: 5 },
     { skip: !bondRequestId }
   );
 
@@ -22,7 +22,7 @@ export default function MatchingBonds({ bondRequestId }) {
 
   if (isLoading) {
     return (
-      <div className="space-y-4 p-1">
+      <div className="space-y-4 p-4">
         {[...Array(2)].map((_, i) => (
           <Skeleton key={i} className="h-40 w-full" />
         ))}

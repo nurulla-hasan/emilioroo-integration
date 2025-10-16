@@ -19,22 +19,22 @@ const BondRequestCard = ({ request, onFindMatch, onEdit, onDelete, onPause }) =>
                 </div>
 
                 <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                        <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-full">
-                            <Gift className="h-5 w-5 text-purple-600 dark:text-purple-300" />
+                    <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3">
+                        <div className="flex items-center gap-3 bg-green-50 p-1 px-4 rounded-2xl">
+                            <div className="p-1 bg-green-100 dark:bg-green-900/50 rounded-full">
+                                <Gift className="h-5 w-5 text-green-600 dark:text-green-300" />
+                            </div>
+                            <div>
+                                <p className="font-semibold text-xs text-green-800 capitalize">{request.offer}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm text-muted-foreground">Offer</p>
-                            <p className="font-semibold text-base">{request.offer}</p>
-                        </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                        <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-full">
-                            <Handshake className="h-5 w-5 text-green-600 dark:text-green-300" />
-                        </div>
-                        <div>
-                            <p className="text-sm text-muted-foreground">Want</p>
-                            <p className="font-semibold text-base">{request.want}</p>
+                        <div className="flex items-center gap-3 bg-red-50 p-1 px-4 rounded-2xl">
+                            <div className="p-1 bg-red-100 dark:bg-red-900/50 rounded-full">
+                                <Handshake className="h-5 w-5 text-red-600 dark:text-red-300" />
+                            </div>
+                            <div>
+                                <p className="font-semibold text-xs dark:text-red-800 capitalize">{request.want}</p>
+                            </div>
                         </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -51,7 +51,7 @@ const BondRequestCard = ({ request, onFindMatch, onEdit, onDelete, onPause }) =>
 
             {/* Footer Actions */}
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                <Button className="flex-1 mr-2" onClick={() => onFindMatch(request)}>
+                <Button className="flex-1 mr-2 bg-violet-500 rounded-xl" onClick={() => onFindMatch(request)}>
                     <Search className="h-4 w-4 mr-2" />
                     Find Match
                 </Button>

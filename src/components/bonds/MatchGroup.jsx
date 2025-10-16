@@ -34,13 +34,13 @@ const UserCard = ({ user, showRating }) => (
             </div>
             <div className="flex flex-col lg:flex-row gap-2 sm:gap-4 mb-2 sm:mb-4">
                 <div className="flex-grow p-2 sm:p-3 bg-green-100 dark:bg-green-900 rounded-lg shadow-sm">
-                    <p className="text-xs font-semibold text-green-800 dark:text-green-200 flex items-center">
-                        <span className="mr-1">🎁</span> <span className="font-bold"></span> {user.offer}
+                    <p className="text-xs font-semibold text-green-800 dark:text-green-200 flex items-center capitalize">
+                        <span className="mr-1">🎁</span>{user.offer}
                     </p>
                 </div>
                 <div className="flex-grow p-2 sm:p-3 bg-red-100 dark:bg-red-900 rounded-lg shadow-sm">
-                    <p className="text-xs font-semibold text-red-800 dark:text-red-200 flex items-center">
-                        <span className="mr-1">🔍</span> <span className="font-bold"></span> {user.want}
+                    <p className="text-xs font-semibold text-red-800 dark:text-red-200 flex items-center capitalize">
+                        <span className="mr-1">🔍</span>{user.want}
                     </p>
                 </div>
             </div>
@@ -77,7 +77,7 @@ const MatchGroup = ({ matchRequest, status, showProposeButton = true, showRating
     };
 
     return (
-        <div className='md:p-4 max-h-[80vh] overflow-scroll'>
+        <div className='md:p-4 xl:p-0 max-h-[80vh] overflow-scroll'>
             <ScrollArea className='max-w-[1600px] border rounded-lg p-4'>
                 <div className='flex flex-col gap-3 xl:flex-row items-start md:items-center mb-3 sm:mb-4'>
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">

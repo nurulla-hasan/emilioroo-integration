@@ -93,15 +93,15 @@ export default function BondRequestTabs() {
 
       <div className='md:mt-12'>
         {isLoading ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-            {[...Array(9)].map((_, i) => (
-              <Skeleton key={i} className="h-42 w-full rounded-lg" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} className="h-50 w-full rounded-lg" />
             ))}
           </div>
         ) : isError ? (
           <LoadFailed msg={tabsT('failedToFetch')} />
         ) : bondRequests?.data?.result?.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {bondRequests.data.result.map((request) => (
               <BondRequestCard 
                 key={request._id} 

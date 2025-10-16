@@ -22,9 +22,9 @@ const CompletedBonds = () => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[...Array(6)].map((_, i) => (
-          <Skeleton key={i} className="h-60 w-full" />
+      <div className="grid grid-cols-1 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <Skeleton key={i} className="h-40 w-full" />
         ))}
       </div>
     );
