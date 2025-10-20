@@ -216,7 +216,7 @@ const Bonds = () => {
                   <FormItem>
                     <FormLabel>{pageT('selectLocation')}</FormLabel>
                     <FormControl>
-                      <div className="rounded-md overflow-hidden border h-96">
+                      <div className="rounded-md overflow-hidden border h-80 md:h-[500px]">
                         <MapPicker
                           onLocationChange={onLocationChange}
                           center={location}
