@@ -7,10 +7,11 @@ const chattingApi = baseApi.injectEndpoints({
 
         // GET ALL TOPICS
         getAllTopics: builder.query({
-            query: (arg) => {
-                const params = new URLSearchParams(arg);
+            query: () => {
+                // const params = new URLSearchParams(arg);
                 return {
-                    url: `/topic/all-topics?${params.toString()}`,
+                    // url: `/topic/all-topics?${params.toString()}`,
+                    url: "/topic/all-topics?limit=2000",
                     method: "GET",
                 };
             },

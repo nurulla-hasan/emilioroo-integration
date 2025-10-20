@@ -25,13 +25,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGetAllTopicsQuery, useCreateAudioMutation, useCheckAudioMutation } from "@/lib/features/api/chattingApi";
 import { Check, ChevronsUpDown, Upload, Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
-const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
 const ALLOWED_AUDIO_TYPES = [
   'audio/mpeg',            // mp3
   'audio/mp3',
@@ -89,6 +90,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
     const [audioFileName, setAudioFileName] = useState('');
     const [coverFileName, setCoverFileName] = useState('');
     const { data: topicsData, isLoading: isTopicsLoading } = useGetAllTopicsQuery();
+    console.log(topicsData);
     const [createAudio, { isLoading: isUploading }] = useCreateAudioMutation();
     const [checkAudio, { isLoading: isCheckingAudio }] = useCheckAudioMutation();
 
@@ -297,28 +299,33 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                                 <CommandList>
                                                     {isTopicsLoading && <div className="p-4 text-sm">{t('loading')}</div>}
                                                     <CommandEmpty>{t('noTopicFound')}</CommandEmpty>
-                                                    <CommandGroup>
-                                                        {topicsData?.data?.result?.map((topic) => (
-                                                            <CommandItem
-                                                                value={topic.name}
-                                                                key={topic._id}
-                                                                onSelect={() => {
-                                                                    form.setValue("audioTopic", topic._id);
-                                                                    setOpen(false);
-                                                                }}
-                                                            >
-                                                                <Check
-                                                                    className={cn(
-                                                                        "mr-2 h-4 w-4",
-                                                                        topic._id === field.value
-                                                                            ? "opacity-100"
-                                                                            : "opacity-0"
-                                                                    )}
-                                                                />
-                                                                {topic.name}
-                                                            </CommandItem>
-                                                        ))}
-                                                    </CommandGroup>
+                                                    <ScrollArea
+                                                        className="h-72"
+                                                        onWheel={(e) => e.stopPropagation()}
+                                                    >
+                                                        <CommandGroup>
+                                                            {topicsData?.data?.result?.map((topic) => (
+                                                                <CommandItem
+                                                                    value={topic.name}
+                                                                    key={topic._id}
+                                                                    onSelect={() => {
+                                                                        form.setValue("audioTopic", topic._id);
+                                                                        setOpen(false);
+                                                                    }}
+                                                                >
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "mr-2 h-4 w-4",
+                                                                            topic._id === field.value
+                                                                                ? "opacity-100"
+                                                                                : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                    {topic.name}
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </ScrollArea>
                                                 </CommandList>
                                             </Command>
                                         </PopoverContent>

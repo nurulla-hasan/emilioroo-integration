@@ -23,7 +23,7 @@ export function VerificationForm({ className, type, ...props }) {
   const router = useRouter();
   const otpMail = (typeof window !== 'undefined' ? localStorage.getItem("tempEmailForOTPVerification") : null);
 
-  const [timeLeft, setTimeLeft] = useState(60); 
+  const [timeLeft, setTimeLeft] = useState(300); 
   const [canResend, setCanResend] = useState(false);
 
   const [verifySignupOTP, { isLoading: isVerifyingSignupOTP }] = useVerifyOTPMutation();
@@ -113,7 +113,7 @@ export function VerificationForm({ className, type, ...props }) {
       } else {
         toast.error("Invalid verification type for resend.");
       }
-      setTimeLeft(60);
+      setTimeLeft(300);
       setCanResend(false);
     } catch (error) {
       toast.error(error?.data?.message || "Failed to send new OTP.");

@@ -18,7 +18,7 @@ const PeoplePage = () => {
     const t = useTranslations('PeoplePage');
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize] = useState(12);
+    const [pageSize] = useState(20);
 
     const { users, isLoading, isError, totalPages } = useGetUsersWithoutMe(currentPage, pageSize, searchTerm);
 

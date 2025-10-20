@@ -126,7 +126,7 @@ const Bonds = () => {
       </div>
 
       <div className="flex justify-center items-center md:p-6">
-        <Card className="w-full max-w-4xl p-3 md:p-6">
+        <Card className="w-full max-w-[1400px] p-3 md:p-6">
           <Title>{t('createANewBond')}</Title>
           <CardContent className="p-0 pt-6">
               <Form {...form}>
@@ -216,7 +216,7 @@ const Bonds = () => {
                   <FormItem>
                     <FormLabel>{pageT('selectLocation')}</FormLabel>
                     <FormControl>
-                      <div className="rounded-md overflow-hidden border h-64">
+                      <div className="rounded-md overflow-hidden border h-96">
                         <MapPicker
                           onLocationChange={onLocationChange}
                           center={location}
