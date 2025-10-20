@@ -47,7 +47,7 @@ const authApis = baseApi.injectEndpoints({
         // GET SKILLS
         getSkills: builder.query({
             query: () => ({
-                url: '/skill/all-skills',
+                url: '/skill/all-skills?limit=1000',
                 method: 'GET'
             })
         }),
