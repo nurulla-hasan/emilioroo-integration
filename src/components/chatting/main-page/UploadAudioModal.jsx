@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 const ALLOWED_AUDIO_TYPES = [
   'audio/mpeg',            // mp3
   'audio/mp3',
@@ -348,24 +348,27 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                     <FormLabel>{t('audioFile')}</FormLabel>
                                     <FormControl>
                                         <div className="flex items-center gap-2">
-                                            <div className="relative w-full">
+                                            <div className="w-full">
                                                 <Input
                                                     type="file"
                                                     accept="audio/*"
+                                                    id="audio-upload"
                                                     disabled={isCheckingAudio || isRecording}
                                                     onChange={(e) => {
                                                         handleAudioFileChange(e);
                                                         field.onChange(e.target.files);
                                                     }}
-                                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                                    className="hidden"
                                                 />
-                                                <div
-                                                    className="flex items-center justify-center p-[5px] border border-dashed rounded-md transition-colors duration-200 bg-accent">
-                                                    <Upload className="h-5 w-5 mr-2" />
-                                                    <span className="text-xs">
-                                                        {audioFileName || t('selectAudio')}
-                                                    </span>
-                                                </div>
+                                                <label htmlFor="audio-upload" className="cursor-pointer">
+                                                    <div
+                                                        className="flex items-center justify-start px-2 py-1.5 border border-dashed rounded-md transition-colors duration-200 bg-accent">
+                                                        <Upload className="h-5 w-5 mr-2" />
+                                                        <span className="text-xs truncate">
+                                                            {audioFileName || t('selectAudio')}
+                                                        </span>
+                                                    </div>
+                                                </label>
                                             </div>
                                             <Button type="button" size="icon" variant={isRecording ? "destructive" : "outline"} onClick={handleMicClick} disabled={isCheckingAudio}>
                                                 <Mic />
@@ -385,9 +388,10 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                 <FormItem className="w-full">
                                     <FormLabel>{t('coverImage')}</FormLabel>
                                     <FormControl>
-                                        <div className="relative">
+                                        <div>
                                             <Input
                                                 type="file"
+                                                id="cover-upload"
                                                 accept="image/*"
                                                 disabled={isCheckingAudio || isRecording}
                                                 onChange={(e) => {
@@ -399,15 +403,17 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
                                                     }
                                                     field.onChange(e.target.files);
                                                 }}
-                                                className="absolute inset-0 opacity-0 cursor-pointer"
+                                                className="hidden"
                                             />
-                                            <div
-                                                className="flex items-center justify-center p-[5px] bg-accent border border-dashed rounded-md transition-colors duration-200">
-                                                <Upload className="h-5 w-5 mr-2" />
-                                                <span className="text-xs">
-                                                    {coverFileName || t('selectCover')}
-                                                </span>
-                                            </div>
+                                            <label htmlFor="cover-upload" className="cursor-pointer">
+                                                <div
+                                                    className="flex items-center justify-start px-2 py-1.5 bg-accent border border-dashed rounded-md transition-colors duration-200">
+                                                    <Upload className="h-5 w-5 mr-2" />
+                                                    <span className="text-xs truncate">
+                                                        {coverFileName || t('selectCover')}
+                                                    </span>
+                                                </div>
+                                            </label>
                                         </div>
                                     </FormControl>
                                     <FormMessage />
