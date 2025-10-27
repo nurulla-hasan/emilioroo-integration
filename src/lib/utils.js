@@ -90,7 +90,8 @@ export const getSocialIcon = (url) => {
   return null
 }
 
-// Replace White Background
+
+
 export const replaceWhiteBackground = (html) => {
   if (!html) return "";
 
@@ -102,18 +103,53 @@ export const replaceWhiteBackground = (html) => {
       if (i === -1) return true;
 
       const propName = prop.substring(0, i).trim();
+      const propNameLower = propName.toLowerCase();
       const propValue = prop.substring(i + 1).trim();
 
-      // Exclude 'background-color' only if it's white
-      if (propName === 'background-color') {
-        const lowerCaseValue = propValue.toLowerCase().replace(/\s/g, '');
-        if (
-          lowerCaseValue === 'white' ||
-          lowerCaseValue === '#fff' ||
-          lowerCaseValue === '#ffffff' ||
-          lowerCaseValue === 'rgb(255,255,255)'
-        ) {
+      const lowerCaseValue = propValue.toLowerCase().replace(/\s/g, '');
+      const normalized = lowerCaseValue.replace(/!important/g, '');
+
+      const isWhite = (
+        normalized === 'white' ||
+        normalized === '#fff' ||
+        normalized === '#ffffff' ||
+        normalized === 'rgb(255,255,255)' ||
+        normalized === 'rgba(255,255,255,1)'
+      );
+
+      // Note: we strip any inline color below, so no need to detect black specifically
+
+      // Remove white backgrounds coming from Jodit
+      if (propNameLower === 'background-color' || propNameLower === 'background') {
+        if (isWhite) {
           return false;
+        }
+      }
+
+      // Remove inline dark text colors (black/dark gray) so theme can set readable color in dark mode
+      if (propNameLower === 'color') {
+        // helper: detect black/dark gray values
+        const isShortHexDark = /^#([0-5])\1\1$/.test(normalized); // #000, #111, ... #555
+        const isFullHexDark = /^#([0-9a-f]{6})$/.test(normalized) && (() => {
+          const hex = normalized.slice(1);
+          const r = parseInt(hex.slice(0,2), 16);
+          const g = parseInt(hex.slice(2,4), 16);
+          const b = parseInt(hex.slice(4,6), 16);
+          const avg = (r + g + b) / 3;
+          return avg <= 90; // treat up to ~#5a5a5a as dark gray
+        })();
+        const rgbMatch = normalized.match(/^rgba?\((\d{1,3}),(\d{1,3}),(\d{1,3})(?:,\d*\.?\d+)?\)$/);
+        const isRgbDark = !!rgbMatch && (() => {
+          const r = parseInt(rgbMatch[1], 10);
+          const g = parseInt(rgbMatch[2], 10);
+          const b = parseInt(rgbMatch[3], 10);
+          const avg = (r + g + b) / 3;
+          return avg <= 90;
+        })();
+        const isNamedBlack = normalized === 'black';
+
+        if (isShortHexDark || isFullHexDark || isRgbDark || isNamedBlack) {
+          return false; // strip dark colors
         }
       }
 
@@ -128,5 +164,3 @@ export const replaceWhiteBackground = (html) => {
     }
   });
 };
-
-
