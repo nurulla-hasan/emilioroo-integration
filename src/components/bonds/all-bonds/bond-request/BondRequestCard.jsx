@@ -58,7 +58,7 @@ const BondRequestCard = ({ request, onFindMatch, onDelete, onPause, isUpdating }
                 <div className="flex items-center">
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" onClick={() => onPause(request)}>
+                            <Button variant="ghost" size="icon" onClick={() => onPause(request)} disabled={isUpdating}>
                                 {isUpdating ? <Loader2 className="h-4 w-4 animate-spin" /> : request.isPause ? <Play className="h-4 w-4 text-green-500" /> : <Pause className="h-4 w-4 text-yellow-500" />}
                             </Button>
                         </TooltipTrigger>
