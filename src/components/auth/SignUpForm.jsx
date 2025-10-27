@@ -32,6 +32,19 @@ const signUpSchema = z.object({
   skills: z.array(z.string()).optional(), // Array of strings for skill IDs
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
   confirmPassword: z.string().min(6, { message: "Confirm password must be at least 6 characters." }),
+  // Recommended users (optional). Empty string is allowed for optional fields
+  rec1Name: z.string().optional(),
+  rec1Email: z.union([z.string().email({ message: "Invalid email address." }), z.literal("")]).optional(),
+  rec1Phone: z.string().optional(),
+  rec1Skill: z.string().optional(),
+  rec2Name: z.string().optional(),
+  rec2Email: z.union([z.string().email({ message: "Invalid email address." }), z.literal("")]).optional(),
+  rec2Phone: z.string().optional(),
+  rec2Skill: z.string().optional(),
+  rec3Name: z.string().optional(),
+  rec3Email: z.union([z.string().email({ message: "Invalid email address." }), z.literal("")]).optional(),
+  rec3Phone: z.string().optional(),
+  rec3Skill: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match.",
   path: ["confirmPassword"],
@@ -75,6 +88,19 @@ export function SignUpForm({ className, ...props }) {
       skills: [],
       password: "",
       confirmPassword: "",
+      // Recommended users
+      rec1Name: "",
+      rec1Email: "",
+      rec1Phone: "",
+      rec1Skill: "",
+      rec2Name: "",
+      rec2Email: "",
+      rec2Phone: "",
+      rec2Skill: "",
+      rec3Name: "",
+      rec3Email: "",
+      rec3Phone: "",
+      rec3Skill: "",
     },
   });
 
@@ -85,7 +111,20 @@ export function SignUpForm({ className, ...props }) {
       ...data,
       dateOfBirth: data.dateOfBirth ? data.dateOfBirth.toISOString().slice(0, 10) : undefined,
     };
-    register(formattedData);
+
+    const recommendedUsers = [
+      { name: data.rec1Name, email: data.rec1Email, phone: data.rec1Phone, skill: data.rec1Skill },
+      { name: data.rec2Name, email: data.rec2Email, phone: data.rec2Phone, skill: data.rec2Skill },
+      { name: data.rec3Name, email: data.rec3Email, phone: data.rec3Phone, skill: data.rec3Skill },
+    ].filter(u => (u?.name || u?.email || u?.phone || u?.skill));
+
+    // Debug only: Do not send to API
+    console.log('Recommended Users (client-only):', recommendedUsers);
+
+    // Exclude recommended users from API payload
+    const { rec1Name, rec1Email, rec1Phone, rec1Skill, rec2Name, rec2Email, rec2Phone, rec2Skill, rec3Name, rec3Email, rec3Phone, rec3Skill, ...payload } = formattedData;
+
+    register(payload);
   };
 
   return (
@@ -329,6 +368,151 @@ export function SignUpForm({ className, ...props }) {
                   />
                 </div>
 
+                {/* Recommended Users - Optional */}
+                <div className="space-y-4 p-4 border rounded-md">
+                  <h3 className="text-base font-semibold">Recommend 3 users (optional)</h3>
+
+                  {/* Person 1 */}
+                  <div className="grid gap-3 md:grid-cols-4 md:gap-6">
+                    <FormField control={control} name="rec1Name" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Full name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={control} name="rec1Email" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder="Email" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={control} name="rec1Phone" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Phone</FormLabel>
+                        <FormControl>
+                          <Input type="tel" placeholder="Phone number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={control} name="rec1Skill" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Skill</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select skill" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {skillOptions.map(s => (
+                              <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                  </div>
+
+                  {/* Person 2 */}
+                  <div className="grid gap-3 md:grid-cols-4 md:gap-6">
+                    <FormField control={control} name="rec2Name" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Full name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={control} name="rec2Email" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder="Email" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={control} name="rec2Phone" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Phone</FormLabel>
+                        <FormControl>
+                          <Input type="tel" placeholder="Phone number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={control} name="rec2Skill" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Skill</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select skill" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {skillOptions.map(s => (
+                              <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                  </div>
+
+                  {/* Person 3 */}
+                  <div className="grid gap-3 md:grid-cols-4 md:gap-6">
+                    <FormField control={control} name="rec3Name" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Full name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={control} name="rec3Email" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder="Email" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={control} name="rec3Phone" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Phone</FormLabel>
+                        <FormControl>
+                          <Input type="tel" placeholder="Phone number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={control} name="rec3Skill" render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Skill</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select skill" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {skillOptions.map(s => (
+                              <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                  </div>
+                </div>
                 <Button loading={isLoading} type="submit" className="w-full" disabled={!isValid || isLoading}>
                   Sign Up
                 </Button>

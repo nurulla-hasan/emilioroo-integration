@@ -5,7 +5,7 @@ import { useGetMyAudioQuery, useDeleteAudioMutation } from "@/lib/features/api/c
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Play, Pause, Edit, Trash2 } from "lucide-react";
+import { Play, Pause, Edit, Trash2, Share2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { playAudio, pauseAudio } from "@/lib/features/slices/audio/audioSlice";
 import ConversationAudioCardSkeleton from "@/components/skeleton/ConversationAudioCardSkeleton";
@@ -48,6 +48,31 @@ const MyContentPage = () => {
     setIsConfirmModalOpen(true);
   };
 
+  const handleShare = async (audio) => {
+    try {
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const path = typeof window !== 'undefined' ? window.location.pathname : '';
+      const url = `${origin}${path}#audio-${audio._id}`;
+
+      if (navigator.share) {
+        await navigator.share({
+          title: audio?.title || 'Audio',
+          text: audio?.description || '',
+          url,
+        });
+        // toast.success(t('sharedSuccessfully') || 'Shared');
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        toast.success(t('linkCopied') || 'Link copied to clipboard');
+      } else {
+        // Fallback: open url in new tab
+        window.open(url, '_blank');
+      }
+    } catch {
+      toast.error(t('shareFailed') || 'Failed to share');
+    }
+  };
+
   const handleDeleteConfirm = async () => {
     if (!selectedAudio) return;
     try {
@@ -55,9 +80,9 @@ const MyContentPage = () => {
       toast.success(t("audioDeletedSuccessfully"));
       setIsConfirmModalOpen(false);
       setSelectedAudio(null);
-    } catch (error) {
+    } catch  {
       toast.error(t("failedToDeleteAudio"));
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -79,7 +104,7 @@ const MyContentPage = () => {
             </div>
           ) : myAudios.length > 0 ? (
             myAudios.map((audio) => (
-              <div key={audio._id} className="flex flex-col sm:flex-row sm:items-center bg-gray-50 dark:bg-card border rounded-lg p-4">
+              <div id={`audio-${audio._id}`} key={audio._id} className="flex flex-col sm:flex-row sm:items-center bg-gray-50 dark:bg-card border rounded-lg p-4">
                 <div className="relative w-full h-48 sm:w-24 sm:h-24 rounded-md overflow-hidden flex-shrink-0 sm:mr-4 mb-4 sm:mb-0">
                   <Image
                     src={audio.cover_image || "/placeholder.png"}
@@ -102,6 +127,9 @@ const MyContentPage = () => {
                   <div className="flex items-center gap-2 mt-4 sm:mt-0 sm:ml-4">
                     <Button size="icon" variant="ghost" className="rounded-full" onClick={() => handlePlayAudio(audio)}>
                       {currentAudio?._id === audio._id && isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                    </Button>
+                    <Button size="icon" variant="ghost" onClick={() => handleShare(audio)}>
+                      <Share2 className="w-5 h-5" />
                     </Button>
                     <Button size="icon" variant="ghost" onClick={() => handleEditClick(audio)}>
                       <Edit className="w-5 h-5" />

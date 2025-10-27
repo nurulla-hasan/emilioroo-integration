@@ -11,7 +11,7 @@ import CustomPagination from '@/components/common/CustomPagination';
 import { Input } from '@/components/ui/input';
 import LoadFailed from '@/components/common/LoadFailed';
 import MatchingBondsModal from '../../MatchingBondsModal';
-import EditBondRequestModal from './EditBondRequestModal';
+// import EditBondRequestModal from './EditBondRequestModal';
 import ConfirmationModal from '@/components/common/ConfirmationModal';
 import { toast } from 'sonner';
 
@@ -24,7 +24,7 @@ export default function BondRequestTabs() {
 
   // State for modals
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  // const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   
   // State for the currently selected request for modals
@@ -36,7 +36,7 @@ export default function BondRequestTabs() {
     searchTerm
   });
   const [deleteRequestBond, { isLoading: isDeleting }] = useDeleteRequestBondMutation();
-  const [updateRequestBond,] = useUpdateRequestBondMutation();
+  const [updateRequestBond, { isLoading: isUpdating }] = useUpdateRequestBondMutation();
 
   const totalPages = bondRequests?.data?.meta?.totalPage;
 
@@ -46,10 +46,10 @@ export default function BondRequestTabs() {
     setIsMatchModalOpen(true);
   };
 
-  const handleEdit = (request) => {
-    setSelectedRequest(request);
-    setIsEditModalOpen(true);
-  };
+  // const handleEdit = (request) => {
+  //   setSelectedRequest(request);
+  //   setIsEditModalOpen(true);
+  // };
 
   const handleDelete = (request) => {
     setSelectedRequest(request);
@@ -107,9 +107,10 @@ export default function BondRequestTabs() {
                 key={request._id} 
                 request={request} 
                 onFindMatch={handleFindMatch} 
-                onEdit={handleEdit}
+                // onEdit={handleEdit}
                 onDelete={handleDelete}
                 onPause={handlePause}
+                isUpdating={isUpdating}
               />
             ))}
           </div>
@@ -135,11 +136,11 @@ export default function BondRequestTabs() {
             onOpenChange={setIsMatchModalOpen}
             bondRequestId={selectedRequest._id}
           />
-          <EditBondRequestModal
+          {/* <EditBondRequestModal
             isOpen={isEditModalOpen}
             onOpenChange={setIsEditModalOpen}
             request={selectedRequest}
-          />
+          /> */}
           <ConfirmationModal
             isOpen={isDeleteModalOpen}
             onOpenChange={setIsDeleteModalOpen}

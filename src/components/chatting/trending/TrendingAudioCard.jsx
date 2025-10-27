@@ -3,17 +3,20 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Star, Play, Pause, Heart } from "lucide-react";
+import { Eye, Star, Play, Pause, Heart, Share2 } from "lucide-react";
 import { formatDuration } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { playAudio, pauseAudio } from "@/lib/features/slices/audio/audioSlice";
 import useFavoriteToggle from "@/hooks/useFavoriteToggle";
 import useGetFavoriteIds from "@/hooks/useGetFavoriteIds";
+import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 const TrendingAudioCard = ({ audio }) => {
   const [favouriteIds] = useGetFavoriteIds();
   const dispatch = useDispatch();
   const { currentAudio, isPlaying } = useSelector((state) => state.audio);
+  const t = useTranslations('MyContentPage');
 
   const { toggleFavorite } = useFavoriteToggle();
 
@@ -30,8 +33,32 @@ const TrendingAudioCard = ({ audio }) => {
     toggleFavorite(audio);
   };
 
+  const handleShare = async () => {
+    try {
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const path = typeof window !== 'undefined' ? window.location.pathname : '';
+      const url = `${origin}${path}#audio-${audio._id}`;
+
+      if (navigator.share) {
+        await navigator.share({
+          title: audio?.title || 'Audio',
+          text: audio?.description || '',
+          url,
+        });
+        // Optional toast removed to match MyContent behavior
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        // toast.success(t('linkCopied') || 'Link copied to clipboard');
+      } else {
+        window.open(url, '_blank');
+      }
+    } catch {
+      toast.error(t('shareFailed') || 'Failed to share');
+    }
+  };
+
   return (
-    <div key={audio._id} className="flex flex-col sm:flex-row sm:items-center bg-gray-50 dark:bg-card border rounded-lg p-4">
+    <div id={`audio-${audio._id}`} key={audio._id} className="flex flex-col sm:flex-row sm:items-center bg-gray-50 dark:bg-card border rounded-lg p-4">
       <div className="relative w-full h-48 sm:w-24 sm:h-24 rounded-md overflow-hidden flex-shrink-0 sm:mr-4 mb-4 sm:mb-0">
         <Image
           src={audio.cover_image || "/placeholder.png"}
@@ -64,6 +91,9 @@ const TrendingAudioCard = ({ audio }) => {
               ) : (
                 <Play className="w-6 h-6" />
               )}
+            </Button>
+            <Button size="icon" variant="ghost" onClick={handleShare}>
+              <Share2 className="w-5 h-5" />
             </Button>
             <div className="flex items-center text-sm text-muted-foreground">
               <Eye className="w-4 h-4 mr-1" /> {audio.totalPlay || 0}k

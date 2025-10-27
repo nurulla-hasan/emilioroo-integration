@@ -3,12 +3,36 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Play, Headphones, Clock } from "lucide-react"
+import { Play, Headphones, Clock, Share2 } from "lucide-react"
 import { isNew, timeAgo } from "@/lib/utils"
 import Link from "next/link"
+import { toast } from "sonner"
+import { useTranslations } from "next-intl"
 
 export default function TrendingTopicCard({topic}) {
   const fresh = isNew(topic.createdAt)
+  const t = useTranslations('MyContentPage')
+
+  const handleShare = async () => {
+    try {
+      const origin = typeof window !== 'undefined' ? window.location.origin : ''
+      const url = `${origin}/chatting/trending/${topic._id}`
+      if (navigator.share) {
+        await navigator.share({
+          title: topic?.name || 'Topic',
+          text: `${topic?.totalAudios || 0} Audio`,
+          url,
+        })
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url)
+        toast.success(t('linkCopied') || 'Link copied to clipboard')
+      } else {
+        window.open(url, '_blank')
+      }
+    } catch {
+      toast.error(t('shareFailed') || 'Failed to share')
+    }
+  }
 
   return (
     <div className="group w-full mx-auto overflow-hidden rounded-2xl border bg-primary shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:shadow-md">
@@ -52,16 +76,27 @@ export default function TrendingTopicCard({topic}) {
           {typeof topic.totalAudios === "number" ? topic.totalAudios : ""} Audio
         </p>
 
-        <Link href={`/chatting/trending/${topic._id}`}>
+        <div className="mt-1 flex items-center gap-2">
+          <Link href={`/chatting/trending/${topic._id}`} className="flex-1">
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full border-white/50 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+            >
+              <Play className="mr-2 h-4 w-4" />
+              Listen Now
+            </Button>
+          </Link>
           <Button
-            size="sm"
+            size="icon"
             variant="outline"
-            className="mt-1 w-full border-white/50 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+            className="border-white/50 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+            onClick={handleShare}
+            aria-label="Share topic"
           >
-            <Play className="mr-2 h-4 w-4" />
-            Listen Now
+            <Share2 className="h-4 w-4" />
           </Button>
-        </Link>
+        </div>
       </div>
     </div>
   )

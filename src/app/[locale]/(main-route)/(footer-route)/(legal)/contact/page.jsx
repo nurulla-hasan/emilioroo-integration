@@ -18,8 +18,8 @@ const Contact = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Handle form submission logic here
-        console.log({ name, email, subject, message });
-        alert('Message sent! (Check console for details)');
+        // console.log({ name, email, subject, message });
+        // alert('Message sent! (Check console for details)');
         // Clear form fields
         setName('');
         setEmail('');

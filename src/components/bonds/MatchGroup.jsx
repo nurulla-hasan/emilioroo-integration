@@ -54,7 +54,7 @@ const UserCard = ({ user, showRating }) => (
 );
 
 const MatchGroup = ({ matchRequest, status, showProposeButton = true, showRating = true }) => {
-    console.log(matchRequest);
+    // console.log(matchRequest);
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [createBondLink, { isLoading }] = useCreateBondLinkMutation();

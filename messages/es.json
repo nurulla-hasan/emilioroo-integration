@@ -33,7 +33,7 @@
     "noUsersFound": "No se encontraron usuarios."
   },
   "Hero": {
-    "title": "Somos lo que hacemos juntos",
+    "title": "Creando la realidad juntos",
     "explore": "Explorar",
     "signIn": "Iniciar sesión"
   },
@@ -264,7 +264,10 @@
     "delete": "Eliminar",
     "cancel": "Cancelar",
     "update": "Actualizar",
-    "deleting": "Eliminando"
+    "deleting": "Eliminando",
+    "sharedSuccessfully": "Compartido con éxito",
+    "linkCopied": "Enlace copiado al portapapeles",
+    "shareFailed": "Error al compartir"
   },
   "UpdateAudioModal": {
     "titleMinLength": "El título debe tener al menos 5 caracteres.",
@@ -342,7 +345,7 @@
     "subscribe": "Suscribir",
     "bankybondy": "Bankybondy",
     "weAreChatting": "Estamos charlando",
-    "platformDescription": "Una plataforma gratuita para compartir y explorar conversaciones de la vida diaria. Disfruta de fragmentos de audio auténticos de personas reales, y si deseas apoyarnos, las donaciones siempre son apreciadas.",
+    "platformDescription": "Creando la realidad juntos.",
     "information": "Información",
     "donateUs": "Dona",
     "contactUs": "Contáctanos",
@@ -354,7 +357,7 @@
     "instagram": "Instagram",
     "madeWith": "Hecho con",
     "byTeam": "por el equipo de Bankybondy",
-    "copyright": "© 2024 Bankybondy. Todos los derechos reservados.",
+    "copyright": "Bankybondy@ 2025 by Emilio Roo is licensed under CC BY-SA 4.0.",
     "online": "En línea",
     "lastUpdated": "Última actualización: Hoy"
   },
@@ -514,5 +517,8 @@
     "radiusLabel": "Radio (km)",
     "cancel": "Cancelar",
     "save": "Guardar Cambios"
+  },
+  "NoData": {
+    "noData": "Sin resultados, por ahora... ¡Intenta más tarde!"
   }
 }

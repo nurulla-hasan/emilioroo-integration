@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useCancelRequestMutation } from "@/lib/features/api/friendsApi";
 
 const CancelSentRequest = ({ request }) => {
-    console.log(request);
+    // console.log(request);
     const [cancelRequest, { isLoading }] = useCancelRequestMutation();
 
     const handleCancelRequest = async () => {

@@ -5,18 +5,21 @@ import Image from 'next/image';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Play, Pause, Heart, Eye, Star, Clock } from 'lucide-react';
+import { Play, Pause, Heart, Eye, Star, Clock, Share2 } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { playAudio, pauseAudio } from '@/lib/features/slices/audio/audioSlice';
 import useFavoriteToggle from "@/hooks/useFavoriteToggle";
 import { cn, formatDuration } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 
 
 const AudioCard = ({ audio, favouriteIds }) => {
     const dispatch = useDispatch();
     const { currentAudio, isPlaying } = useSelector((state) => state.audio);
     const { toggleFavorite } = useFavoriteToggle();
+    const t = useTranslations('MyContentPage');
 
     const isThisAudioPlaying = currentAudio?._id === audio._id && isPlaying;
 
@@ -34,8 +37,33 @@ const AudioCard = ({ audio, favouriteIds }) => {
         toggleFavorite(audio);
     };
 
+    const handleShare = async (e) => {
+        e.stopPropagation();
+        try {
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            const path = typeof window !== 'undefined' ? window.location.pathname : '';
+            const url = `${origin}${path}#audio-${audio._id}`;
+
+            if (navigator.share) {
+                await navigator.share({
+                    title: audio?.title || 'Audio',
+                    text: audio?.description || '',
+                    url,
+                });
+            } else if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(url);
+                toast.success(t('linkCopied') || 'Link copied to clipboard');
+            } else {
+                window.open(url, '_blank');
+            }
+        } catch {
+            toast.error(t('shareFailed') || 'Failed to share');
+        }
+    };
+
     return (
         <Card
+            id={`audio-${audio._id}`}
             className={cn(
                 "group w-full overflow-hidden bg-card flex flex-col border border-gray-200/70 shadow-sm transition-all duration-300",
                 "hover:shadow-md hover:-translate-y-[2px]",
@@ -55,25 +83,45 @@ const AudioCard = ({ audio, favouriteIds }) => {
                     {/* Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-black/10 transition-colors duration-300 group-hover:from-black/50 group-hover:via-black/30 group-hover:to-black/10" />
 
-                    {/* Favorite button */}
-                    <TooltipProvider disableHoverableContent>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    className="absolute top-2 right-2 bg-black/20 hover:bg-white/25 text-white backdrop-blur-sm"
-                                    onClick={handleFavoriteClick}
-                                    aria-label="Add to favorites"
-                                >
-                                    <Heart className={`w-4 h-4 ${favouriteIds.includes(audio._id) ? "fill-red-500" : ""}`} />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="left" className="text-xs">
-                                Favorite
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
+                    {/* Favorite and Share buttons */}
+                    <div className="absolute top-2 right-2 flex items-center gap-2">
+                        <TooltipProvider disableHoverableContent>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        className="bg-black/20 hover:bg-white/25 text-white backdrop-blur-sm"
+                                        onClick={handleFavoriteClick}
+                                        aria-label="Add to favorites"
+                                    >
+                                        <Heart className={`w-4 h-4 ${favouriteIds.includes(audio._id) ? "fill-red-500" : ""}`} />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent side="left" className="text-xs">
+                                    Favorite
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider disableHoverableContent>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        className="bg-black/20 hover:bg-white/25 text-white backdrop-blur-sm"
+                                        onClick={handleShare}
+                                        aria-label="Share audio"
+                                    >
+                                        <Share2 className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent side="left" className="text-xs">
+                                    Share
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
 
                     {/* Duration chip */}
                     <div className="absolute bottom-2 left-2 flex items-center gap-1 text-[11px] px-2 py-1 rounded-full bg-black/60 text-white backdrop-blur-sm">

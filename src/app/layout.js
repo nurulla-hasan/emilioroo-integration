@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "sonner";
 import NextTopLoader from "nextjs-toploader";
 import { SocketProvider } from "@/context/soket-context/SocketContext";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const poltawski = Poltawski_Nowy({
   variable: "--font-poltawski",
@@ -42,7 +43,9 @@ export default async function RootLayout({ children }) {
               disableTransitionOnChange
             >
                 <SocketProvider>
-                  {children}
+                  <ScrollArea className="h-screen scrollbar-primary">
+                    {children}
+                  </ScrollArea>
                 </SocketProvider>
               <Toaster richColors />
             </ThemeProvider>

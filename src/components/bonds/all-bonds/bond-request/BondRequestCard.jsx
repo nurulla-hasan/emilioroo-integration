@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Gift, Handshake, MapPin, Pencil, Trash2, Pause, Search, Play } from "lucide-react";
+import { Gift, Handshake, MapPin, Trash2, Pause, Search, Play, Loader2 } from "lucide-react";
 import { timeAgo } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-const BondRequestCard = ({ request, onFindMatch, onEdit, onDelete, onPause }) => {
+const BondRequestCard = ({ request, onFindMatch, onDelete, onPause, isUpdating }) => {
     return (
         <div className="bg-card rounded-xl shadow-md border border-gray-200 dark:border-gray-800 p-4 flex flex-col justify-between h-full transition-all hover:shadow-lg">
             <div>
@@ -59,14 +59,14 @@ const BondRequestCard = ({ request, onFindMatch, onEdit, onDelete, onPause }) =>
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <Button variant="ghost" size="icon" onClick={() => onPause(request)}>
-                                {request.isPause ? <Play className="h-4 w-4 text-green-500" /> : <Pause className="h-4 w-4 text-yellow-500" />}
+                                {isUpdating ? <Loader2 className="h-4 w-4 animate-spin" /> : request.isPause ? <Play className="h-4 w-4 text-green-500" /> : <Pause className="h-4 w-4 text-yellow-500" />}
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>{request.isPause ? "Resume Request" : "Pause Request"}</p>
                         </TooltipContent>
                     </Tooltip>
-                    <Tooltip>
+                    {/* <Tooltip>
                         <TooltipTrigger asChild>
                             <Button variant="ghost" size="icon" onClick={() => onEdit(request)}>
                                 <Pencil className="h-4 w-4 text-blue-500" />
@@ -75,7 +75,7 @@ const BondRequestCard = ({ request, onFindMatch, onEdit, onDelete, onPause }) =>
                         <TooltipContent>
                             <p>Edit Request</p>
                         </TooltipContent>
-                    </Tooltip>
+                    </Tooltip> */}
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <Button variant="ghost" size="icon" onClick={() => onDelete(request)}>

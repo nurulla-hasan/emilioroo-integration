@@ -20,7 +20,7 @@ const donateApi = baseApi.injectEndpoints({
                     }
                 } catch (error) {
                     toast.error(error?.error?.data?.message === "Your are not authorized 1" && "Please login first");
-                    console.log(error);
+                    // console.log(error);
                 }
             },
         }),

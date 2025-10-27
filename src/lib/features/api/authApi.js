@@ -181,8 +181,8 @@ const authApis = baseApi.injectEndpoints({
                     await queryFulfilled;
                     dispatch(clearAuthTokens());
                     await persistor.purge();
-                } catch (error) {
-                    console.log(error);
+                } catch  {
+                    // console.log(error);
                 }
             },
         }),

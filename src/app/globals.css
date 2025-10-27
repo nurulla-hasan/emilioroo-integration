@@ -114,10 +114,26 @@
 }
 
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
+} */
+
+/* globals.css */
+.scrollbar-primary [data-slot="scroll-area-thumb"] {
+  background-color: #3b72d8; /* light mode */
+}
+.dark .scrollbar-primary [data-slot="scroll-area-thumb"] {
+  background-color: #647cff; /* dark mode (example) */
+}
+
+/* Optional: track background or hover width */
+.scrollbar-primary [data-slot="scroll-area-scrollbar"] {
+  background-color: transparent;
+}
+.scrollbar-primary [data-slot="scroll-area-thumb"]:hover {
+  background-color: #2f5cc2;
 }
 
 @layer base {

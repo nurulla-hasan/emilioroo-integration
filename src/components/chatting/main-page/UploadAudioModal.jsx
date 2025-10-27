@@ -90,7 +90,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
     const [audioFileName, setAudioFileName] = useState('');
     const [coverFileName, setCoverFileName] = useState('');
     const { data: topicsData, isLoading: isTopicsLoading } = useGetAllTopicsQuery();
-    console.log(topicsData);
+    // console.log(topicsData);
     const [createAudio, { isLoading: isUploading }] = useCreateAudioMutation();
     const [checkAudio, { isLoading: isCheckingAudio }] = useCheckAudioMutation();
 
@@ -145,7 +145,7 @@ const UploadAudioModal = ({ isOpen, onOpenChange }) => {
             };
 
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             toast.error("Failed to analyze audio", {
                 description: error?.data?.message || "An error occurred during analysis.",
             });

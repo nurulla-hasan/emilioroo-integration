@@ -11,7 +11,7 @@ const Terms = () => {
 
     const { data: termsData, isLoading, isError } = useGetTermsQuery();
     const terms = termsData?.data?.description;
-    console.log(terms);
+    // console.log(terms);
 
     const breadcrumbLinks = [
         { name: 'Home', href: '/' },
