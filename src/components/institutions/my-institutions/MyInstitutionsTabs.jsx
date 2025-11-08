@@ -52,7 +52,7 @@
 //   const currentData = activeTab === "created" ? createdData : joinedData;
 //   const currentLoading = activeTab === "created" ? createdLoading : joinedLoading;
 //   const currentError = activeTab === "created" ? createdError : joinedError;
-//   const totalPages = currentData?.data?.meta?.totalPage;
+//   const totalPages = currentData?.data?.meta?.totalPages;
 
 //   const handleDeleteInstitution = (institutionId) => {
 //     setInstitutionToDelete(institutionId);

@@ -39,7 +39,7 @@ const PeopleCardButton = ({ user }) => {
                 );
             default:
                 return (
-                    <Button className="flex-1" onClick={() => handleConnect(user)} disabled={isSendingRequest} loading={isSendingRequest}>
+                    <Button className="flex-1 rounded-full" onClick={() => handleConnect(user)} disabled={isSendingRequest} loading={isSendingRequest}>
                         Add Friend
                     </Button>
                 );

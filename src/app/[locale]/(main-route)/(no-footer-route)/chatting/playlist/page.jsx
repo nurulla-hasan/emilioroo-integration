@@ -87,11 +87,11 @@ const PlaylistPage = () => {
                   <PlaylistCard key={playlist._id} playlist={playlist} />
                 ))}
               </div>
-              {allMeta.totalPage > 1 && (
+              {allMeta.totalPages > 1 && (
                 <div className="mt-8 flex justify-center">
                   <CustomPagination
                     currentPage={allMeta.page}
-                    totalPage={allMeta.totalPage}
+                    totalPages={allMeta.totalPages}
                     onPageChange={setAllPage}
                   />
                 </div>
@@ -123,11 +123,11 @@ const PlaylistPage = () => {
                   <PlaylistCard key={playlist._id} playlist={playlist} />
                 ))}
               </div>
-              {myMeta.totalPage > 1 && (
+              {myMeta.totalPages > 1 && (
                 <div className="mt-8 flex justify-center">
                   <CustomPagination
                     currentPage={myMeta.page}
-                    totalPage={myMeta.totalPage}
+                    totalPages={myMeta.totalPages}
                     onPageChange={setMyPage}
                   />
                 </div>

@@ -16,11 +16,13 @@ import { useTranslations } from "next-intl";
 import Title from "@/components/ui/Title";
 import NoData from "@/components/common/NoData";
 import LoadFailed from "@/components/common/LoadFailed";
+import CustomPagination from "@/components/common/CustomPagination";
 
 const MyContentPage = () => {
   const t = useTranslations('MyContentPage');
   const dispatch = useDispatch();
-  const { data, isLoading, isError } = useGetMyAudioQuery();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data, isLoading, isError } = useGetMyAudioQuery({ page: currentPage, limit: 10 });
   const [deleteAudio, { isLoading: isDeleting }] = useDeleteAudioMutation();
   const { currentAudio, isPlaying } = useSelector((state) => state.audio);
 
@@ -29,6 +31,8 @@ const MyContentPage = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const myAudios = data?.data?.result || [];
+  const meta = data?.data?.meta || {};
+  const totalPages = meta?.totalPages || 1;
 
   const handlePlayAudio = (audio) => {
     if (currentAudio?._id === audio._id && isPlaying) {
@@ -166,6 +170,16 @@ const MyContentPage = () => {
         confirmText={t('delete')}
         loading={isDeleting}
       />
+
+      {totalPages > 1 && (
+        <div className="my-4">
+          <CustomPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
     </div>
   );
 };

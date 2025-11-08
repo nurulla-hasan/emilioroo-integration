@@ -38,7 +38,7 @@ export default function BondRequestTabs() {
   const [deleteRequestBond, { isLoading: isDeleting }] = useDeleteRequestBondMutation();
   const [updateRequestBond, { isLoading: isUpdating }] = useUpdateRequestBondMutation();
 
-  const totalPages = bondRequests?.data?.meta?.totalPage;
+  const totalPages = bondRequests?.data?.meta?.totalPages;
 
   // Handlers to open modals
   const handleFindMatch = (request) => {

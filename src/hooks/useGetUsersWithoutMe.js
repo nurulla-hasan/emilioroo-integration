@@ -13,7 +13,7 @@ export const useGetUsersWithoutMe = (currentPage, pageSize, searchTerm) => {
 
     const userData = data?.data?.result || [];
     const users = userData.filter((user) => user._id !== userId);
-    const totalPages = data?.data?.meta?.totalPage || 1;
+    const totalPages = data?.data?.meta?.totalPages || 1;
 
     return { users, isLoading, isError, totalPages };
 };

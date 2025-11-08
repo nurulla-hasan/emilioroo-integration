@@ -35,7 +35,7 @@ const CompletedBonds = () => {
   }
 
   const bonds = data?.data?.result || [];
-  const totalPages = data?.data?.meta?.totalPage || 1;
+  const totalPages = data?.data?.meta?.totalPages || 1;
 
   return (
     <div>

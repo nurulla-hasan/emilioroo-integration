@@ -40,7 +40,7 @@
 //         return () => clearTimeout(timeoutId);
 //     }, [searchQuery])
 
-//     const totalPages = data?.data?.meta?.totalPage
+//     const totalPages = data?.data?.meta?.totalPages
 
 //     const handleOpenCreateModal = () => {
 //         setIsCreateModalOpen(true);

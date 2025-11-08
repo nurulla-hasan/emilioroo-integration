@@ -42,9 +42,9 @@ const Friends = () => {
     const myFollower = myFollowerData?.data?.result || [];
     const sentRequests = sentRequestData?.data?.result || [];
 
-    const friendTotalPages = myFriendData?.data?.meta?.totalPage || 1;
-    const followerTotalPages = myFollowerData?.data?.meta?.totalPage || 1;
-    const sentRequestTotalPages = sentRequestData?.data?.meta?.totalPage || 1;
+    const friendTotalPages = myFriendData?.data?.meta?.totalPages || 1;
+    const followerTotalPages = myFollowerData?.data?.meta?.totalPages || 1;
+    const sentRequestTotalPages = sentRequestData?.data?.meta?.totalPages || 1;
 
 
 

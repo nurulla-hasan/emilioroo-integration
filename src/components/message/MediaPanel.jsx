@@ -53,7 +53,7 @@ export const MediaPanel = ({ activeConversation }) => {
         const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
         const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
 
-        if (isAtBottom && !isFetching && mediaData?.data?.meta?.totalPage > page) {
+        if (isAtBottom && !isFetching && mediaData?.data?.meta?.totalPages > page) {
             dispatch(incrementPage());
         }
     };

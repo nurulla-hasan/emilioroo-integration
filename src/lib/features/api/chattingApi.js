@@ -36,10 +36,15 @@ const chattingApi = baseApi.injectEndpoints({
 
         // GET MY AUDIO
         getMyAudio: builder.query({
-            query: () => ({
-                url: "/audio/my-audios",
-                method: "GET",
-            }),
+            query: (arg = {}) => {
+                const params = new URLSearchParams(arg);
+                const queryString = params.toString();
+
+                return {
+                    url: queryString ? `/audio/my-audios?${queryString}` : "/audio/my-audios",
+                    method: "GET",
+                };
+            },
             providesTags: ["AUDIO"],
         }),
 
@@ -54,10 +59,15 @@ const chattingApi = baseApi.injectEndpoints({
 
         // GET BOOKMARK AUDIO
         getBookmarkAudio: builder.query({
-            query: () => ({
-                url: "/audio-bookmark/my-bookmark-audios",
-                method: "GET",
-            }),
+            query: (arg = {}) => {
+                const params = new URLSearchParams(arg);
+                const queryString = params.toString();
+
+                return {
+                    url: queryString ? `/audio-bookmark/my-bookmark-audios?${queryString}` : "/audio-bookmark/my-bookmark-audios",
+                    method: "GET",
+                };
+            },
             providesTags: ["AUDIO"],
         }),
 

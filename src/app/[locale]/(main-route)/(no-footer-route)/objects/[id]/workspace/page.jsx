@@ -51,7 +51,7 @@
 //   const images = imagesData?.data?.result;
 
 //   const fetchMoreMessages = () => {
-//     if (!areMessagesLoading && messagesData?.data?.meta?.totalPage > page) {
+//     if (!areMessagesLoading && messagesData?.data?.meta?.totalPages > page) {
 //       setPage(prevPage => prevPage + 1);
 //     }
 //   };

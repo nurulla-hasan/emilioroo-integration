@@ -51,11 +51,11 @@ const MostPlayedPage = () => {
               <AudioCard key={audio._id} audio={audio} favouriteIds={favouriteIds} />
             ))}
           </div>
-          {meta.totalPage > 1 && (
+          {meta.totalPages > 1 && (
             <div className="mt-8 flex justify-center">
               <CustomPagination
                 currentPage={meta.page}
-                totalPage={meta.totalPage}
+                totalPages={meta.totalPages}
                 onPageChange={handlePageChange}
               />
             </div>

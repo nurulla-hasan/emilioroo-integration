@@ -52,11 +52,11 @@ const ConversationsPage = () => {
         )}
       </div>
 
-      {meta.totalPage > 1 && !isLoading && !isError && audios.length > 0 && (
+      {meta.totalPages > 1 && !isLoading && !isError && audios.length > 0 && (
         <div className="mt-8 flex justify-center">
           <CustomPagination
             currentPage={meta.page}
-            totalPage={meta.totalPage}
+            totalPages={meta.totalPages}
             onPageChange={handlePageChange}
           />
         </div>

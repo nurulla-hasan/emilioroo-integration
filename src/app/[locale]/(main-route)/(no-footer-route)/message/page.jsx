@@ -85,7 +85,7 @@ const MessagePage = () => {
         setActiveConversation(null);
     };
     const fetchMoreMessages = () => {
-        if (!isMessagesLoading && messagesData?.data?.meta?.totalPage > page) {
+        if (!isMessagesLoading && messagesData?.data?.meta?.totalPages > page) {
             setPage(prevPage => prevPage + 1);
         }
     };
