@@ -29,7 +29,7 @@ const DonateUs = () => {
   }
 
   return (
-    <div className="min-h-minus-header flex flex-col items-center justify-between bg-gradient-to-br from-primary via-primary/95 to-primary/90 dark:from-accent dark:via-accent/95 dark:to-accent/90 px-4 pt-10 md:pt-20 overflow-hidden relative">
+    <div className="min-h-minus-header flex flex-col items-center justify-between bg-gradient-to-br from-primary via-primary/95 to-primary/90 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-purple-900 px-4 pt-10 md:pt-20 overflow-hidden relative">
       {/* Animated Love Icons Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Large floating hearts */}

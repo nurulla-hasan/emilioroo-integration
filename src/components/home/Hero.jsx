@@ -20,7 +20,7 @@ const Hero = () => {
   const musicIcons = [Music, Music2, Music3, Music4, Headphones, Radio, Volume2, Disc3]
 
   return (
-    <div className="relative w-full min-h-minus-header flex flex-col items-center justify-center text-center bg-primary dark:bg-accent overflow-hidden">
+    <div className="relative w-full min-h-minus-header flex flex-col items-center justify-center text-center bg-primary dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-purple-900 overflow-hidden">
       {/* Animated Background Bubbles */}
       <div className="absolute inset-0 overflow-hidden">
 
