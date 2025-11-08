@@ -501,7 +501,9 @@
     "mother": "Mother",
     "father": "Father",
     "reportUser": "Report User",
-    "friends": "Friends"
+    "friends": "Friends",
+    "recommendedUsers": "Recommended Users",
+    "noRecommendedUsers": "No recommended users available yet."
   },
   "EditBondRequestModal": {
     "offerRequired": "Offer is required.",

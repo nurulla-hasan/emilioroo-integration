@@ -4,6 +4,15 @@ import { baseApi } from "./baseApi";
 const relativesApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
 
+        // GET RECOMANDED USER
+        getRecommendedUser: builder.query({
+            query: () => ({
+                url: "/recommended-user/get",
+                method: "GET",
+            }),
+            providesTags: ["RELATIVES"],
+        }),
+
         // GET ALL RELATIVES
         getAllRelatives: builder.query({
             query: () => ({
@@ -45,6 +54,7 @@ const relativesApi = baseApi.injectEndpoints({
 });
 
 export const {
+    useGetRecommendedUserQuery,
     useGetAllRelativesQuery,
     useCreateRelativeMutation,
     useUpdateRelativeMutation,

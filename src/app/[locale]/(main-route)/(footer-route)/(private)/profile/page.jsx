@@ -3,7 +3,7 @@
 import { useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import { useGetMyProfileQuery, useGetSkillsQuery } from "@/lib/features/api/authApi";
-import { useGetAllRelativesQuery, useDeleteRelativeMutation } from "@/lib/features/api/relativesApi";
+import { useGetAllRelativesQuery, useDeleteRelativeMutation, useGetRecommendedUserQuery } from "@/lib/features/api/relativesApi";
 import { useGetMyFriendsQuery } from "@/lib/features/api/friendsApi";
 import { toast } from "sonner";
 import AddRelativeModal from "@/components/profile/modal/AddRelativeModal";
@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import ProfilePageSkeleton from "@/components/skeleton/ProfilePageSkeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Title2 from "@/components/ui/Title2";
 import { getInitials, fallbackAvatar2 } from "@/lib/utils";
@@ -79,6 +80,47 @@ const RelativeColumn = ({ relatives, title, handleEdit, handleDelete, isEditable
 };
 
 
+const RecommendedUsersSection = ({ recommendedUsers }) => {
+    const t = useTranslations('ProfilePage');
+    const translate = (key, fallback) => {
+        try {
+            return t(key);
+        } catch {
+            return fallback;
+        }
+    };
+
+    const heading = translate('recommendedUsers', 'Recommended Users');
+    const emptyMessage = translate('noRecommendedUsers', 'No recommended users available yet.');
+
+    return (
+        <div className="mt-10">
+            <Title2>{heading}</Title2>
+            {recommendedUsers.length === 0 ? (
+                <p className="text-sm text-muted-foreground mt-4 text-center">{emptyMessage}</p>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mt-4">
+                    {recommendedUsers.map((user) => (
+                        <div key={user._id} className="p-4 bg-background dark:bg-muted/40 border border-border rounded-lg shadow-sm flex flex-col gap-3">
+                            <div>
+                                <p className="font-semibold text-sm">{user.name}</p>
+                                <p className="text-xs text-muted-foreground break-all">{user.email}</p>
+                            </div>
+                            {user.phone && <p className="text-xs text-muted-foreground">{user.phone}</p>}
+                            {user.skill?.name && (
+                                <Badge variant="secondary" className="w-fit">
+                                    {user.skill.name}
+                                </Badge>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+
 const ProfilePage = () => {
     const t = useTranslations('ProfilePage');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -90,12 +132,14 @@ const ProfilePage = () => {
     const { data: profileData, isLoading: isProfileLoading, isError: isProfileError } = useGetMyProfileQuery();
     const { data: skillsData, isLoading: isSkillsLoading, isError: isSkillsError } = useGetSkillsQuery();
     const { data: relativesData, isLoading: isRelativesLoading, isError: isRelativesError } = useGetAllRelativesQuery();
+    const { data: recommendedData, isLoading: isRecommendedLoading, isError: isRecommendedError } = useGetRecommendedUserQuery();
     const { data: friendsData, isLoading: isFriendsLoading, isError: isFriendsError } = useGetMyFriendsQuery();
     const [deleteRelative, { isLoading: isDeleting }] = useDeleteRelativeMutation();
 
     const user = profileData?.data;
     const allSkills = skillsData?.data?.result || [];
     const relatives = relativesData?.data?.result || [];
+    const recommendedUsers = recommendedData?.data?.result || [];
     const friends = friendsData?.data?.result || [];
 
     const userSkills = user?.skills?.map(skillId => {
@@ -131,11 +175,11 @@ const ProfilePage = () => {
         }
     };
 
-    if (isProfileLoading || isSkillsLoading || isRelativesLoading || isFriendsLoading) {
+    if (isProfileLoading || isSkillsLoading || isRelativesLoading || isFriendsLoading || isRecommendedLoading) {
         return <div className="min-h-minus-header"><ProfilePageSkeleton /></div>;
     }
 
-    if (isProfileError || isSkillsError || isRelativesError || isFriendsError) {
+    if (isProfileError || isSkillsError || isRelativesError || isFriendsError || isRecommendedError) {
         return <PageLayout><div className="min-h-minus-header not-[]:text-red-500">{t('errorLoadingProfile')}</div></PageLayout>;
     }
 
@@ -169,6 +213,7 @@ const ProfilePage = () => {
                             </div>
                         </div>
                         <SocialLinks user={user} />
+                        <RecommendedUsersSection recommendedUsers={recommendedUsers} />
                         <FriendsSection friends={friends} />
                     </CardContent>
                 </Card>

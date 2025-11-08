@@ -171,6 +171,44 @@ body {
   color: #333333;
 }
 
+/* Scrollbar track */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  transition: all 0.3s ease;
+}
+
+/* Scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background-color 0.3s ease;
+}
+
+/* Scrollbar thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent);
+}
+
+/* Scrollbar track background */
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+}
+
+/* Scrollbar corner (between vertical and horizontal scrollbars) */
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) rgba(0, 0, 0, 0.05);
+}
+
 
 /* Custom animation */
 /* Add these animations to your global CSS file */
