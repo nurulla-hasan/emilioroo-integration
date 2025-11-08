@@ -118,11 +118,12 @@ export function SignUpForm({ className, ...props }) {
       { name: data.rec3Name, email: data.rec3Email, phone: data.rec3Phone, skill: data.rec3Skill },
     ].filter(u => (u?.name || u?.email || u?.phone || u?.skill));
 
-    // Debug only: Do not send to API
-    console.log('Recommended Users (client-only):', recommendedUsers);
+    const { rec1Name, rec1Email, rec1Phone, rec1Skill, rec2Name, rec2Email, rec2Phone, rec2Skill, rec3Name, rec3Email, rec3Phone, rec3Skill, ...payloadWithoutRecommendations } = formattedData;
 
-    // Exclude recommended users from API payload
-    const { rec1Name, rec1Email, rec1Phone, rec1Skill, rec2Name, rec2Email, rec2Phone, rec2Skill, rec3Name, rec3Email, rec3Phone, rec3Skill, ...payload } = formattedData;
+    const payload = {
+      ...payloadWithoutRecommendations,
+      ...(recommendedUsers.length ? { recommendedUsers } : {}),
+    };
 
     register(payload);
   };
