@@ -86,7 +86,9 @@ const AllBonds = () => {
     ];
 
     return (
-        <div className='min-h-minus-header'>
+        <div className='relative min-h-minus-header bg-gradient-to-br from-primary/15 via-primary/10 to-sky-100 dark:from-slate-950 dark:via-slate-900 dark:to-purple-950'>
+            {/* <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-sky-300/40 blur-3xl dark:bg-sky-500/20" />
+            <div className="pointer-events-none absolute -bottom-36 -right-16 h-80 w-80 rounded-full bg-purple-300/35 blur-3xl dark:bg-purple-500/15" /> */}
             <PageLayout>
                 <CustomBreadcrumb links={breadcrumbLinks} />
                 <Tabs defaultValue="bond-request" className="w-full">

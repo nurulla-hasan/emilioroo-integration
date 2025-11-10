@@ -1,73 +1,17 @@
 "use client"
-
 import { Facebook, Instagram, Mail, Heart } from "lucide-react"
 import Link from "next/link"
-// import { Button } from "@/components/ui/button"
-// import { Input } from "@/components/ui/input"
-// import { useState } from "react"
 import { Separator } from "../ui/separator"
 import { useTranslations } from 'next-intl';
 
 const Footer = () => {
     const t = useTranslations('Footer');
-    // const [email, setEmail] = useState("")
-    // const [isSubscribed, setIsSubscribed] = useState(false)
-
-    // const handleSubscribe = (e) => {
-    //     e.preventDefault()
-    //     if (email) {
-    //         setIsSubscribed(true)
-    //         setEmail("")
-    //         setTimeout(() => setIsSubscribed(false), 3000)
-    //     }
-    // }
 
     return (
-        <footer className="relative dark:bg-accent bg-primary text-white overflow-hidden px-4 xl:px-0">
+        <footer className="relative bg-gradient-to-br from-primary via-primary/95 to-sky-600 text-white overflow-hidden px-4 xl:px-0 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-purple-900">
             {/* Animated Background Elements */}
             <div className="relative z-10 py-8">
                 <div>
-                    {/* Newsletter Section */}
-                    {/* <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between text-center">
-                        <div className="flex flex-col">
-                            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-                                {t('joinCommunity')}
-                            </h2>
-                            <p className="text-white/80 mb-8 max-w-md mx-auto">
-                                {t('getUpdates')}
-                            </p>
-                        </div>
-
-                        <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4">
-                            <div className="relative flex-1">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60" />
-                                <Input
-                                    type="email"
-                                    placeholder={t('enterEmail')}
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white/15 focus:border-white/40 transition-all duration-300"
-                                />
-                            </div>
-                            <Button
-                                type="submit"
-                                className="bg-white dark:bg-white/10 text-primary hover:bg-white/90 font-semibold px-6 transition-all duration-300 hover:scale-105 shadow-lg"
-                            >
-                                {isSubscribed ? (
-                                    <span className="flex items-center gap-2">
-                                        <Heart className="w-4 h-4 text-red-500" />
-                                        {t('subscribed')}
-                                    </span>
-                                ) : (
-                                    <span className="flex items-center gap-2">
-                                        <Send className="w-4 h-4" />
-                                        {t('subscribe')}
-                                    </span>
-                                )}
-                            </Button>
-                        </form>
-                    </div> */}
-                    {/* <Separator className="bg-gray-500 my-4" /> */}
                     {/* Main Footer Content */}
                     <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
                         {/* Logo and Description */}

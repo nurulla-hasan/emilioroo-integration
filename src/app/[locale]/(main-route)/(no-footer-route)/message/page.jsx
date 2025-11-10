@@ -318,7 +318,7 @@ const MessagePage = () => {
     }
 
     return (
-        <div className="h-[calc(100vh-80px)] w-full">
+        <div className="h-[calc(100vh-80px)] w-full ">
             <div className="flex h-full bg-card border rounded-lg">
                 {/* Mobile View */}
                 <div className="w-full lg:hidden">

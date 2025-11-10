@@ -153,7 +153,7 @@ export const MediaPanel = ({ activeConversation }) => {
     };
 
     return (
-        <div className="w-full bg-card flex-col h-full flex">
+        <div className="w-full bg-card flex-col h-full flex bg-gradient-to-br from-primary/15 via-primary/10 to-sky-100 dark:from-slate-950 dark:via-slate-900 dark:to-purple-950">
             <div className="flex justify-between items-center p-5.5 border-b">
                 <h3 className="text-lg font-semibold">{t('media')}</h3>
             </div>

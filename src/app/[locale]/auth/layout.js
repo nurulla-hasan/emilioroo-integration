@@ -1,4 +1,3 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const metadata = {
     title: "Emilirio | Auth",
@@ -8,9 +7,7 @@ export const metadata = {
 const layout = ({ children }) => {
     return (
         <>
-            <ScrollArea className="h-screen scrollbar-primary">
-                {children}
-            </ScrollArea>
+            {children}
         </>
     );
 };

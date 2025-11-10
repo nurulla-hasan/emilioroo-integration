@@ -197,6 +197,45 @@ const Navbar = () => {
 
                             {/* Right Action Icons */}
                             <div className="flex items-center justify-end xl:justify-start space-x-2 md:space-x-4">
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild className="hover:bg-transparent">
+                                        <Button variant="ghost" size="icon" className="rounded-full">
+                                            <Languages className="h-6 w-6 text-white" />
+                                            <span className="sr-only">{t('language')}</span>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
+                                            {t('en')}
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleLanguageChange('es')}>
+                                            {t('es')}
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+
+                                {/* Theme Toggle */}
+                                <Toggle
+                                    variant="ghost"
+                                    size="sm"
+                                    className="group hover:bg-transparent data-[state=on]:bg-transparent rounded-full"
+                                    pressed={theme === "dark"}
+                                    onPressedChange={() =>
+                                        setTheme((prev) => (prev === "dark" ? "light" : "dark"))
+                                    }
+                                    aria-label={t(theme === 'dark' ? 'switchToLight' : 'switchToDark')}
+                                >
+                                    <MoonIcon
+                                        size={10}
+                                        className="shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
+                                        aria-hidden="true"
+                                    />
+                                    <SunIcon
+                                        size={10}
+                                        className="absolute shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0 text-white"
+                                        aria-hidden="true"
+                                    />
+                                </Toggle>
                                 {/* User Profile Icon */}
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -289,45 +328,6 @@ const Navbar = () => {
                                                 </NextIntlLink>
                                             </>
                                         )}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-
-                                {/* Theme Toggle */}
-                                <Toggle
-                                    variant="outline"
-                                    className="group data-[state=off]:hover:bg-white/10 data-[state=on]:hover:bg-white/10 border-0 rounded-full"
-                                    pressed={theme === "dark"}
-                                    onPressedChange={() =>
-                                        setTheme((prev) => (prev === "dark" ? "light" : "dark"))
-                                    }
-                                    aria-label={t(theme === 'dark' ? 'switchToLight' : 'switchToDark')}
-                                >
-                                    <MoonIcon
-                                        size={12}
-                                        className="shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
-                                        aria-hidden="true"
-                                    />
-                                    <SunIcon
-                                        size={12}
-                                        className="absolute shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0 text-white"
-                                        aria-hidden="true"
-                                    />
-                                </Toggle>
-
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" size="icon" className="bg-white/10 rounded-full hover:bg-white/20">
-                                            <Languages className="h-6 w-6 text-white" />
-                                            <span className="sr-only">{t('language')}</span>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
-                                            {t('en')}
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => handleLanguageChange('es')}>
-                                            {t('es')}
-                                        </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </div>

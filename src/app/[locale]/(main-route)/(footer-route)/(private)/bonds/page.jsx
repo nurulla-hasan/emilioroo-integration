@@ -114,21 +114,25 @@ const Bonds = () => {
   ];
 
   return (
-    <PageLayout>
-      <CustomBreadcrumb links={breadcrumbLinks} />
-      <div className="flex md:flex-row flex-col gap-2 justify-between items-center mb-6">
-        <Title>{bondsT('exchangeServicesGoods')}</Title>
-        <Link href="/bonds/all-bonds">
-          <Button>
-            {bondsT('allBonds')} <ArrowBigRight className="h-4 w-4" />
-          </Button>
-        </Link>
-      </div>
+    <div className="relative min-h-minus-header overflow-hidden bg-gradient-to-br from-primary/15 via-primary/10 to-sky-100 dark:from-slate-950 dark:via-slate-900 dark:to-purple-950">
+      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-sky-300/40 blur-3xl dark:bg-sky-500/20" />
+      <div className="pointer-events-none absolute -bottom-36 -right-16 h-80 w-80 rounded-full bg-purple-300/35 blur-3xl dark:bg-purple-500/15" />
 
-      <div className="flex justify-center items-center md:p-6">
-        <Card className="w-full max-w-[1400px] p-3 md:p-6">
-          <Title>{t('createANewBond')}</Title>
-          <CardContent className="p-0 pt-6">
+      <PageLayout className="relative z-10 space-y-10">
+        <CustomBreadcrumb links={breadcrumbLinks} />
+        <div className="flex md:flex-row flex-col gap-2 justify-between items-center mb-6">
+          <Title>{bondsT('exchangeServicesGoods')}</Title>
+          <Link href="/bonds/all-bonds">
+            <Button>
+              {bondsT('allBonds')} <ArrowBigRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+
+        <div className="flex justify-center items-center md:p-6">
+          <Card className="w-full max-w-[1400px] p-3 md:p-6 dark:bg-transparent">
+            <Title>{t('createANewBond')}</Title>
+            <CardContent className="p-0 pt-6">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
                   <div className="grid grid-cols-2 gap-4">
@@ -255,12 +259,13 @@ const Bonds = () => {
         </Card>
       </div>
 
-      <MatchingBondsModal
-        isOpen={isMatchModalOpen}
-        onOpenChange={setIsMatchModalOpen}
-        bondRequestId={newlyCreatedBondId}
-      />
-    </PageLayout>
+        <MatchingBondsModal
+          isOpen={isMatchModalOpen}
+          onOpenChange={setIsMatchModalOpen}
+          bondRequestId={newlyCreatedBondId}
+        />
+      </PageLayout>
+    </div>
   );
 }
 

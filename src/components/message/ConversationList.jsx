@@ -15,7 +15,7 @@ export const ConversationList = ({ conversations, activeConversation, onConversa
     const t = useTranslations('Message');
     const [isModalOpen, setIsModalOpen] = useState(false);
     return (
-        <div className="bg-card border-r flex-col h-full flex w-full">
+        <div className="bg-card border-r flex-col h-full flex w-full bg-gradient-to-br from-primary/15 via-primary/10 to-sky-100 dark:from-slate-950 dark:via-slate-900 dark:to-purple-950">
             <div className="p-4 border-b">
                 <div className="flex items-start justify-between">
                     <h1 className="text-2xl font-bold">{t('chats')}</h1>

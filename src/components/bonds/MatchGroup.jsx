@@ -13,7 +13,7 @@ import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 
 const UserCard = ({ user, showRating }) => (
     <div className="min-w-lg px-1">
-        <div className="border rounded-lg sm:rounded-xl p-2 sm:p-4 bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-gray-800 dark:via-gray-700 dark:to-purple-900 transition-all duration-500 h-full flex flex-col relative overflow-hidden">
+        <div className="border rounded-lg sm:rounded-xl p-2 sm:p-4 bg-gradient-to-br from-white via-slate-50 to-blue-50 dark:from-slate-800 dark:via-slate-700 dark:to-blue-900 transition-all duration-500 h-full flex flex-col relative overflow-hidden">
 
             <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-500"></div>
             <div className='flex justify-between items-center'>

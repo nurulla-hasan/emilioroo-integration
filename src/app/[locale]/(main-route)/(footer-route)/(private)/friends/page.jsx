@@ -49,7 +49,7 @@ const Friends = () => {
 
 
     return (
-        <div className="min-h-minus-header">
+        <div className="min-h-minus-header bg-gradient-to-br from-primary/15 via-primary/10 to-sky-100 dark:from-slate-950 dark:via-slate-900 dark:to-purple-950">
             <PageLayout>
                 <Tabs defaultValue="my-friends" className="w-full">
                     <div className="flex justify-between items-center mb-6">

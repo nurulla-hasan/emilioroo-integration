@@ -206,7 +206,7 @@ export const MessagePanel = ({
                 onOpenChange={setIsRatingModalOpen}
                 bondLinkId={conversation.bondLinkId}
             />
-            <div className="w-full bg-card flex flex-col h-full">
+            <div className="w-full bg-card flex flex-col h-full bg-gradient-to-br from-primary/15 via-primary/10 to-sky-100 dark:from-slate-950 dark:via-slate-900 dark:to-purple-950">
                 <div className="p-3 border-b flex items-center justify-between shadow-sm">
                     <div className="flex items-center">
                         <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}>
