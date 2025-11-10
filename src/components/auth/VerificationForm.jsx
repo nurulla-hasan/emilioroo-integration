@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { cn, replaceWhiteBackground } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
@@ -9,9 +9,14 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useVerifyOTPMutation, useVerifyOTPForResetPasswordMutation, useResendOTPMutation, useResendResetOTPMutation } from "@/lib/features/api/authApi";
+import { useGetTermsQuery } from "@/lib/features/api/legalApi";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 const verificationSchema = z.object({
   code: z.string().min(6, {
@@ -25,11 +30,16 @@ export function VerificationForm({ className, type, ...props }) {
 
   const [timeLeft, setTimeLeft] = useState(300); 
   const [canResend, setCanResend] = useState(false);
+  const [showTermsDialog, setShowTermsDialog] = useState(false);
+  const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
 
   const [verifySignupOTP, { isLoading: isVerifyingSignupOTP }] = useVerifyOTPMutation();
   const [verifyResetOTP, { isLoading: isVerifyingResetOTP }] = useVerifyOTPForResetPasswordMutation();
   const [resendOTP, { isLoading: isResendingOTP }] = useResendOTPMutation();
   const [resendResetOTP, { isLoading: isResendingResetOTP }] = useResendResetOTPMutation();
+  const { data: termsData, isLoading: isTermsLoading, isError: isTermsError } = useGetTermsQuery(undefined, { skip: !showTermsDialog });
+  const termsHtml = termsData?.data?.description;
+  const sanitizedTerms = useMemo(() => replaceWhiteBackground(termsHtml || ""), [termsHtml]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -80,7 +90,9 @@ export function VerificationForm({ className, type, ...props }) {
         if (typeof window !== 'undefined') {
           localStorage.removeItem("tempEmailForOTPVerification");
         }
-        router.push("/auth/login");
+        setHasAcceptedTerms(false);
+        setShowTermsDialog(true);
+        toast.success("Verification successful! Please review our Terms & Conditions.");
       } else if (type === 'reset-password') {
         await verifyResetOTP(credentials).unwrap();
         toast.success("OTP verified! You can now reset your password.");
@@ -122,6 +134,29 @@ export function VerificationForm({ className, type, ...props }) {
 
   const sendOtpLoading = isResendingOTP || isResendingResetOTP;
   const verifyOtpLoading = isVerifyingSignupOTP || isVerifyingResetOTP;
+
+  const handleDialogOpenChange = (nextOpen) => {
+    if (!nextOpen && !hasAcceptedTerms) {
+      return;
+    }
+    setShowTermsDialog(nextOpen);
+    if (!nextOpen) {
+      setHasAcceptedTerms(false);
+    }
+  };
+
+  const handleAcceptTerms = () => {
+    if (!hasAcceptedTerms || isTermsLoading || isTermsError) {
+      if (isTermsError) {
+        toast.error("Unable to continue without loading Terms & Conditions.");
+      }
+      return;
+    }
+    setShowTermsDialog(false);
+    setHasAcceptedTerms(false);
+    toast.success("Thanks for accepting our Terms & Conditions.");
+    router.push("/");
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -200,6 +235,48 @@ export function VerificationForm({ className, type, ...props }) {
           </form>
         </CardContent>
       </Card>
+      <Dialog open={showTermsDialog} onOpenChange={handleDialogOpenChange}>
+        <DialogContent showCloseButton={false} className="sm:max-w-7xl h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>Terms &amp; Conditions</DialogTitle>
+            <DialogDescription>Please review and accept to continue to your account.</DialogDescription>
+          </DialogHeader>
+          <div className="border rounded-md">
+            <ScrollArea className="h-[70vh] p-4">
+              {isTermsLoading ? (
+                <p className="text-sm text-subtitle">Loading terms...</p>
+              ) : isTermsError ? (
+                <p className="text-sm text-destructive">Failed to load Terms &amp; Conditions. Please try again in a moment.</p>
+              ) : (
+                <div
+                  className="prose prose-sm dark:prose-invert max-w-none"
+                  dangerouslySetInnerHTML={{ __html: sanitizedTerms }}
+                />
+              )}
+            </ScrollArea>
+          </div>
+          <DialogFooter className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <Checkbox
+                id="accept-terms"
+                checked={hasAcceptedTerms}
+                onCheckedChange={(checked) => setHasAcceptedTerms(checked === true)}
+                disabled={isTermsLoading || isTermsError}
+              />
+              <Label htmlFor="accept-terms" className="text-sm leading-5">
+                I have read and agree to the Terms &amp; Conditions.
+              </Label>
+            </div>
+            <Button
+              type="button"
+              onClick={handleAcceptTerms}
+              disabled={!hasAcceptedTerms || isTermsLoading || isTermsError}
+            >
+              Continue
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
