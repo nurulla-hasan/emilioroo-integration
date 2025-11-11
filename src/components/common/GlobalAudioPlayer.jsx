@@ -124,7 +124,7 @@ const GlobalAudioPlayer = () => {
     }
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-t border-border/60 shadow-2xl animate-slide-up">
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-t border-border/60 shadow-2xl animate-slide-up  bg-gradient-to-br from-primary/15 via-primary/10 to-sky-100 dark:from-slate-950 dark:via-slate-900 dark:to-purple-950">
             <Slider
                 value={[progress]}
                 max={100}

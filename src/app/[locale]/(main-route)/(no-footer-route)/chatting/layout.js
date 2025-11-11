@@ -8,7 +8,7 @@ import ChattingSidebar from '@/components/chatting/main-page/ChattingSidebar';
 
 const ChattingLayout = ({ children }) => {
     return (
-        <div className="h-[calc(100vh-80px)] flex flex-col">
+        <div className="h-[calc(100vh-80px)] flex flex-col bg-gradient-to-br from-primary/15 via-primary/10 to-sky-100 dark:from-slate-950 dark:via-slate-900 dark:to-purple-950">
             <div className="flex flex-1">
                 {/* Desktop Sidebar */}
                 <ChattingSidebar className="w-64 hidden lg:block" />

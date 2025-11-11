@@ -38,11 +38,11 @@ export const useConversationsList = (searchTerm) => {
             if (conv.type === 'chat-group') {
                 subtype = 'chatGroup';
                 name = conv.chatGroup.name;
-                avatar = conv.chatGroup.image || "/images/groupFallback.jpg";
+                avatar = conv.chatGroup.image || "/images/group.png";
             } else if (conv.type === 'bond-link-group') {
                 subtype = 'bondLink';
                 name = conv.bondLink.name;
-                avatar = conv.bondLink.cover_image || "/images/groupFallback.jpg";
+                avatar = conv.bondLink.cover_image || "/images/group.png";
             } else if (conv.type === 'project-group') {
                 subtype = 'project';
                 name = conv.project.name;

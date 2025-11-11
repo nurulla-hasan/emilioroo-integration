@@ -6,11 +6,12 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Heart, LayoutGrid, ListMusic, MessageCircle, PlayCircle, Flame, TableOfContents } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 
 const ChattingSidebar = ({ className }) => {
     const t = useTranslations('Chatting');
+    const locale = useLocale();
     const menuItems = [
         { name: t('allContent'), href: "/chatting", icon: LayoutGrid },
         { name: t('myContent'), href: "/chatting/my-content", icon: TableOfContents },
@@ -23,22 +24,30 @@ const ChattingSidebar = ({ className }) => {
     const pathname = usePathname();
 
     return (
-        <div className={cn("h-full bg-card border-r", className)}>
+        <div className={cn("h-full  bg-gradient-to-br from-primary/15 via-primary/10 to-sky-100 dark:from-slate-950 dark:via-slate-900 dark:to-purple-950 border-r", className)}>
             <div className="p-4">
                 <h2 className="text-lg font-semibold mb-4">{t('menu')}</h2>
                 <div className="flex flex-col gap-2">
-                    {menuItems.map((item) => (
-                        <Link href={item.href} key={item.name} passHref>
-                            <Button
-                                size={"lg"}
-                                variant={pathname === item.href ? "default" : "ghost"}
-                                className="w-full justify-start"
-                            >
-                                <item.icon className="mr-2 h-4 w-4" />
-                                {item.name}
-                            </Button>
-                        </Link>
-                    ))}
+                    {menuItems.map((item) => {
+                        const localizedHref = locale ? `/${locale}${item.href}` : item.href;
+                        const matchesExact = pathname === localizedHref;
+                        const matchesNested = pathname.startsWith(`${localizedHref}/`);
+                        const isRootItem = item.href === "/chatting";
+                        const isActive = isRootItem ? matchesExact : (matchesExact || matchesNested);
+
+                        return (
+                            <Link href={item.href} key={item.name} passHref>
+                                <Button
+                                    size={"lg"}
+                                    variant={isActive ? "default" : "ghost"}
+                                    className="w-full justify-start"
+                                >
+                                    <item.icon className="mr-2 h-4 w-4" />
+                                    {item.name}
+                                </Button>
+                            </Link>
+                        );
+                    })}
                 </div>
             </div>
         </div>
