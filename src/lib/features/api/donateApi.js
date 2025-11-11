@@ -33,7 +33,29 @@ const donateApi = baseApi.injectEndpoints({
             })
         }),
 
+
+        // subscribe
+        subscribe: builder.mutation({
+            query: (data) => ({
+                url: '/normal-user/subscribe',
+                method: 'POST',
+                body: data
+            }),
+
+            async onQueryStarted(arg, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    if (data?.data?.url) {
+                        window.location.href = data?.data?.url;
+                    }
+                } catch (error) {
+                    toast.error(error?.error?.data?.message === "Your are not authorized 1" && "Please login first");
+                    // console.log(error);
+                }
+            },
+        }),
+
     }),
 })
 
-export const { useDonateMutation } = donateApi;
+export const { useDonateMutation, useGetAllDonnerQuery, useSubscribeMutation } = donateApi;

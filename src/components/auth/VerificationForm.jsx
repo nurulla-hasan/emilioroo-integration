@@ -155,7 +155,7 @@ export function VerificationForm({ className, type, ...props }) {
     setShowTermsDialog(false);
     setHasAcceptedTerms(false);
     toast.success("Thanks for accepting our Terms & Conditions.");
-    router.push("/");
+    router.push("/subscriptions");
   };
 
   return (
