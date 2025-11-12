@@ -67,6 +67,32 @@ const Page = () => {
     const router = useRouter()
     const [loadingPlan, setLoadingPlan] = useState(null)
     const [subscribe] = useSubscribeMutation()
+
+    // Handler for choosing a plan (free or paid)
+    const handleChoose = async (plan) => {
+        // Free plan: quick 2s loading then redirect home
+        if (plan.id === 'free') {
+            try {
+                setLoadingPlan(plan.id)
+                await new Promise((r) => setTimeout(r, 2000))
+                router.push('/')
+            } finally {
+                setLoadingPlan(null)
+            }
+            return
+        }
+
+        // Paid plans: call subscribe mutation (handles redirect via onQueryStarted in donateApi)
+        try {
+            setLoadingPlan(plan.id)
+            await subscribe({ type: plan.title }).unwrap()
+            // onQueryStarted in donateApi will redirect if payment URL provided
+        } catch (err) {
+            console.error(err)
+            toast.error(err?.data?.message || 'Failed to initiate subscription')
+            setLoadingPlan(null)
+        }
+    }
     return (
         <div className="min-h-screen bg-background dark:bg-slate-950 transition-colors duration-300">
             <div className="container mx-auto px-4 py-20">
@@ -112,30 +138,7 @@ const Page = () => {
                                         className="w-full"
                                         variant={plan.variant || 'default'}
                                         loading={loadingPlan === plan.id}
-                                        onClick={async () => {
-                                            // Free plan: quick 2s loading then redirect home
-                                            if (plan.id === 'free') {
-                                                try {
-                                                    setLoadingPlan(plan.id)
-                                                    await new Promise((r) => setTimeout(r, 2000))
-                                                    router.push('/')
-                                                } finally {
-                                                    setLoadingPlan(null)
-                                                }
-                                                return
-                                            }
-
-                                            // Paid plans: call subscribe mutation (handles redirect via onQueryStarted)
-                                            try {
-                                                setLoadingPlan(plan.id)
-                                                await subscribe({ type: plan.title }).unwrap()
-                                                // subscribe mutation handles redirect via onQueryStarted in donateApi
-                                            } catch (err) {
-                                                console.error(err)
-                                                toast.error(err?.data?.message || 'Failed to initiate subscription')
-                                                setLoadingPlan(null)
-                                            }
-                                        }}
+                                        onClick={() => handleChoose(plan)}
                                     >
                                         Choose {plan.title}
                                     </Button>
