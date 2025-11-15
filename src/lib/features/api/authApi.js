@@ -60,9 +60,13 @@ const authApis = baseApi.injectEndpoints({
                 method: 'POST',
                 body: data
             }),
-            async onQueryStarted(arg, { queryFulfilled }) {
+            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
-                    await queryFulfilled;
+                    const { data } = await queryFulfilled;
+                    const accessToken = data?.data?.accessToken;
+                    if (accessToken) {
+                        dispatch(setAuthTokens({ accessToken }));
+                    }
                     toast.success("OTP verification successful!");
                 } catch (error) {
                     toast.error(error?.error?.data?.message || "OTP verification failed.");

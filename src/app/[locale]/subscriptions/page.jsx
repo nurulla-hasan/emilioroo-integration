@@ -9,7 +9,7 @@ import { toast } from "sonner"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Check } from "lucide-react"
+import { Check, User, Star, Trophy } from "lucide-react"
 import { useSubscribeMutation } from "@/lib/features/api/donateApi"
 
 const plans = [
@@ -18,6 +18,7 @@ const plans = [
         title: "Starter",
         price: "$0",
         summary: "Perfect for getting started",
+        icon: User,
         features: [
             "Up to 10 active bond requests",
             "Basic matching",
@@ -33,6 +34,7 @@ const plans = [
         title: "Standard",
         price: "$9.99",
         summary: "For active exchangers",
+        icon: Star,
         features: [
             "Up to 100 active bond requests",
             "Advanced matching algorithms",
@@ -42,13 +44,13 @@ const plans = [
             "Performance analytics",
         ],
         cta: "/normal-user/subscribe",
-        badge: "Most Popular",
     },
     {
         id: "business",
         title: "Premium",
         price: "$24.99",
         summary: "For power users & teams",
+        icon: Trophy,
         features: [
             "Up to 1000 active bond requests",
             "Premium matching + AI suggestions",
@@ -94,7 +96,7 @@ const Page = () => {
         }
     }
     return (
-        <div className="min-h-screen bg-background dark:bg-slate-950 transition-colors duration-300">
+        <div className="min-h-screen bg-gradient-to-br from-background to-muted/10 dark:from-slate-950 dark:to-slate-900 transition-colors duration-300">
             <div className="container mx-auto px-4 py-20">
                 <div className="max-w-3xl mx-auto text-center mb-8">
                     <h1 className="text-3xl font-semibold text-foreground">Choose Your Plan</h1>
@@ -103,11 +105,14 @@ const Page = () => {
                     </p>
                 </div>            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     {plans.map((plan) => (
-                        <Card key={plan.id} className={`p-0 transition-all duration-300 hover:shadow-lg dark:hover:shadow-lg dark:hover:shadow-primary/20 bg-white dark:bg-slate-900 ${plan.id === 'business' ? 'border-2 border-primary ring-2 ring-primary/20 dark:ring-primary/30' : 'dark:border-slate-700'}`}>
+                        <Card key={plan.id} className="p-0 flex flex-col h-full transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-primary/10 dark:hover:shadow-primary/20 bg-gradient-to-br from-white to-gray-50 dark:from-slate-900 dark:to-slate-800 border border-gray-200 dark:border-slate-700 hover:border-primary/50">
                             <CardHeader className="flex items-start justify-between px-6 py-6">
-                                <div>
-                                    <CardTitle className="text-lg text-gray-900 dark:text-white">{plan.title}</CardTitle>
-                                    <CardDescription className="text-gray-600 dark:text-gray-300">{plan.summary}</CardDescription>
+                                <div className="flex items-center gap-3">
+                                    <plan.icon className="h-6 w-6 text-primary" />
+                                    <div>
+                                        <CardTitle className="text-lg text-gray-900 dark:text-white">{plan.title}</CardTitle>
+                                        <CardDescription className="text-gray-600 dark:text-gray-300">{plan.summary}</CardDescription>
+                                    </div>
                                 </div>
                                 {plan.badge ? (
                                     <div className="ml-4">
@@ -116,13 +121,15 @@ const Page = () => {
                                 ) : null}
                             </CardHeader>
 
-                            <CardContent className="px-6 pb-4">
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-3xl font-bold text-gray-900 dark:text-white">{plan.price}</span>
-                                    <span className="text-sm text-gray-600 dark:text-gray-400">One‑time</span>
+                            <CardContent className="px-6 pb-4 flex-1">
+                                <div className="bg-primary/5 dark:bg-primary/10 rounded-lg p-4 mb-4">
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-3xl font-bold text-gray-900 dark:text-white">{plan.price}</span>
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">One‑time</span>
+                                    </div>
                                 </div>
 
-                                <ul className="mt-4 space-y-2 text-sm">
+                                <ul className="space-y-2 text-sm">
                                     {plan.features.map((f, i) => (
                                         <li key={i} className="flex items-center gap-2 text-gray-700 dark:text-gray-200">
                                             <Check className="h-4 w-4 text-primary dark:text-sky-400 flex-shrink-0" />
