@@ -46,7 +46,7 @@ const UserCard = ({ user, showRating }) => (
             </div>
             <p className="pt-1 sm:pt-2 text-xs text-gray-600 dark:text-gray-300 break-words border-t border-gray-200 dark:border-gray-600 flex-grow flex items-start">
                 <span className='font-bold text-purple-600 dark:text-purple-400 mr-1 sm:mr-2'>📝</span>
-                <span className="leading-relaxed">{user.description}</span>
+                <span className="leading-relaxed max-w-sm">{user.description}</span>
             </p>
         </div>
 

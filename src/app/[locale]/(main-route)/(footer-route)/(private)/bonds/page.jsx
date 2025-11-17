@@ -27,6 +27,7 @@ import MatchingBondsModal from '@/components/bonds/MatchingBondsModal';
 import CustomBreadcrumb from '@/components/common/CustomBreadcrumb';
 import { Textarea } from '@/components/ui/textarea';
 import { Link } from '@/i18n/navigation';
+import { useGetMe } from '@/hooks/useGetMe';
 
 const MapPicker = dynamic(() => import('@/components/bonds/all-bonds/my-bonds/MapPicker'), { ssr: false });
 
@@ -36,7 +37,13 @@ const Bonds = () => {
   const t = useTranslations('AddNewBondModal');
   const bondsT = useTranslations('Bonds');
   const pageT = useTranslations('BondPage');
+  const { profile } = useGetMe();
+  const isAlreadyCreated = profile?.data?.isBondHave;
+  const [selectLocation, setSelectLocation] = useState(false);
+  const isProfileLoaded = profile !== undefined && profile !== null;
+  const requireLocation = isProfileLoaded ? (!isAlreadyCreated || selectLocation) : false;
 
+  // Make location optional in schema; we'll enforce conditionally in onSubmit
   const formSchema = z.object({
     offer: z.string().min(1, { message: t('offerIsRequired') }),
     want: z.string().min(1, { message: t('wantIsRequired') }),
@@ -48,8 +55,7 @@ const Bonds = () => {
         lat: z.number(),
         lng: z.number(),
       })
-      .nullable()
-      .refine((val) => val !== null, { message: pageT('locationRequired') }),
+      .nullable(),
   });
 
   const [createRequestBond, { isLoading }] = useCreateRequestBondMutation();
@@ -66,7 +72,7 @@ const Bonds = () => {
       want: '',
       description: '',
       tag: '',
-      radius: 5,
+      radius: 20,
       location: defaultLocation,
     },
   });
@@ -79,17 +85,27 @@ const Bonds = () => {
   }, [setValue]);
 
   const onSubmit = async (values) => {
+    // Conditionally require location only when needed
+    if (requireLocation && !values.location) {
+      toast.error(pageT('locationRequired'));
+      return;
+    }
+
     const newBond = {
       offer: values.offer,
       want: values.want,
       description: values.description,
       tag: values.tag,
-      location: {
-        type: 'Point',
-        coordinates: [values.location.lng, values.location.lat],
-      },
       radius: values.radius,
     };
+
+    // Include location only if required or explicitly selected
+    if (values.location && (!isAlreadyCreated || selectLocation)) {
+      newBond.location = {
+        type: 'Point',
+        coordinates: [values.location.lng, values.location.lat],
+      };
+    }
 
     try {
       const response = await createRequestBond(newBond).unwrap();
@@ -219,14 +235,31 @@ const Bonds = () => {
                   />
                   <FormItem>
                     <FormLabel>{pageT('selectLocation')}</FormLabel>
-                    <FormControl>
-                      <div className="rounded-md overflow-hidden border h-80 md:h-[500px]">
-                        <MapPicker
-                          onLocationChange={onLocationChange}
-                          center={location}
-                        />
+                    {!requireLocation && (
+                      <div className="mb-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setSelectLocation(true);
+                            if (!location) setValue('location', defaultLocation, { shouldValidate: false });
+                          }}
+                        >
+                          {pageT('selectLocation')}
+                        </Button>
                       </div>
-                    </FormControl>
+                    )}
+                    {requireLocation && (
+                      <FormControl>
+                        <div className="rounded-md overflow-hidden border h-80 md:h-[500px]">
+                          <MapPicker
+                            onLocationChange={onLocationChange}
+                            center={location || defaultLocation}
+                          />
+                        </div>
+                      </FormControl>
+                    )}
                     <FormMessage>{errors.location?.message}</FormMessage>
                   </FormItem>
                   <FormField
