@@ -23,6 +23,7 @@ import { getInitials, fallbackAvatar2 } from "@/lib/utils";
 import { Link as LinkIcon, MessageSquare, MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import EditBioModal from "@/components/profile/modal/EditBioModal";
+import { useGetMe } from "@/hooks/useGetMe";
 
 const RelativeColumn = ({ relatives, title, handleEdit, handleDelete, isEditable }) => {
     const t = useTranslations('ProfilePage');
@@ -128,11 +129,12 @@ const ProfilePage = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedRelative, setSelectedRelative] = useState(null);
     const [isEditBioModalOpen, setIsEditBioModalOpen] = useState(false);
+    const { profile } = useGetMe();
 
     const { data: profileData, isLoading: isProfileLoading, isError: isProfileError } = useGetMyProfileQuery();
     const { data: skillsData, isLoading: isSkillsLoading, isError: isSkillsError } = useGetSkillsQuery();
     const { data: relativesData, isLoading: isRelativesLoading, isError: isRelativesError } = useGetAllRelativesQuery();
-    const { data: recommendedData, isLoading: isRecommendedLoading, isError: isRecommendedError } = useGetRecommendedUserQuery();
+    const { data: recommendedData, isLoading: isRecommendedLoading, isError: isRecommendedError } = useGetRecommendedUserQuery(profile?.data?._id);
     const { data: friendsData, isLoading: isFriendsLoading, isError: isFriendsError } = useGetMyFriendsQuery();
     const [deleteRelative, { isLoading: isDeleting }] = useDeleteRelativeMutation();
 

@@ -6,8 +6,8 @@ const relativesApi = baseApi.injectEndpoints({
 
         // GET RECOMANDED USER
         getRecommendedUser: builder.query({
-            query: () => ({
-                url: "/recommended-user/get",
+            query: (id) => ({
+                url: `recommended-user/get?recommendBy=${id}`,
                 method: "GET",
             }),
             providesTags: ["RELATIVES"],
