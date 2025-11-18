@@ -234,7 +234,7 @@ const Bonds = () => {
                     )}
                   />
                   <FormItem>
-                    <FormLabel>{pageT('selectLocation')}</FormLabel>
+                    <FormLabel>{pageT('changeLocation')}</FormLabel>
                     {!requireLocation && (
                       <div className="mb-2">
                         <Button
@@ -246,7 +246,7 @@ const Bonds = () => {
                             if (!location) setValue('location', defaultLocation, { shouldValidate: false });
                           }}
                         >
-                          {pageT('selectLocation')}
+                          {pageT('changeLocation')}
                         </Button>
                       </div>
                     )}

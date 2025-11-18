@@ -139,7 +139,7 @@ export default function AddNewBondRequestModal({ isOpen, onOpenChange }) {
               />
             </div>
             <FormItem>
-              <FormLabel>Select Location</FormLabel>
+              <FormLabel>Change Location</FormLabel>
               <FormControl>
                 <div className="rounded-md overflow-hidden border">
                   {isOpen && (

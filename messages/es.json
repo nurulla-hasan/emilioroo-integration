@@ -367,7 +367,7 @@
     "locationRequired": "Por favor, selecciona una ubicación en el mapa.",
     "bondCreatedSuccess": "¡Vínculo creado con éxito!",
     "bondCreatedError": "Error al crear el vínculo.",
-    "selectLocation": "Seleccionar Ubicación",
+    "changeLocation": "Cambiar Ubicación",
     "createBondRequestHint": "Crea una solicitud de vínculo y mira los vínculos que coinciden.",
     "home": "Inicio",
     "bonds": "Vínculos",
@@ -515,7 +515,7 @@
     "title": "Editar Solicitud de Bono",
     "offerLabel": "¿Qué ofrece?",
     "wantLabel": "¿Qué quiere?",
-    "locationLabel": "Seleccionar Ubicación",
+    "locationLabel": "Cambiar Ubicación",
     "radiusLabel": "Radio (km)",
     "cancel": "Cancelar",
     "save": "Guardar Cambios"

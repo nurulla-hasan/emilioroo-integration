@@ -367,7 +367,7 @@
     "locationRequired": "Please select a location from the map.",
     "bondCreatedSuccess": "Bond created successfully!",
     "bondCreatedError": "Failed to create bond.",
-    "selectLocation": "Select Location",
+    "changeLocation": "Change Location",
     "createBondRequestHint": "Create a bond request and see matching bonds.",
     "home": "Home",
     "bonds": "Bonds",
@@ -515,7 +515,7 @@
     "title": "Edit Bond Request",
     "offerLabel": "What do you offer?",
     "wantLabel": "What do you want?",
-    "locationLabel": "Select Location",
+    "locationLabel": "Chnage Location",
     "radiusLabel": "Radius (km)",
     "cancel": "Cancel",
     "save": "Save Changes"
