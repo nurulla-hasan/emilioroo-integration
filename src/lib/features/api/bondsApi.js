@@ -111,6 +111,15 @@ const bondsApi = baseApi.injectEndpoints({
             providesTags: ["BONDS"],
         }),
 
+        // GET BOND FILTER ITEMS
+        getLastBondLocation: builder.query({
+            query: () => ({
+                url: "bond-request/get-last-bond",
+                method: "GET",
+            }),
+            providesTags: ["BONDS"],
+        }),
+
         // =================================================================================
 
         // CREATE MY BOND
@@ -194,4 +203,4 @@ const bondsApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useGetFilterItemsQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation, useGetSingleBondLinkQuery, useMarkAsCompletedMutation, useGiveRatingMutation } = bondsApi;
+export const { useGetMyBondsQuery, useGetMyBondsRequestQuery, useGetMatchingBondsQuery, useGetOngoingBondsQuery, useGetFilterItemsQuery, useGetLastBondLocationQuery, useCreateMyBondMutation, useCreateRequestBondMutation, useUpdateMyBondMutation, useDeleteMyBondMutation, useUpdateRequestBondMutation, useDeleteRequestBondMutation, useGetMyBondSelectItemsQuery, useCreateBondLinkMutation, useGetSingleBondLinkQuery, useMarkAsCompletedMutation, useGiveRatingMutation } = bondsApi;

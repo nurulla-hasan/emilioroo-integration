@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useCreateRequestBondMutation } from '@/lib/features/api/bondsApi';
+import { useCreateRequestBondMutation, useGetLastBondLocationQuery } from '@/lib/features/api/bondsApi';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+
 import {
   Form,
   FormControl,
@@ -27,7 +28,6 @@ import MatchingBondsModal from '@/components/bonds/MatchingBondsModal';
 import CustomBreadcrumb from '@/components/common/CustomBreadcrumb';
 import { Textarea } from '@/components/ui/textarea';
 import { Link } from '@/i18n/navigation';
-import { useGetMe } from '@/hooks/useGetMe';
 
 const MapPicker = dynamic(() => import('@/components/bonds/all-bonds/my-bonds/MapPicker'), { ssr: false });
 
@@ -37,11 +37,14 @@ const Bonds = () => {
   const t = useTranslations('AddNewBondModal');
   const bondsT = useTranslations('Bonds');
   const pageT = useTranslations('BondPage');
-  const { profile } = useGetMe();
-  const isAlreadyCreated = profile?.data?.isBondHave;
   const [selectLocation, setSelectLocation] = useState(false);
-  const isProfileLoaded = profile !== undefined && profile !== null;
-  const requireLocation = isProfileLoaded ? (!isAlreadyCreated || selectLocation) : false;
+
+  const { data: lastBondData } = useGetLastBondLocationQuery();
+  const fetchedLocation = lastBondData?.data?.location?.coordinates
+    ? { lat: lastBondData.data.location.coordinates[1], lng: lastBondData.data.location.coordinates[0] }
+    : null;
+  const hasLastLocation = !!fetchedLocation;
+  const requireLocation = !hasLastLocation || selectLocation;
 
   // Make location optional in schema; we'll enforce conditionally in onSubmit
   const formSchema = z.object({
@@ -80,12 +83,20 @@ const Bonds = () => {
   const { reset, setValue, watch, formState: { errors } } = form;
   const location = watch('location');
 
+  useEffect(() => {
+    if (hasLastLocation && !selectLocation) {
+      if (!location || location.lat !== fetchedLocation.lat || location.lng !== fetchedLocation.lng) {
+        setValue('location', fetchedLocation, { shouldValidate: false });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasLastLocation, fetchedLocation?.lat, fetchedLocation?.lng, selectLocation]);
+
   const onLocationChange = useCallback((loc) => {
     setValue('location', loc, { shouldValidate: true });
   }, [setValue]);
 
   const onSubmit = async (values) => {
-    // Conditionally require location only when needed
     if (requireLocation && !values.location) {
       toast.error(pageT('locationRequired'));
       return;
@@ -99,8 +110,12 @@ const Bonds = () => {
       radius: values.radius,
     };
 
-    // Include location only if required or explicitly selected
-    if (values.location && (!isAlreadyCreated || selectLocation)) {
+    if (hasLastLocation && !selectLocation) {
+      newBond.location = {
+        type: 'Point',
+        coordinates: [fetchedLocation.lng, fetchedLocation.lat],
+      };
+    } else if (values.location) {
       newBond.location = {
         type: 'Point',
         coordinates: [values.location.lng, values.location.lat],
@@ -235,7 +250,7 @@ const Bonds = () => {
                   />
                   <FormItem>
                     <FormLabel>{pageT('changeLocation')}</FormLabel>
-                    {!requireLocation && (
+                    {hasLastLocation && !selectLocation && (
                       <div className="mb-2">
                         <Button
                           type="button"
@@ -243,19 +258,19 @@ const Bonds = () => {
                           variant="outline"
                           onClick={() => {
                             setSelectLocation(true);
-                            if (!location) setValue('location', defaultLocation, { shouldValidate: false });
+                            setValue('location', fetchedLocation || defaultLocation, { shouldValidate: false });
                           }}
                         >
                           {pageT('changeLocation')}
                         </Button>
                       </div>
                     )}
-                    {requireLocation && (
+                    {(!hasLastLocation || selectLocation) && (
                       <FormControl>
                         <div className="rounded-md overflow-hidden border h-80 md:h-[500px]">
                           <MapPicker
                             onLocationChange={onLocationChange}
-                            center={location || defaultLocation}
+                            center={location || fetchedLocation || defaultLocation}
                           />
                         </div>
                       </FormControl>
