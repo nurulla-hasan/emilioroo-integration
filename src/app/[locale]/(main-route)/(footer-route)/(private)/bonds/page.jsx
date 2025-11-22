@@ -52,7 +52,7 @@ const Bonds = () => {
     want: z.string().min(1, { message: t('wantIsRequired') }),
     description: z.string().min(1, { message: pageT('descriptionIsRequired') }),
     tag: z.string(),
-    radius: z.coerce.number().min(1, { message: pageT('radiusPositive') }),
+    radius: z.coerce.number().min(1, { message: pageT('radiusPositive') }).max(20000, { message: "Radius must be less than 20000" }),
     location: z
       .object({
         lat: z.number(),
