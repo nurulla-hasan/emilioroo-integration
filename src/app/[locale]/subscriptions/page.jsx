@@ -101,7 +101,7 @@ const Page = () => {
                 <div className="max-w-3xl mx-auto text-center mb-8">
                     <h1 className="text-3xl font-semibold text-foreground">Choose Your Plan</h1>
                     <p className="text-muted-foreground mt-2">
-                        One-time purchase — unlock more bond requests and grow your network with BankyBondy. No recurring billing.
+                        One-time purchase — unlock more bond requests and grow your network with Bankybondy. No recurring billing.
                     </p>
                 </div>            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     {plans.map((plan) => (
