@@ -1,14 +1,13 @@
 
 export const metadata = {
-    title: "Emilirio | Auth",
-    description: "Please Sign up or Sign in to continue.",
+    title: "BankyBondy | Login & Sign Up",
+    description:
+        "Sign in or create your BankyBondy account to create bonds, manage bond requests, chat securely, and complete trusted exchanges.",
 };
 
 const layout = ({ children }) => {
     return (
-        <>
-            {children}
-        </>
+        { children }
     );
 };
 

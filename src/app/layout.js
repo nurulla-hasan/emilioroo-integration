@@ -19,8 +19,9 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "BankyBondy | Home",
-  description: "Please Sign up or Sign in to continue.",
+  title: "BankyBondy | Smart Bond Matching Platform",
+  description:
+    "BankyBondy is a smart bond-matching platform where you list what you offer and what you want, discover perfectly matching people, and complete safe, trusted exchanges through secure bond links.",
 };
 
 export default async function RootLayout({ children }) {
