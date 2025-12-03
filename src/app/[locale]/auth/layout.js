@@ -1,4 +1,5 @@
 
+
 export const metadata = {
     title: "Bankybondy | Login & Sign Up",
     description:
@@ -7,7 +8,7 @@ export const metadata = {
 
 const layout = ({ children }) => {
     return (
-        { children }
+        <>{children}</>
     );
 };
 
