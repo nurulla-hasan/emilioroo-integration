@@ -91,7 +91,7 @@ const MatchGroup = ({ matchRequest, status, showProposeButton = true, showRating
                     </div>
                     {showProposeButton && (
                         <div className="flex justify-center sm:justify-end">
-                            <Button onClick={() => setIsModalOpen(true)} className="bg-pink-600 hover:bg-violet-700 text-white rounded">
+                            <Button onClick={() => setIsModalOpen(true)} className="bg-green-600 hover:bg-violet-700 text-white rounded">
                                 Propose
                             </Button>
                         </div>

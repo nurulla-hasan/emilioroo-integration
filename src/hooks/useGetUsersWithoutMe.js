@@ -1,7 +1,8 @@
+import { useMemo } from "react";
 import { useGetAllUsersQuery } from "@/lib/features/api/projectApi";
 import { useGetMe } from "./useGetMe";
 
-export const useGetUsersWithoutMe = (currentPage, pageSize, searchTerm) => {
+export const useGetUsersWithoutMe = (currentPage = 1, pageSize = 10, searchTerm = "") => {
     const { data, isLoading, isError } = useGetAllUsersQuery([
         { name: "page", value: currentPage },
         { name: "limit", value: pageSize },
@@ -11,8 +12,11 @@ export const useGetUsersWithoutMe = (currentPage, pageSize, searchTerm) => {
     const { profile } = useGetMe();
     const userId = profile?.data?._id;
 
-    const userData = data?.data?.result || [];
-    const users = userData.filter((user) => user._id !== userId);
+    const users = useMemo(() => {
+        const userData = data?.data?.result || [];
+        return userData.filter((user) => user._id !== userId);
+    }, [data, userId]);
+
     const totalPages = data?.data?.meta?.totalPages || 1;
 
     return { users, isLoading, isError, totalPages };

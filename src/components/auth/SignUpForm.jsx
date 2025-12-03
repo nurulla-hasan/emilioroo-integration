@@ -104,7 +104,7 @@ export function SignUpForm({ className, ...props }) {
     },
   });
 
-  const { handleSubmit, formState: { errors, isValid }, control } = methods;
+  const { handleSubmit, formState: { isValid }, control } = methods;
 
   const onSubmit = (data) => {
     const formattedData = {
@@ -157,7 +157,7 @@ export function SignUpForm({ className, ...props }) {
                             {...field}
                           />
                         </FormControl>
-                        {errors.name && <p className="text-red-500 text-xs -mt-2">{errors.name.message}</p>}
+                        {/* {errors.name && <p className="text-red-500 text-xs -mt-2">{errors.name.message}</p>} */}
                         <FormMessage />
                       </FormItem>
                     )}
@@ -176,7 +176,7 @@ export function SignUpForm({ className, ...props }) {
                             {...field}
                           />
                         </FormControl>
-                        {errors.email && <p className="text-red-500 text-xs -mt-2">{errors.email.message}</p>}
+                        {/* {errors.email && <p className="text-red-500 text-xs -mt-2">{errors.email.message}</p>} */}
                         <FormMessage />
                       </FormItem>
                     )}
@@ -330,7 +330,7 @@ export function SignUpForm({ className, ...props }) {
                               placeholder="********"
                               {...field}
                             />
-                            {errors && <span className="text-red-500 text-xs">{errors.password?.message}</span>}
+                            {/* {errors && <span className="text-red-500 text-xs">{errors.password?.message}</span>} */}
                             <Button
                               variant="ghost"
                               type="button"
@@ -360,7 +360,7 @@ export function SignUpForm({ className, ...props }) {
                               placeholder="********"
                               {...field}
                             />
-                            {errors && <span className="text-red-500 text-xs">{errors.confirmPassword?.message}</span>}
+                            {/* {errors && <span className="text-red-500 text-xs">{errors.confirmPassword?.message}</span>} */}
                           </div>
                         </FormControl>
                         <FormMessage />

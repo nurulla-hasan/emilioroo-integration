@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -11,6 +12,7 @@ import {
     DialogTitle,
     DialogFooter,
     DialogClose,
+    DialogDescription,
 } from "@/components/ui/dialog";
 import {
     Form,
@@ -50,9 +52,46 @@ const AddRelativeModal = ({ isOpen, onOpenChange }) => {
         },
     });
 
-    const { users, isLoading: isUsersLoading } = useGetUsersWithoutMe();
+    const [page, setPage] = useState(1);
+    const [allUsers, setAllUsers] = useState([]);
+    const { users, isLoading: isUsersLoading, totalPages } = useGetUsersWithoutMe(page, 10, "");
     const [createRelative, { isLoading: isCreating }] = useCreateRelativeMutation();
 
+    // Update allUsers when users change
+    useEffect(() => {
+        if (users && users.length > 0) {
+            setAllUsers((prev) => {
+                if (page === 1) {
+                    return users;
+                }
+                const newUsers = users.filter((u) => !prev.some((p) => p._id === u._id));
+                return [...prev, ...newUsers];
+            });
+        }
+    }, [users, page]);
+
+    // Reset on modal close
+    useEffect(() => {
+        if (!isOpen) {
+            setPage(1);
+            setAllUsers([]);
+        }
+    }, [isOpen]);
+
+    const observer = useRef();
+    const lastUserElementRef = useCallback(
+        (node) => {
+            if (isUsersLoading) return;
+            if (observer.current) observer.current.disconnect();
+            observer.current = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && page < totalPages) {
+                    setPage((prevPage) => prevPage + 1);
+                }
+            });
+            if (node) observer.current.observe(node);
+        },
+        [isUsersLoading, totalPages, page]
+    );
 
     const onSubmit = async (values) => {
         try {
@@ -70,6 +109,9 @@ const AddRelativeModal = ({ isOpen, onOpenChange }) => {
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Add New Relative</DialogTitle>
+                    <DialogDescription className="sr-only">
+                        Select a relative to add to your profile.
+                    </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
@@ -86,18 +128,31 @@ const AddRelativeModal = ({ isOpen, onOpenChange }) => {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {isUsersLoading ? (
-                                                <SelectItem disabled>Loading users...</SelectItem>
+                                            {isUsersLoading && page === 1 ? (
+                                                <SelectItem disabled value="loading">Loading users...</SelectItem>
+                                            ) : allUsers.length === 0 ? (
+                                                <SelectItem disabled value="no-users">No users available</SelectItem>
                                             ) : (
-                                                users.map((user) => (
-                                                    <SelectItem key={user._id} value={user._id}>
-                                                        <Avatar className="mr-2">
-                                                            <AvatarImage src={user.profile_image || fallbackAvatar(user.gender)} />
-                                                            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
-                                                        </Avatar>
-                                                        {user.name}
-                                                    </SelectItem>
-                                                ))
+                                                <>
+                                                    {allUsers.map((user, index) => (
+                                                        <SelectItem 
+                                                            key={user._id} 
+                                                            value={user._id}
+                                                            ref={index === allUsers.length - 1 ? lastUserElementRef : null}
+                                                        >
+                                                            <div className="flex items-center">
+                                                                <Avatar className="mr-2 h-6 w-6">
+                                                                    <AvatarImage src={user.profile_image || fallbackAvatar(user.gender)} />
+                                                                    <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                                                                </Avatar>
+                                                                {user.name}
+                                                            </div>
+                                                        </SelectItem>
+                                                    ))}
+                                                    {isUsersLoading && page > 1 && (
+                                                        <SelectItem disabled value="loading-more">Loading more...</SelectItem>
+                                                    )}
+                                                </>
                                             )}
                                         </SelectContent>
                                     </Select>
